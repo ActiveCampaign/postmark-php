@@ -267,6 +267,60 @@ class PostmarkClient extends PostmarkClientBase {
 
 		return (object)$this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query);
 	}
+
+	function createTagTrigger($matchName, $trackOpens = true){
+		$body = [];
+		$body["MatchName"] = $matchName;
+		$body["TrackOpens"] = $trackOpens;
+
+		return (object)$this->processRestRequest('POST', '/triggers/tags', $body);
+	}
+
+	function deleteTagTrigger($id){
+		return (object)$this->processRestRequest('DELETE', "/triggers/tags/$id");
+	}
+
+	function searchTagTriggers($count = 100, $offset = 0, $match_name = NULL){
+		$query = [];
+		
+		$query["count"] = $count;
+		$query["offset"] = $offset;
+		$query["match_name"] = $match_name;
+
+		return (object)$this->processRestRequest('GET', '/triggers/tags', $query);
+	}
+
+	function editTagTrigger($id, $matchName, $trackOpens = true){
+		$body = [];
+		$body["MatchName"] = $matchName;
+		$body["TrackOpens"] = $trackOpens;
+
+		return (object)$this->processRestRequest('POST', "/triggers/tags/$id", $body);
+	}
+
+	function getTagTrigger($id){
+		return (object)$this->processRestRequest('GET', "/triggers/tags/$id");
+	}
+
+	function createInboundRuleTrigger($rule){
+		$body = [];
+		$body["Rule"] = $rule;
+
+		return (object)$this->processRestRequest('POST', '/triggers/inboundrules', $body);
+	}
+
+	function deleteInboundRuleTrigger($id){
+		return (object)$this->processRestRequest('DELETE', "/triggers/inboundrules/$id");
+	}
+
+	function listInboundRulesTriggers($count = 100, $offset = 0){
+		$query = [];
+		
+		$query["count"] = $count;
+		$query["offset"] = $offset;
+
+		return (object)$this->processRestRequest('GET', '/triggers/inboundrules', $query);
+	}
 }
 
 ?>
