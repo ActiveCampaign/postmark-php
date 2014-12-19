@@ -8,14 +8,24 @@ use \Postmark\PostmarkClient;
 
 class PostmarkClientServerTest extends PostmarkClientBaseTest {
 	
-	function testClientCanSendBasicMessage() {
+	function testClientCanGetServerInformation() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
-
-		//$this->assertNotEmpty($stats, 'Stats from getDeliveryStatistics() should never be null or empty.');
-		//$this->assertGreaterThan(0, $stats->InactiveMails, "The inactive mail count should be greater than zero.");
+		$server = $client->getServer();
+		$this->assertNotEmpty($server);
 	}
 
-}
+	function testClientCanEditServerInformation() {
+		$tk = parent::$testKeys;
+		
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$originalServer = $client->getServer();
+		
+		$server = $client->editServer('testing-server-1234');
 
+		//set it back to the original name.
+		$client->editServer($originalServer->Name);
+		$this->assertNotSame($originalServer->Name, $server->Name);
+	}
+}
 ?>

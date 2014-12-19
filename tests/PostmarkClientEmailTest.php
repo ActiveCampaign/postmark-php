@@ -35,7 +35,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 				'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 				'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
 				'Subject' => "Hello from the PHP Postmark Client Tests! ($currentTime)",
-				'HtmlBody' => '<b>Hi there!</b>',
+				'HtmlBody' => '<b>Hi there! (batch test)</b>',
 				'TextBody' => 'This is a text body for a test email.',
 				'TrackOpens' => true
 			];
