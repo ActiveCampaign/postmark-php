@@ -1,2 +1,6 @@
+.DS_Store
+oracle.sqlite
 .phpintel
+test_keys.json
 vendor
+build
