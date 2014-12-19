@@ -8,7 +8,6 @@ php:
   - hhvm
 
 before_script:
-  - curl --version
   - composer self-update
   - composer install --no-interaction --prefer-source --dev
   
