@@ -33,6 +33,7 @@ abstract class PostmarkClientBase {
 				case 'GET':
 				case 'HEAD':
 				case 'DELETE':
+				case 'PUT':
 				case 'OPTIONS':
 					$query = $request->getQuery();
 					foreach ($body as $key => $value) {
@@ -41,7 +42,6 @@ abstract class PostmarkClientBase {
 						}
 					}
 					break;
-				case 'PUT':
 				case 'POST':
 				case 'PATCH':
 					$cleanBody = [];
