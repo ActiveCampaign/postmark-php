@@ -8,10 +8,26 @@ use \Postmark\PostmarkClient;
 
 class PostmarkClientRuleTriggerTest extends PostmarkClientBaseTest {
 	
+	//todo - teardowns to clean up rules that were created and not deleted.
+
 	function testClientCanGetRuleTriggers() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
-		//TODO
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+
+		$triggers = $client->listInboundRuleTriggers();
+
+		$this->assertNotEmpty($triggers);
+	}
+
+	function testClientCanCreateAndDeleteRuleTriggers() {
+		$tk = parent::$testKeys;
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+
+		$trigger = $client->createInboundRuleTrigger('test.php+' . uniqid("", true) . '@example.com');
+		$this->assertNotEmpty($trigger);
+
+		$client->deleteInboundRuleTrigger($trigger->ID);
+		//Not throwing an exception here constitutes passing.
 	}
 }
 

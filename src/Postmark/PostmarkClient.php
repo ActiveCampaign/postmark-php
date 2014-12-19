@@ -295,7 +295,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["MatchName"] = $matchName;
 		$body["TrackOpens"] = $trackOpens;
 
-		return (object)$this->processRestRequest('POST', "/triggers/tags/$id", $body);
+		return (object)$this->processRestRequest('PUT', "/triggers/tags/$id", $body);
 	}
 
 	function getTagTrigger($id){
@@ -309,17 +309,17 @@ class PostmarkClient extends PostmarkClientBase {
 		return (object)$this->processRestRequest('POST', '/triggers/inboundrules', $body);
 	}
 
-	function deleteInboundRuleTrigger($id){
-		return (object)$this->processRestRequest('DELETE', "/triggers/inboundrules/$id");
-	}
-
-	function listInboundRulesTriggers($count = 100, $offset = 0){
+	function listInboundRuleTriggers($count = 100, $offset = 0){
 		$query = [];
 		
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 
 		return (object)$this->processRestRequest('GET', '/triggers/inboundrules', $query);
+	}
+
+	function deleteInboundRuleTrigger($id){
+		return (object)$this->processRestRequest('DELETE', "/triggers/inboundrules/$id");
 	}
 }
 
