@@ -21,6 +21,10 @@ class PostmarkClient extends PostmarkClientBase {
 
 		return $this->processRestRequest("POST", "/email", $payload, NULL);
 	}
+
+	function getDeliveryStatistics() {
+		return $this->processRestRequest("GET", "/deliverystats", NULL, NULL);
+	}
 }
 
 ?>

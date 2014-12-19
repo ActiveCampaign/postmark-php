@@ -2,23 +2,14 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/TestingKeys.php";
-
 use Postmark\PostmarkClient;
 
-class PostmarkClientEmailTest extends \PHPUnit_Framework_TestCase {
+require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
-	static $testKeys;
-
-	static function setUpBeforeClass() {
-		//get the config keys for the various tests
-		PostmarkClientEmailTest::$testKeys = new TestingKeys();
-		date_default_timezone_set("UTC");
-	}
+class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 
 	function testClientCanSendBasicMessage() {
-		$tk = PostmarkClientEmailTest::$testKeys;
+		$tk = parent::$testKeys;
 
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 

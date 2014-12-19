@@ -31,12 +31,26 @@ abstract class PostmarkClientBase {
 		$request->setHeader($this->authorization_header, $this->authorization_token);
 
 		if ($body != NULL) {
-			$json_body = json_encode($body);
-			$request->setBody($json_body);
+
+			//TODO: scrub the empty values from the body.
+
+			switch ($method) {
+				case 'GET':
+				case 'HEAD':
+				case 'DELETE':
+				case 'OPTIONS':
+					$request->setQuery($body);
+				case 'PUT':
+				case 'POST':
+				case 'PATCH':
+					$json_body = json_encode($body);
+					$request->setBody($json_body);
+					break;
+			}
 		}
 
 		$response = $client->send($request);
-		$result = json_decode($response->getBody());
+		$result = $response->json();
 
 		return $result;
 	}
