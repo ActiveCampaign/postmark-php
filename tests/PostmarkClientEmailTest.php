@@ -22,6 +22,32 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			'This is a text body for a test email.');
 		$this->assertNotEmpty($response, 'The client could not send a basic message.');
 	}
+
+	function testClientCanSendBatchMessages() {
+		$tk = parent::$testKeys;
+
+		$currentTime = date("c");
+
+		$batch = [];
+
+		for($i = 0; $i < 5; $i++){
+			$payload = [
+				'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+				'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+				'Subject' => "Hello from the PHP Postmark Client Tests! ($currentTime)",
+				'HtmlBody' => '<b>Hi there!</b>',
+				'TextBody' => 'This is a text body for a test email.',
+				'TrackOpens' => true
+			];
+
+			$batch[] = $payload;
+		}
+
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$response = $client->sendEmailBatch($batch);
+		$this->assertNotEmpty($response, 'The client could not send a batch of messages.');
+	}
+
 }
 
 ?>

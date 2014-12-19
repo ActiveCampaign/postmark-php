@@ -13,18 +13,13 @@ abstract class PostmarkClientBase {
 		$this->authorization_token = $token;
 	}
 
-	protected function processRestRequest($method, $path, $body, $headers) {
+	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
 
 		$client = new \Guzzle\Http\Client();
 
-		$headers = $headers ?: [];
-
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
-		$request = $client->createRequest($method, $url,
-			[
-				'headers' => $headers,
-			]);
+		$request = $client->createRequest($method, $url, []);
 
 		$request->setHeader('Accept', 'application/json');
 		$request->setHeader('Content-Type', 'application/json');
@@ -39,11 +34,23 @@ abstract class PostmarkClientBase {
 				case 'HEAD':
 				case 'DELETE':
 				case 'OPTIONS':
-					$request->setQuery($body);
+					$query = $request->getQuery();
+					foreach ($body as $key => $value) {
+						if($value !== NULL){
+							$query[$key] = $value;
+						}
+					}
+					break;
 				case 'PUT':
 				case 'POST':
 				case 'PATCH':
-					$json_body = json_encode($body);
+					$cleanBody = [];
+					foreach ($body as $key => $value) {
+						if($value !== NULL){
+							$cleanBody[$key] = $value;
+						}
+					}
+					$json_body = json_encode($cleanBody);
 					$request->setBody($json_body);
 					break;
 			}
