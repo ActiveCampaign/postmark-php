@@ -21,8 +21,17 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN);
 
-		$bounces = $client->getBounces();
+		$bounces = $client->getBounces(NULL, NULL, NULL, NULL, NULL, 10, 0);
 		$this->assertNotEmpty($bounces);
+	}
+
+	function testClientCanGetBounce(){
+		$tk = parent::$testKeys;
+		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN);
+		$bounces = $client->getBounces(NULL, NULL, NULL, NULL, NULL, 10, 0);
+		$id = $bounces->Bounces[0]['ID'];
+		$bounce = $client->getBounce($id);
+		$this->assertNotEmpty($bounce);
 	}
 }
 ?>

@@ -57,6 +57,9 @@ class PostmarkClient extends PostmarkClientBase {
 		return (object)$this->processRestRequest("GET", "/bounces", $query);
 	}
 
+	function getBounce($id){
+		return (object)$this->processRestRequest("GET", "/bounces/$id");
+	}
 }
 
 ?>
