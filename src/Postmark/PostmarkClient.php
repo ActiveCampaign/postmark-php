@@ -2,6 +2,7 @@
 
 namespace Postmark;
 
+use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 class PostmarkClient extends PostmarkClientBase {
@@ -261,7 +262,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query);
+		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
 	}
 
 	function createTagTrigger($matchName, $trackOpens = true) {

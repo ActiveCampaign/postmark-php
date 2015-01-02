@@ -4,10 +4,11 @@ namespace Postmark\Tests;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
+use Postmark\Tests\PostmarkClientBaseTest as PostmarkClientBaseTest;
 use \Postmark\PostmarkClient;
 
 class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
-	
+
 	function testClientCanGetMessageOpens() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
