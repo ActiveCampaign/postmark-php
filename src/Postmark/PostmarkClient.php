@@ -2,7 +2,7 @@
 
 namespace Postmark;
 
-use \Postmark\Model\BatchSendResponse;
+use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 class PostmarkClient extends PostmarkClientBase {
 
@@ -17,71 +17,69 @@ class PostmarkClient extends PostmarkClientBase {
 
 		//TODO: Support attachments.
 
-		$payload = [
-			'From' => $from,
-			'To' => $to,
-			'Cc' => $cc,
-			'Bcc' => $bcc,
-			'Subject' => $subject,
-			'HtmlBody' => $htmlBody,
-			'TextBody' => $textBody,
-			'ReplyTo' => $replyTo,
-			'Headers' => $headers,
-			'TrackOpens' => $trackOpens
-		];
+		$body = [];
+		$body['From'] = $from;
+		$body['To'] = $to;
+		$body['Cc'] = $cc;
+		$body['Bcc'] = $bcc;
+		$body['Subject'] = $subject;
+		$body['HtmlBody'] = $htmlBody;
+		$body['TextBody'] = $textBody;
+		$body['ReplyTo'] = $replyTo;
+		$body['Headers'] = $headers;
+		$body['TrackOpens'] = $trackOpen;
 
-		return (object)$this->processRestRequest('POST', '/email', $payload);
+		return (object) $this->processRestRequest('POST', '/email', $body);
 	}
 
 	function sendEmailBatch($emailBatch = []) {
-	 	return $this->processRestRequest('POST', '/email/batch', $emailBatch);
+		return $this->processRestRequest('POST', '/email/batch', $emailBatch);
 	}
 
 	function getDeliveryStatistics() {
-		return (object)$this->processRestRequest('GET', '/deliverystats');
+		return (object) $this->processRestRequest('GET', '/deliverystats');
 	}
 
-	function getBounces($type = NULL, $inactive = NULL, $emailFilter = NULL, 
-		$tag = NULL, $messageID = NULL, $count = 100, $offset = 0){
+	function getBounces($type = NULL, $inactive = NULL, $emailFilter = NULL,
+		$tag = NULL, $messageID = NULL, $count = 100, $offset = 0) {
 
-		$query = [
-			'type' => $type,
-			'inactive' => $inactive,
-			'emailFilter' => $emailFilter,
-			'tag' => $tag,
-			'messageID' => $messageID,
-			'count' => $count,
-			'offset' => $offset
-		];
-		
-		return (object)$this->processRestRequest('GET', '/bounces', $query);
+		$query = [];
+		$query['type'] = $type;
+		$query['inactive'] = $inactive;
+		$query['emailFilter'] = $emailFilter;
+		$query['tag'] = $tag;
+		$query['messageID'] = $messageID;
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+
+		return (object) $this->processRestRequest('GET', '/bounces', $query);
 	}
 
-	function getBounce($id){
-		return (object)$this->processRestRequest('GET', "/bounces/$id");
+	function getBounce($id) {
+		return (object) $this->processRestRequest('GET', "/bounces/$id");
 	}
 
-	function getBounceDump($id){
-		return (object)$this->processRestRequest('GET', "/bounces/$id/dump");
+	function getBounceDump($id) {
+		return (object) $this->processRestRequest('GET', "/bounces/$id/dump");
 	}
 
-	function activateBounce($id){
-		return (object)$this->processRestRequest('PUT', "/bounces/$id/activate");
+	function activateBounce($id) {
+		return (object) $this->processRestRequest('PUT', "/bounces/$id/activate");
 	}
 
-	function getBounceTags(){
+	function getBounceTags() {
 		return $this->processRestRequest('GET', '/bounces/tags');
 	}
 
-	function getServer(){
-		return (object)$this->processRestRequest('GET', '/server');
+	function getServer() {
+		return (object) $this->processRestRequest('GET', '/server');
 	}
 
-	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL, 
-		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL, 
-		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL, 
-		$inboundDomain = NULL, $inboundSpamThreshold = NULL){
-	
+	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
+		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
+		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL,
+		$inboundDomain = NULL, $inboundSpamThreshold = NULL) {
+
 		$body = [];
 		$body["Name"] = $name;
 		$body["Color"] = $color;
@@ -95,12 +93,12 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["InboundDomain"] = $inboundDomain;
 		$body["InboundSpamThreshold"] = $inboundSpamThreshold;
 
-		return (object)$this->processRestRequest('PUT', '/server', $body);
+		return (object) $this->processRestRequest('PUT', '/server', $body);
 	}
 
-	function getOutboundMessages( $recipient = NULL, $fromemail = NULL, $tag = NULL, 
-		$subject = NULL, $count = 100, $offset = 0){
-		
+	function getOutboundMessages($recipient = NULL, $fromemail = NULL, $tag = NULL,
+		$subject = NULL, $count = 100, $offset = 0) {
+
 		$query = [];
 		$query["recipient"] = $recipient;
 		$query["fromemail"] = $fromemail;
@@ -108,22 +106,22 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["subject"] = $subject;
 		$query["count"] = $count;
 		$query["offset"] = $offset;
-		
-		return (object)$this->processRestRequest('GET', '/messages/outbound', $query);
+
+		return (object) $this->processRestRequest('GET', '/messages/outbound', $query);
 	}
 
-	function getOutboundMessageDetails($id){
-		return (object)$this->processRestRequest('GET', "/messages/outbound/$id/details");	
+	function getOutboundMessageDetails($id) {
+		return (object) $this->processRestRequest('GET', "/messages/outbound/$id/details");
 	}
 
-	function getOutboundMessageDump($id){
-		return (object)$this->processRestRequest('GET', "/messages/outbound/$id/dump");	
+	function getOutboundMessageDump($id) {
+		return (object) $this->processRestRequest('GET', "/messages/outbound/$id/dump");
 	}
 
-	function getInboundMessages($recipient = NULL, $fromemail = NULL, 
-				$tag = NULL, $subject = NULL, $mailboxhash = NULL,
-				$status = NULL, $count = 100, $offset = 0){
-		
+	function getInboundMessages($recipient = NULL, $fromemail = NULL,
+		$tag = NULL, $subject = NULL, $mailboxhash = NULL,
+		$status = NULL, $count = 100, $offset = 0) {
+
 		$query = [];
 		$query['recipient'] = $recipient;
 		$query['fromemail'] = $fromemail;
@@ -132,23 +130,22 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['mailboxhash'] = $mailboxhash;
 		$query['count'] = $count;
 		$query['offset'] = $offset;
-		
-		return (object)$this->processRestRequest('GET', '/messages/inbound', $query);
+
+		return (object) $this->processRestRequest('GET', '/messages/inbound', $query);
 	}
 
-	function getInboundMessageDetails($id){
-		return (object)$this->processRestRequest('GET', "/messages/inbound/$id/details");	
+	function getInboundMessageDetails($id) {
+		return (object) $this->processRestRequest('GET', "/messages/inbound/$id/details");
 	}
 
-
-	function bypassInboundMessageRules($id){
-		return (object)$this->processRestRequest('PUT', "/messages/inbound/$id/bypass");	
+	function bypassInboundMessageRules($id) {
+		return (object) $this->processRestRequest('PUT', "/messages/inbound/$id/bypass");
 	}
 
-	function getOpenStatistics($recipient = NULL, 
-		$tag = NULL, $client_name = NULL, $client_company = NULL,$client_family = NULL, 
-		$os_name = NULL,$os_family = NULL, $os_company = NULL,$platform = NULL, 
-		$country = NULL,$region = NULL, $city = NULL, $count = 100, $offset = 0){
+	function getOpenStatistics($recipient = NULL,
+		$tag = NULL, $client_name = NULL, $client_company = NULL, $client_family = NULL,
+		$os_name = NULL, $os_family = NULL, $os_company = NULL, $platform = NULL,
+		$country = NULL, $region = NULL, $city = NULL, $count = 100, $offset = 0) {
 
 		$query = [];
 		$query['count'] = $count;
@@ -166,160 +163,159 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['region'] = $region;
 		$query['city'] = $city;
 
-		return (object)$this->processRestRequest('GET', '/messages/outbound/opens', $query);	
+		return (object) $this->processRestRequest('GET', '/messages/outbound/opens', $query);
 	}
 
-	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0){
+	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0) {
 		$query = [];
-		
+
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
-		return (object)$this->processRestRequest('GET', "/messages/outbound/opens/$id", $query);
+		return (object) $this->processRestRequest('GET', "/messages/outbound/opens/$id", $query);
 	}
 
-	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound', $query);
 	}
 
-	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/sends', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/sends', $query);
 	}
-	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/bounces', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/bounces', $query);
 	}
 
-	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/spam', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/spam', $query);
 	}
 
-	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/tracked', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/tracked', $query);
 	}
 
-
-	function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/opens', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/opens', $query);
 	}
 
-	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/opens/platforms', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/opens/platforms', $query);
 	}
 
-	function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query);
 	}
 
-	function getOutboundReadTimeStatistics($tag = NULL, $fromdate = NULL, $todate = NULL){
+	function getOutboundReadTimeStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = [];
-		
+
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return (object)$this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query);
+		return (object) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query);
 	}
 
-	function createTagTrigger($matchName, $trackOpens = true){
+	function createTagTrigger($matchName, $trackOpens = true) {
 		$body = [];
 		$body["MatchName"] = $matchName;
 		$body["TrackOpens"] = $trackOpens;
 
-		return (object)$this->processRestRequest('POST', '/triggers/tags', $body);
+		return (object) $this->processRestRequest('POST', '/triggers/tags', $body);
 	}
 
-	function deleteTagTrigger($id){
-		return (object)$this->processRestRequest('DELETE', "/triggers/tags/$id");
+	function deleteTagTrigger($id) {
+		return (object) $this->processRestRequest('DELETE', "/triggers/tags/$id");
 	}
 
-	function searchTagTriggers($count = 100, $offset = 0, $match_name = NULL){
+	function searchTagTriggers($count = 100, $offset = 0, $match_name = NULL) {
 		$query = [];
-		
+
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 		$query["match_name"] = $match_name;
 
-		return (object)$this->processRestRequest('GET', '/triggers/tags', $query);
+		return (object) $this->processRestRequest('GET', '/triggers/tags', $query);
 	}
 
-	function editTagTrigger($id, $matchName, $trackOpens = true){
+	function editTagTrigger($id, $matchName, $trackOpens = true) {
 		$body = [];
 		$body["MatchName"] = $matchName;
 		$body["TrackOpens"] = $trackOpens;
 
-		return (object)$this->processRestRequest('PUT', "/triggers/tags/$id", $body);
+		return (object) $this->processRestRequest('PUT', "/triggers/tags/$id", $body);
 	}
 
-	function getTagTrigger($id){
-		return (object)$this->processRestRequest('GET', "/triggers/tags/$id");
+	function getTagTrigger($id) {
+		return (object) $this->processRestRequest('GET', "/triggers/tags/$id");
 	}
 
-	function createInboundRuleTrigger($rule){
+	function createInboundRuleTrigger($rule) {
 		$body = [];
 		$body["Rule"] = $rule;
 
-		return (object)$this->processRestRequest('POST', '/triggers/inboundrules', $body);
+		return (object) $this->processRestRequest('POST', '/triggers/inboundrules', $body);
 	}
 
-	function listInboundRuleTriggers($count = 100, $offset = 0){
+	function listInboundRuleTriggers($count = 100, $offset = 0) {
 		$query = [];
-		
+
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 
-		return (object)$this->processRestRequest('GET', '/triggers/inboundrules', $query);
+		return (object) $this->processRestRequest('GET', '/triggers/inboundrules', $query);
 	}
 
-	function deleteInboundRuleTrigger($id){
-		return (object)$this->processRestRequest('DELETE', "/triggers/inboundrules/$id");
+	function deleteInboundRuleTrigger($id) {
+		return (object) $this->processRestRequest('DELETE', "/triggers/inboundrules/$id");
 	}
 }
 
