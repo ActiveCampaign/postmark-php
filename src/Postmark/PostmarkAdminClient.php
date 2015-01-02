@@ -11,7 +11,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 }
 
 function getServer($id) {
-	return (object) $this->processRestRequest('GET', "/servers/$id");
+	return new DynamicResponseModel($this->processRestRequest('GET', "/servers/$id"));
 }
 
 function listServers($count = 100, $offset = 0, $name = NULL) {
@@ -19,11 +19,11 @@ function listServers($count = 100, $offset = 0, $name = NULL) {
 	$query['count'] = $count;
 	$query['offset'] = $offset;
 
-	return (object) $this->processRestRequest('GET', '/servers/', $query);
+	return new DynamicResponseModel($this->processRestRequest('GET', '/servers/', $query));
 }
 
 function deleteServer($id) {
-	return (object) $this->processRestRequest('DELETE', "/servers/$id");
+	return new DynamicResponseModel($this->processRestRequest('DELETE', "/servers/$id"));
 }
 
 function editServer($id, $name = NULL, $color = NULL,
@@ -44,7 +44,7 @@ function editServer($id, $name = NULL, $color = NULL,
 	$body['inboundDomain'] = $inboundDomain;
 	$body['inboundSpamThreshold'] = $inboundSpamThreshold;
 
-	return (object) $this->processRestRequest('PUT', "/servers/$id", $body);
+	return new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body));
 }
 
 function createServer($name = NULL, $color = NULL,
@@ -65,7 +65,7 @@ function createServer($name = NULL, $color = NULL,
 	$body['inboundDomain'] = $inboundDomain;
 	$body['inboundSpamThreshold'] = $inboundSpamThreshold;
 
-	return (object) $this->processRestRequest('POST', '/servers/', $body);
+	return new DynamicResponseModel($this->processRestRequest('POST', '/servers/', $body));
 }
 
 function listSenderSignatures($count = 100, $offset = 0) {
@@ -74,11 +74,11 @@ function listSenderSignatures($count = 100, $offset = 0) {
 	$query['count'] = $count;
 	$query['offset'] = $offset;
 
-	return (object) $this->processRestRequest('GET', '/senders/', $query);
+	return new DynamicResponseModel($this->processRestRequest('GET', '/senders/', $query));
 }
 
 function getSenderSignature($id) {
-	return (object) $this->processRestRequest('GET', "/senders/$id");
+	return new DynamicResponseModel($this->processRestRequest('GET', "/senders/$id"));
 }
 
 function createSenderSignature($fromEmail, $name, $replyToEmail = NULL) {
@@ -88,7 +88,7 @@ function createSenderSignature($fromEmail, $name, $replyToEmail = NULL) {
 	$body['name'] = $name;
 	$body['replyToEmail'] = $replyToEmail;
 
-	return (object) $this->processRestRequest('POST', '/senders/', $body);
+	return new DynamicResponseModel($this->processRestRequest('POST', '/senders/', $body));
 }
 
 function editSenderSignature($id, $name = NULL, $replyToEmail = NULL) {
@@ -97,23 +97,23 @@ function editSenderSignature($id, $name = NULL, $replyToEmail = NULL) {
 	$body['name'] = $name;
 	$body['replyToEmail'] = $replyToEmail;
 
-	return (object) $this->processRestRequest('PUT', "/senders/$id", $body);
+	return new DynamicResponseModel($this->processRestRequest('PUT', "/senders/$id", $body));
 }
 
 function deleteSenderSignature($id) {
-	return (object) $this->processRestRequest('DELETE', "/senders/$id");
+	return new DynamicResponseModel($this->processRestRequest('DELETE', "/senders/$id"));
 }
 
 function resendSenderSignatureConfirmation($id) {
-	return (object) $this->processRestRequest('POST', "/senders/$id/resend");
+	return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/resend"));
 }
 
 function verifySenderSignatureSPF($id) {
-	return (object) $this->processRestRequest('POST', "/senders/$id/verifyspf");
+	return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/verifyspf"));
 }
 
 function requestNewSenderSignatureDKIM($id) {
-	return (object) $this->processRestRequest('POST', "/senders/$id/requestnewdkim");
+	return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/requestnewdkim"));
 }
 
 ?>
