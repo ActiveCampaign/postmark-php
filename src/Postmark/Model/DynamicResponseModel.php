@@ -2,8 +2,8 @@
 
 namespace \Postmark\Model;
 
-class BatchSendResponse{
-	
+class DynamicResponseModel {
+
 }
 
 ?>
