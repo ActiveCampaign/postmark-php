@@ -3,8 +3,17 @@ namespace Postmark;
 
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
+/**
+ * This is the core class that interacts with the Postmark API. All clients should
+ * inherit fromt this class.
+ */
 abstract class PostmarkClientBase {
 
+	/**
+	 * BASE_URL is "https://api.postmarkapp.com" - you may modify this value
+	 * to disable SSL support, but it is not recommended.
+	 * @var string
+	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
 
 	protected $authorization_token = NULL;
