@@ -1,6 +1,8 @@
 <?php
 namespace Postmark;
 
+use Postmark\PostmarkClientBase as PostmarkClientBase;
+
 abstract class PostmarkClientBase {
 
 	public static $BASE_URL = "https://api.postmarkapp.com";
@@ -26,9 +28,6 @@ abstract class PostmarkClientBase {
 		$request->setHeader($this->authorization_header, $this->authorization_token);
 
 		if ($body != NULL) {
-
-			//TODO: scrub the empty values from the body.
-
 			switch ($method) {
 				case 'GET':
 				case 'HEAD':
@@ -36,7 +35,7 @@ abstract class PostmarkClientBase {
 				case 'OPTIONS':
 					$query = $request->getQuery();
 					foreach ($body as $key => $value) {
-						if($value !== NULL){
+						if ($value !== NULL) {
 							$query[$key] = $value;
 						}
 					}
@@ -46,7 +45,7 @@ abstract class PostmarkClientBase {
 				case 'PATCH':
 					$cleanBody = [];
 					foreach ($body as $key => $value) {
-						if($value !== NULL){
+						if ($value !== NULL) {
 							$cleanBody[$key] = $value;
 						}
 					}
