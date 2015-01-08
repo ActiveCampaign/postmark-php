@@ -7,12 +7,12 @@ require_once __DIR__ . "/PostmarkClientBaseTest.php";
 use \Postmark\PostmarkClient;
 
 class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
-	
+
 	function testClientCanSearchOutboundMessages() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 
-		$messages = $client->getOutboundMessages(NULL, NULL, NULL, NULL, 10);
+		$messages = $client->getOutboundMessages(10);
 		$this->assertNotEmpty($messages);
 		$this->assertCount(10, $messages->Messages);
 	}
@@ -21,7 +21,7 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 
-		$retrievedMessages = $client->getOutboundMessages(NULL, NULL, NULL, NULL, 1);
+		$retrievedMessages = $client->getOutboundMessages(1);
 		$baseMessageId = $retrievedMessages->Messages[0]["MessageID"];
 		$message = $client->getOutboundMessageDetails($baseMessageId);
 
@@ -32,7 +32,7 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 
-		$retrievedMessages = $client->getOutboundMessages(NULL, NULL, NULL, NULL, 1);
+		$retrievedMessages = $client->getOutboundMessages(1);
 		$baseMessageId = $retrievedMessages->Messages[0]["MessageID"];
 		$message = $client->getOutboundMessageDump($baseMessageId);
 
