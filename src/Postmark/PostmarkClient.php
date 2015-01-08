@@ -50,7 +50,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TextBody'] = $textBody;
 		$body['ReplyTo'] = $replyTo;
 		$body['Headers'] = $headers;
-		$body['TrackOpens'] = $trackOpen;
+		$body['TrackOpens'] = $trackOpens;
 
 		if ($attachments != NULL) {
 			//TODO: Support attachments.
