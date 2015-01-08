@@ -2,6 +2,7 @@
 
 namespace Postmark;
 
+use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 /**
@@ -91,7 +92,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['inboundDomain'] = $inboundDomain;
 		$body['inboundSpamThreshold'] = $inboundSpamThreshold;
 
-		$response = new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body))
+		$response = new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body));
 		$response["ID"] = $id;
 		return $response;
 	}
@@ -212,7 +213,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Request that the Postmark API updates verify the SPF records associated 
+	 * Request that the Postmark API updates verify the SPF records associated
 	 * with the Sender Signature's email address's domain. Configuring SPF is not required to use
 	 * Postmark, but it is highly recommended, and can improve delivery rates.
 	 * @param  integer
