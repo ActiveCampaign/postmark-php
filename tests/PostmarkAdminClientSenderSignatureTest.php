@@ -25,56 +25,88 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$sigs = $client->listSenderSignatures();
+
+		$this->assertGreaterThan(0, $sigs->totalCount);
+		$this->assertNotEmpty($sigs->senderSignatures);
 	}
 
 	function testClientCanGetSingleSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$id = $client->listSenderSignatures()->senderSignatures[0]->id;
+		$sig = $client->getSenderSignature($id);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$this->assertNotEmpty($sig->name);
 	}
 
 	function testClientCanCreateSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$sig = $client->createSenderSignature(
+			'test-create-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-php-create-' . date('U'));
+
+		$this->assertNotEmpty($sig->id);
 	}
 
 	function testClientCanEditSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$name = 'test-php-edit-' . date('U');
+		$sig = $client->createSenderSignature(
+			'test-edit-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$name);
+
+		$updated = $client->editSenderSignature(
+			$sig->id, $name . '-updated');
+
+		$this->assertNotSame($sig->name, $updated->name);
 	}
 
 	function testClientCanDeleteSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$name = 'test-php-delete-' . date('U');
+		$sig = $client->createSenderSignature(
+			'test-delete-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$name);
+
+		$client->deleteSenderSignature($sig->id);
+
+		$sigs = $client->listSenderSignatures()->senderSignatures;
+
+		foreach ($sigs as $key => $value) {
+			$this->assertNotSame($sig->name, $value->name);
+		}
+
 	}
 
 	function testClientCanRequestNewVerificationForSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
-	}
+		$name = 'test-php-reverify-' . date('U');
+		$sig = $client->createSenderSignature(
+			'test-php-reverify-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$name);
 
-	function testClientCanRequestNewDKIMForSignature() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
-
-		throw new \Exception("Not yet implemented.", 1);
+		$client->resendSenderSignatureConfirmation($sig->id);
 	}
 
 	function testClientCanVerifySPFForSignature() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		throw new \Exception("Not yet implemented.", 1);
+		$name = 'test-php-spf-' . date('U');
+		$sig = $client->createSenderSignature(
+			'test-spfcheck-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$name);
+
+		$client->verifySenderSignatureSPF($sig->id);
 	}
 
 }

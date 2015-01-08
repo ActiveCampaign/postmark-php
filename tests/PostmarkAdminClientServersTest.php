@@ -47,22 +47,18 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		$server = $client->createServer('test-php-' . date('c'), 'purple');
-
+		$server = $client->createServer('test-php-create-' . date('c'));
 		$this->assertNotEmpty($server);
-
 	}
 
 	function testClientCanEditServer() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		$server = $client->createServer('test-php-' . date('U'), 'purple');
+		$server = $client->createServer('test-php-edit-' . date('c'), 'purple');
 
-		//wait for data consistency in the API
-		sleep(2);
-
-		$serverUpdated = $client->editServer($server->id, 'test-php-' . date('c') . '-updated', 'green');
+		$updateName = 'test-php-edit-' . date('c') . '-updated';
+		$serverUpdated = $client->editServer($server->id, $updateName, 'green');
 
 		$this->assertNotEmpty($serverUpdated);
 		$this->assertNotSame($serverUpdated->name, $server->name);
@@ -73,10 +69,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		$server = $client->createServer('test-php-' . date('U'), 'purple');
-
-		//wait for data consistency in the API
-		sleep(2);
+		$server = $client->createServer('test-php-delete-' . date('c'));
 
 		$client->deleteServer($server->id);
 
