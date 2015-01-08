@@ -7,7 +7,7 @@ require_once __DIR__ . "/PostmarkClientBaseTest.php";
 use \Postmark\PostmarkClient;
 
 class PostmarkClientServerTest extends PostmarkClientBaseTest {
-	
+
 	function testClientCanGetServerInformation() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
@@ -17,11 +17,11 @@ class PostmarkClientServerTest extends PostmarkClientBaseTest {
 
 	function testClientCanEditServerInformation() {
 		$tk = parent::$testKeys;
-		
+
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 		$originalServer = $client->getServer();
-		
-		$server = $client->editServer('testing-server-1234');
+
+		$server = $client->editServer('testing-server-' . date('c'));
 
 		//set it back to the original name.
 		$client->editServer($originalServer->Name);
