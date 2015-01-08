@@ -45,7 +45,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
 		$sig = $client->createSenderSignature(
-			'test-create-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-create-' . date('U') . '@example.com',
 			'test-php-create-' . date('U'));
 
 		$this->assertNotEmpty($sig->id);
@@ -57,7 +57,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$name = 'test-php-edit-' . date('U');
 		$sig = $client->createSenderSignature(
-			'test-edit-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-edit-' . date('U') . '+' . '@example.com',
 			$name);
 
 		$updated = $client->editSenderSignature(
@@ -72,7 +72,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$name = 'test-php-delete-' . date('U');
 		$sig = $client->createSenderSignature(
-			'test-delete-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-delete-' . date('U') . '@example.com',
 			$name);
 
 		$client->deleteSenderSignature($sig->id);
@@ -91,7 +91,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$name = 'test-php-reverify-' . date('U');
 		$sig = $client->createSenderSignature(
-			'test-php-reverify-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-php-reverify-' . date('U') . '@example.com',
 			$name);
 
 		$client->resendSenderSignatureConfirmation($sig->id);
@@ -103,7 +103,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$name = 'test-php-spf-' . date('U');
 		$sig = $client->createSenderSignature(
-			'test-spfcheck-' . date('U') . '+' . $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			'test-spfcheck-' . date('U') . '@example.com',
 			$name);
 
 		$client->verifySenderSignatureSPF($sig->id);
