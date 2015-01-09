@@ -10,4 +10,4 @@ Welcome to Postmark-PHP's documentation!
     :maxdepth: 3
     :glob:
     
-    Postmark/*
+    api/*
