@@ -1,4 +1,11 @@
 <?php
+
+/*
+ * Author:   Wildbit (http://wildbit.com)
+ * License:  http://creativecommons.org/licenses/MIT/ MIT
+ * Link:     https://postmark-php.readthedocs.org/en/latest/
+ */
+
 namespace Postmark;
 
 use Postmark\PostmarkClientBase as PostmarkClientBase;

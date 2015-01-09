@@ -21,7 +21,8 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 
-		$retrievedMessages = $client->getOutboundMessages(1);
+		$retrievedMessages = $client->getOutboundMessages(1, 50);
+
 		$baseMessageId = $retrievedMessages->Messages[0]["MessageID"];
 		$message = $client->getOutboundMessageDetails($baseMessageId);
 
@@ -32,7 +33,7 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
 
-		$retrievedMessages = $client->getOutboundMessages(1);
+		$retrievedMessages = $client->getOutboundMessages(1, 50);
 		$baseMessageId = $retrievedMessages->Messages[0]["MessageID"];
 		$message = $client->getOutboundMessageDump($baseMessageId);
 
