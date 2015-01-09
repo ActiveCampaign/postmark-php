@@ -41,7 +41,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
 		$headers = NULL, $attachments = NULL) {
 
-		$body = [];
+		$body = array();
 		$body['From'] = $from;
 		$body['To'] = $to;
 		$body['Cc'] = $cc;
@@ -66,7 +66,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :param  array $emailBatch
 	 * :return DynamicResponseModel
 	 */
-	function sendEmailBatch($emailBatch = []) {
+	function sendEmailBatch($emailBatch = array()) {
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $emailBatch));
 	}
 
@@ -92,7 +92,7 @@ class PostmarkClient extends PostmarkClientBase {
 	function getBounces($count = 100, $offset = 0, $type = NULL,
 		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL) {
 
-		$query = [];
+		$query = array();
 		$query['type'] = $type;
 		$query['inactive'] = $inactive;
 		$query['emailFilter'] = $emailFilter;
@@ -169,7 +169,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL,
 		$inboundDomain = NULL, $inboundSpamThreshold = NULL) {
 
-		$body = [];
+		$body = array();
 		$body["Name"] = $name;
 		$body["Color"] = $color;
 		$body["RawEmailEnabled"] = $rawEmailEnabled;
@@ -198,7 +198,7 @@ class PostmarkClient extends PostmarkClientBase {
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
 		$fromEmail = NULL, $tag = NULL, $subject = NULL) {
 
-		$query = [];
+		$query = array();
 		$query["recipient"] = $recipient;
 		$query["fromemail"] = $fromEmail;
 		$query["tag"] = $tag;
@@ -242,7 +242,7 @@ class PostmarkClient extends PostmarkClientBase {
 	function getInboundMessages($count = 100, $offset = 0, $recipient = NULL, $fromEmail = NULL,
 		$tag = NULL, $subject = NULL, $mailboxHash = NULL, $status = NULL) {
 
-		$query = [];
+		$query = array();
 		$query['recipient'] = $recipient;
 		$query['fromemail'] = $fromEmail;
 		$query['tag'] = $tag;
@@ -296,7 +296,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$osName = NULL, $osFamily = NULL, $osCompany = NULL, $platform = NULL,
 		$country = NULL, $region = NULL, $city = NULL) {
 
-		$query = [];
+		$query = array();
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 		$query['recipient'] = $recipient;
@@ -323,7 +323,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0) {
-		$query = [];
+		$query = array();
 
 		$query['count'] = $count;
 		$query['offset'] = $offset;
@@ -340,7 +340,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -358,7 +358,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -376,7 +376,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -394,7 +394,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -412,7 +412,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -430,7 +430,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -448,7 +448,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -466,7 +466,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -484,7 +484,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getOutboundReadTimeStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
-		$query = [];
+		$query = array();
 
 		$query['tag'] = $tag;
 		$query['fromdate'] = $fromdate;
@@ -500,7 +500,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function createTagTrigger($matchName, $trackOpens = true) {
-		$body = [];
+		$body = array();
 		$body["MatchName"] = $matchName;
 		$body["TrackOpens"] = $trackOpens;
 
@@ -524,7 +524,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function searchTagTriggers($count = 100, $offset = 0, $matchName = NULL) {
-		$query = [];
+		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;
@@ -541,7 +541,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function editTagTrigger($id, $matchName, $trackOpens = true) {
-		$body = [];
+		$body = array();
 		$body["MatchName"] = $matchName;
 		$body["TrackOpens"] = $trackOpens;
 
@@ -563,7 +563,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function createInboundRuleTrigger($rule) {
-		$body = [];
+		$body = array();
 		$body["Rule"] = $rule;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/triggers/inboundrules', $body));
@@ -576,7 +576,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function listInboundRuleTriggers($count = 100, $offset = 0) {
-		$query = [];
+		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;

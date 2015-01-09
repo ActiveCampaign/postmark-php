@@ -37,7 +37,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * :returntype: DynamicResponseModel
 	 */
 	function listServers($count = 100, $offset = 0, $name = NULL) {
-		$query = [];
+		$query = array();
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
@@ -77,7 +77,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL) {
 
-		$body = [];
+		$body = array();
 		$body['name'] = $name;
 		$body['color'] = $color;
 		$body['rawEmailEnabled'] = $rawEmailEnabled;
@@ -116,7 +116,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL) {
 
-		$body = [];
+		$body = array();
 		$body['name'] = $name;
 		$body['color'] = $color;
 		$body['rawEmailEnabled'] = $rawEmailEnabled;
@@ -140,7 +140,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 */
 	function listSenderSignatures($count = 100, $offset = 0) {
 
-		$query = [];
+		$query = array();
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
@@ -167,7 +167,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 */
 	function createSenderSignature($fromEmail, $name, $replyToEmail = NULL) {
 
-		$body = [];
+		$body = array();
 		$body['fromEmail'] = $fromEmail;
 		$body['name'] = $name;
 		$body['replyToEmail'] = $replyToEmail;
@@ -184,7 +184,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 */
 	function editSenderSignature($id, $name = NULL, $replyToEmail = NULL) {
 
-		$body = [];
+		$body = array();
 		$body['name'] = $name;
 		$body['replyToEmail'] = $replyToEmail;
 

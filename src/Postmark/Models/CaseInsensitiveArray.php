@@ -2,9 +2,11 @@
 
 namespace Postmark\Models;
 
-// This class allows for case-insensitive member lookup
-// modified from: http://stackoverflow.com/a/4240055/32238
-
+/**
+ * CaseInsensitiveArray allows accessing elements with mixed-case keys.
+ * This allows access to the array to be very forgiving. (i.e. If you access something
+ * with the wrong CaSe, it'll still find the correct element)
+ */
 class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	private $_container = array();
 	private $_pointer = 0;
@@ -50,7 +52,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	}
 
 	public function current() {
-		//use "offsetGet" instead of indexes
+		// use "offsetGet" instead of indexes
 		// so that subclasses can override behavior if needed.
 		return $this->offsetGet($this->key());
 	}

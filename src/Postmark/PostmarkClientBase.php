@@ -17,9 +17,10 @@ use Postmark\PostmarkClientBase as PostmarkClientBase;
 abstract class PostmarkClientBase {
 
 	/**
-	 * BASE_URL is "https://api.postmarkapp.com" - you may modify this value
-	 * to disable SSL support, but it is not recommended.
-	 * @var string
+	 * BASE_URL is "https://api.postmarkapp.com"
+	 *
+	 * You may modify this value to disable SSL support, but it is not recommended.
+	 * :var string:
 	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
 
@@ -31,13 +32,21 @@ abstract class PostmarkClientBase {
 		$this->authorization_token = $token;
 	}
 
+	/**
+	 * The base request method for all API access.
+	 * :param string $method:
+	 * :param string $path:
+	 * :param string $body:
+	 * :returns: JSON HTTP API Response.
+	 * :rtype: object
+	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
 
 		$client = new \Guzzle\Http\Client();
 
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
-		$request = $client->createRequest($method, $url, []);
+		$request = $client->createRequest($method, $url, array());
 
 		$request->setHeader('Accept', 'application/json');
 		$request->setHeader('Content-Type', 'application/json');
@@ -59,7 +68,7 @@ abstract class PostmarkClientBase {
 				case 'PUT':
 				case 'POST':
 				case 'PATCH':
-					$cleanBody = [];
+					$cleanBody = array();
 					foreach ($body as $key => $value) {
 						if ($value !== NULL) {
 							$cleanBody[$key] = $value;
@@ -75,6 +84,7 @@ abstract class PostmarkClientBase {
 		$result = $response->json();
 
 		return $result;
+
 	}
 }
 
