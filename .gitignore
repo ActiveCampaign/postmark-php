@@ -4,3 +4,4 @@ oracle.sqlite
 test_keys.json
 vendor
 build
+docs/_build

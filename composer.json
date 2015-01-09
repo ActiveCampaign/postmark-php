@@ -23,6 +23,6 @@
     },
     "scripts": {
         "test": "phpunit",
-        "document" : "mkdir -p docs && rm -r docs && mkdir -p docs && ./vendor/bin/sphpdox process --output=\"./docs\" Postmark src/Postmark"
+        "document" : "mkdir -p docs && mkdir -p docs/Postmark && rm -r docs/Postmark && ./vendor/bin/sphpdox process --output=\"./docs\" Postmark src/Postmark"
     }
 }
