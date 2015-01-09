@@ -34,6 +34,7 @@ abstract class PostmarkClientBase {
 
 	/**
 	 * The base request method for all API access.
+	 *
 	 * :param string $method:
 	 * :param string $path:
 	 * :param string $body:

@@ -15,7 +15,8 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Create a new PostmarkClient.
-	 * :param string $server_token:  The token associated with "Server" you'd like to use to send/receive email from.
+	 *
+	 * :param string $server_token: The token associated with "Server" you'd like to use to send/receive email from.
 	 */
 	function __construct($server_token) {
 		parent::__construct($server_token, 'X-Postmark-Server-Token');
@@ -23,6 +24,7 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Send an email.
+	 *
 	 * :param  string $from:
 	 * :param  string $to:
 	 * :param  string $subject:
@@ -35,7 +37,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :param  string $bcc:
 	 * :param  array $headers:
 	 * :param  array $attachments:
-	 * :return DynamicResponseModel:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
@@ -63,8 +65,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Send multiple emails as a batch
-	 * :param  array $emailBatch
-	 * :return DynamicResponseModel
+	 *
+	 * :param  array $emailBatch:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function sendEmailBatch($emailBatch = array()) {
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $emailBatch));
@@ -72,7 +75,8 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get an overview of the delivery statistics for all email that has been sent through this Server.
-	 * :return DynamicResponseModel
+	 *
+	 * :rtype: DyanamicResponseModel
 	 */
 	function getDeliveryStatistics() {
 		return new DynamicResponseModel($this->processRestRequest('GET', '/deliverystats'));
@@ -80,13 +84,14 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get a batch of bounces to be processed.
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :param  string $type
-	 * :param  bool $inactive
-	 * :param  string $emailFilter
-	 * :param  string $tag
-	 * :param  string $messageID
+	 *
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :param  string $type:
+	 * :param  bool $inactive:
+	 * :param  string $emailFilter:
+	 * :param  string $tag:
+	 * :param  string $messageID:
 	 * :return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
@@ -106,8 +111,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Locate information on a specific email bounce.
-	 * :param  integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $id:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function getBounce($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id"));
@@ -115,8 +121,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get a "dump" for a specific bounce.
-	 * :param  integer $id
-	 * :return string
+	 *
+	 * :param  integer $id:
+	 * :rtype: string
 	 */
 	function getBounceDump($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id/dump"));
@@ -124,8 +131,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Cause the email address associated with a Bounce to be reactivated.
-	 * :param  integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $id:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function activateBounce($id) {
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/bounces/$id/activate"));
@@ -133,7 +141,8 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get the list of tags associated with messages that have bounced.
-	 * :return Array
+	 *
+	 * :rtype: array
 	 */
 	function getBounceTags() {
 		return $this->processRestRequest('GET', '/bounces/tags');
@@ -142,7 +151,8 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get the settings for the server associated with this PostmarkClient instance
 	 * (defined by the $server_token you passed when instantiating this client)
-	 * :return DynamicResponseModel
+	 *
+	 * :rtype: DyanamicResponseModel
 	 */
 	function getServer() {
 		return new DynamicResponseModel($this->processRestRequest('GET', '/server'));
@@ -151,18 +161,19 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Modify the associated Server. Any parameters passed with NULL will be
 	 * ignored (their existing values will not be modified).
-	 * :param  string $name
-	 * :param  string $color
-	 * :param  bool $rawEmailEnabled
-	 * :param  bool $smtpApiActivated
-	 * :param  string $inboundHookUrl
-	 * :param  string $bounceHookUrl
-	 * :param  string $openHookUrl
-	 * :param  bool $postFirstOpenOnly
-	 * :param  bool $trackOpens
-	 * :param  string $inboundDomain
-	 * :param  integer $inboundSpamThreshold
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $name:
+	 * :param  string $color:
+	 * :param  bool $rawEmailEnabled:
+	 * :param  bool $smtpApiActivated:
+	 * :param  string $inboundHookUrl:
+	 * :param  string $bounceHookUrl:
+	 * :param  string $openHookUrl:
+	 * :param  bool $postFirstOpenOnly:
+	 * :param  bool $trackOpens:
+	 * :param  string $inboundDomain:
+	 * :param  integer $inboundSpamThreshold:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
 		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
@@ -187,13 +198,14 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Search messages that have been sent using this Server.
-	 * :param  string $recipient
-	 * :param  string $fromEmail
-	 * :param  string $tag
-	 * :param  string $subject
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :param  string $recipient:
+	 * :param  string $fromEmail:
+	 * :param  string $tag:
+	 * :param  string $subject:
+	 * :rtype: DyanamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
 		$fromEmail = NULL, $tag = NULL, $subject = NULL) {
@@ -211,8 +223,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get information related to a specific sent message.
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundMessageDetails($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/details"));
@@ -220,24 +233,27 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get the raw content for a message that was sent.
-	 * :param  integer $id
-	 * :return string
+	 *
+	 * :param  integer $id:
+	 * :rtype: string
 	 */
 	function getOutboundMessageDump($id) {
-		return $this->processRestRequest('GET', "/messages/outbound/$id/dump")['Body'];
+		$response = new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/dump"));
+		return $response->body;
 	}
 
 	/**
 	 * Get messages sent to the inbound email address associated with this Server.
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :param  string $recipient
-	 * :param  string $fromEmail
-	 * :param  string $tag
-	 * :param  string $subject
-	 * :param  string $mailboxHash
-	 * :param  string $status
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :param  string $recipient:
+	 * :param  string $fromEmail:
+	 * :param  string $tag:
+	 * :param  string $subject:
+	 * :param  string $mailboxHash:
+	 * :param  string $status:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getInboundMessages($count = 100, $offset = 0, $recipient = NULL, $fromEmail = NULL,
 		$tag = NULL, $subject = NULL, $mailboxHash = NULL, $status = NULL) {
@@ -256,8 +272,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get details for a specific inbound message.
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getInboundMessageDetails($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/inbound/$id/details"));
@@ -266,8 +283,9 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Allow an inbound message to be processed, even though the filtering rules would normally
 	 * prevent it from being processed.
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function bypassInboundMessageRules($id) {
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/bypass"));
@@ -275,21 +293,22 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get statistics for tracked messages, optionally filtering by various open event properties.
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :param  string $recipient
-	 * :param  string $tag
-	 * :param  string $clientName
-	 * :param  string $clientCompany
-	 * :param  string $clientFamily
-	 * :param  string $osName
-	 * :param  string $osFamily
-	 * :param  string $osCompany
-	 * :param  string $platform
-	 * :param  string $country
-	 * :param  string $region
-	 * :param  string $city
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :param  string $recipient:
+	 * :param  string $tag:
+	 * :param  string $clientName:
+	 * :param  string $clientCompany:
+	 * :param  string $clientFamily:
+	 * :param  string $osName:
+	 * :param  string $osFamily:
+	 * :param  string $osCompany:
+	 * :param  string $platform:
+	 * :param  string $country:
+	 * :param  string $region:
+	 * :param  string $city:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOpenStatistics($count = 100, $offset = 0, $recipient = NULL,
 		$tag = NULL, $clientName = NULL, $clientCompany = NULL, $clientFamily = NULL,
@@ -317,10 +336,11 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get information about individual opens for a sent message.
-	 * :param  integer $id
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $id:
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0) {
 		$query = array();
@@ -334,10 +354,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get an overview of the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -352,10 +373,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get send statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -370,10 +392,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -388,10 +411,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get SPAM complaint statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -406,10 +430,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -424,10 +449,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get open statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -442,10 +468,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get platform statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -460,10 +487,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get email client statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -478,10 +506,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get reading times for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
-	 * :param  string $tag
-	 * :param  string $fromdate must be of the format 'YYYY-MM-DD'
-	 * :param  string $todate must be of the format 'YYYY-MM-DD'
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $tag:
+	 * :param  string $fromdate: must be of the format 'YYYY-MM-DD'
+	 * :param  string $todate: must be of the format 'YYYY-MM-DD'
+	 * :rtype: DynamicResponseModel
 	 */
 	function getOutboundReadTimeStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
 		$query = array();
@@ -495,9 +524,10 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Create a Tag Trigger.
-	 * :param  string $matchName
-	 * :param  boolean $trackOpens
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $matchName:
+	 * :param  boolean $trackOpens:
+	 * :rtype: DynamicResponseModel
 	 */
 	function createTagTrigger($matchName, $trackOpens = true) {
 		$body = array();
@@ -509,8 +539,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Delete a Tag Trigger with the given ID.
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function deleteTagTrigger($id) {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/tags/$id"));
@@ -518,10 +549,11 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Locate Tag Triggers matching the filter criteria.
-	 * :param  integer $count
-	 * :param  integer $offset
-	 * :param  string $matchName
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $count:
+	 * :param  integer $offset:
+	 * :param  string $matchName:
+	 * :rtype: DynamicResponseModel
 	 */
 	function searchTagTriggers($count = 100, $offset = 0, $matchName = NULL) {
 		$query = array();
@@ -535,10 +567,11 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Edit an existing Tag Trigger
-	 * :param  integer $id
-	 * :param  string $matchName
-	 * :param  boolean $trackOpens
-	 * :return DynamicResponseModel
+	 *
+	 * :param  integer $id:
+	 * :param  string $matchName:
+	 * :param  boolean $trackOpens:
+	 * :rtype: DynamicResponseModel
 	 */
 	function editTagTrigger($id, $matchName, $trackOpens = true) {
 		$body = array();
@@ -550,8 +583,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Retrieve information related to the associated Tag Trigger
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function getTagTrigger($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/triggers/tags/$id"));
@@ -559,8 +593,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Create an Inbound Rule to block messages from a single email address, or an entire domain.
-	 * :param  string $rule
-	 * :return DynamicResponseModel
+	 *
+	 * :param  string $rule:
+	 * :rtype: DynamicResponseModel
 	 */
 	function createInboundRuleTrigger($rule) {
 		$body = array();
@@ -571,9 +606,10 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get a list of all existing Inbound Rule Triggers.
-	 * :param integer $count
-	 * :param integer $offset
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $count:
+	 * :param integer $offset:
+	 * :rtype: DynamicResponseModel
 	 */
 	function listInboundRuleTriggers($count = 100, $offset = 0) {
 		$query = array();
@@ -586,8 +622,9 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Delete an Inbound Rule Trigger.
-	 * :param integer $id
-	 * :return DynamicResponseModel
+	 *
+	 * :param integer $id:
+	 * :rtype: DynamicResponseModel
 	 */
 	function deleteInboundRuleTrigger($id) {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
