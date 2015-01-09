@@ -106,6 +106,8 @@ pygments_style = 'sphinx'
 sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
 html_theme = 'kr'
+html_show_sourcelink = False
+html_show_sphinx = False
 
 from sphinx.highlighting import lexers
 from pygments.lexers.web import PhpLexer
