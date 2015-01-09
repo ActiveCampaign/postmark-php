@@ -27,6 +27,7 @@ class DynamicResponseModel extends CaseInsensitiveArray {
 
 	/**
 	 * Create a new DynamicResponseModel from an associative array.
+	 *
 	 * :param Array $data: The source data.
 	 */
 	function __construct($data) {

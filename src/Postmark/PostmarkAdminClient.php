@@ -7,8 +7,8 @@ use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 /**
  * The PostmarkAdminClient allows users to access and modify
- * "Account-wide" settings. At this time the API supports
- * management of the "Sender Signatures", and "Servers."
+ *  "Account-wide" settings. At this time the API supports
+ *  management of the "Sender Signatures", and "Servers."
  */
 class PostmarkAdminClient extends PostmarkClientBase {
 
