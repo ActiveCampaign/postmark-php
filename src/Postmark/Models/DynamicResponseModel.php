@@ -8,7 +8,7 @@ namespace Postmark\Models;
  * Most responses from the PostmarkClient return a DynamicResponseModel, so understanding how it works is useful.
  *
  * Essentially, you can use either object or array index notation to lookup values. The member names are case insensitive,
- * so that that each of these are acceptable ways of accessing "id" on a server response, for example.
+ * so that each of these are acceptable ways of accessing "id" on a server response, for example.
  *
  * .. code-block:: php
  *
