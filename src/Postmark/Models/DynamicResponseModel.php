@@ -1,39 +1,46 @@
 <?php
-
+/**
+ * The DynamicResponseModel class.
+ */
 namespace Postmark\Models;
 
 /**
- * The DynamicResponseModel allows flexible and forgiving access to responses from the Postmark API.
+ * The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.
  *
  * Most responses from the PostmarkClient return a DynamicResponseModel, so understanding how it works is useful.
  *
  * Essentially, you can use either object or array index notation to lookup values. The member names are case insensitive,
- * so that each of these are acceptable ways of accessing "id" on a server response, for example.
+ * so that each of these are acceptable ways of accessing "id" on a server response, for example:
  *
- * .. code-block:: php
+ * ```
+ * //Create a client instance and get server info.
+ * $client = new PostmarkClient($server_token);
+ * $server = $client->getServer();
  *
- *      //Create a client instance and get server info.
- *      $client = new PostmarkClient($server_token);
- *      $server = $client->getServer();
- *
- *      //You have many ways of accessing the same members:
- *      $server->id;
- *      $server->Id;
- *      $server["id"];
- *      $server["ID"];
+ * //You have many ways of accessing the same members:
+ * $server->id;
+ * $server->Id;
+ * $server["id"];
+ * $server["ID"];
+ * ```
  */
-
 class DynamicResponseModel extends CaseInsensitiveArray {
 
 	/**
 	 * Create a new DynamicResponseModel from an associative array.
 	 *
-	 * :param Array $data: The source data.
+	 * @param array $data The source associative array.
 	 */
-	function __construct($data) {
+	function __construct(array $data) {
 		parent::__construct($data);
 	}
 
+	/**
+	 * Infrastructure. Get an element by name.
+	 *
+	 * @param string $name Name of element to get from the dynamic response model.
+	 *
+	 */
 	public function __get($name) {
 
 		$value = $this[$name];
@@ -47,8 +54,9 @@ class DynamicResponseModel extends CaseInsensitiveArray {
 		return $value;
 	}
 
-	// since we allow indexers, those should
-	// return dynamic response models when appropriate.
+	/**
+	 * Infrastructure. Allows indexer to return a DynamicResponseModel.
+	 */
 	public function offsetGet($offset) {
 		$result = parent::offsetGet($offset);
 		if ($result != NULL && is_array($result)) {
