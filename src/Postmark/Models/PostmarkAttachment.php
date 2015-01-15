@@ -14,11 +14,11 @@ class PostmarkAttachment implements \JsonSerializable {
 	}
 
 	public static function fromStream($stream, $attachmentName, $mimeType = NULL, $clientId = NULL) {
-
+		//TODO, base64_encode file.
 	}
 
 	public static function fromFile($filePath, $attachmentName, $mimeType = NULL, $clientId = NULL) {
-
+		//TODO, load from FS, then serialize
 	}
 
 	function jsonSerialize() {

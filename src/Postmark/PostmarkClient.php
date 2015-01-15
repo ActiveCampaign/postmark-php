@@ -52,7 +52,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['HtmlBody'] = $htmlBody;
 		$body['TextBody'] = $textBody;
 		$body['ReplyTo'] = $replyTo;
-		$body['Headers'] = $headers;
+		$body['Headers'] = $this->fixHeaders($headers);
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 
@@ -60,13 +60,46 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
+	 * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
+	 * therefore, we need to wrap the elements in an array.
+	 */
+	private function fixHeaders($headers) {
+		$retval = NULL;
+		if ($headers != NULL) {
+			$retval = [];
+			$index = 0;
+			foreach ($headers as $key => $value) {
+				$retval[$index] = [$key => $value];
+				$index++;
+			}
+		}
+		return $retval;
+	}
+
+	/**
 	 * Send multiple emails as a batch
 	 *
-	 * @param  array $emailBatch  An array of emails to be sent in one batch. Each email can be an associative array of values, but note that the 'Attachments' key must be an array of 'PostmarkAttachment' objects if you intend to send attachments with an email.
+	 * @param  array $emailBatch  An array of emails to be sent in one batch.
+	 * Each email can be an associative array of values, but note that the 'Attachments'
+	 * key must be an array of 'PostmarkAttachment' objects if you intend to send
+	 * attachments with an email.
+	 *
 	 * @return DyanamicResponseModel
 	 */
 	function sendEmailBatch($emailBatch = array()) {
-		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $emailBatch));
+
+		$final = [];
+
+		foreach ($emailBatch as $key => $email) {
+			foreach ($email as $emailIdx => $emailValue) {
+				if (strtolower($emailIdx) == 'headers') {
+					$email[$emailIdx] = $this->fixHeaders($emailValue);
+				}
+			}
+			array_push($final, $email);
+		}
+
+		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $final));
 	}
 
 	/**
