@@ -25,18 +25,18 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send an email.
 	 *
-	 * :param  string $from:
-	 * :param  string $to:
-	 * :param  string $subject:
-	 * :param  string $htmlBody:
-	 * :param  string $textBody:
-	 * :param  string $tag:
-	 * :param  boolean $trackOpens:
-	 * :param  string $replyTo:
-	 * :param  string $cc:
-	 * :param  string $bcc:
-	 * :param  array $headers:
-	 * :param  array $attachments:
+	 * :param  string $from: The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * :param  string $to: The recipient of the email.
+	 * :param  string $subject: The subject of the email.
+	 * :param  string $htmlBody: The HTML content of the message, optional if Text Body is specified.
+	 * :param  string $textBody: The text content of the message, optional if HTML Body is specified.
+	 * :param  string $tag: A tag associated with this message, useful for classifying sent messages.
+	 * :param  boolean $trackOpens: True if you want Postmark to track opens of HTML emails.
+	 * :param  string $replyTo: Reply to email address.
+	 * :param  string $cc: Carbon Copy recipients, comma-separated
+	 * :param  string $bcc: Blind Carbon Copy recipients, comma-separated.
+	 * :param  array $headers: Headers to be included with the sent email message.
+	 * :param  array $attachments: An array of PostmarkAttachment objects.
 	 * :rtype: DyanamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
@@ -54,19 +54,15 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['ReplyTo'] = $replyTo;
 		$body['Headers'] = $headers;
 		$body['TrackOpens'] = $trackOpens;
+		$body['Attachments'] = $attachments;
 
-		if ($attachments != NULL) {
-			//TODO: Support attachments.
-			throw new Exception('Attachment support has not yet been included.', 1);
-
-		}
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email', $body));
 	}
 
 	/**
 	 * Send multiple emails as a batch
 	 *
-	 * :param  array $emailBatch:
+	 * :param  array $emailBatch: An array of emails to be sent in one batch. Each email can be an associative array of values, but note that the 'Attachments' key must be an array of 'PostmarkAttachment' objects if you intend to send attachments with an email.
 	 * :rtype: DyanamicResponseModel
 	 */
 	function sendEmailBatch($emailBatch = array()) {

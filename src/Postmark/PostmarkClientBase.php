@@ -8,6 +8,7 @@
 
 namespace Postmark;
 
+use Postmark\Models\PostmarkException as PostmarkException;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 /**
@@ -43,47 +44,78 @@ abstract class PostmarkClientBase {
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
 
-		$client = new \Guzzle\Http\Client();
+		$client = new \GuzzleHttp\Client(['defaults' => [
+			'exceptions' => false,
+		],
+		]);
 
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
-		$request = $client->createRequest($method, $url, array());
-
-		$request->setHeader('Accept', 'application/json');
-		$request->setHeader('Content-Type', 'application/json');
-		$request->setHeader($this->authorization_header, $this->authorization_token);
+		$options = [];
 
 		if ($body != NULL) {
+			$cleanParams = [];
+
+			foreach ($body as $key => $value) {
+				if ($value !== NULL) {
+					$cleanParams[$key] = $value;
+				}
+			}
+
 			switch ($method) {
 				case 'GET':
 				case 'HEAD':
 				case 'DELETE':
 				case 'OPTIONS':
-					$query = $request->getQuery();
-					foreach ($body as $key => $value) {
-						if ($value !== NULL) {
-							$query[$key] = $value;
-						}
-					}
+					$options['query'] = $cleanParams;
 					break;
 				case 'PUT':
 				case 'POST':
 				case 'PATCH':
-					$cleanBody = array();
-					foreach ($body as $key => $value) {
-						if ($value !== NULL) {
-							$cleanBody[$key] = $value;
-						}
-					}
-					$json_body = json_encode($cleanBody);
-					$request->setBody($json_body);
+					$options['json'] = $cleanParams;
 					break;
 			}
 		}
 
-		$response = $client->send($request);
-		$result = $response->json();
+		$request = $client->createRequest($method, $url, $options);
 
+		$request->setHeader('Accept', 'application/json');
+		$request->setHeader('Content-Type', 'application/json');
+		$request->setHeader($this->authorization_header, $this->authorization_token);
+
+		$response = $client->send($request);
+
+		$result = NULL;
+
+		switch ($response->getStatusCode()) {
+			case 200:
+				$result = $response->json();
+				break;
+			case 401:
+
+				$ex = new PostmarkException();
+				$ex->message = 'Unauthorized: Missing or incorrect API token in header.';
+				$ex->httpStatusCode = 401;
+				throw $ex;
+				break;
+			case 422:
+				$ex = new PostmarkException();
+
+				$body = $response->json();
+
+				$ex->httpStatusCode = 401;
+				$ex->postmarkApiErrorCode = $body['ErrorCode'];
+				$ex->message = $body['Message'];
+
+				throw $ex;
+				break;
+			case 500:
+				$ex = new PostmarkException();
+				$ex->httpStatusCode = 500;
+				$ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. In most cases the message is lost during the process, and we are notified so that we can investigate the issue.';
+				throw $ex;
+				break;
+		}
 		return $result;
 
 	}
