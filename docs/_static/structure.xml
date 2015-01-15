@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project title="API Documentation" version="2.8.1">
   <partials/>
-  <file path="Models/CaseInsensitiveArray.php" generated-path="Models.CaseInsensitiveArray.html" hash="273167bf42a3d52985fd61f804483042" package="Postmark-PHP">
+  <file path="Models/CaseInsensitiveArray.php" generated-path="Models.CaseInsensitiveArray.html" hash="8b9528438ed987a5fe1eabc1eef11413" package="Postmark-PHP">
     <docblock line="0">
-      <description></description>
+      <description>CaseInsensitiveArray allows accessing elements with mixed-case keys.</description>
       <long-description></long-description>
       <tag name="package" line="0" description="Postmark-PHP"/>
     </docblock>
-    <class final="false" abstract="false" namespace="Postmark\Models" line="10" package="Postmark-PHP">
+    <class final="false" abstract="false" namespace="Postmark\Models" line="13" package="Postmark-PHP">
       <extends/>
       <implements>\ArrayAccess</implements>
       <implements>\Iterator</implements>
       <name>CaseInsensitiveArray</name>
       <full_name>\Postmark\Models\CaseInsensitiveArray</full_name>
-      <docblock line="10">
+      <docblock line="13">
         <description>CaseInsensitiveArray allows accessing elements with mixed-case keys.</description>
         <long-description>This allows access to the array to be very forgiving. (i.e. If you access something
 with the wrong CaSe, it'll still find the correct element)</long-description>
-        <tag name="package" line="10" description="Postmark-PHP"/>
+        <tag name="package" line="13" description="Postmark-PHP"/>
       </docblock>
-      <property static="false" visibility="private" namespace="Postmark\Models" line="11" package="Postmark-PHP">
+      <property static="false" visibility="private" namespace="Postmark\Models" line="14" package="Postmark-PHP">
         <name>$_container</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::_container</full_name>
         <default>array()</default>
-        <docblock line="11">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </property>
-      <property static="false" visibility="private" namespace="Postmark\Models" line="12" package="Postmark-PHP">
-        <name>$_pointer</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::_pointer</full_name>
-        <default>0</default>
-        <docblock line="12">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="14" package="Postmark-PHP">
-        <name>__construct</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::__construct()</full_name>
         <docblock line="14">
           <description></description>
           <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="Postmark\Models" line="15" package="Postmark-PHP">
+        <name>$_pointer</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::_pointer</full_name>
+        <default>0</default>
+        <docblock line="15">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="22" package="Postmark-PHP">
+        <name>__construct</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::__construct()</full_name>
+        <docblock line="22">
+          <description>Initialize a CaseInsensitiveArray from an existing array.</description>
+          <long-description></long-description>
+          <tag name="param" line="22" description="" type="array" variable="$initial_array">
+            <type>array</type>
+          </tag>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$initial_array</name>
@@ -50,10 +53,10 @@ with the wrong CaSe, it'll still find the correct element)</long-description>
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="18" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="26" package="Postmark-PHP">
         <name>offsetSet</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::offsetSet()</full_name>
-        <docblock line="18">
+        <docblock line="26">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -68,22 +71,9 @@ with the wrong CaSe, it'll still find the correct element)</long-description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="30" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="38" package="Postmark-PHP">
         <name>offsetExists</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::offsetExists()</full_name>
-        <docblock line="30">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$offset</name>
-          <default></default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="38" package="Postmark-PHP">
-        <name>offsetUnset</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetUnset()</full_name>
         <docblock line="38">
           <description></description>
           <long-description></long-description>
@@ -95,8 +85,8 @@ with the wrong CaSe, it'll still find the correct element)</long-description>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="46" package="Postmark-PHP">
-        <name>offsetGet</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetGet()</full_name>
+        <name>offsetUnset</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetUnset()</full_name>
         <docblock line="46">
           <description></description>
           <long-description></long-description>
@@ -108,80 +98,91 @@ with the wrong CaSe, it'll still find the correct element)</long-description>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="54" package="Postmark-PHP">
-        <name>current</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::current()</full_name>
+        <name>offsetGet</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetGet()</full_name>
         <docblock line="54">
           <description></description>
           <long-description></long-description>
         </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type/>
+        </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="60" package="Postmark-PHP">
-        <name>key</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::key()</full_name>
-        <docblock line="60">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="64" package="Postmark-PHP">
-        <name>next</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::next()</full_name>
-        <docblock line="64">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="62" package="Postmark-PHP">
+        <name>current</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::current()</full_name>
+        <docblock line="62">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="68" package="Postmark-PHP">
-        <name>rewind</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::rewind()</full_name>
+        <name>key</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::key()</full_name>
         <docblock line="68">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="72" package="Postmark-PHP">
+        <name>next</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::next()</full_name>
+        <docblock line="72">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="76" package="Postmark-PHP">
+        <name>rewind</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::rewind()</full_name>
+        <docblock line="76">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="80" package="Postmark-PHP">
         <name>valid</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::valid()</full_name>
-        <docblock line="72">
+        <docblock line="80">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
     </class>
     <parse_markers>
-      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
-      <error line="14" code="PPC:ERR-50015">Argument $initial_array is missing from the Docblock of __construct</error>
-      <error line="14" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="18" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetSet</error>
-      <error line="18" code="PPC:ERR-50015">Argument $value is missing from the Docblock of offsetSet</error>
-      <error line="18" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="30" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetExists</error>
-      <error line="30" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="38" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetUnset</error>
+      <error line="22" code="PPC:ERR-50015">Argument $initial_array is missing from the Docblock of __construct</error>
+      <error line="26" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetSet</error>
+      <error line="26" code="PPC:ERR-50015">Argument $value is missing from the Docblock of offsetSet</error>
+      <error line="26" code="PPC:ERR-50008">No summary for method ""</error>
+      <error line="38" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetExists</error>
       <error line="38" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="46" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetGet</error>
+      <error line="46" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetUnset</error>
       <error line="46" code="PPC:ERR-50008">No summary for method ""</error>
+      <error line="54" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetGet</error>
       <error line="54" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="60" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="64" code="PPC:ERR-50008">No summary for method ""</error>
+      <error line="62" code="PPC:ERR-50008">No summary for method ""</error>
       <error line="68" code="PPC:ERR-50008">No summary for method ""</error>
       <error line="72" code="PPC:ERR-50008">No summary for method ""</error>
-      <error line="11" code="PPC:ERR-50007">No summary for property $_container</error>
-      <error line="12" code="PPC:ERR-50007">No summary for property $_pointer</error>
+      <error line="76" code="PPC:ERR-50008">No summary for method ""</error>
+      <error line="80" code="PPC:ERR-50008">No summary for method ""</error>
+      <error line="14" code="PPC:ERR-50007">No summary for property $_container</error>
+      <error line="15" code="PPC:ERR-50007">No summary for property $_pointer</error>
     </parse_markers>
-    <source>eJytVE1r20AQPVu/YgiG2vmwe27ahBBKyaFQSHtKglivRtEQeVfsjGSb0v/ekWQ58YdMobmI1e7Om/fe7Mzn6yIrosiZOXJhLMIPzzI34eXxu08w58somp6eRnAKt4bxzjE6JqEKb0IwKzB57hcMxlpkJvcMmOMcnTAsSDKY0xKTC6uR8IIrntQ4PzPi7TgQD5IhmAZSf2YIFYYVpD48U6WwExjRBCdwl8LKl10Y+zlKpsc1bJOvRlkErzxuzT2eA8mHPAcW0m9KLmkuWB8CWumojjV6GtncKOJBjTQvOlGPzc5Nk/4cHu8EgxEf4Hc0KAJVRhCGsfVODDkM8KWVNBpfvj0vPDlpTj+qu4OinOVkIS2dFfIO4hqAJZRWRi2BITmlY/K4NWiDOq7zDoZqAV9c7aeNbWbcM8bqfFyXYLSNU5P6cyC/T1NGuUcZDdvlOQwrk5fYpqNUa8GxElTjuytrKoP1rzLQc/FaYwybO5qvSdhBuDLP9wB2xTw8KVibv4nXqulj6rm7BtsJOSbz65JYeMPivRQGlDI4IObaxl6ex0vwy/FrEd6NWun+h9O392b0717B9aHH/lrzT1A/qB72ttSedzJqiU2nUOorOtloOgHSlkOTqExdJrhEbu9xPZqMAJezZkQggzXqhs6nQAnqqMpMRToC1AiHmGAyedW0ZvvGunZDO1K7t4dqc9jQXKO0zVzPz317xg/d1nqqPPWgOlx26ncizs56QgIu1IrDQe3wOhimjUfJtgLrS/X+qI4xXMFOjgZfM1xf/QU2XzLS</source>
+    <source>eJytVNtq20AQfZa+YgiG2rnYfW7apCGU4odCIe1TEsxmNYqGSLtiZ+VLS/+9syspTnwJhfpFaC9z5pwzO/Pxsi7qdHJ8nMIxXCvGqWE0TJ7meOWcWoEqS7tgUFojM5lHwBIrNJ5hQb6AipaYnWmJhCdc8VhwJqlRFXKtNMJ3y75S7unum82w5PP0wLkC1I+C+HUoeAu+QFARVRYPCHN0K8ite6S5II9hSGMcwzSHlW36MLYV+kKOA2xMGVAWzgqVa3WDp0D+XVkCe5JvTiaLF7R1DrXv2Y6iB7pUgrhTJlV1r+su7lzF9KdwN/XolLcOfqdJ7WiuPMJgpq3xigw6+NRKGo7OX57XloyPp+/F4CQ4nEyNJFQl/RIXdrPIna1AGcAliR5RGKHHAvC5Vk5VnXsDapFmcZkmQVtSNw8lacgboz1ZA7PAkb1rtB9e7QhbEx8FaclAXOazi21lM10o84gzqe8sFHr4Gifo/pNu57d5zuhv0A8H7e8pDOaqbLBNR7mUm2dCUHT2VzoqSbcUBnLurTwjdM93JF9M2EOYpiy3ADbF3N4LWJs/xsvDkCe7524HthHylswvoWD8zOJQCh36xhkg5mDjXp5vl+Cn4XURDkatMf/D6euhGf27V3C567Gva/4BwoPaw143MlaMH7bEJhNo5BUdPWs6ApKWQ5WJTPnNcInc3uMw/ZQHbh7iFEIGLY1uZQQ6ylCmYaHmJFNGjDCIGWbjtaaO7Qvr2g3pSOnePVTjYaTZobTNHKb0tj2j236rG1z3e1ANLnv1GxEnJ3tCHC7Eit1B7XzcGSaNR9lrBdo24v2bOkZwARs5Ir5kuLz4C/L/b5k=</source>
   </file>
-  <file path="Models/DynamicResponseModel.php" generated-path="Models.DynamicResponseModel.html" hash="c6e52e2cf0e65138643f13fae2b927dc" package="Postmark-PHP">
+  <file path="Models/DynamicResponseModel.php" generated-path="Models.DynamicResponseModel.html" hash="dbb176e8771ce4a6f1bbd74f45b3a196" package="Postmark-PHP">
     <docblock line="0">
-      <description>The DynamicResponseModel class.</description>
+      <description></description>
       <long-description></long-description>
       <tag name="package" line="0" description="Postmark-PHP"/>
     </docblock>
-    <class final="false" abstract="false" namespace="Postmark\Models" line="27" package="Postmark-PHP">
+    <class final="false" abstract="false" namespace="Postmark\Models" line="24" package="Postmark-PHP">
       <extends>\Postmark\Models\CaseInsensitiveArray</extends>
       <name>DynamicResponseModel</name>
       <full_name>\Postmark\Models\DynamicResponseModel</full_name>
-      <docblock line="27">
+      <docblock line="24">
         <description>The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.</description>
         <long-description>Most responses from the PostmarkClient return a DynamicResponseModel, so understanding how it works is useful.
 
@@ -199,64 +200,60 @@ $server-&gt;Id;
 $server["id"];
 $server["ID"];
 ```</long-description>
-        <tag name="package" line="27" description="Postmark-PHP"/>
+        <tag name="package" line="24" description="Postmark-PHP"/>
         <tag name="inherited_from" description="\Postmark\Models\CaseInsensitiveArray" refers="\Postmark\Models\CaseInsensitiveArray" link="/classes/Postmark.Models.CaseInsensitiveArray.html"/>
       </docblock>
-      <property static="false" visibility="private" namespace="Postmark\Models" line="11" package="Postmark-PHP">
+      <property static="false" visibility="private" namespace="Postmark\Models" line="14" package="Postmark-PHP">
         <name>$_container</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::_container</full_name>
         <default>array()</default>
-        <docblock line="11">
+        <docblock line="14">
           <description></description>
           <long-description></long-description>
         </docblock>
       </property>
-      <property static="false" visibility="private" namespace="Postmark\Models" line="12" package="Postmark-PHP">
+      <property static="false" visibility="private" namespace="Postmark\Models" line="15" package="Postmark-PHP">
         <name>$_pointer</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::_pointer</full_name>
         <default>0</default>
-        <docblock line="12">
+        <docblock line="15">
           <description></description>
           <long-description></long-description>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="34" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="31" package="Postmark-PHP">
         <name>__construct</name>
         <full_name>\Postmark\Models\DynamicResponseModel::__construct()</full_name>
-        <docblock line="34">
+        <docblock line="31">
           <description>Create a new DynamicResponseModel from an associative array.</description>
           <long-description></long-description>
-          <tag name="param" line="34" description="&lt;p&gt;The source associative array.&lt;/p&gt;" type="array" variable="$data">
-            <type>array</type>
-          </tag>
+          <tag name="param" line="31" description="&lt;p&gt;The source associative array.&lt;/p&gt;" type="" variable="$data"/>
           <tag name="inherited_from" description="\Postmark\Models\CaseInsensitiveArray::__construct()" refers="\Postmark\Models\CaseInsensitiveArray::__construct()" link="/classes/Postmark.Models.CaseInsensitiveArray.html#method___construct"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$data</name>
           <default></default>
-          <type>array</type>
+          <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="44" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="41" package="Postmark-PHP">
         <name>__get</name>
         <full_name>\Postmark\Models\DynamicResponseModel::__get()</full_name>
-        <docblock line="44">
+        <docblock line="41">
           <description>Infrastructure. Get an element by name.</description>
           <long-description></long-description>
-          <tag name="param" line="44" description="&lt;p&gt;Name of element to get from the dynamic response model.&lt;/p&gt;" type="string" variable="$name">
-            <type>string</type>
-          </tag>
+          <tag name="param" line="41" description="&lt;p&gt;Name of element to get from the dynamic response model.&lt;/p&gt;" type="" variable="$name"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$name</name>
           <default></default>
-          <type>string</type>
+          <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="60" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="57" package="Postmark-PHP">
         <name>offsetGet</name>
         <full_name>\Postmark\Models\DynamicResponseModel::offsetGet()</full_name>
-        <docblock line="60">
+        <docblock line="57">
           <description>Infrastructure. Allows indexer to return a DynamicResponseModel.</description>
           <long-description></long-description>
           <tag name="inherited_from" description="\Postmark\Models\CaseInsensitiveArray::offsetGet()" refers="\Postmark\Models\CaseInsensitiveArray::offsetGet()" link="/classes/Postmark.Models.CaseInsensitiveArray.html#method_offsetGet"/>
@@ -267,12 +264,15 @@ $server["ID"];
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="14" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="22" package="Postmark-PHP">
         <name>__construct</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::__construct()</full_name>
-        <docblock line="14">
-          <description></description>
+        <docblock line="22">
+          <description>Initialize a CaseInsensitiveArray from an existing array.</description>
           <long-description></long-description>
+          <tag name="param" line="22" description="" type="array" variable="$initial_array">
+            <type>array</type>
+          </tag>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$initial_array</name>
@@ -281,10 +281,10 @@ $server["ID"];
         </argument>
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="18" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="26" package="Postmark-PHP">
         <name>offsetSet</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::offsetSet()</full_name>
-        <docblock line="18">
+        <docblock line="26">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -300,23 +300,9 @@ $server["ID"];
         </argument>
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="30" package="Postmark-PHP">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="38" package="Postmark-PHP">
         <name>offsetExists</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::offsetExists()</full_name>
-        <docblock line="30">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$offset</name>
-          <default></default>
-          <type/>
-        </argument>
-        <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="38" package="Postmark-PHP">
-        <name>offsetUnset</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetUnset()</full_name>
         <docblock line="38">
           <description></description>
           <long-description></long-description>
@@ -329,8 +315,8 @@ $server["ID"];
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="46" package="Postmark-PHP">
-        <name>offsetGet</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetGet()</full_name>
+        <name>offsetUnset</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetUnset()</full_name>
         <docblock line="46">
           <description></description>
           <long-description></long-description>
@@ -343,35 +329,31 @@ $server["ID"];
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="54" package="Postmark-PHP">
-        <name>current</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::current()</full_name>
+        <name>offsetGet</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::offsetGet()</full_name>
         <docblock line="54">
           <description></description>
           <long-description></long-description>
         </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type/>
+        </argument>
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="60" package="Postmark-PHP">
-        <name>key</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::key()</full_name>
-        <docblock line="60">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="64" package="Postmark-PHP">
-        <name>next</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::next()</full_name>
-        <docblock line="64">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="62" package="Postmark-PHP">
+        <name>current</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::current()</full_name>
+        <docblock line="62">
           <description></description>
           <long-description></long-description>
         </docblock>
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="68" package="Postmark-PHP">
-        <name>rewind</name>
-        <full_name>\Postmark\Models\CaseInsensitiveArray::rewind()</full_name>
+        <name>key</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::key()</full_name>
         <docblock line="68">
           <description></description>
           <long-description></long-description>
@@ -379,9 +361,27 @@ $server["ID"];
         <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="72" package="Postmark-PHP">
+        <name>next</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::next()</full_name>
+        <docblock line="72">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="76" package="Postmark-PHP">
+        <name>rewind</name>
+        <full_name>\Postmark\Models\CaseInsensitiveArray::rewind()</full_name>
+        <docblock line="76">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <inherited_from>\Postmark\Models\CaseInsensitiveArray</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Postmark\Models" line="80" package="Postmark-PHP">
         <name>valid</name>
         <full_name>\Postmark\Models\CaseInsensitiveArray::valid()</full_name>
-        <docblock line="72">
+        <docblock line="80">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -389,11 +389,12 @@ $server["ID"];
       </method>
     </class>
     <parse_markers>
-      <error line="34" code="PPC:ERR-50015">Argument $data is missing from the Docblock of __construct</error>
-      <error line="44" code="PPC:ERR-50015">Argument $name is missing from the Docblock of __get</error>
-      <error line="60" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetGet</error>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="31" code="PPC:ERR-50015">Argument $data is missing from the Docblock of __construct</error>
+      <error line="41" code="PPC:ERR-50015">Argument $name is missing from the Docblock of __get</error>
+      <error line="57" code="PPC:ERR-50015">Argument $offset is missing from the Docblock of offsetGet</error>
     </parse_markers>
-    <source>eJyNlG1P2zAQx18nn+KGqq1FpXnfDhiCCVUChPbwYmJTcZML8UjsyHb6oGnffXd20pZR2N70wff33+ff3fn9aV3UcXJ4GMMhfCkQLtZKVDL9hLbWyuK1zrCEtBTWjkiSxBSlkEgRbrV1lTCP373GTuL/swFRlnppIS9xJeclglAZ5No8yIVUDyDSFEnkNJh2L0mNrsAV2yPh7HbK6fBp17T2mva8lKhY4RqjQOzNbAhWQ6MyNNZROpxHoZcgHSy1ebQgLTQW86bsDv1oLZlKusp6CGvdQCoUSwAlnW1Az39i6kAbEMaINUjyXoHSTjipFd+u1PqxqWEhygbtyDOrsJrTXk+Y9iGZkqOkJJWVTi5wyEdTpq4QDlCkBeic70oqljO62glmuhRry8FAk+9zILMD0AzAolnQMR2yIcMHXImqLnHc3u/+/p6/kuTcoHBkTbXzGCkbIpSGqj2g69ykyjXDgV4rPAaFy7+K0O8F9czpR1SDide3BsfdzqMTsv3sF/teEhL5RpALsSBKQq333I9LbolcS9GOd8yPTmQ2efJ/+uT/HcP58XRletGuBBRJHJp3b1/jyqHKLJxTvabbcp350v+K44gHIyKvDU1ms9fKty/1Ep2lUynYJrTQiA28yYdaGFG1jdXLhBO+e6xuDNdl78YkjvJGpb75ZrOUznOmSV1/x2RAmUYReVMNxuNdUQhP4uj3zlWmKjciCBqDI7ikXqC8scSKyz9f+z5+ljXt4Gr1OAg3/EFV7DbRWHBLbUY4C4Q2rQoVM9p40qXqZl6SYOduZND37gNPPur5CeP2coW0dz5EhaVIksDUj4/BdzRvYRR9X0vHCyrwGwYp4aC+cPwmUJrieW5h5IcUpUGIIplDvz37zTHcfL26grdv6SGZedM2NAjQt0m+1BednorgqxC1z1lY/kdpzsKD698gmjT/tL7yGI5eYKvz3KK7ZL7hZ0i+RwSakge+653nwkkHpNXuJRJiGyQb25eZtDsClC2TsOyhEJbTkz8ZA0Hn</source>
+    <source>eJyFlNtu2zAMhq/tp+CKoEuKNLlP1nZFOxQB2qLY4WLohlSx6VqLLRmSnAOGvftIyc5hTbubHKRfP6mPpD5cVHkVK1GirUSC8KCtK4WZ/7jTKRZ2HMfDk5MYTuBrjnC9JqFMPpNWK4teAkkhrAVRFHppIStwJWcFglApZNo8y4VUzyCSBEnkNJjmLEmNLsHl25Bw+TAZUCiOdkdrb2mvComKFa42CsTBzPpgNdQqRWMdpcN55HoJ0sFSm7kFaaG2mNVFG/STtWQq6SrrPqx1DYlQLAGUFNuAnv3CxIE2IIwRa5DkvQKlnXBSK75dofW8rmAhihrtwDMrsZzRWU+YziGZkqOkJJWVTi6wz6EpU5cLByiSHHTGdyUVyxld5QQzXYq15c1Ak+9zJNMj0AzAollQmBZZn+EDrkRZFThq7vf09MRfw+GVQeHImmrnMVI2RCgJVXtG17pJlWmGA51GeAYKl/8UodsJ6qnTc1S9sdc3BmftydNzsv3iF7teEhL5TpBzsSBKQq0P3I9LbolcQ9GOdsxPz2U63vs/2fv/yHB+7q9MrpuVgGIYh+Y92Ne4cqhSC1dUr8m2XJe+9L/jOOLBiMhrQ5PZHLTy7Uu9RLF0IgXbhBYasIE3+VgJI0ropMIJ3zdW14YrcvDIMI6yWiW+7abThCI5UyeuG/rSm/QoxygiV6I/Gu2KwvY4jv7sXGKiMiOCoDY4gBvqAsoYCyy58LO17+CX+fIq3PMHFa5V0yRwF22mNg1QNt0JJWPZmNFtqnpWkGDnUmTQ9e49Dzvq+KHijnK5tI9+i2pJO8MhTPzEGHxPIxamz7eydLygArh+kBIHagXHzwClKV7mFqa8T7vU+1EkM+g2sd+dwf2321s4Pqa3Y+pNm61eoL1N8rVWaPVE3+OPmhcsLP+nJpfhjfXPDg2Xf03feP8Gr7DVWWbR3TDf8DMk3yECdcEz3jbNS+G4BdJoDxIJexskG9vXmTQnApQtk7DsoRCWi/O/e7Evww==</source>
   </file>
   <file path="Models/PostmarkAttachment.php" generated-path="Models.PostmarkAttachment.html" hash="41ddc67d5d9b72ea026473f9b3873d54" package="Postmark-PHP">
     <docblock line="0">

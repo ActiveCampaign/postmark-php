@@ -1,2 +1,0 @@
-sphinxcontrib-phpdomain
-hg+https://bitbucket.org/tk0miya/tk.phpautodoc

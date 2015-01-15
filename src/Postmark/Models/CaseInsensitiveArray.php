@@ -1,9 +1,9 @@
 <?php
-
 namespace Postmark\Models;
 
 /**
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.
+ *
  * This allows access to the array to be very forgiving. (i.e. If you access something
  * with the wrong CaSe, it'll still find the correct element)
  */
@@ -11,10 +11,21 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	private $_container = array();
 	private $_pointer = 0;
 
+	/**
+	 * Initialize a CaseInsensitiveArray from an existing array.
+	 *
+	 * @param array $initial_array
+	 */
 	public function __construct(Array $initial_array = array()) {
 		$this->_container = array_change_key_case($initial_array);
 	}
 
+	/**
+	 * Assign a value at the specified offset.
+	 *
+	 * @param mixed $offset The key of of the value being set.
+	 * @param mixed $value The value being set.
+	 */
 	public function offsetSet($offset, $value) {
 		if (is_string($offset)) {
 			$offset = strtolower($offset);

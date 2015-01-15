@@ -1,7 +1,4 @@
 <?php
-/**
- * The DynamicResponseModel class.
- */
 namespace Postmark\Models;
 
 /**
@@ -38,8 +35,7 @@ class DynamicResponseModel extends CaseInsensitiveArray {
 	/**
 	 * Infrastructure. Get an element by name.
 	 *
-	 * @param string $name Name of element to get from the dynamic response model.
-	 *
+	 * @param mixed $name Name of element to get from the dynamic response model.
 	 */
 	public function __get($name) {
 

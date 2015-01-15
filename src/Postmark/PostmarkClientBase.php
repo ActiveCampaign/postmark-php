@@ -3,7 +3,7 @@
 /*
  * Author:   Wildbit (http://wildbit.com)
  * License:  http://creativecommons.org/licenses/MIT/ MIT
- * Link:     https://postmark-php.readthedocs.org/en/latest/
+ * Link:     https://github.com/wildbit/postmark-php/
  */
 
 namespace Postmark;
@@ -21,26 +21,30 @@ abstract class PostmarkClientBase {
 	 * BASE_URL is "https://api.postmarkapp.com"
 	 *
 	 * You may modify this value to disable SSL support, but it is not recommended.
-	 * :var string:
+	 * @var string
 	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
 
 	protected $authorization_token = NULL;
 	protected $authorization_header = NULL;
+	protected $version = NULL;
+	protected $os = NULL;
 
 	protected function __construct($token, $header) {
 		$this->authorization_header = $header;
 		$this->authorization_token = $token;
+		$this->version = phpversion();
+		$this->os = PHP_OS;
 	}
 
 	/**
 	 * The base request method for all API access.
 	 *
-	 * :param string $method:
-	 * :param string $path:
-	 * :param string $body:
+	 * @param string $method
+	 * @param string $path
+	 * @param string $body
 	 * :returns: JSON HTTP API Response.
-	 * :rtype: object
+	 * @return object
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
 
@@ -79,6 +83,11 @@ abstract class PostmarkClientBase {
 
 		$request = $client->createRequest($method, $url, $options);
 
+		$v = $this->version;
+		$o = $this->os;
+
+		//TODO: include version info in the request.
+		$request->setHeader('User-Agent', "Postmark-PHP (PHP Version:$v, OS:$o)");
 		$request->setHeader('Accept', 'application/json');
 		$request->setHeader('Content-Type', 'application/json');
 		$request->setHeader($this->authorization_header, $this->authorization_token);
