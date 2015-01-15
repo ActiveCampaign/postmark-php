@@ -1,6 +1,6 @@
 ### Postmark-PHP
 
-**postmark-php** is the _officially supported_ PHP library for [Postmark](http://postmarkapp.com).
+**Postmark-PHP** is the _officially supported_ PHP library for [Postmark](http://postmarkapp.com).
 
 With Postmark, you can send and _receive_ emails effortlessly.
 
