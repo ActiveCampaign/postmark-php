@@ -30,7 +30,7 @@ class PostmarkAttachment implements \JsonSerializable {
 		];
 
 		if ($this->clientId != NULL) {
-			$retval["ClientId"] = $clientId;
+			$retval["ClientId"] = $this->clientId;
 		}
 
 		return $retval;
