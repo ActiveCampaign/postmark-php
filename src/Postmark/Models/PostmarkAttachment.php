@@ -6,19 +6,19 @@ class PostmarkAttachment implements \JsonSerializable {
 
 	private $name;
 	private $mimeType;
-	private $clientId;
 	private $data;
 
-	public static function fromRawData($data, $attachmentName, $mimeType = NULL, $clientId = NULL) {
-		return new PostmarkAttachment(base64_encode($data), $attachmentName, $mimeType, $clientId);
+	public static function fromRawData($data, $attachmentName, $mimeType = NULL) {
+		return new PostmarkAttachment(base64_encode($data), $attachmentName, $mimeType);
 	}
 
-	public static function fromStream($stream, $attachmentName, $mimeType = NULL, $clientId = NULL) {
-		//TODO, base64_encode file.
+	/*
+	public static function fromStream($stream, $attachmentName, $mimeType = NULL) {
+	return new PostmarkAttachment($stream, $attachmentName, $mimeType);
 	}
-
-	public static function fromFile($filePath, $attachmentName, $mimeType = NULL, $clientId = NULL) {
-		//TODO, load from FS, then serialize
+	 */
+	public static function fromFile($filePath, $attachmentName, $mimeType = NULL) {
+		return new PostmarkAttachment(base64_encode(file_get_contents($filePath)), $attachmentName, $mimeType);
 	}
 
 	function jsonSerialize() {
@@ -27,20 +27,16 @@ class PostmarkAttachment implements \JsonSerializable {
 			"Name" => $this->name,
 			"Content" => $this->data,
 			"ContentType" => $this->mimeType ?: "application/octet-stream",
+			"ContentId" => $this->name,
 		];
-
-		if ($this->clientId != NULL) {
-			$retval["ClientId"] = $this->clientId;
-		}
 
 		return $retval;
 	}
 
-	private function __construct($base64EncodedData, $attachmentName, $mimeType = "application/octet-stream", $clientId = NULL) {
+	private function __construct($base64EncodedData, $attachmentName, $mimeType = "application/octet-stream") {
 		$this->name = $attachmentName;
 		$this->data = $base64EncodedData;
 		$this->mimeType = $mimeType;
-		$this->clientId = $clientId;
 	}
 
 }

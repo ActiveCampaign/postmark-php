@@ -24,7 +24,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$this->assertNotEmpty($response, 'The client could not send a basic message.');
 	}
 
-	function testClientCanSendMessageWithAttachment() {
+	function testClientCanSendMessageWithRawAttachment() {
 		$tk = parent::$testKeys;
 
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
@@ -32,12 +32,33 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$currentTime = date("c");
 
 		$attachment = PostmarkAttachment::fromRawData("attachment content",
-			"hello.txt", "text/plain", "textattachment1");
+			"hello.txt", "text/plain");
 
 		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
 			"Hello from the PHP Postmark Client Tests! ($currentTime)",
 			'<b>Hi there!</b>',
+			'This is a text body for a test email.',
+			NULL, true, NULL, NULL, NULL,
+			["X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'], [$attachment]);
+
+		$this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
+	}
+
+	function testClientCanSendMessageWithFileSystemAttachment() {
+		$tk = parent::$testKeys;
+
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+
+		$currentTime = date("c");
+
+		$attachment = PostmarkAttachment::fromFile(dirname(__FILE__) . '/postmark-logo.png',
+			"hello.png", "image/png");
+
+		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+			"Hello from the PHP Postmark Client Tests! ($currentTime)",
+			'<b>Hi there! From <img src="cid:hello.png"/></b>',
 			'This is a text body for a test email.',
 			NULL, true, NULL, NULL, NULL,
 			["X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'], [$attachment]);
@@ -53,7 +74,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$batch = [];
 
 		$attachment = PostmarkAttachment::fromRawData("attachment content",
-			"hello.txt", "text/plain", "textattachment1");
+			"hello.txt", "text/plain");
 
 		for ($i = 0; $i < 5; $i++) {
 			$payload = [
