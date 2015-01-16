@@ -15,18 +15,20 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	/**
 	 * Create a new PostmarkAdminClient.
 	 *
-	 * @param string $account_token The Account Token used to access the Admin API.
+	 * @param string $accountToken The Account Token used to access the Admin API.
 	 * This token is NOT the same as a Server Token. You can get your account token
 	 * from this page: https://postmarkapp.com/account/edit
+	 *
+	 * @param integer $timeout The timeout, in seconds, that API calls should wait before throwing an exception.
 	 */
-	function __construct($account_token, $timeout = 30) {
-		parent::__construct($account_token, "X-Postmark-Account-Token", $timeout);
+	function __construct($accountToken, $timeout = 30) {
+		parent::__construct($accountToken, "X-Postmark-Account-Token", $timeout);
 	}
 
 	/**
 	 * Request a given server by ID.
 	 *
-	 * @param int $id  The Id for the server you wish to retrieve.
+	 * @param int $id The Id for the server you wish to retrieve.
 	 * @return DynamicResponseModel
 	 */
 	function getServer($id) {
@@ -38,7 +40,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 *
 	 * @param integer $count  The number of servers to retrieve in the request, defaults to 100.
 	 * @param integer $offset  The number of servers to "skip" when paging through lists of servers.
-	 * @param string $name
+	 * @param string $name Filter by server name.
 	 * @return DynamicResponseModel
 	 */
 	function listServers($count = 100, $offset = 0, $name = NULL) {
@@ -55,7 +57,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * contact support and request that they enable this feature on your account before you can use this
 	 * client to delete Servers.
 	 *
-	 * @param  integer $id  The ID of the Server to delete.
+	 * @param  integer $id The ID of the Server to delete.
 	 * :return DynamicResponseModel
 	 */
 	function deleteServer($id) {
@@ -66,18 +68,19 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * Modify an existing Server. Any parameters passed with NULL will be
 	 * ignored (their existing values will not be modified).
 	 *
-	 * @param  integer $id  The Identity of the Server to modify.
-	 * @param  string $name
-	 * @param  string $color
-	 * @param  bool $rawEmailEnabled
-	 * @param  bool $smtpApiActivated
-	 * @param  string $inboundHookUrl
-	 * @param  string $bounceHookUrl
-	 * @param  string $openHookUrl
-	 * @param  bool $postFirstOpenOnly
-	 * @param  bool $trackOpens
-	 * @param  string $inboundDomain
-	 * @param  integer $inboundSpamThreshold
+	 * @param integer $id The ID of the Server we wish to modify.
+	 * @param string $name Set the name of the server.
+	 * @param string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+	 * @param bool $rawEmailEnabled Enable raw email to be sent with inbound.
+	 * @param bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
+	 * @param string $inboundHookUrl URL to POST to everytime an inbound event occurs.
+	 * @param string $bounceHookUrl URL to POST to everytime a bounce event occurs.
+	 * @param string $openHookUrl URL to POST to everytime an open event occurs.
+	 * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+	 * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
+	 * @param string $inboundDomain Inbound domain for MX setup.
+	 * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 *
 	 * @return DynamicResponseModel
 	 */
 	function editServer($id, $name = NULL, $color = NULL,
@@ -107,18 +110,18 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * Create a new Server. Any parameters passed with NULL will be
 	 * ignored (their default values will be used).
 	 *
-	 * @param  string $name
-	 * @param  string $color  The color shown for the server in the Postmark web UI (may be any of the following: purple, blue, turqoise, green, red, yellow, grey)
-	 * @param  bool $rawEmailEnabled
-	 * @param  bool $smtpApiActivated
-	 * @param  string $inboundHookUrl
-	 * @param  string $bounceHookUrl
-	 * @param  string $openHookUrl
-	 * @param  bool $postFirstOpenOnly
-	 * @param  bool $trackOpens
-	 * @param  string $inboundDomain
-	 * @param  integer $inboundSpamThreshold Between 0 and 30.
-	 *  rtype: DynamicResponseModel
+	 * @param string $name Set the name of the server.
+	 * @param string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+	 * @param bool $rawEmailEnabled Enable raw email to be sent with inbound.
+	 * @param bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
+	 * @param string $inboundHookUrl URL to POST to everytime an inbound event occurs.
+	 * @param string $bounceHookUrl URL to POST to everytime a bounce event occurs.
+	 * @param string $openHookUrl URL to POST to everytime an open event occurs.
+	 * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+	 * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
+	 * @param string $inboundDomain Inbound domain for MX setup.
+	 * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 * @return DynamicResponseModel
 	 */
 	function createServer($name, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
@@ -144,8 +147,8 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	/**
 	 * Get a "page" of Sender Signatures.
 	 *
-	 * @param  integer $count
-	 *  param  integer $offset
+	 * @param  integer $count The number of Sender Signatures to retrieve with this request.
+	 *  param  integer $offset The number of Sender Signatures to 'skip' when 'paging' through them.
 	 * @return DynamicResponseModel
 	 */
 	function listSenderSignatures($count = 100, $offset = 0) {
@@ -160,7 +163,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	/**
 	 * Get information for a sepcific Sender Signature.
 	 *
-	 * @param  integer $id  The ID for the Sender Signature you wish to retrieve.
+	 * @param  integer $id The ID for the Sender Signature you wish to retrieve.
 	 * @return DynamicResponseModel
 	 */
 	function getSenderSignature($id) {
@@ -172,9 +175,9 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * "verify" this Sender Signature by following a link that will be emailed to the "fromEmail"
 	 * address specified when calling this method.
 	 *
-	 * @param  string $fromEmail
-	 * @param  string $name
-	 * @param  string $replyToEmail
+	 * @param  string $fromEmail The email address for the Sender Signature
+	 * @param  string $name The name of the Sender Signature.
+	 * @param  string $replyToEmail The reply-to email address for the Sender Signature.
 	 * @return DynamicResponseModel
 	 */
 	function createSenderSignature($fromEmail, $name, $replyToEmail = NULL) {
@@ -190,9 +193,9 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	/**
 	 * Alter the defaults for a Sender Signature.
 	 *
-	 * @param  integer $id
-	 * @param  string $name
-	 * @param  string $replyToEmail
+	 * @param  integer $id The ID for the Sender Signature we wish to modify.
+	 * @param  string $name The name of the Sender Signature.
+	 * @param  string $replyToEmail The reply-to email address for the Sender Signature.
 	 * @return DynamicResponseModel
 	 */
 	function editSenderSignature($id, $name = NULL, $replyToEmail = NULL) {
@@ -207,7 +210,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	/**
 	 * Delete a Sender Signature with the given ID.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID for the Sender Signature we wish to delete.
 	 * @return DynamicResponseModel
 	 */
 	function deleteSenderSignature($id) {
@@ -218,7 +221,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * Cause a new verification email to be sent for an existing (unverified) Sender Signature.
 	 * Sender Signatures require verification before they may be used to send email through the Postmark API.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID for the Sender Signature to which we wish to resend a verification email.
 	 * @return DynamicResponseModel
 	 */
 	function resendSenderSignatureConfirmation($id) {
@@ -230,7 +233,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * with the Sender Signature's email address's domain. Configuring SPF is not required to use
 	 * Postmark, but it is highly recommended, and can improve delivery rates.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID for the Sender Signature for which we wish to verify the SPF records.
 	 * @return DynamicResponseModel
 	 */
 	function verifySenderSignatureSPF($id) {
@@ -242,7 +245,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * to your email domain's DNS records. Including DKIM is not required, but is recommended. For more information
 	 * on DKIM and its purpose, see http://www.dkim.org/
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
 	 * @return DynamicResponseModel
 	 */
 	function requestNewSenderSignatureDKIM($id) {
