@@ -11,6 +11,10 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	private $_container = array();
 	private $_pointer = 0;
 
+	private function fixOffsetName($offset) {
+		return preg_replace('/_/', '', strtolower($offset));
+	}
+
 	/**
 	 * Initialize a CaseInsensitiveArray from an existing array.
 	 *
@@ -28,7 +32,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	 */
 	public function offsetSet($offset, $value) {
 		if (is_string($offset)) {
-			$offset = strtolower($offset);
+			$offset = $this->fixOffsetName($offset);
 		}
 
 		if (is_null($offset)) {
@@ -40,7 +44,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 
 	public function offsetExists($offset) {
 		if (is_string($offset)) {
-			$offset = strtolower($offset);
+			$offset = $this->fixOffsetName($offset);
 		}
 
 		return isset($this->_container[$offset]);
@@ -48,7 +52,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 
 	public function offsetUnset($offset) {
 		if (is_string($offset)) {
-			$offset = strtolower($offset);
+			$offset = $this->fixOffsetName($offset);
 		}
 
 		unset($this->_container[$offset]);
@@ -56,7 +60,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 
 	public function offsetGet($offset) {
 		if (is_string($offset)) {
-			$offset = strtolower($offset);
+			$offset = $this->fixOffsetName($offset);
 		}
 		return isset($this->_container[$offset]) ?
 		$this->_container[$offset] : null;
