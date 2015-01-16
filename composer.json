@@ -1,5 +1,5 @@
 {
-    "name": "wildbit/postmark-client",
+    "name": "wildbit/postmark-php",
     "license" : "MIT",
     "description": "The officially supported client for Postmark (http://postmarkapp.com)",
     "require": {

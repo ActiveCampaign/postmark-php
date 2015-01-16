@@ -45,7 +45,8 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$query = array();
 		$query['count'] = $count;
 		$query['offset'] = $offset;
-
+		$query['name'] = $name;
+		
 		return new DynamicResponseModel($this->processRestRequest('GET', '/servers/', $query));
 	}
 
