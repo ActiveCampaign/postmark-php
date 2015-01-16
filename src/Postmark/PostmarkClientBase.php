@@ -29,12 +29,14 @@ abstract class PostmarkClientBase {
 	protected $authorization_header = NULL;
 	protected $version = NULL;
 	protected $os = NULL;
+	protected $timeout = 30;
 
-	protected function __construct($token, $header) {
+	protected function __construct($token, $header, $timeout = 30) {
 		$this->authorization_header = $header;
 		$this->authorization_token = $token;
 		$this->version = phpversion();
 		$this->os = PHP_OS;
+		$this->timeout = $timeout;
 	}
 
 	/**
@@ -50,6 +52,7 @@ abstract class PostmarkClientBase {
 
 		$client = new \GuzzleHttp\Client(['defaults' => [
 			'exceptions' => false,
+			'timeout' => $this->timeout,
 		],
 		]);
 

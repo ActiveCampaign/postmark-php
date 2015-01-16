@@ -18,8 +18,8 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param string $server_token  The token associated with "Server" you'd like to use to send/receive email from.
 	 */
-	function __construct($server_token) {
-		parent::__construct($server_token, 'X-Postmark-Server-Token');
+	function __construct($server_token, $timeout = 30) {
+		parent::__construct($server_token, 'X-Postmark-Server-Token', $timeout);
 	}
 
 	/**

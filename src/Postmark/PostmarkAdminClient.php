@@ -19,8 +19,8 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * This token is NOT the same as a Server Token. You can get your account token
 	 * from this page: https://postmarkapp.com/account/edit
 	 */
-	function __construct($account_token) {
-		parent::__construct($account_token, "X-Postmark-Account-Token");
+	function __construct($account_token, $timeout = 30) {
+		parent::__construct($account_token, "X-Postmark-Account-Token", $timeout);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 		$query['name'] = $name;
-		
+
 		return new DynamicResponseModel($this->processRestRequest('GET', '/servers/', $query));
 	}
 
