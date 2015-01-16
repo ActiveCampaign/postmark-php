@@ -17,9 +17,10 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Create a new PostmarkClient.
 	 *
 	 * @param string $server_token  The token associated with "Server" you'd like to use to send/receive email from.
+	 * @param integer $timeout The timeout, in seconds to wait for an API call to complete before throwing an Exception.
 	 */
-	function __construct($server_token, $timeout = 30) {
-		parent::__construct($server_token, 'X-Postmark-Server-Token', $timeout);
+	function __construct($serverToken, $timeout = 30) {
+		parent::__construct($serverToken, 'X-Postmark-Server-Token', $timeout);
 	}
 
 	/**
@@ -79,10 +80,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send multiple emails as a batch
 	 *
-	 * @param  array $emailBatch  An array of emails to be sent in one batch.
-	 * Each email can be an associative array of values, but note that the 'Attachments'
+	 * Each email is an associative array of values, but note that the 'Attachments'
 	 * key must be an array of 'PostmarkAttachment' objects if you intend to send
 	 * attachments with an email.
+	 *
+	 * @param array $emailBatch  An array of emails to be sent in one batch.
 	 *
 	 * @return DyanamicResponseModel
 	 */
@@ -114,13 +116,13 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get a batch of bounces to be processed.
 	 *
-	 * @param  integer $count
-	 * @param  integer $offset
-	 * @param  string $type
-	 * @param  bool $inactive
-	 * @param  string $emailFilter
-	 * @param  string $tag
-	 * @param  string $messageID
+	 * @param  integer $count Number of bounces to retrieve
+	 * @param  integer $offset How many bounces to skip (when paging through bounces.)
+	 * @param  string $type The bounce type. (see http://developer.postmarkapp.com/developer-api-bounce.html#bounce-types)
+	 * @param  bool $inactive Specifies if the bounce caused Postmark to deactivate this email.
+	 * @param  string $emailFilter Filter by email address
+	 * @param  string $tag Filter by tag
+	 * @param  string $messageID Filter by MessageID
 	 * :return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
@@ -141,7 +143,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Locate information on a specific email bounce.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID of the bounce to get.
 	 * @return DyanamicResponseModel
 	 */
 	function getBounce($id) {
@@ -151,7 +153,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get a "dump" for a specific bounce.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The ID of the bounce for which we want a dump.
 	 * @return string
 	 */
 	function getBounceDump($id) {
@@ -161,7 +163,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Cause the email address associated with a Bounce to be reactivated.
 	 *
-	 * @param  integer $id
+	 * @param  integer $id The bounce which has a deactivated email address.
 	 * @return DyanamicResponseModel
 	 */
 	function activateBounce($id) {
@@ -170,6 +172,8 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get the list of tags associated with messages that have bounced.
+	 *
+	 * This produces an array of strings. This one of the only client API calls that does not produce a DynamicResponseModel.
 	 *
 	 * @return array
 	 */
@@ -191,17 +195,17 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Modify the associated Server. Any parameters passed with NULL will be
 	 * ignored (their existing values will not be modified).
 	 *
-	 * @param  string $name
-	 * @param  string $color
-	 * @param  bool $rawEmailEnabled
-	 * @param  bool $smtpApiActivated
-	 * @param  string $inboundHookUrl
-	 * @param  string $bounceHookUrl
-	 * @param  string $openHookUrl
-	 * @param  bool $postFirstOpenOnly
-	 * @param  bool $trackOpens
-	 * @param  string $inboundDomain
-	 * @param  integer $inboundSpamThreshold
+	 * @param  string $name Set the name of the server.
+	 * @param  string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+	 * @param  bool $rawEmailEnabled Enable raw email to be sent with inbound.
+	 * @param  bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
+	 * @param  string $inboundHookUrl URL to POST to everytime an inbound event occurs.
+	 * @param  string $bounceHookUrl URL to POST to everytime a bounce event occurs.
+	 * @param  string $openHookUrl URL to POST to everytime an open event occurs.
+	 * @param  bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+	 * @param  bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
+	 * @param  string $inboundDomain Inbound domain for MX setup.
+	 * @param  integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
 	 * @return DyanamicResponseModel
 	 */
 	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
@@ -228,12 +232,12 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Search messages that have been sent using this Server.
 	 *
-	 * @param  integer $count
-	 * @param  integer $offset
-	 * @param  string $recipient
-	 * @param  string $fromEmail
-	 * @param  string $tag
-	 * @param  string $subject
+	 * @param  integer $count How many messages to retrieve at once (defaults to 100)
+	 * @param  integer $offset How many messages to skip when 'paging' through the massages (defaults to 0)
+	 * @param  string $recipient Filter by recipient.
+	 * @param  string $fromEmail Filter by sender email address.
+	 * @param  string $tag Filter by tag.
+	 * @param  string $subject Filter by subject.
 	 * @return DyanamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
@@ -253,7 +257,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get information related to a specific sent message.
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID of the Message for which we want details.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessageDetails($id) {
@@ -262,26 +266,25 @@ class PostmarkClient extends PostmarkClientBase {
 
 	/**
 	 * Get the raw content for a message that was sent.
-	 *
-	 * @param  integer $id
-	 * @return string
+	 * This response
+	 * @param  integer $id The ID of the message for which we want a dump.
+	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessageDump($id) {
-		$response = new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/dump"));
-		return $response->body;
+		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/dump"));
 	}
 
 	/**
 	 * Get messages sent to the inbound email address associated with this Server.
 	 *
-	 * @param  integer $count
-	 * @param  integer $offset
-	 * @param  string $recipient
-	 * @param  string $fromEmail
-	 * @param  string $tag
-	 * @param  string $subject
-	 * @param  string $mailboxHash
-	 * @param  string $status
+	 * @param  integer $count The number of inbounce messages to retrieve in the request (defaults to 100)
+	 * @param  integer $offset The number of messages to 'skip' when 'paging' through messages (defaults to 0)
+	 * @param  string $recipient Filter by the message recipient
+	 * @param  string $fromEmail Filter by the message sender
+	 * @param  string $tag Filter by the message tag
+	 * @param  string $subject Filter by the message subject
+	 * @param  string $mailboxHash Filter by the mailboxHash
+	 * @param  string $status Filter by status ('blocked' or 'processed')
 	 * @return DynamicResponseModel
 	 */
 	function getInboundMessages($count = 100, $offset = 0, $recipient = NULL, $fromEmail = NULL,
@@ -294,6 +297,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['subject'] = $subject;
 		$query['mailboxhash'] = $mailboxHash;
 		$query['count'] = $count;
+		$query['status'] = $status;
 		$query['offset'] = $offset;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/inbound', $query));
@@ -302,7 +306,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get details for a specific inbound message.
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID of the message for which we went to get details.
 	 * @return DynamicResponseModel
 	 */
 	function getInboundMessageDetails($id) {
@@ -313,7 +317,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Allow an inbound message to be processed, even though the filtering rules would normally
 	 * prevent it from being processed.
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID for a message that we wish to unblock.
 	 * @return DynamicResponseModel
 	 */
 	function bypassInboundMessageRules($id) {
@@ -323,20 +327,20 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get statistics for tracked messages, optionally filtering by various open event properties.
 	 *
-	 * @param  integer $count
-	 * @param  integer $offset
-	 * @param  string $recipient
-	 * @param  string $tag
-	 * @param  string $clientName
-	 * @param  string $clientCompany
-	 * @param  string $clientFamily
-	 * @param  string $osName
-	 * @param  string $osFamily
-	 * @param  string $osCompany
-	 * @param  string $platform
-	 * @param  string $country
-	 * @param  string $region
-	 * @param  string $city
+	 * @param  integer $count The number of open statistics to retrieve in this request.
+	 * @param  integer $offset The number of statistics to 'skip' when paging through statistics.
+	 * @param  string $recipient Filter by recipient.
+	 * @param  string $tag Filter by tag.
+	 * @param  string $clientName Filter by Email Client name.
+	 * @param  string $clientCompany Filter by Email Client Company's name.
+	 * @param  string $clientFamily Filter by Email Client's Family name.
+	 * @param  string $osName Filter by Email Client's Operating System Name.
+	 * @param  string $osFamily Filter by Email Client's Operating System's Family.
+	 * @param  string $osCompany Filter by Email Client's Operating System's Company.
+	 * @param  string $platform Filter by Email Client's Platform Name.
+	 * @param  string $country Filter by Country.
+	 * @param  string $region Filter by Region.
+	 * @param  string $city Filter by City.
 	 * @return DynamicResponseModel
 	 */
 	function getOpenStatistics($count = 100, $offset = 0, $recipient = NULL,
@@ -366,9 +370,9 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get information about individual opens for a sent message.
 	 *
-	 * @param  integer $id
-	 * @param  integer $count
-	 * @param  integer $offset
+	 * @param  integer $id The ID for the message that we want statistics for.
+	 * @param  integer $count How many statistics should we retrieve?
+	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
 	 * @return DynamicResponseModel
 	 */
 	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0) {
@@ -384,7 +388,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get an overview of the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -403,7 +407,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get send statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -422,7 +426,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -441,7 +445,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get SPAM complaint statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -460,7 +464,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -479,7 +483,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get open statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -498,7 +502,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get platform statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -517,7 +521,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get email client statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -536,7 +540,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get reading times for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag
+	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
 	 * @return DynamicResponseModel
@@ -554,8 +558,8 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Create a Tag Trigger.
 	 *
-	 * @param  string $matchName
-	 * @param  boolean $trackOpens
+	 * @param  string $matchName Name of the tag that will activate this trigger.
+	 * @param  boolean $trackOpens Indicates if this trigger activates open tracking.
 	 * @return DynamicResponseModel
 	 */
 	function createTagTrigger($matchName, $trackOpens = true) {
@@ -569,7 +573,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Delete a Tag Trigger with the given ID.
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID of the Tag Trigger we wish to delete.
 	 * @return DynamicResponseModel
 	 */
 	function deleteTagTrigger($id) {
@@ -579,8 +583,8 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Locate Tag Triggers matching the filter criteria.
 	 *
-	 * @param  integer $count
-	 * @param  integer $offset
+	 * @param  integer $count The number of triggers to return with this request.
+	 * @param  integer $offset The number of triggers to 'skip' when 'paging' through tag triggers.
 	 * @param  string $matchName
 	 * @return DynamicResponseModel
 	 */
@@ -597,9 +601,9 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Edit an existing Tag Trigger
 	 *
-	 * @param  integer $id
-	 * @param  string $matchName
-	 * @param  boolean $trackOpens
+	 * @param  integer $id The ID of the Tag Trigger we wish to modify.
+	 * @param  string $matchName Name of the tag that will activate this trigger.
+	 * @param  boolean $trackOpens Indicates if this trigger activates open tracking.
 	 * @return DynamicResponseModel
 	 */
 	function editTagTrigger($id, $matchName, $trackOpens = true) {
@@ -613,7 +617,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Retrieve information related to the associated Tag Trigger
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID of the Tag Trigger we wish to retrieve.
 	 * @return DynamicResponseModel
 	 */
 	function getTagTrigger($id) {
@@ -623,7 +627,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Create an Inbound Rule to block messages from a single email address, or an entire domain.
 	 *
-	 * @param  string $rule
+	 * @param  string $rule The email address (or domain) that will be blocked.
 	 * @return DynamicResponseModel
 	 */
 	function createInboundRuleTrigger($rule) {
@@ -636,8 +640,8 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get a list of all existing Inbound Rule Triggers.
 	 *
-	 * @param integer $count
-	 * @param integer $offset
+	 * @param integer $count The number of rule triggers to return with this request.
+	 * @param integer $offset The number of triggers to 'skip' when 'paging' through rule triggers.
 	 * @return DynamicResponseModel
 	 */
 	function listInboundRuleTriggers($count = 100, $offset = 0) {
@@ -652,7 +656,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Delete an Inbound Rule Trigger.
 	 *
-	 * @param integer $id
+	 * @param integer $id The ID of the rule trigger we wish to delete.
 	 * @return DynamicResponseModel
 	 */
 	function deleteInboundRuleTrigger($id) {

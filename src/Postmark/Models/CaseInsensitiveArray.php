@@ -18,18 +18,12 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	/**
 	 * Initialize a CaseInsensitiveArray from an existing array.
 	 *
-	 * @param array $initial_array
+	 * @param array $initialArray The base array from which to create the new array.
 	 */
-	public function __construct(Array $initial_array = array()) {
-		$this->_container = array_change_key_case($initial_array);
+	public function __construct(Array $initialArray = array()) {
+		$this->_container = array_change_key_case($initialArray);
 	}
 
-	/**
-	 * Assign a value at the specified offset.
-	 *
-	 * @param mixed $offset The key of of the value being set.
-	 * @param mixed $value The value being set.
-	 */
 	public function offsetSet($offset, $value) {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);

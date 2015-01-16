@@ -21,6 +21,7 @@ abstract class PostmarkClientBase {
 	 * BASE_URL is "https://api.postmarkapp.com"
 	 *
 	 * You may modify this value to disable SSL support, but it is not recommended.
+	 *
 	 * @var string
 	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
@@ -42,10 +43,9 @@ abstract class PostmarkClientBase {
 	/**
 	 * The base request method for all API access.
 	 *
-	 * @param string $method
-	 * @param string $path
-	 * @param string $body
-	 * :returns: JSON HTTP API Response.
+	 * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
+	 * @param string $path The API path.
+	 * @param array $body The content to be used (either as the query, or the json post/put body)
 	 * @return object
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
@@ -106,7 +106,8 @@ abstract class PostmarkClientBase {
 			case 401:
 
 				$ex = new PostmarkException();
-				$ex->message = 'Unauthorized: Missing or incorrect API token in header.';
+				$ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
+				'Please verify that you used the correct token when you constructed your client.';
 				$ex->httpStatusCode = 401;
 				throw $ex;
 				break;
@@ -124,7 +125,9 @@ abstract class PostmarkClientBase {
 			case 500:
 				$ex = new PostmarkException();
 				$ex->httpStatusCode = 500;
-				$ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. In most cases the message is lost during the process, and we are notified so that we can investigate the issue.';
+				$ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
+				'In most cases the message is lost during the process, ' .
+				'and Postmark is notified so that we can investigate the issue.';
 				throw $ex;
 				break;
 		}
