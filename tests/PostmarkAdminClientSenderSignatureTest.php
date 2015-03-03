@@ -15,7 +15,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$signatures = $client->listSenderSignatures();
 
 		foreach ($signatures->senderSignatures as $key => $value) {
-			if (preg_match('/^test-php.+/', $value->name) > 0) {
+			if (preg_match('/test-php.+/', $value->name) > 0) {
 				$client->deleteSenderSignature($value->id);
 			}
 		}
@@ -33,6 +33,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetSingleSignature() {
 		$tk = parent::$testKeys;
+
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 		$id = $client->listSenderSignatures()->senderSignatures[0]->id;
 		$sig = $client->getSenderSignature($id);
@@ -44,9 +45,10 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
-		$sig = $client->createSenderSignature(
-			'test-create-' . date('U') . '@example.com',
-			'test-php-create-' . date('U'));
+		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
+		$sender = str_replace('[token]', 'test-php-create' . date('U'), $i);
+
+		$sig = $client->createSenderSignature($sender, 'test-php-create-' . date('U'));
 
 		$this->assertNotEmpty($sig->id);
 	}
@@ -56,9 +58,11 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
 		$name = 'test-php-edit-' . date('U');
-		$sig = $client->createSenderSignature(
-			'test-edit-' . date('U') . '+' . '@example.com',
-			$name);
+
+		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
+		$sender = str_replace('[token]', 'test-php-edit' . date('U'), $i);
+
+		$sig = $client->createSenderSignature($sender, $name);
 
 		$updated = $client->editSenderSignature(
 			$sig->id, $name . '-updated');
@@ -70,10 +74,11 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
+		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
+		$sender = str_replace('[token]', 'test-php-delete' . date('U'), $i);
+
 		$name = 'test-php-delete-' . date('U');
-		$sig = $client->createSenderSignature(
-			'test-delete-' . date('U') . '@example.com',
-			$name);
+		$sig = $client->createSenderSignature($sender, $name);
 
 		$client->deleteSenderSignature($sig->id);
 
@@ -89,10 +94,11 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
+		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
+		$sender = str_replace('[token]', 'test-php-reverify' . date('U'), $i);
+
 		$name = 'test-php-reverify-' . date('U');
-		$sig = $client->createSenderSignature(
-			'test-php-reverify-' . date('U') . '@example.com',
-			$name);
+		$sig = $client->createSenderSignature($sender, $name);
 
 		$client->resendSenderSignatureConfirmation($sig->id);
 	}
@@ -102,10 +108,11 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
 
 		$name = 'test-php-spf-' . date('U');
-		$sig = $client->createSenderSignature(
-			'test-spfcheck-' . date('U') . '@example.com',
-			$name);
+		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 
+		$sender = str_replace('[token]', 'test-php-spf-' . date('U'), $i);
+
+		$sig = $client->createSenderSignature($sender, $name);
 		$client->verifySenderSignatureSPF($sig->id);
 	}
 
