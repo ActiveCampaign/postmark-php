@@ -9,7 +9,6 @@
 namespace Postmark;
 
 use Postmark\Models\PostmarkException as PostmarkException;
-use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 /**
  * This is the core class that interacts with the Postmark API. All clients should
