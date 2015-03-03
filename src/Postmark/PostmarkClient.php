@@ -71,7 +71,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$retval = [];
 			$index = 0;
 			foreach ($headers as $key => $value) {
-				$retval[$index] = [$key => $value];
+				$retval[$index] = ['Name' => $key, 'Value' => $value];
 				$index++;
 			}
 		}
