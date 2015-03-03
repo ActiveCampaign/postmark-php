@@ -52,6 +52,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Subject'] = $subject;
 		$body['HtmlBody'] = $htmlBody;
 		$body['TextBody'] = $textBody;
+		$body['Tag'] = $tag;
 		$body['ReplyTo'] = $replyTo;
 		$body['Headers'] = $this->fixHeaders($headers);
 		$body['TrackOpens'] = $trackOpens;
