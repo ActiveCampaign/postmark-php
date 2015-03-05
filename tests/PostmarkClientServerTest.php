@@ -10,7 +10,7 @@ class PostmarkClientServerTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetServerInformation() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$server = $client->getServer();
 		$this->assertNotEmpty($server);
 	}
@@ -18,7 +18,7 @@ class PostmarkClientServerTest extends PostmarkClientBaseTest {
 	function testClientCanEditServerInformation() {
 		$tk = parent::$testKeys;
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$originalServer = $client->getServer();
 
 		$server = $client->editServer('testing-server-' . date('c'));

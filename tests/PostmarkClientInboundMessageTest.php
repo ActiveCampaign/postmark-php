@@ -10,7 +10,7 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
 
 	function testClientCanSearchInboundMessages() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$messages = $client->getInboundMessages(10);
 
@@ -20,7 +20,7 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetInboundMessageDetails() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$retrievedMessages = $client->getInboundMessages(10);
 		$baseMessageId = $retrievedMessages->InboundMessages[0]["MessageID"];

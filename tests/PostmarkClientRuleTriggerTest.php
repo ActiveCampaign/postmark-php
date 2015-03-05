@@ -7,12 +7,12 @@ require_once __DIR__ . "/PostmarkClientBaseTest.php";
 use \Postmark\PostmarkClient;
 
 class PostmarkClientRuleTriggerTest extends PostmarkClientBaseTest {
-	
+
 	//todo - teardowns to clean up rules that were created and not deleted.
 
 	function testClientCanGetRuleTriggers() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$triggers = $client->listInboundRuleTriggers();
 
@@ -21,7 +21,7 @@ class PostmarkClientRuleTriggerTest extends PostmarkClientBaseTest {
 
 	function testClientCanCreateAndDeleteRuleTriggers() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$trigger = $client->createInboundRuleTrigger('test.php+' . uniqid("", true) . '@example.com');
 		$this->assertNotEmpty($trigger);

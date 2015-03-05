@@ -4,6 +4,8 @@ namespace Postmark\Tests;
 
 class TestingKeys {
 
+	public $TEST_TIMEOUT;
+
 	public $READ_INBOUND_TEST_SERVER_TOKEN;
 	public $READ_SELENIUM_TEST_SERVER_TOKEN;
 
@@ -22,6 +24,8 @@ class TestingKeys {
 			$keys = file_get_contents($keyfile);
 			$test_keys = json_decode($keys, true);
 		}
+
+		$this->TEST_TIMEOUT = (int) (getenv("TEST_TIMEOUT") ?: '60');
 
 		$this->READ_INBOUND_TEST_SERVER_TOKEN = getenv("READ_INBOUND_TEST_SERVER_TOKEN") ?: $test_keys["READ_INBOUND_TEST_SERVER_TOKEN"];
 		$this->READ_SELENIUM_TEST_SERVER_TOKEN = getenv("READ_SELENIUM_TEST_SERVER_TOKEN") ?: $test_keys["READ_SELENIUM_TEST_SERVER_TOKEN"];

@@ -11,7 +11,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetMessageOpens() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOpenStatistics();
 		$this->assertNotEmpty($stats);
@@ -19,7 +19,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetMessageOpensForSpecificMessage() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOpenStatistics();
 
@@ -31,7 +31,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundOverviewStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundOverviewStatistics();
 
@@ -40,7 +40,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundSendStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundSendStatistics();
 
@@ -49,7 +49,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundBounceStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundBounceStatistics();
 
@@ -58,7 +58,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundSpamComplaintStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundSpamComplaintStatistics();
 
@@ -67,7 +67,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundTrackedStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundTrackedStatistics();
 
@@ -76,7 +76,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundOpenStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundOpenStatistics();
 
@@ -85,7 +85,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundPlatformStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundPlatformStatistics();
 
@@ -94,7 +94,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundEmailClientStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundEmailClientStatistics();
 
@@ -103,7 +103,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundReadTimeStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundReadTimeStatistics();
 

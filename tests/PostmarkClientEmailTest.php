@@ -12,7 +12,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 	function testClientCanSendBasicMessage() {
 		$tk = parent::$testKeys;
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$currentTime = date("c");
 
@@ -27,7 +27,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 	function testClientCanSendMessageWithRawAttachment() {
 		$tk = parent::$testKeys;
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$currentTime = date("c");
 
@@ -48,7 +48,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 	function testClientCanSendMessageWithFileSystemAttachment() {
 		$tk = parent::$testKeys;
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$currentTime = date("c");
 
@@ -91,7 +91,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			$batch[] = $payload;
 		}
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$response = $client->sendEmailBatch($batch);
 		$this->assertNotEmpty($response, 'The client could not send a batch of messages.');
 	}

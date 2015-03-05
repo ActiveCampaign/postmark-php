@@ -10,7 +10,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	static function tearDownAfterClass() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$signatures = $client->listSenderSignatures();
 
@@ -23,7 +23,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetSignatureList() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$sigs = $client->listSenderSignatures();
 
@@ -34,7 +34,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 	function testClientCanGetSingleSignature() {
 		$tk = parent::$testKeys;
 
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 		$id = $client->listSenderSignatures()->senderSignatures[0]->id;
 		$sig = $client->getSenderSignature($id);
 
@@ -43,7 +43,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanCreateSignature() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 		$sender = str_replace('[token]', 'test-php-create' . date('U'), $i);
@@ -55,7 +55,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanEditSignature() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$name = 'test-php-edit-' . date('U');
 
@@ -72,7 +72,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanDeleteSignature() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 		$sender = str_replace('[token]', 'test-php-delete' . date('U'), $i);
@@ -92,7 +92,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanRequestNewVerificationForSignature() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 		$sender = str_replace('[token]', 'test-php-reverify' . date('U'), $i);
@@ -105,7 +105,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 	function testClientCanVerifySPFForSignature() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$name = 'test-php-spf-' . date('U');
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;

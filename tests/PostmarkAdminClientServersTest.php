@@ -10,7 +10,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	static function tearDownAfterClass() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$servers = $client->listServers();
 
@@ -23,7 +23,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetServerList() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$servers = $client->listServers();
 
@@ -33,7 +33,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetSingleServer() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$servers = $client->listServers();
 		$targetId = $servers->servers[0]->id;
@@ -45,7 +45,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	function testClientCanCreateServer() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$server = $client->createServer('test-php-create-' . date('c'));
 		$this->assertNotEmpty($server);
@@ -53,7 +53,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	function testClientCanEditServer() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$server = $client->createServer('test-php-edit-' . date('c'), 'purple');
 
@@ -67,7 +67,7 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 	function testClientCanDeleteServer() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN);
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$server = $client->createServer('test-php-delete-' . date('c'));
 
