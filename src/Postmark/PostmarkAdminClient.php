@@ -178,14 +178,16 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param  string $fromEmail The email address for the Sender Signature
 	 * @param  string $name The name of the Sender Signature.
 	 * @param  string $replyToEmail The reply-to email address for the Sender Signature.
+	 * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
 	 * @return DynamicResponseModel
 	 */
-	function createSenderSignature($fromEmail, $name, $replyToEmail = NULL) {
+	function createSenderSignature($fromEmail, $name, $replyToEmail = NULL, $returnPathDomain = NULL) {
 
 		$body = array();
 		$body['fromEmail'] = $fromEmail;
 		$body['name'] = $name;
 		$body['replyToEmail'] = $replyToEmail;
+		$body['returnPathDomain'] = $returnPathDomain;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/senders/', $body));
 	}
@@ -196,13 +198,15 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param  integer $id The ID for the Sender Signature we wish to modify.
 	 * @param  string $name The name of the Sender Signature.
 	 * @param  string $replyToEmail The reply-to email address for the Sender Signature.
+	 * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
 	 * @return DynamicResponseModel
 	 */
-	function editSenderSignature($id, $name = NULL, $replyToEmail = NULL) {
+	function editSenderSignature($id, $name = NULL, $replyToEmail = NULL, $returnPathDomain = NULL) {
 
 		$body = array();
 		$body['name'] = $name;
 		$body['replyToEmail'] = $replyToEmail;
+		$body['returnPathDomain'] = $returnPathDomain;
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/senders/$id", $body));
 	}
