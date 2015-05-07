@@ -62,12 +62,15 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 		$sender = str_replace('[token]', 'test-php-edit' . date('U'), $i);
 
-		$sig = $client->createSenderSignature($sender, $name);
+		$returnPath = 'test.' . explode('@', $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE)[1];
+
+		$sig = $client->createSenderSignature($sender, $name, NULL, $returnPath);
 
 		$updated = $client->editSenderSignature(
-			$sig->id, $name . '-updated');
+			$sig->id, $name . '-updated', NULL, 'updated-' . $returnPath);
 
 		$this->assertNotSame($sig->name, $updated->name);
+		$this->assertNotSame($sig->returnpathdomain, $updated->returnpathdomain);
 	}
 
 	function testClientCanDeleteSignature() {
