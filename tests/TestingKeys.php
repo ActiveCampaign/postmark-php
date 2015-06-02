@@ -16,7 +16,7 @@ class TestingKeys {
 	public $WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 
 	function __construct() {
-		$test_keys = [];
+		$test_keys = array();
 
 		$keyfile = __DIR__ . "/../test_keys.json";
 

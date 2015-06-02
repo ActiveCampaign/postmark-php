@@ -62,7 +62,8 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 		$sender = str_replace('[token]', 'test-php-edit' . date('U'), $i);
 
-		$returnPath = 'test.' . explode('@', $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE)[1];
+        $exploded = explode('@', $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE);
+		$returnPath = 'test.' . $exploded[1];
 
 		$sig = $client->createSenderSignature($sender, $name, NULL, $returnPath);
 

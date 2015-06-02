@@ -49,18 +49,18 @@ abstract class PostmarkClientBase {
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
 
-		$client = new \GuzzleHttp\Client(['defaults' => [
+		$client = new \GuzzleHttp\Client(array('defaults' => array(
 			'exceptions' => false,
 			'timeout' => $this->timeout,
-		],
-		]);
+        ),
+        ));
 
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
-		$options = [];
+		$options = array();
 
 		if ($body != NULL) {
-			$cleanParams = [];
+			$cleanParams = array();
 
 			foreach ($body as $key => $value) {
 				if ($value !== NULL) {

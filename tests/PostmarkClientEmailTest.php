@@ -40,7 +40,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			'<b>Hi there!</b>',
 			'This is a text body for a test email.',
 			NULL, true, NULL, NULL, NULL,
-			["X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'], [$attachment]);
+			array("X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'), array($attachment));
 
 		$this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
 	}
@@ -61,7 +61,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			'<b>Hi there! From <img src="cid:hello.png"/></b>',
 			'This is a text body for a test email.',
 			NULL, true, NULL, NULL, NULL,
-			["X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'], [$attachment]);
+			array("X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'), array($attachment));
 
 		$this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
 	}
@@ -71,22 +71,22 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 
 		$currentTime = date("c");
 
-		$batch = [];
+		$batch = array();
 
 		$attachment = PostmarkAttachment::fromRawData("attachment content",
 			"hello.txt", "text/plain");
 
 		for ($i = 0; $i < 5; $i++) {
-			$payload = [
+			$payload = array(
 				'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 				'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
 				'Subject' => "Hello from the PHP Postmark Client Tests! ($currentTime)",
 				'HtmlBody' => '<b>Hi there! (batch test)</b>',
 				'TextBody' => 'This is a text body for a test email.',
 				'TrackOpens' => true,
-				'Headers' => ["X-Test-Header" => "Test Header Content", 'X-Test-Date-Sent' => date('c')],
-				'Attachments' => [$attachment],
-			];
+				'Headers' => array("X-Test-Header" => "Test Header Content", 'X-Test-Date-Sent' => date('c')),
+				'Attachments' => array($attachment),
+            );
 
 			$batch[] = $payload;
 		}
