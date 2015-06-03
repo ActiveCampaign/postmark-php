@@ -67,7 +67,8 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 	}
 
 	public function key() {
-		return array_keys($this->_container)[$this->_pointer];
+        $keys = array_keys($this->_container);
+		return $keys[$this->_pointer];
 	}
 
 	public function next() {

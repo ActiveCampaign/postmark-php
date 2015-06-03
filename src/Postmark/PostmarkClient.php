@@ -68,10 +68,10 @@ class PostmarkClient extends PostmarkClientBase {
 	private function fixHeaders($headers) {
 		$retval = NULL;
 		if ($headers != NULL) {
-			$retval = [];
+			$retval = array();
 			$index = 0;
 			foreach ($headers as $key => $value) {
-				$retval[$index] = ['Name' => $key, 'Value' => $value];
+				$retval[$index] = array('Name' => $key, 'Value' => $value);
 				$index++;
 			}
 		}
@@ -91,7 +91,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function sendEmailBatch($emailBatch = array()) {
 
-		$final = [];
+		$final = array();
 
 		foreach ($emailBatch as $key => $email) {
 			foreach ($email as $emailIdx => $emailValue) {

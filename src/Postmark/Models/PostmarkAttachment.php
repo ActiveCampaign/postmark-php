@@ -23,12 +23,12 @@ class PostmarkAttachment implements \JsonSerializable {
 
 	function jsonSerialize() {
 
-		$retval = [
+		$retval = array(
 			"Name" => $this->name,
 			"Content" => $this->data,
 			"ContentType" => $this->mimeType ?: "application/octet-stream",
 			"ContentId" => $this->name,
-		];
+        );
 
 		return $retval;
 	}
