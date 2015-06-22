@@ -61,6 +61,27 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email', $body));
 	}
 
+	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
+		 $tag = NULL, $trackOpens = true, $replyTo = NULL, 
+		 $cc = NULL, $bcc = NULL, 
+		 $headers = NULL, $attachments = NULL) {
+
+		$body = array();
+		$body['From'] = $from;
+		$body['To'] = $to;
+		$body['Cc'] = $cc;
+		$body['Bcc'] = $bcc;
+		$body['Tag'] = $tag;
+		$body['ReplyTo'] = $replyTo;
+		$body['Headers'] = $this->fixHeaders($headers);
+		$body['TrackOpens'] = $trackOpens;
+		$body['Attachments'] = $attachments;
+		$body['TemplateModel'] = $templateModel;
+		$body['TemplateId'] = $templateId;
+		
+		return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
+	}
+
 	/**
 	 * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
 	 * therefore, we need to wrap the elements in an array.
@@ -662,6 +683,32 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function deleteInboundRuleTrigger($id) {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
+	}
+
+	function deleteTemplate($id){
+		return new DynamicResponseModel($this->processRestRequest('DELETE', "/templates/$id"));
+	}
+
+	function createTemplate($template){
+		return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
+	}
+
+	function editTemplate($id, $template){
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
+	}
+
+	function getTemplate($id){
+		return new DynamicResponseModel($this->processRestRequest('GET', "/templates/$id"));
+	}
+
+	function listTemplate($count = 100, $offset = 0, $includeDeletedTemplates = true){
+		$query = array();
+
+		$query["count"] = $count;
+		$query["offset"] = $offset;
+		$query["includeDeletedTemplates"] = $includeDeletedTemplates;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
 	}
 }
 
