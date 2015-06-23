@@ -1,17 +1,17 @@
 {
     "name": "wildbit/postmark-php",
-    "license" : "MIT",
+    "license": "MIT",
     "description": "The officially supported client for Postmark (http://postmarkapp.com)",
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/guzzle": ">= 5.1.0"
+        "guzzlehttp/guzzle": "~5.1.0"
     },
     "require-dev": {
-    	"phpunit/phpunit": "4.4.0"
+        "phpunit/phpunit": "4.4.0"
     },
     "autoload": {
         "psr-0": {
-            "Postmark\\" : "src/"
+            "Postmark\\": "src/"
         }
     },
     "autoload-dev": {
