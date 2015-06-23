@@ -710,6 +710,17 @@ class PostmarkClient extends PostmarkClientBase {
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
 	}
+
+	function validateTemplate($subjectTemplate = NULL, $htmlTemplate = NULL, $textTemplate = NULL, $testingRenderModel = NULL){
+		$query = array();
+
+		$query["subjectTemplate"] = $subjectTemplate;
+		$query["htmlTemplate"] = $htmlTemplate;
+		$query["textTemplate"] = $textTemplate;
+		$query["testingRenderModel"] = $testingRenderModel;
+
+		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
+	}
 }
 
 ?>
