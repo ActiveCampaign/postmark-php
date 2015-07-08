@@ -61,10 +61,27 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email', $body));
 	}
 
+	/**
+	 * Send an email using a template.
+	 *
+	 * @param  string $from: The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param  string $to  The recipient of the email.
+	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
+	 * @param  object $templateModel  The values to combine with the Templated content.
+	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
+	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
+	 * @param  boolean $trackOpens  True if you want Postmark to track opens of HTML emails.
+	 * @param  string $replyTo  Reply to email address.
+	 * @param  string $cc  Carbon Copy recipients, comma-separated
+	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
+	 * @param  array $headers  Headers to be included with the sent email message.
+	 * @param  array $attachments  An array of PostmarkAttachment objects.
+	 * @return DyanamicResponseModel
+	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
-		 $tag = NULL, $trackOpens = true, $replyTo = NULL, 
-		 $cc = NULL, $bcc = NULL, 
-		 $headers = NULL, $attachments = NULL) {
+		$tag = NULL, $trackOpens = true, $replyTo = NULL,
+		$cc = NULL, $bcc = NULL,
+		$headers = NULL, $attachments = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -78,7 +95,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Attachments'] = $attachments;
 		$body['TemplateModel'] = $templateModel;
 		$body['TemplateId'] = $templateId;
-		
+
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
 
@@ -685,39 +702,101 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
 	}
 
-	function deleteTemplate($id){
+	/**
+	 * Delete a template.
+	 *
+	 * @param integer $id The ID of the template to delete.
+	 * @return DynamicResponseModel
+	 */
+	function deleteTemplate($id) {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/templates/$id"));
 	}
 
-	function createTemplate($template){
+	/**
+	 * Create a template
+	 *
+	 * @param string $name The friendly name for this template.
+	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
+	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL.
+	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function createTemplate($name, $subject, $htmlBody, $textBody) {
+		$template = array();
+		$template["name"] = $name;
+		$template["subject"] = $subject;
+		$template["htmlBody"] = $htmlBody;
+		$template["textBody"] = $textBody;
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
 	}
 
-	function editTemplate($id, $template){
+	/**
+	 * Edit a template
+	 *
+	 * @param integer $id The ID of the template you wish to update.
+	 * @param string $name The friendly name for this template.
+	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
+	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
+	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL) {
+		$template = array();
+		$template["name"] = $name;
+		$template["subject"] = $subject;
+		$template["htmlBody"] = $htmlBody;
+		$template["textBody"] = $textBody;
+
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
 	}
 
-	function getTemplate($id){
+	/**
+	 * Get the current information for a specific template.
+	 *
+	 * @param integer $id the Id for the template info you wish to retrieve.
+	 * @return DynamicResponseModel
+	 */
+	function getTemplate($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/templates/$id"));
 	}
 
-	function listTemplate($count = 100, $offset = 0, $includeDeletedTemplates = true){
+	/**
+	 * Get all templates associated with the Server.
+	 *
+	 * @param integer $count The total number of templates to get at once (default is 100)
+	 * @param integer $offset The number of templates to "Skip" before returning results.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function listTemplates($count = 100, $offset = 0) {
 		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;
-		$query["includeDeletedTemplates"] = $includeDeletedTemplates;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
 	}
 
-	function validateTemplate($subjectTemplate = NULL, $htmlTemplate = NULL, $textTemplate = NULL, $testingRenderModel = NULL){
+	/**
+	 * Confirm that your template content can be parsed/rendered, get a test rendering of your template, and a suggested model to use with your templates.
+	 *
+	 * @param string $subject The Subject template you wish to test.
+	 * @param string $htmlBody The HTML template you wish to test
+	 * @param string $textBody The number of templates to "Skip" before returning results.
+	 * @param object $testingRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
+	 * @param bool $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
+	 * @return DynamicResponseModel
+	 */
+	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true) {
 		$query = array();
 
 		$query["subjectTemplate"] = $subjectTemplate;
 		$query["htmlTemplate"] = $htmlTemplate;
 		$query["textTemplate"] = $textTemplate;
-		$query["testingRenderModel"] = $testingRenderModel;
+		$query["testRenderModel"] = $testingRenderModel;
+		$query["InlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
