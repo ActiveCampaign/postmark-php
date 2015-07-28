@@ -95,6 +95,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Attachments'] = $attachments;
 		$body['TemplateModel'] = $templateModel;
 		$body['TemplateId'] = $templateId;
+		$body['InlineCss'] = $inlineCss;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
@@ -792,11 +793,11 @@ class PostmarkClient extends PostmarkClientBase {
 	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true) {
 		$query = array();
 
-		$query["subjectTemplate"] = $subjectTemplate;
-		$query["htmlTemplate"] = $htmlTemplate;
-		$query["textTemplate"] = $textTemplate;
-		$query["testRenderModel"] = $testingRenderModel;
-		$query["InlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
+		$query["subject"] = $subject;
+		$query["htmlBody"] = $htmlBody;
+		$query["textBody"] = $textBody;
+		$query["testRenderModel"] = $testRenderModel;
+		$query["inlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}

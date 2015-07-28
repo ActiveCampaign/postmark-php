@@ -5,7 +5,6 @@ namespace Postmark\Tests;
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
 use Postmark\PostmarkClient as PostmarkClient;
-use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
@@ -13,7 +12,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
 	static function tearDownAfterClass() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$templates = $client->listTemplates();
 
@@ -22,20 +21,6 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 				$client->deleteTemplate($value->templateid);
 			}
 		}
-	}
-
-	function setUp() {
-		PostmarkClientBase::$BASE_URL = "";
-		$this->testServerToken = parent::$testKeys->WRITE_TEST_SERVER_TOKEN;
-		parent::$testKeys->WRITE_TEST_SERVER_TOKEN = "";
-	}
-
-	function tearDown() {
-		//TEMPORARY:
-		self::tearDownAfterClass();
-
-		PostmarkClientBase::$BASE_URL = parent::$testKeys->BASE_URL;
-		parent::$testKeys->WRITE_TEST_SERVER_TOKEN = $this->testServerToken;
 	}
 
 	//create
@@ -53,13 +38,13 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$result = $client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
 		$firstVersion = $client->getTemplate($result->TemplateId);
 
-		$result = $client->editTemplate($result->TemplateId, 'test-php-template-edited-' . date('c'), "{{subject}}!", "Hi <b>{{name}}</b>!", "Hi {{name}}!");
-		$secondVersion = $client . getTemplate($result->TemplateId);
+		$r2 = $client->editTemplate($result->TemplateId, 'test-php-template-edited-' . date('c'), "{{subject}}!", "Hi <b>{{name}}</b>!", "Hi {{name}}!");
+		$secondVersion = $client->getTemplate($r2->TemplateId);
 
-		$this->assertNotEqual($firstVersion->Name, $secondVersion->Name);
-		$this->assertNotEqual($firstVersion->HtmlBody, $secondVersion->HtmlBody);
-		$this->assertNotEqual($firstVersion->Subject, $secondVersion->Subject);
-		$this->assertNotEqual($firstVersion->TextBody, $secondVersion->TextBody);
+		$this->assertNotSame($firstVersion->Name, $secondVersion->Name);
+		$this->assertNotSame($firstVersion->HtmlBody, $secondVersion->HtmlBody);
+		$this->assertNotSame($firstVersion->Subject, $secondVersion->Subject);
+		$this->assertNotSame($firstVersion->TextBody, $secondVersion->TextBody);
 	}
 
 	//list
@@ -109,8 +94,10 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 	//send
 	function testClientCanSendMailWithTemplate() {
 		$tk = parent::$testKeys;
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$result = $client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
-		$emailResult = $client->sendEmailWithTemplate($result->templateid, $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS, $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, array("subject" => "Hello!"));
+		$emailResult = $client->sendEmailWithTemplate($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $result->templateid, array("subjectValue" => "Hello!"));
 
 		$this->assertEquals(0, $emailResult->ErrorCode);
 	}
