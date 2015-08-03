@@ -278,10 +278,14 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $fromEmail Filter by sender email address.
 	 * @param  string $tag Filter by tag.
 	 * @param  string $subject Filter by subject.
+	 * @param  string $status The current status for the outbound messages to return defaults to 'sent'
+	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
+	 * @param  string $todate Filter to messages on or before YYYY-MM-DD 
 	 * @return DyanamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
-		$fromEmail = NULL, $tag = NULL, $subject = NULL) {
+		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL, 
+		$fromdate = NULL, $todate = NULL) {
 
 		$query = array();
 		$query["recipient"] = $recipient;
@@ -290,6 +294,9 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["subject"] = $subject;
 		$query["count"] = $count;
 		$query["offset"] = $offset;
+		$query["status"] = $status;
+		$query["fromdate"] = $fromdate;
+		$query["todate"] = $todate;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound', $query));
 	}
@@ -325,10 +332,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $subject Filter by the message subject
 	 * @param  string $mailboxHash Filter by the mailboxHash
 	 * @param  string $status Filter by status ('blocked' or 'processed')
+	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
+	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
 	 * @return DynamicResponseModel
 	 */
 	function getInboundMessages($count = 100, $offset = 0, $recipient = NULL, $fromEmail = NULL,
-		$tag = NULL, $subject = NULL, $mailboxHash = NULL, $status = NULL) {
+		$tag = NULL, $subject = NULL, $mailboxHash = NULL, $status = NULL, $fromdate = NULL,
+		$todate = NULL) {
 
 		$query = array();
 		$query['recipient'] = $recipient;
@@ -339,6 +349,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['count'] = $count;
 		$query['status'] = $status;
 		$query['offset'] = $offset;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/inbound', $query));
 	}
@@ -362,6 +374,16 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function bypassInboundMessageRules($id) {
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/bypass"));
+	}
+
+	/**
+	 * Request that Postmark retry POSTing the specified message to the Server's Inbound Hook.
+	 *
+	 * @param integer $id The ID for a message that we wish retry the inbound hook for.
+	 * @return DynamicResponseModel
+	 */
+	function retryInboundMessageHook($id) {
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/retry"));
 	}
 
 	/**
