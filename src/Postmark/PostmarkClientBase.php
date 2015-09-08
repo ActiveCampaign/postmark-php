@@ -48,12 +48,10 @@ abstract class PostmarkClientBase {
 	 * @return object
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
-
-		$client = new \GuzzleHttp\Client(array('defaults' => array(
+		$client = new \GuzzleHttp\Client([
 			'exceptions' => false,
 			'timeout' => $this->timeout,
-        ),
-        ));
+        ]);
 
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
@@ -83,24 +81,22 @@ abstract class PostmarkClientBase {
 			}
 		}
 
-		$request = $client->createRequest($method, $url, $options);
-
 		$v = $this->version;
 		$o = $this->os;
 
-		//TODO: include version info in the request.
-		$request->setHeader('User-Agent', "Postmark-PHP (PHP Version:$v, OS:$o)");
-		$request->setHeader('Accept', 'application/json');
-		$request->setHeader('Content-Type', 'application/json');
-		$request->setHeader($this->authorization_header, $this->authorization_token);
+		$options['headers'] = array('User-Agent' => "Postmark-PHP (PHP Version:$v, OS:$o)",
+					 'Accept' => 'application/json',
+					 'Content-Type' => 'application/json',
+					 $this->authorization_header => $this->authorization_token);
 
-		$response = $client->send($request);
-
+		
+		$response = $client->request($method, $url, $options);
+		
 		$result = NULL;
 
 		switch ($response->getStatusCode()) {
 			case 200:
-				$result = $response->json();
+				$result = json_decode($response->getBody(), true);
 				break;
 			case 401:
 
@@ -113,7 +109,7 @@ abstract class PostmarkClientBase {
 			case 422:
 				$ex = new PostmarkException();
 
-				$body = $response->json();
+				$body = json_decode($response->getBody(), true);
 
 				$ex->httpStatusCode = 401;
 				$ex->postmarkApiErrorCode = $body['ErrorCode'];
@@ -131,7 +127,6 @@ abstract class PostmarkClientBase {
 				break;
 		}
 		return $result;
-
 	}
 }
 
