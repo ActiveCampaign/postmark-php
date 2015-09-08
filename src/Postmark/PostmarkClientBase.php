@@ -111,7 +111,7 @@ abstract class PostmarkClientBase {
 
 				$body = json_decode($response->getBody(), true);
 
-				$ex->httpStatusCode = 401;
+				$ex->httpStatusCode = 422;
 				$ex->postmarkApiErrorCode = $body['ErrorCode'];
 				$ex->message = $body['Message'];
 
