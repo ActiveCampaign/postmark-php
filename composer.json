@@ -1,4 +1,8 @@
 {
+    "repositories" : [{
+        "url": "https://packagist.org/",
+        "type" : "composer"
+    }],
     "name": "wildbit/postmark-php",
     "license": "MIT",
     "description": "The officially supported client for Postmark (http://postmarkapp.com)",
