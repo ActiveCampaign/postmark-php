@@ -14,7 +14,7 @@ abstract class PostmarkClientBaseTest extends \PHPUnit_Framework_TestCase {
 	public static function setUpBeforeClass() {
 		//get the config keys for the various tests
 		self::$testKeys = new TestingKeys();
-		PostmarkClientBase::$BASE_URL = self::$testKeys->BASE_URL;
+		PostmarkClientBase::$BASE_URL = self::$testKeys->BASE_URL ?: 'https://api.postmarkapp.com';
 		date_default_timezone_set("UTC");
 	}
 }
