@@ -25,18 +25,6 @@ abstract class PostmarkClientBase {
 	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
 
-	/**
-	 * CERTIFICATE_PATH is NULL by default. 
-	 * This can be set to your own certificate chain if your PHP instance is not able to verify the SSL.
-	 *
-	 * Setting this value causes SSL/TLS requests to use this certificate chain for verifying Postmark requests.
-	 * 
-	 * See: https://guzzle.readthedocs.org/en/5.3/clients.html#verify
-	 *
-	 * @var string
-	 */
-	public static $CERTIFICATE_PATH = NULL;
-
 	protected $authorization_token = NULL;
 	protected $authorization_header = NULL;
 	protected $version = NULL;
@@ -60,11 +48,10 @@ abstract class PostmarkClientBase {
 	 * @return object
 	 */
 	protected function processRestRequest($method = NULL, $path = NULL, $body = NULL) {
-
-		$client = new \GuzzleHttp\Client(array('defaults' => array(
+		$client = new \GuzzleHttp\Client([
 			'exceptions' => false,
 			'timeout' => $this->timeout,
-        )));
+        ]);
 
 		$url = PostmarkClientBase::$BASE_URL . $path;
 
@@ -94,28 +81,22 @@ abstract class PostmarkClientBase {
 			}
 		}
 
-		if (PostmarkClientBase::$CERTIFICATE_PATH != NULL) {
-         	$options['verify'] = PostmarkClientBase::$CERTIFICATE_PATH;
-     	}
-
-		$request = $client->createRequest($method, $url, $options);
-
 		$v = $this->version;
 		$o = $this->os;
 
-		//TODO: include version info in the request.
-		$request->setHeader('User-Agent', "Postmark-PHP (PHP Version:$v, OS:$o)");
-		$request->setHeader('Accept', 'application/json');
-		$request->setHeader('Content-Type', 'application/json');
-		$request->setHeader($this->authorization_header, $this->authorization_token);
+		$options['headers'] = array('User-Agent' => "Postmark-PHP (PHP Version:$v, OS:$o)",
+					 'Accept' => 'application/json',
+					 'Content-Type' => 'application/json',
+					 $this->authorization_header => $this->authorization_token);
 
-		$response = $client->send($request);
+
+		$response = $client->request($method, $url, $options);
 
 		$result = NULL;
 
 		switch ($response->getStatusCode()) {
 			case 200:
-				$result = $response->json();
+				$result = json_decode($response->getBody(), true);
 				break;
 			case 401:
 
@@ -128,7 +109,7 @@ abstract class PostmarkClientBase {
 			case 422:
 				$ex = new PostmarkException();
 
-				$body = $response->json();
+				$body = json_decode($response->getBody(), true);
 
 				$ex->httpStatusCode = 422;
 				$ex->postmarkApiErrorCode = $body['ErrorCode'];
@@ -146,7 +127,6 @@ abstract class PostmarkClientBase {
 				break;
 		}
 		return $result;
-
 	}
 }
 
