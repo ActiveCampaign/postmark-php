@@ -25,6 +25,22 @@ abstract class PostmarkClientBase {
 	 */
 	public static $BASE_URL = "https://api.postmarkapp.com";
 
+	/**
+	* VERIFY_SSL is defaulted to "true". 
+	*
+	* In some PHP configurations, SSL/TLS certificates cannot be verified.
+	* Rather than disabling SSL/TLS entirely in these circumstances, you may
+	* disable certificate verification. This is dramatically better than disabling
+	* connecting to the Postmark API without TLS, as it's still encrypted,
+	* but the risk is that if your connection has been compromised, your application could
+	* be subject to a Man-in-the-middle attack. However, this is still a better outcome
+	* than using no encryption at all.
+	* 
+	* If possible, you should try to resolve your PHP install's certificate issues as outline here:
+	* https://github.com/wildbit/postmark-php/wiki/SSL%20Errors%20on%20Windows
+	*/
+	public static $VERIFY_SSL= true;
+
 	protected $authorization_token = NULL;
 	protected $authorization_header = NULL;
 	protected $version = NULL;
@@ -89,6 +105,7 @@ abstract class PostmarkClientBase {
 					 'Content-Type' => 'application/json',
 					 $this->authorization_header => $this->authorization_token);
 
+		$options['verify'] = PostmarkClientBase::$VERIFY_SSL;
 
 		$response = $client->request($method, $url, $options);
 
