@@ -16,7 +16,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Create a new PostmarkClient.
 	 *
-	 * @param string $server_token  The token associated with "Server" you'd like to use to send/receive email from.
+	 * @param string $serverToken The token associated with "Server" you'd like to use to send/receive email from.
 	 * @param integer $timeout The timeout, in seconds to wait for an API call to complete before throwing an Exception.
 	 */
 	function __construct($serverToken, $timeout = 30) {
@@ -26,7 +26,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send an email.
 	 *
-	 * @param  string $from: The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
 	 * @param  string $to  The recipient of the email.
 	 * @param  string $subject  The subject of the email.
 	 * @param  string $htmlBody  The HTML content of the message, optional if Text Body is specified.
@@ -64,8 +64,8 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send an email using a template.
 	 *
-	 * @param  string $from: The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-	 * @param  string $to  The recipient of the email.
+	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param  string $to The recipient of the email.
 	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
 	 * @param  object $templateModel  The values to combine with the Templated content.
 	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
@@ -808,7 +808,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $subject The Subject template you wish to test.
 	 * @param string $htmlBody The HTML template you wish to test
 	 * @param string $textBody The number of templates to "Skip" before returning results.
-	 * @param object $testingRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
+	 * @param object $testRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
 	 * @param bool $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
 	 * @return DynamicResponseModel
 	 */
