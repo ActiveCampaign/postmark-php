@@ -132,7 +132,7 @@ class PostmarkClient extends PostmarkClientBase {
 
 		$final = array();
 
-		foreach ($emailBatch as $key => $email) {
+		foreach ($emailBatch as $email) {
 			foreach ($email as $emailIdx => $emailValue) {
 				if (strtolower($emailIdx) == 'headers') {
 					$email[$emailIdx] = $this->fixHeaders($emailValue);
