@@ -38,7 +38,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
@@ -76,7 +76,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
@@ -126,7 +126,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param array $emailBatch  An array of emails to be sent in one batch.
 	 *
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function sendEmailBatch($emailBatch = array()) {
 
@@ -147,7 +147,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get an overview of the delivery statistics for all email that has been sent through this Server.
 	 *
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function getDeliveryStatistics() {
 		return new DynamicResponseModel($this->processRestRequest('GET', '/deliverystats'));
@@ -184,7 +184,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Locate information on a specific email bounce.
 	 *
 	 * @param  integer $id The ID of the bounce to get.
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function getBounce($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id"));
@@ -204,7 +204,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Cause the email address associated with a Bounce to be reactivated.
 	 *
 	 * @param  integer $id The bounce which has a deactivated email address.
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function activateBounce($id) {
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/bounces/$id/activate"));
@@ -225,7 +225,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get the settings for the server associated with this PostmarkClient instance
 	 * (defined by the $server_token you passed when instantiating this client)
 	 *
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function getServer() {
 		return new DynamicResponseModel($this->processRestRequest('GET', '/server'));
@@ -246,7 +246,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
 	 * @param  string $inboundDomain Inbound domain for MX setup.
 	 * @param  integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
 		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
@@ -281,7 +281,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $status The current status for the outbound messages to return defaults to 'sent'
 	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
 	 * @param  string $todate Filter to messages on or before YYYY-MM-DD 
-	 * @return DyanamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
 		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL, 
