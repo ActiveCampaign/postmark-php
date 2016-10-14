@@ -66,7 +66,6 @@ abstract class PostmarkClientBase {
 	 * @return Client
 	 */
 	protected function getClient() {
-
 		if(!$this->client) {
 			$this->client = new Client([
 				'base_uri' => self::$BASE_URL,

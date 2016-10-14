@@ -5,3 +5,4 @@ test_keys.json
 vendor
 build
 docs/_build
+*.swp
