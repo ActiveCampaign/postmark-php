@@ -38,7 +38,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText, "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @return DyanamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
@@ -84,7 +84,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText, "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @return DyanamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
