@@ -89,7 +89,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
-				       {		$cc = NULL, $bcc = NULL,
+		$cc = NULL, $bcc = NULL,
 		$headers = NULL, $attachments = NULL, $trackLinks = NULL) {
 
 		$body = array();
