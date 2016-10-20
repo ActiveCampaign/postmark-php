@@ -38,11 +38,12 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
+	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @return DyanamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL) {
+		$headers = NULL, $attachments = NULL, $trackLinks = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -57,6 +58,13 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Headers'] = $this->fixHeaders($headers);
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
+		
+		// Since this parameter can override a per-server setting
+		// we have to check whether it was actually set.
+		// And only include it in the API call if that is the case.
+		if ($trackLinks !== NULL) {
+			$body['TrackLinks'] = $trackLinks;
+		}
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email', $body));
 	}
@@ -76,12 +84,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
+	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @return DyanamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
 		$cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL) {
+		$headers = NULL, $attachments = NULL, $trackLinks = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -96,6 +105,14 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TemplateModel'] = $templateModel;
 		$body['TemplateId'] = $templateId;
 		$body['InlineCss'] = $inlineCss;
+		
+		// Since this parameter can override a per-server setting
+		// we have to check whether it was actually set.
+		// And only include it in the API call if that is the case.
+		if ($trackLinks !== NULL) {
+			$body['TrackLinks'] = $trackLinks;
+		}
+
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
