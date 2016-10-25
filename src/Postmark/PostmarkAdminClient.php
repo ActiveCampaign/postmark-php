@@ -8,7 +8,7 @@ use Postmark\PostmarkClientBase as PostmarkClientBase;
 /**
  * The PostmarkAdminClient allows users to access and modify
  *  "Account-wide" settings. At this time the API supports
- *  management of the "Sender Signatures", and "Servers."
+ *  management of the "Sender Signatures", "Domains", and "Servers."
  */
 class PostmarkAdminClient extends PostmarkClientBase {
 
@@ -161,7 +161,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Get information for a sepcific Sender Signature.
+	 * Get information for a specific Sender Signature.
 	 *
 	 * @param  integer $id The ID for the Sender Signature you wish to retrieve.
 	 * @return DynamicResponseModel
@@ -237,6 +237,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * with the Sender Signature's email address's domain. Configuring SPF is not required to use
 	 * Postmark, but it is highly recommended, and can improve delivery rates.
 	 *
+   * @deprecated verifyDomainSPF replaces this method
 	 * @param  integer $id The ID for the Sender Signature for which we wish to verify the SPF records.
 	 * @return DynamicResponseModel
 	 */
@@ -249,11 +250,103 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * to your email domain's DNS records. Including DKIM is not required, but is recommended. For more information
 	 * on DKIM and its purpose, see http://www.dkim.org/
 	 *
+   * @deprecated rotateDKIMForDomain replaces this method.
 	 * @param  integer $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
 	 * @return DynamicResponseModel
 	 */
 	function requestNewSenderSignatureDKIM($id) {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/requestnewdkim"));
+	}
+  
+  /**
+	 * Get a "page" of Domains.
+	 *
+	 * @param  integer $count The number of Domains to retrieve with this request.
+	 *  param  integer $offset The number of Domains to 'skip' when 'paging' through them.
+	 * @return DynamicResponseModel
+	 */
+	function listDomains($count = 100, $offset = 0) {
+
+		$query = array();
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/domains/', $query));
+	}
+  
+  /**
+	 * Get information for a specific Domain.
+	 *
+	 * @param  integer $id The ID for the Domains you wish to retrieve.
+	 * @return DynamicResponseModel
+	 */
+	function getDomain($id) {
+		return new DynamicResponseModel($this->processRestRequest('GET', "/domains/$id"));
+	}
+
+  
+  /**
+	 * Create a new Domain with the given Name. 
+	 *
+	 * @param  string $name The name of the Domain.
+	 * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
+	 * @return DynamicResponseModel
+	 */
+	function createDomain($name, $returnPathDomain = NULL) {
+		$body = array();
+		$body['name'] = $name;
+		$body['returnPathDomain'] = $returnPathDomain;
+
+		return new DynamicResponseModel($this->processRestRequest('POST', '/domains/', $body));
+	}
+  
+  /**
+	 * Alter the properties of a Domain.
+	 *
+	 * @param  integer $id The ID for the Domain we wish to modify.
+	 * @param  string $returnPathDomain The custom Return-Path domain for the Domain.
+	 * @return DynamicResponseModel
+	 */
+	function editDomain($id, $returnPathDomain = NULL) {
+
+		$body = array();
+		$body['returnPathDomain'] = $returnPathDomain;
+
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id", $body));
+	}
+  
+  /**
+	 * Delete a Domain with the given ID.
+	 *
+	 * @param  integer $id The ID for the Domain we wish to delete.
+	 * @return DynamicResponseModel
+	 */
+	function deleteDomain($id) {
+		return new DynamicResponseModel($this->processRestRequest('DELETE', "/domains/$id"));
+	}
+  
+  /**
+	 * Request that the Postmark API verify the SPF records associated
+	 * with the Domain. Configuring SPF is not required to use
+	 * Postmark, but it is highly recommended, and can improve delivery rates.
+	 *
+	 * @param  integer $id The ID for the Domain for which we wish to verify the SPF records.
+	 * @return DynamicResponseModel
+	 */
+	function verifyDomainSPF($id) {
+		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/verifyspf"));
+	}
+  
+  /**
+	 * Rotate DKIM keys associated with the Domain. This key must be added
+	 * to your DNS records. Including DKIM is not required, but is recommended. For more information
+	 * on DKIM and its purpose, see http://www.dkim.org/
+	 *
+	 * @param  integer $id The ID for the Domain for which we wish to get an updated DKIM configuration.
+	 * @return DynamicResponseModel
+	 */
+	function rotateDKIMForDomain($id) {
+		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
 	}
 }
 ?>

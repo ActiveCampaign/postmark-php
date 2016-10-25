@@ -14,12 +14,13 @@ class TestingKeys {
 	public $WRITE_TEST_SENDER_EMAIL_ADDRESS;
 	public $WRITE_TEST_EMAIL_RECIPIENT_ADDRESS;
 	public $WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
+	public $WRITE_TEST_DOMAIN_NAME;
 	public $BASE_URL;
 
 	function __construct() {
 		$test_keys = array();
 
-		$keyfile = __DIR__ . "/../test_keys.json";
+		$keyfile = __DIR__ . "/../testing_keys.json";
 
 		if (file_exists($keyfile)) {
 			$keys = file_get_contents($keyfile);
@@ -36,6 +37,7 @@ class TestingKeys {
 		$this->WRITE_TEST_SENDER_EMAIL_ADDRESS = getenv("WRITE_TEST_SENDER_EMAIL_ADDRESS") ?: $test_keys["WRITE_TEST_SENDER_EMAIL_ADDRESS"];
 		$this->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS = getenv("WRITE_TEST_EMAIL_RECIPIENT_ADDRESS") ?: $test_keys["WRITE_TEST_EMAIL_RECIPIENT_ADDRESS"];
 		$this->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE = getenv("WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE") ?: $test_keys["WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE"];
+		$this->WRITE_TEST_DOMAIN_NAME = getenv("WRITE_TEST_DOMAIN_NAME") ?: $test_keys["WRITE_TEST_DOMAIN_NAME"];
 
 		$this->BASE_URL = getenv("BASE_URL") ?: $test_keys["BASE_URL"];
 	}
