@@ -10,7 +10,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetDeliveryStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getDeliveryStatistics();
 
@@ -20,7 +20,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetBounces() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$bounces = $client->getBounces(10, 0);
 		$this->assertNotEmpty($bounces);
@@ -28,7 +28,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetBounce() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$bounces = $client->getBounces(10, 0);
 		$id = $bounces->Bounces[0]['ID'];
 		$bounce = $client->getBounce($id);
@@ -37,7 +37,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetBounceDump() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$bounces = $client->getBounces(10, 0);
 		$id = $bounces->Bounces[0]['ID'];
 		$dump = $client->getBounceDump($id);
@@ -46,7 +46,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetBounceTags() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_INBOUND_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$tags = $client->getBounceTags();
 		$this->assertNotEmpty($tags);
 		$this->assertGreaterThan(0, count($tags));

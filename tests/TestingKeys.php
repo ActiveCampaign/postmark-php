@@ -20,7 +20,7 @@ class TestingKeys {
 	function __construct() {
 		$test_keys = array();
 
-		$keyfile = __DIR__ . "/../test_keys.json";
+		$keyfile = __DIR__ . "/../testing_keys.json";
 
 		if (file_exists($keyfile)) {
 			$keys = file_get_contents($keyfile);
