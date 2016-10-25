@@ -635,6 +635,84 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
+	 * Get click statistics for the messages sent using this Server,
+	 * optionally filtering on message tag, and a to and from date.
+	 *
+	 * @param  string $tag Filter by tag.
+	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
+	 * @return DynamicResponseModel
+	 */
+	function getOutboundClickStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
+		$query = array();
+
+		$query['tag'] = $tag;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks', $query));
+	}
+
+	/**
+	 * Get information about which browsers were used to open tracked links for the messages sent using this Server,
+	 * optionally filtering on message tag, and a to and from date.
+	 *
+	 * @param  string $tag Filter by tag.
+	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
+	 * @return DynamicResponseModel
+	 */
+	function getOutboundClickBrowserFamilyStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
+		$query = array();
+
+		$query['tag'] = $tag;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/browserfamilies', $query));
+	}
+
+	/**
+	 * Get information about which browsers platforms (Desktop, Mobile, etc.) were used to open 
+	 * tracked links for the messages sent using this Server,
+	 * optionally filtering on message tag, and a to and from date.
+	 *
+	 * @param  string $tag Filter by tag.
+	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
+	 * @return DynamicResponseModel
+	 */
+	function getOutboundClickBrowserPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
+		$query = array();
+
+		$query['tag'] = $tag;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/platforms', $query));
+	}
+
+	/**
+	 * Get information about part of the message (HTML or Text) 
+	 * tracked links were clicked from in messages sent using this Server,
+	 * optionally filtering on message tag, and a to and from date.
+	 *
+	 * @param  string $tag Filter by tag.
+	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
+	 * @return DynamicResponseModel
+	 */
+	function getOutboundClickLocationStatistics($tag = NULL, $fromdate = NULL, $todate = NULL) {
+		$query = array();
+
+		$query['tag'] = $tag;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/location', $query));
+	}
+
+	/**
 	 * Create a Tag Trigger.
 	 *
 	 * @param  string $matchName Name of the tag that will activate this trigger.
