@@ -139,12 +139,10 @@ abstract class PostmarkClientBase {
 
 		$response = $client->request($method, $path, $options);
 
-		$result = NULL;
-
 		switch ($response->getStatusCode()) {
 			case 200:
-				$result = json_decode($response->getBody(), true);
-				break;
+				return json_decode($response->getBody(), true);
+				
 			case 401:
 
 				$ex = new PostmarkException();
@@ -152,18 +150,7 @@ abstract class PostmarkClientBase {
 				'Please verify that you used the correct token when you constructed your client.';
 				$ex->httpStatusCode = 401;
 				throw $ex;
-				break;
-			case 422:
-				$ex = new PostmarkException();
-
-				$body = json_decode($response->getBody(), true);
-
-				$ex->httpStatusCode = 422;
-				$ex->postmarkApiErrorCode = $body['ErrorCode'];
-				$ex->message = $body['Message'];
-
-				throw $ex;
-				break;
+				
 			case 500:
 				$ex = new PostmarkException();
 				$ex->httpStatusCode = 500;
@@ -171,8 +158,20 @@ abstract class PostmarkClientBase {
 				'In most cases the message is lost during the process, ' .
 				'and Postmark is notified so that we can investigate the issue.';
 				throw $ex;
-				break;
+			
+			case 422:
+			default: //any other status code
+				$ex = new PostmarkException();
+
+				$body = json_decode($response->getBody(), true);
+
+				$ex->httpStatusCode = $response->getStatusCode();
+				$ex->postmarkApiErrorCode = $body['ErrorCode'];
+				$ex->message = $body['Message'];
+
+				throw $ex;
+				
 		}
-		return $result;
+		
 	}
 }
