@@ -139,27 +139,15 @@ abstract class PostmarkClientBase {
 
 		$response = $client->request($method, $path, $options);
 
-		$result = NULL;
-
 		switch ($response->getStatusCode()) {
 			case 200:
-				$result = json_decode($response->getBody(), true);
-				break;
+				return json_decode($response->getBody(), true);
 			case 401:
 				$ex = new PostmarkException();
 				$ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
 				'Please verify that you used the correct token when you constructed your client.';
 				$ex->httpStatusCode = 401;
 				throw $ex;
-				break;
-			case 422:
-				$ex = new PostmarkException();
-				$body = json_decode($response->getBody(), true);
-				$ex->httpStatusCode = 422;
-				$ex->postmarkApiErrorCode = $body['ErrorCode'];
-				$ex->message = $body['Message'];
-				throw $ex;
-				break;
 			case 500:
 				$ex = new PostmarkException();
 				$ex->httpStatusCode = 500;
@@ -167,14 +155,20 @@ abstract class PostmarkClientBase {
 				'In most cases the message is lost during the process, ' .
 				'and Postmark is notified so that we can investigate the issue.';
 				throw $ex;
-				break;
 			case 503:
 				$ex = new PostmarkException();
 				$ex->httpStatusCode = 503;
-				$ex->message = 'The Postmark API is currently unavailable due to scheduled downtime. Please try your request again, later.';
+				$ex->message = 'The Postmark API is currently unavailable, please try your request later.';
 				throw $ex;
-				break;
+			// This should cover case 422, and any others that are possible:
+			default:
+				$ex = new PostmarkException();
+				$body = json_decode($response->getBody(), true);
+				$ex->httpStatusCode = $response->getStatusCode();
+				$ex->postmarkApiErrorCode = $body['ErrorCode'];
+				$ex->message = $body['Message'];
+				throw $ex;
 		}
-		return $result;
+		
 	}
 }
