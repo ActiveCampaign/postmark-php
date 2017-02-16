@@ -183,7 +183,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * :return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
-		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL) {
+		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, $fromdate = NULL, $todate = NULL) {
 
 		$query = array();
 		$query['type'] = $type;
@@ -193,6 +193,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['messageID'] = $messageID;
 		$query['count'] = $count;
 		$query['offset'] = $offset;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/bounces', $query));
 	}
