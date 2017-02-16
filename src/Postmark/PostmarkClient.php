@@ -180,10 +180,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $emailFilter Filter by email address
 	 * @param  string $tag Filter by tag
 	 * @param  string $messageID Filter by MessageID
+	 * @param  string $fromdate Filter for bounces after is date.
+	 * @param  string $todate Filter for bounces before this date.
 	 * :return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
-		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, $fromdate = NULL, $todate = NULL) {
+		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, 
+	        $fromdate = NULL, $todate = NULL) {
 
 		$query = array();
 		$query['type'] = $type;
