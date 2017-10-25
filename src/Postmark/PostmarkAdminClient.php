@@ -79,16 +79,17 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
 	 * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
 	 * @param string $inboundDomain Inbound domain for MX setup.
-	 * @param string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
 	 * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-	 *
+	 * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
+	 * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
+	 * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
 	 * @return DynamicResponseModel
 	 */
 	function editServer($id, $name = NULL, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
-		$trackLinks = NULL) {
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL ) {
 
 		$body = array();
 		$body['name'] = $name;
@@ -100,9 +101,11 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['openHookUrl'] = $openHookUrl;
 		$body['postFirstOpenOnly'] = $postFirstOpenOnly;
 		$body['trackOpens'] = $trackOpens;
-		$body['trackLinks'] = $trackLinks;
 		$body['inboundDomain'] = $inboundDomain;
 		$body['inboundSpamThreshold'] = $inboundSpamThreshold;
+		$body['trackLinks'] = $trackLinks;
+		$body["ClickHookUrl"] = $clickHookUrl;
+		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
 		$response = new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body));
 		$response["ID"] = $id;
@@ -123,14 +126,17 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
 	 * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
 	 * @param string $inboundDomain Inbound domain for MX setup.
-	 * @param string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
 	 * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 * @param string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
+	 * @param string $clickHookUrl URL to POST to everytime an click event occurs.
+	 * @param string $deliveryHookUrl URL to POST to everytime an click event occurs.
 	 * @return DynamicResponseModel
 	 */
 	function createServer($name, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
-		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, $trackLinks = NULL) {
+		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
 
 		$body = array();
 		$body['name'] = $name;
@@ -142,9 +148,11 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['openHookUrl'] = $openHookUrl;
 		$body['postFirstOpenOnly'] = $postFirstOpenOnly;
 		$body['trackOpens'] = $trackOpens;
-		$body['trackLinks'] = $trackLinks;
 		$body['inboundDomain'] = $inboundDomain;
 		$body['inboundSpamThreshold'] = $inboundSpamThreshold;
+		$body['trackLinks'] = $trackLinks;
+		$body["ClickHookUrl"] = $clickHookUrl;
+		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/servers/', $body));
 	}

@@ -268,12 +268,16 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
 	 * @param  string $inboundDomain Inbound domain for MX setup.
 	 * @param  integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
+	 * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
+	 * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
 	 * @return DynamicResponseModel
 	 */
 	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
 		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
 		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL,
-		$inboundDomain = NULL, $inboundSpamThreshold = NULL) {
+		$inboundDomain = NULL, $inboundSpamThreshold = NULL,
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
 
 		$body = array();
 		$body["Name"] = $name;
@@ -287,6 +291,9 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["TrackOpens"] = $trackOpens;
 		$body["InboundDomain"] = $inboundDomain;
 		$body["InboundSpamThreshold"] = $inboundSpamThreshold;
+		$body['trackLinks'] = $trackLinks;
+		$body["ClickHookUrl"] = $clickHookUrl;
+		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', '/server', $body));
 	}
