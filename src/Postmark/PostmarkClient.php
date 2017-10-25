@@ -459,6 +459,49 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
+	 * Get statistics for tracked messages, optionally filtering by various click event properties.
+	 *
+	 * @param  integer $count The number of click statistics to retrieve in this request.
+	 * @param  integer $offset The number of statistics to 'skip' when paging through statistics.
+	 * @param  string $recipient Filter by recipient.
+	 * @param  string $tag Filter by tag.
+	 * @param  string $clientName Filter by Email Client name.
+	 * @param  string $clientCompany Filter by Email Client Company's name.
+	 * @param  string $clientFamily Filter by Email Client's Family name.
+	 * @param  string $osName Filter by Email Client's Operating System Name.
+	 * @param  string $osFamily Filter by Email Client's Operating System's Family.
+	 * @param  string $osCompany Filter by Email Client's Operating System's Company.
+	 * @param  string $platform Filter by Email Client's Platform Name.
+	 * @param  string $country Filter by Country.
+	 * @param  string $region Filter by Region.
+	 * @param  string $city Filter by City.
+	 * @return DynamicResponseModel
+	 */
+	function getClickStatistics($count = 100, $offset = 0, $recipient = NULL,
+		$tag = NULL, $clientName = NULL, $clientCompany = NULL, $clientFamily = NULL,
+		$osName = NULL, $osFamily = NULL, $osCompany = NULL, $platform = NULL,
+		$country = NULL, $region = NULL, $city = NULL) {
+
+		$query = array();
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+		$query['recipient'] = $recipient;
+		$query['tag'] = $tag;
+		$query['client_name'] = $clientName;
+		$query['client_company'] = $clientCompany;
+		$query['client_family'] = $clientFamily;
+		$query['os_name'] = $osName;
+		$query['os_family'] = $osFamily;
+		$query['os_company'] = $osCompany;
+		$query['platform'] = $platform;
+		$query['country'] = $country;
+		$query['region'] = $region;
+		$query['city'] = $city;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound/clicks', $query));
+	}
+
+	/**
 	 * Get information about individual opens for a sent message.
 	 *
 	 * @param  integer $id The ID for the message that we want statistics for.
@@ -473,6 +516,23 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['offset'] = $offset;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
+	}
+
+	/**
+	 * Get information about individual clicks for a sent message.
+	 *
+	 * @param  integer $id The ID for the message that we want statistics for.
+	 * @param  integer $count How many statistics should we retrieve?
+	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
+	 * @return DynamicResponseModel
+	 */
+	function getClickStatisticsForMessage($id, $count = 100, $offset = 0) {
+		$query = array();
+
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/clicks/$id", $query));
 	}
 
 	/**
