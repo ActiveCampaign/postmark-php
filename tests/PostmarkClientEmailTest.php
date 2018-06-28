@@ -2,8 +2,15 @@
 
 namespace Postmark\Tests;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 use Postmark\Models\PostmarkAttachment;
 use Postmark\PostmarkClient;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriInterface;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
@@ -96,6 +103,53 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$this->assertNotEmpty($response, 'The client could not send a batch of messages.');
 	}
 
+	public function testRequestSentWithCustomGuzzleClientHasCorrectUri() {
+	    $successResponse = new Response(
+	        200,
+            ['content-type' => 'application/json'],
+            json_encode([
+                'To' => 'user@example.com',
+                'SubmittedAt' => '2014-02-17T07:25:01.4178645-05:00',
+                'MessageId' => '0a129aee-e1cd-480d-b08d-4f48548ff48d',
+                'ErrorCode' => 0,
+                'Message' => 'OK',
+            ])
+        );
+
+	    $guzzleMockHandler = new MockHandler();
+	    $guzzleMockHandler->append($successResponse);
+
+	    $httpHistoryContainer = [];
+
+        $handlerStack = HandlerStack::create($guzzleMockHandler);
+	    $handlerStack->push(Middleware::history($httpHistoryContainer), 'history');
+
+        $guzzleClient = new Client([
+            'handler' => $handlerStack,
+        ]);
+        $postmarkClient = new PostmarkClient('not-applicable');
+
+        $postmarkClient->setClient($guzzleClient);
+
+        $postmarkClient->sendEmail(
+            'sender@example.com',
+            'recipient@example.com',
+            'Test message',
+            null,
+            'Text body'
+        );
+
+        /* @var RequestInterface $lastRequest */
+        $lastRequest = $httpHistoryContainer[0]['request'];
+
+        /* @var UriInterface $lastRequestUri */
+        $lastRequestUri = $lastRequest->getUri();
+
+        $this->assertEquals(
+            PostmarkClient::$BASE_URL,
+            sprintf('%s://%s', $lastRequestUri->getScheme(), $lastRequestUri->getHost())
+        );
+    }
 }
 
 ?>

@@ -68,7 +68,6 @@ abstract class PostmarkClientBase {
 	protected function getClient() {
 		if(!$this->client) {
 			$this->client = new Client([
-				'base_uri' => self::$BASE_URL,
 				RequestOptions::VERIFY  => self::$VERIFY_SSL,
 				RequestOptions::TIMEOUT => $this->timeout,
 			]);
@@ -137,7 +136,7 @@ abstract class PostmarkClientBase {
 			}
 		}
 
-		$response = $client->request($method, $path, $options);
+		$response = $client->request($method, self::$BASE_URL . $path, $options);
 
 		switch ($response->getStatusCode()) {
 			case 200:
@@ -169,6 +168,6 @@ abstract class PostmarkClientBase {
 				$ex->message = $body['Message'];
 				throw $ex;
 		}
-		
+
 	}
 }
