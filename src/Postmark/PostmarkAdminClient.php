@@ -83,13 +83,15 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
 	 * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
 	 * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
+	 * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
 	 * @return DynamicResponseModel
 	 */
 	function editServer($id, $name = NULL, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
-		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL,
+		$enableSmtpApiErrorHooks = NULL) {
 
 		$body = array();
 		$body['name'] = $name;
@@ -106,6 +108,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['trackLinks'] = $trackLinks;
 		$body["ClickHookUrl"] = $clickHookUrl;
 		$body["DeliveryHookUrl"] = $deliveryHookUrl;
+		$body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
 
 		$response = new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body));
 		$response["ID"] = $id;
@@ -130,13 +133,15 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
 	 * @param string $clickHookUrl URL to POST to everytime an click event occurs.
 	 * @param string $deliveryHookUrl URL to POST to everytime an click event occurs.
+	 * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
 	 * @return DynamicResponseModel
 	 */
 	function createServer($name, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
-		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL,
+		$enableSmtpApiErrorHooks = NULL) {
 
 		$body = array();
 		$body['name'] = $name;
@@ -153,6 +158,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['trackLinks'] = $trackLinks;
 		$body["ClickHookUrl"] = $clickHookUrl;
 		$body["DeliveryHookUrl"] = $deliveryHookUrl;
+		$body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/servers/', $body));
 	}
