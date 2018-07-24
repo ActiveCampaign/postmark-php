@@ -39,11 +39,12 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
 	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
 	 * @return DynamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL, $trackLinks = NULL) {
+		$headers = NULL, $attachments = NULL, $trackLinks = NULL, $metadata = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -58,6 +59,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Headers'] = $this->fixHeaders($headers);
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
+		$body['Metadata'] = $metadata;
 		
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
@@ -85,12 +87,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $headers  Headers to be included with the sent email message.
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
 	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
 	 * @return DynamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
-		$cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL, $trackLinks = NULL) {
+		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL, 
+		$trackLinks = NULL, $metadata = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -105,6 +108,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TemplateModel'] = $templateModel;
 		$body['TemplateId'] = $templateId;
 		$body['InlineCss'] = $inlineCss;
+		$body['Metadata'] = $metadata;
+		
 		
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
@@ -309,12 +314,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $subject Filter by subject.
 	 * @param  string $status The current status for the outbound messages to return defaults to 'sent'
 	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
-	 * @param  string $todate Filter to messages on or before YYYY-MM-DD 
+	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
+	 * @param  string $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
 		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL, 
-		$fromdate = NULL, $todate = NULL) {
+		$fromdate = NULL, $todate = NULL, $metadata = NULL) {
 
 		$query = array();
 		$query["recipient"] = $recipient;
@@ -326,6 +332,12 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["status"] = $status;
 		$query["fromdate"] = $fromdate;
 		$query["todate"] = $todate;
+
+		if($metadata != NULL) {
+			foreach($metadata as $key => $value) {
+				$query["metadata_$key"] = $value;
+			}
+		}
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound', $query));
 	}

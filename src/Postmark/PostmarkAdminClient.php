@@ -89,7 +89,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
 		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
-		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL ) {
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
 
 		$body = array();
 		$body['name'] = $name;
