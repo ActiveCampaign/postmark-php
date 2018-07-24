@@ -75,7 +75,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
 	 * @param  string $to The recipient of the email.
 	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
-	 * @param  object $templateModel  The values to combine with the Templated content.
+	 * @param  array $templateModel  The values to combine with the Templated content.
 	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
 	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
 	 * @param  boolean $trackOpens  True if you want Postmark to track opens of HTML emails.
@@ -182,7 +182,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $messageID Filter by MessageID
 	 * @param  string $fromdate Filter for bounces after is date.
 	 * @param  string $todate Filter for bounces before this date.
-	 * :return DynamicResponseModel
+	 * @return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
 		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, 
