@@ -11,7 +11,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetMessageOpens() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOpenStatistics();
 		$this->assertNotEmpty($stats);
@@ -19,7 +19,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetMessageOpensForSpecificMessage() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOpenStatistics();
 
@@ -76,7 +76,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 	function testClientCanGetOutboundOpenStatistics() {
 		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
 		$stats = $client->getOutboundOpenStatistics();
 
