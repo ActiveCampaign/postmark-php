@@ -75,7 +75,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
 	 * @param  string $to The recipient of the email.
 	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
-	 * @param  object $templateModel  The values to combine with the Templated content.
+	 * @param  array $templateModel  The values to combine with the Templated content.
 	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
 	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
 	 * @param  boolean $trackOpens  True if you want Postmark to track opens of HTML emails.
@@ -180,10 +180,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $emailFilter Filter by email address
 	 * @param  string $tag Filter by tag
 	 * @param  string $messageID Filter by MessageID
-	 * :return DynamicResponseModel
+	 * @param  string $fromdate Filter for bounces after is date.
+	 * @param  string $todate Filter for bounces before this date.
+	 * @return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
-		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL) {
+		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, 
+	        $fromdate = NULL, $todate = NULL) {
 
 		$query = array();
 		$query['type'] = $type;
@@ -193,6 +196,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['messageID'] = $messageID;
 		$query['count'] = $count;
 		$query['offset'] = $offset;
+		$query['fromdate'] = $fromdate;
+		$query['todate'] = $todate;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/bounces', $query));
 	}
@@ -263,12 +268,16 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
 	 * @param  string $inboundDomain Inbound domain for MX setup.
 	 * @param  integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
+	 * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
+	 * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
 	 * @return DynamicResponseModel
 	 */
 	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
 		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
 		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL,
-		$inboundDomain = NULL, $inboundSpamThreshold = NULL) {
+		$inboundDomain = NULL, $inboundSpamThreshold = NULL,
+		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
 
 		$body = array();
 		$body["Name"] = $name;
@@ -282,6 +291,9 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["TrackOpens"] = $trackOpens;
 		$body["InboundDomain"] = $inboundDomain;
 		$body["InboundSpamThreshold"] = $inboundSpamThreshold;
+		$body['trackLinks'] = $trackLinks;
+		$body["ClickHookUrl"] = $clickHookUrl;
+		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', '/server', $body));
 	}
@@ -447,6 +459,49 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
+	 * Get statistics for tracked messages, optionally filtering by various click event properties.
+	 *
+	 * @param  integer $count The number of click statistics to retrieve in this request.
+	 * @param  integer $offset The number of statistics to 'skip' when paging through statistics.
+	 * @param  string $recipient Filter by recipient.
+	 * @param  string $tag Filter by tag.
+	 * @param  string $clientName Filter by Email Client name.
+	 * @param  string $clientCompany Filter by Email Client Company's name.
+	 * @param  string $clientFamily Filter by Email Client's Family name.
+	 * @param  string $osName Filter by Email Client's Operating System Name.
+	 * @param  string $osFamily Filter by Email Client's Operating System's Family.
+	 * @param  string $osCompany Filter by Email Client's Operating System's Company.
+	 * @param  string $platform Filter by Email Client's Platform Name.
+	 * @param  string $country Filter by Country.
+	 * @param  string $region Filter by Region.
+	 * @param  string $city Filter by City.
+	 * @return DynamicResponseModel
+	 */
+	function getClickStatistics($count = 100, $offset = 0, $recipient = NULL,
+		$tag = NULL, $clientName = NULL, $clientCompany = NULL, $clientFamily = NULL,
+		$osName = NULL, $osFamily = NULL, $osCompany = NULL, $platform = NULL,
+		$country = NULL, $region = NULL, $city = NULL) {
+
+		$query = array();
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+		$query['recipient'] = $recipient;
+		$query['tag'] = $tag;
+		$query['client_name'] = $clientName;
+		$query['client_company'] = $clientCompany;
+		$query['client_family'] = $clientFamily;
+		$query['os_name'] = $osName;
+		$query['os_family'] = $osFamily;
+		$query['os_company'] = $osCompany;
+		$query['platform'] = $platform;
+		$query['country'] = $country;
+		$query['region'] = $region;
+		$query['city'] = $city;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound/clicks', $query));
+	}
+
+	/**
 	 * Get information about individual opens for a sent message.
 	 *
 	 * @param  integer $id The ID for the message that we want statistics for.
@@ -461,6 +516,23 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['offset'] = $offset;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
+	}
+
+	/**
+	 * Get information about individual clicks for a sent message.
+	 *
+	 * @param  integer $id The ID for the message that we want statistics for.
+	 * @param  integer $count How many statistics should we retrieve?
+	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
+	 * @return DynamicResponseModel
+	 */
+	function getClickStatisticsForMessage($id, $count = 100, $offset = 0) {
+		$query = array();
+
+		$query['count'] = $count;
+		$query['offset'] = $offset;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/clicks/$id", $query));
 	}
 
 	/**
