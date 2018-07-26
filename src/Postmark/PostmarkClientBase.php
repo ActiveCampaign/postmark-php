@@ -98,7 +98,7 @@ abstract class PostmarkClientBase {
      * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
      * @param string $path The API path.
      * @param array $body The content to be used (either as the query, or the json post/put body)
-     * @return object
+     * @return array
      *
      * @throws PostmarkException
      */
