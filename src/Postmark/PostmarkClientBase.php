@@ -92,16 +92,16 @@ abstract class PostmarkClientBase {
 		$this->client = $client;
 	}
 
-	/**
-	 * The base request method for all API access.
-	 *
-	 * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
-	 * @param string $path The API path.
-	 * @param array $body The content to be used (either as the query, or the json post/put body)
-	 * @return object
-	 *
-	 * @throws PostmarkException
-	 */
+    /**
+     * The base request method for all API access.
+     *
+     * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
+     * @param string $path The API path.
+     * @param array $body The content to be used (either as the query, or the json post/put body)
+     * @return object
+     *
+     * @throws PostmarkException
+     */
 	protected function processRestRequest($method = NULL, $path = NULL, array $body = []) {
 		$client = $this->getClient();
 
