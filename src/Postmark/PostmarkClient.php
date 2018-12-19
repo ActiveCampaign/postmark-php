@@ -105,7 +105,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['Headers'] = $this->fixHeaders($headers);
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
-		$body['TemplateModel'] = $templateModel;
+		$body['TemplateModel'] = empty($templateModel) ? (object) ([]) : $templateModel;
 		$body['TemplateId'] = $templateId;
 		$body['InlineCss'] = $inlineCss;
 		$body['Metadata'] = $metadata;
