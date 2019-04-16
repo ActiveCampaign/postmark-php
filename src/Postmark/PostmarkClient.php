@@ -167,6 +167,32 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
+	 * Send multiple emails with a template as a batch
+	 *
+	 * Each email is an associative array of values. See sendEmailWithTemplate()
+	 * for details on required values.
+	 *
+	 * @param array $emailBatch An array of emails to be sent in one batch.
+	 *
+	 * @return DynamicResponseModel
+	 * @throws Models\PostmarkException
+	 */
+	function sendEmailBatchWithTemplate($emailBatch = array()) {
+		$final = array();
+
+		foreach ($emailBatch as $email) {
+			foreach ($email as $emailIdx => $emailValue) {
+				if (strtolower($emailIdx) === 'headers') {
+					$email[$emailIdx] = $this->fixHeaders($emailValue);
+				}
+			}
+			$final[] = $email;
+		}
+
+		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batchWithTemplates', array('Messages' => $final)));
+	}
+
+	/**
 	 * Get an overview of the delivery statistics for all email that has been sent through this Server.
 	 *
 	 * @return DynamicResponseModel
