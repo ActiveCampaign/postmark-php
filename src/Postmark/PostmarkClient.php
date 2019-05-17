@@ -76,7 +76,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
 	 * @param  string $to The recipient of the email.
-	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
+	 * @param  integer $templateIdOrAlias  The ID or Alias of the template to use to generate the content of this message.
 	 * @param  array $templateModel  The values to combine with the Templated content.
 	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
 	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
@@ -90,7 +90,6 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
 	 * @return DynamicResponseModel
 	 */
-	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
 		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL, 
 		$trackLinks = NULL, $metadata = NULL) {
@@ -106,7 +105,12 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 		$body['TemplateModel'] = $templateModel;
-		$body['TemplateId'] = $templateId;
+		if(is_int($templateIdOrAlias) {
+		    $body['TemplateId'] = $templateIdOrAlias;
+		}
+		else {
+		    $body['TemplateAlias'] = $templateIdOrAlias;
+		}
 		$body['InlineCss'] = $inlineCss;
 		$body['Metadata'] = $metadata;
 		
