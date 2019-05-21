@@ -106,7 +106,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 		$body['TemplateModel'] = $templateModel;
-		if(is_int($templateIdOrAlias) {
+		if(is_int($templateIdOrAlias)) {
 		    $body['TemplateId'] = $templateIdOrAlias;
 		}
 		else {
