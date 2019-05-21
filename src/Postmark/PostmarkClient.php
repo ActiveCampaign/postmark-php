@@ -90,6 +90,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
 	 * @return DynamicResponseModel
 	 */
+	function sendEmailWithTemplate($from, $to, $templateIdOrAlias, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
 		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL, 
 		$trackLinks = NULL, $metadata = NULL) {
