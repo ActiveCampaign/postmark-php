@@ -991,7 +991,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param bool $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
 	 * @return DynamicResponseModel
 	 */
-	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true) {
+	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true, $templateType = NULL, $layoutTemplate = NULL) {
 		$query = array();
 
 		$query["subject"] = $subject;
@@ -999,6 +999,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["textBody"] = $textBody;
 		$query["testRenderModel"] = $testRenderModel;
 		$query["inlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
+		$query['templateType'] = $templateType;
+		$query['layoutTemplate'] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
