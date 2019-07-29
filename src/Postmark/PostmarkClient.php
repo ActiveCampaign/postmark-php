@@ -60,7 +60,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 		$body['Metadata'] = $metadata;
-		
+
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
 		// And only include it in the API call if that is the case.
@@ -76,7 +76,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
 	 * @param  string $to The recipient of the email.
-	 * @param  integer $templateId  The ID of the template to use to generate the content of this message.
+	 * @param  integer|string $templateIdOrAlias  The ID or alias of the template to use to generate the content of this message.
 	 * @param  array $templateModel  The values to combine with the Templated content.
 	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
 	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
@@ -90,9 +90,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
 	 * @return DynamicResponseModel
 	 */
-	function sendEmailWithTemplate($from, $to, $templateId, $templateModel, $inlineCss = true,
+	function sendEmailWithTemplate($from, $to, $templateIdOrAlias, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
-		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL, 
+		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL,
 		$trackLinks = NULL, $metadata = NULL) {
 
 		$body = array();
@@ -106,16 +106,23 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 		$body['TemplateModel'] = $templateModel;
-		$body['TemplateId'] = $templateId;
 		$body['InlineCss'] = $inlineCss;
 		$body['Metadata'] = $metadata;
-		
-		
+
+
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
 		// And only include it in the API call if that is the case.
 		if ($trackLinks !== NULL) {
 			$body['TrackLinks'] = $trackLinks;
+		}
+
+		if ( is_int( $templateIdOrAlias ) ) {
+			$body['TemplateId'] = $templateIdOrAlias;
+
+			// Uses the Template Alias if specified instead of Template ID.
+		} else {
+			$body['TemplateAlias'] = $templateIdOrAlias;
 		}
 
 
@@ -190,7 +197,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
-		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL, 
+		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL,
 	        $fromdate = NULL, $todate = NULL) {
 
 		$query = array();
@@ -313,13 +320,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $subject Filter by subject.
 	 * @param  string $status The current status for the outbound messages to return defaults to 'sent'
-	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
+	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD
 	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
 	 * @param  string $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
-		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL, 
+		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL,
 		$fromdate = NULL, $todate = NULL, $metadata = NULL) {
 
 		$query = array();
@@ -373,7 +380,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $subject Filter by the message subject
 	 * @param  string $mailboxHash Filter by the mailboxHash
 	 * @param  string $status Filter by status ('blocked' or 'processed')
-	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD 
+	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD
 	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
 	 * @return DynamicResponseModel
 	 */
@@ -757,7 +764,7 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Get information about which browsers platforms (Desktop, Mobile, etc.) were used to open 
+	 * Get information about which browsers platforms (Desktop, Mobile, etc.) were used to open
 	 * tracked links for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
@@ -777,7 +784,7 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Get information about part of the message (HTML or Text) 
+	 * Get information about part of the message (HTML or Text)
 	 * tracked links were clicked from in messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
@@ -907,7 +914,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Delete a template.
 	 *
-	 * @param integer $id The ID of the template to delete.
+	 * @param string $id The ID or alias of the template to delete.
 	 * @return DynamicResponseModel
 	 */
 	function deleteTemplate($id) {
@@ -921,35 +928,39 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
+	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function createTemplate($name, $subject, $htmlBody, $textBody) {
+	function createTemplate($name, $subject, $htmlBody, $textBody, $alias = NULL) {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
 		$template["htmlBody"] = $htmlBody;
 		$template["textBody"] = $textBody;
+		$template["alias"] = $alias;
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
 	}
 
 	/**
 	 * Edit a template
 	 *
-	 * @param integer $id The ID of the template you wish to update.
+	 * @param string $id The ID or alias of the template you wish to update.
 	 * @param string $name The friendly name for this template.
 	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template.
+	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL) {
+	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL, $alias = NULL) {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
 		$template["htmlBody"] = $htmlBody;
 		$template["textBody"] = $textBody;
+		$template["alias"] = $alias;
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
 	}
@@ -957,7 +968,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get the current information for a specific template.
 	 *
-	 * @param integer $id the Id for the template info you wish to retrieve.
+	 * @param string $id the Id or alias for the template info you wish to retrieve.
 	 * @return DynamicResponseModel
 	 */
 	function getTemplate($id) {
