@@ -86,7 +86,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 	function testClientCanValidateTemplate() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		$result = $client->validateTemplate("{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", NULL, false);
+		$result = $client->validateTemplate("{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", NULL, false, NULL, NULL);
 
 		$this->assertNotEmpty($result);
 	}

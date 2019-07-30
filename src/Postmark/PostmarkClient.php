@@ -1026,9 +1026,11 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $textBody The number of templates to "Skip" before returning results.
 	 * @param object $testRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
 	 * @param bool $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
+	 * @param string $templateType Validates templates based on template type (layout template or standard template). Possible options: Standard or Layout. Defaults to Standard.
+	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided a standard template will not use a layout template.
 	 * @return DynamicResponseModel
 	 */
-	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true) {
+	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true, $templateType = 'Standard', $layoutTemplate = NULL) {
 		$query = array();
 
 		$query["subject"] = $subject;
@@ -1036,6 +1038,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["textBody"] = $textBody;
 		$query["testRenderModel"] = $testRenderModel;
 		$query["inlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
+		$query['templateType'] = $templateType;
+		$query['layoutTemplate'] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
