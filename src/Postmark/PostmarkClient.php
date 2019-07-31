@@ -956,7 +956,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
 	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
 	 * @param string $templateType Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
-	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided, a standard template will not use a layout template.
+	 * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
 	 *
 	 * @return DynamicResponseModel
 	 */
@@ -982,7 +982,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template.
 	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided, a standard template will not use a layout template.
+	 * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
 	 *
 	 * @return DynamicResponseModel
 	 */
@@ -1014,15 +1014,17 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param integer $count The total number of templates to get at once (default is 100)
 	 * @param integer $offset The number of templates to "Skip" before returning results.
 	 * @param string $templateType Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
+	 * @param string $layoutTemplate Filter results by layout template alias. Defaults to NULL.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function listTemplates($count = 100, $offset = 0, $templateType = 'All') {
+	function listTemplates($count = 100, $offset = 0, $templateType = 'All', $layoutTemplate = NULL) {
 		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 		$query["templateType"] = $templateType;
+		$query["layoutTemplate"] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
 	}
