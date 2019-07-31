@@ -1014,7 +1014,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param integer $count The total number of templates to get at once (default is 100)
 	 * @param integer $offset The number of templates to "Skip" before returning results.
 	 * @param string $templateType Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
-	 * @param string $layoutTemplate Filter results by layout template alias. Defaults to NULL.
+	 * @param string $layoutTemplate Filters the results based on the layout template alias. Defaults to NULL.
 	 *
 	 * @return DynamicResponseModel
 	 */

@@ -82,13 +82,12 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$result = $client->listTemplates();
 		$this->assertNotEmpty($result->Templates);
 		
-		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . $i . '-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
-		
 		// Filtering Layout templates
+		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . $i . '-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		$result = $client->listTemplates(100, 0, "Layout");
 		$this->assertNotEmpty($result->Templates);
 		
-		// Filterinig by LayoutTemplate
+		// Filtering by LayoutTemplate
 		$client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", null, "Standard", $layoutTemplate->Alias);
 		$result = $client->listTemplates(100, 0, "All", $layoutTemplate->Alias);
 		$this->assertNotEmpty($result->Templates);
