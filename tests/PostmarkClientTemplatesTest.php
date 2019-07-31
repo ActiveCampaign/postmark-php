@@ -152,8 +152,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 				'TemplateModel' => array("name" => "Jones-" . $i),
 				'TrackOpens' => true,
 				'Headers' => array("X-Test-Header" => "Test Header Content", 'X-Test-Date-Sent' => date('c')),
-				'Attachments' => array($attachment),
-            );
+				'Attachments' => array($attachment));
 
 			$batch[] = $payload;
 		}
