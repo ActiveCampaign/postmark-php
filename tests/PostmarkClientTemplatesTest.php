@@ -30,7 +30,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		
 		// Creating a layout template
-		$layoutResult = $client->createTemplate('test-php-template-layout' . '-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
+		$layoutResult = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		$this->assertNotEmpty($layoutResult->TemplateId);
 		$this->assertNotEmpty($layoutResult->Alias);
 		
@@ -57,7 +57,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$this->assertEquals($firstVersion->TemplateType, $secondVersion->TemplateType);
 		
 		// Creating a layout template
-		$layoutTemplate = $client->createTemplate('test-php-template-layout' . '-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
+		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		
 		// Adding a layout template to a standard template
 		$r3 = $client->editTemplate($result->TemplateId, NULL, NULL, NULL, NULL, NULL, $layoutTemplate->Alias);
@@ -83,7 +83,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$this->assertNotEmpty($result->Templates);
 		
 		// Filtering Layout templates
-		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . $i . '-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
+		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		$result = $client->listTemplates(100, 0, "Layout");
 		$this->assertNotEmpty($result->Templates);
 		
