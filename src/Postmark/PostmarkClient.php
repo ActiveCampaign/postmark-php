@@ -955,16 +955,21 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
 	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+	 * @param string $templateType Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
+	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided, a standard template will not use a layout template.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function createTemplate($name, $subject, $htmlBody, $textBody, $alias = NULL) {
+	function createTemplate($name, $subject, $htmlBody, $textBody, $alias = NULL, $templateType = 'Standard', $layoutTemplate = NULL) {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
 		$template["htmlBody"] = $htmlBody;
 		$template["textBody"] = $textBody;
 		$template["alias"] = $alias;
+		$template["templateType"] = $templateType;
+		$template["layoutTemplate"] = $layoutTemplate;
+
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
 	}
 
@@ -977,16 +982,18 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template.
 	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided, a standard template will not use a layout template.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL, $alias = NULL) {
+	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL, $alias = NULL, $layoutTemplate = NULL) {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
 		$template["htmlBody"] = $htmlBody;
 		$template["textBody"] = $textBody;
 		$template["alias"] = $alias;
+		$template["layoutTemplate"] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
 	}
@@ -1006,14 +1013,16 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param integer $count The total number of templates to get at once (default is 100)
 	 * @param integer $offset The number of templates to "Skip" before returning results.
+	 * @param string $templateType Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function listTemplates($count = 100, $offset = 0) {
+	function listTemplates($count = 100, $offset = 0, $templateType = 'All') {
 		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;
+		$query["templateType"] = $templateType;
 
 		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
 	}
@@ -1038,8 +1047,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["textBody"] = $textBody;
 		$query["testRenderModel"] = $testRenderModel;
 		$query["inlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
-		$query['templateType'] = $templateType;
-		$query['layoutTemplate'] = $layoutTemplate;
+		$query["templateType"] = $templateType;
+		$query["layoutTemplate"] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
