@@ -142,7 +142,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		
 		$batch = array();
 
-		$attachment = PostmarkAttachment::fromRawData("attachment content",	"hello.txt", "text/plain");
+		$attachment = PostmarkAttachment::fromRawData("attachment content", "hello.txt", "text/plain");
 
 		for ($i = 0; $i < 5; $i++) {
 			$payload = array(
