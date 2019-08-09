@@ -117,7 +117,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$body['TrackLinks'] = $trackLinks;
 		}
 
-		if ( is_int( $templateIdOrAlias ) ) {
+		if ( preg_match('/^\d+$/', $templateIdOrAlias) === 1) {
 			$body['TemplateId'] = $templateIdOrAlias;
 
 			// Uses the Template Alias if specified instead of Template ID.
