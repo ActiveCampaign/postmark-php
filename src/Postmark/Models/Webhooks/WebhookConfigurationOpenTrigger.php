@@ -29,11 +29,11 @@ class WebhookConfigurationOpenTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function isEnabled() {
+    public function getEnabled() {
         return $this->enabled;
     }
 
-    public function doesPostFirstOpenOnly() {
+    public function getPostFirstOpenOnly() {
         return $this->postFirstOpenOnly;
     }
 }

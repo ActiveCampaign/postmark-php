@@ -29,11 +29,11 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function isEnabled() {
+    public function getEnabled() {
         return $this->enabled;
     }
 
-    public function doesIncludeContent() {
+    public function getIncludeContent() {
         return $this->includeContent;
     }
 }

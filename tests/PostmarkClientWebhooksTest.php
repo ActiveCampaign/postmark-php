@@ -56,14 +56,14 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->Password);
         $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($headers["X-Test-Header"], $result->HttpHeaders[0]->Value);
-        $this->assertEquals($triggers->getOpenSettings()->isEnabled(), $result->Triggers->Open->Enabled);
-        $this->assertEquals($triggers->getOpenSettings()->doesPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
-        $this->assertEquals($triggers->getClickSettings()->isEnabled(), $result->Triggers->Click->Enabled);
-        $this->assertEquals($triggers->getDeliverySettings()->isEnabled(), $result->Triggers->Delivery->Enabled);
-        $this->assertEquals($triggers->getBounceSettings()->isEnabled(), $result->Triggers->Bounce->Enabled);
-        $this->assertEquals($triggers->getBounceSettings()->doesIncludeContent(), $result->Triggers->Bounce->IncludeContent);
-        $this->assertEquals($triggers->getSpamComplaintSettings()->isEnabled(), $result->Triggers->SpamComplaint->Enabled);
-        $this->assertEquals($triggers->getSpamComplaintSettings()->doesIncludeContent(), $result->Triggers->SpamComplaint->IncludeContent);
+        $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->Open->Enabled);
+        $this->assertEquals($triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
+        $this->assertEquals($triggers->getClickSettings()->getEnabled(), $result->Triggers->Click->Enabled);
+        $this->assertEquals($triggers->getDeliverySettings()->getEnabled(), $result->Triggers->Delivery->Enabled);
+        $this->assertEquals($triggers->getBounceSettings()->getEnabled(), $result->Triggers->Bounce->Enabled);
+        $this->assertEquals($triggers->getBounceSettings()->getIncludeContent(), $result->Triggers->Bounce->IncludeContent);
+        $this->assertEquals($triggers->getSpamComplaintSettings()->getEnabled(), $result->Triggers->SpamComplaint->Enabled);
+        $this->assertEquals($triggers->getSpamComplaintSettings()->getIncludeContent(), $result->Triggers->SpamComplaint->IncludeContent);
     }
 
     //edit with null parameters
@@ -123,8 +123,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($newHttpAuth->getPassword(), $result->HttpAuth->Password);
         $this->assertEquals("X-Test-New-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($newHeaders["X-Test-New-Header"], $result->HttpHeaders[0]->Value);
-        $this->assertEquals($newTriggers->getOpenSettings()->isEnabled(), $result->Triggers->Open->Enabled);
-        $this->assertEquals($newTriggers->getOpenSettings()->doesPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
+        $this->assertEquals($newTriggers->getOpenSettings()->getEnabled(), $result->Triggers->Open->Enabled);
+        $this->assertEquals($newTriggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
     }
 
     //get

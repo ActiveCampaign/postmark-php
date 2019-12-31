@@ -25,7 +25,7 @@ class WebhookConfigurationDeliveryTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function isEnabled() {
+    public function getEnabled() {
         return $this->enabled;
     }
 }
