@@ -6,13 +6,13 @@ namespace Postmark\Models\Webhooks;
  */
 class WebhookConfigurationTriggers implements \JsonSerializable {
 
-	private $open;
-	private $click;
-	private $delivery;
-	private $bounce;
-	private $spamComplaint;
+    private $open;
+    private $click;
+    private $delivery;
+    private $bounce;
+    private $spamComplaint;
 
-	/**
+    /**
      * Create a new WebhookConfigurationTriggers object.
      *
      * @param WebhookConfigurationOpenTrigger $open Optional settings for Open webhooks.
@@ -21,7 +21,7 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
      * @param WebhookConfigurationBounceTrigger $bounce Optional settings for Bounce webhooks.
      * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint Optional settings for SpamComplaint webhooks.
      */
-    public function __construct($open = NULL, $click = NULL, $delivery = NULL, $bounce = NULL, $spamComplaint = NULL) {
+    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null) {
         $this->open = $open;
         $this->click = $click;
         $this->delivery = $delivery;
@@ -29,51 +29,51 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         $this->spamComplaint = $spamComplaint;
     }
 
-	function jsonSerialize() {
+    public function jsonSerialize() {
         $retval = array();
 
-        if ($this->open !== NULL) {
+        if ($this->open !== null) {
             $retval['Open'] = $this->open->jsonSerialize();
         }
 
-        if ($this->click !== NULL) {
+        if ($this->click !== null) {
             $retval['Click'] = $this->click->jsonSerialize();
         }
 
-        if ($this->delivery !== NULL) {
+        if ($this->delivery !== null) {
             $retval['Delivery'] = $this->delivery->jsonSerialize();
         }
 
-        if ($this->bounce !== NULL) {
+        if ($this->bounce !== null) {
             $retval['Bounce'] = $this->bounce->jsonSerialize();
         }
 
-        if ($this->spamComplaint !== NULL) {
+        if ($this->spamComplaint !== null) {
             $retval['SpamComplaint'] = $this->spamComplaint->jsonSerialize();
-		}
+        }
 
-		return $retval;
+        return $retval;
     }
 
-    public function getOpenSettings(){
+    public function getOpenSettings() {
         return $this->open;
     }
 
-    public function getClickSettings(){
+    public function getClickSettings() {
         return $this->click;
     }
 
-    public function getDeliverySettings(){
+    public function getDeliverySettings() {
         return $this->delivery;
     }
 
-    public function getBounceSettings(){
+    public function getBounceSettings() {
         return $this->bounce;
     }
 
-    public function getSpamComplaintSettings(){
+    public function getSpamComplaintSettings() {
         return $this->spamComplaint;
-	}
+    }
 }
 
 ?>

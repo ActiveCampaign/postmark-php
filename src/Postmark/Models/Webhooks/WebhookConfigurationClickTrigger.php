@@ -6,28 +6,28 @@ namespace Postmark\Models\Webhooks;
  */
 class WebhookConfigurationClickTrigger implements \JsonSerializable {
 
-	private $enabled;
+    private $enabled;
 
-	/**
-	 * Create a new WebhookConfigurationClickTrigger.
-	 *
-	 * @param boolean $enabled Specifies whether or not webhooks will be triggered by Click events.
-	 */
+    /**
+     * Create a new WebhookConfigurationClickTrigger.
+     *
+     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Click events.
+     */
     public function __construct($enabled = false) {
-		$this->enabled = $enabled;
+        $this->enabled = $enabled;
     }
 
-	function jsonSerialize() {
-		$retval = array(
-			"Enabled" => $this->enabled
+    public function jsonSerialize() {
+        $retval = array(
+            "Enabled" => $this->enabled
         );
 
-		return $retval;
-	}
+        return $retval;
+    }
 
-	public function isEnabled(){
+    public function isEnabled() {
         return $this->enabled;
-	}
+    }
 }
 
 ?>
