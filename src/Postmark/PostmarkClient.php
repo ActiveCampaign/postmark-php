@@ -6,7 +6,7 @@ use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
 /**
- * PostmarkClient provides the main functionality used to send an analyze email on a "per-Server"
+ * PostmarkClient provides the main functionality used to send and analyze email on a "per-Server"
  * basis. If you'd like to manage "Account-wide" configuration, see the PostmarkAdminClient.
  */
 class PostmarkClient extends PostmarkClientBase {
@@ -830,75 +830,6 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Create a Tag Trigger.
-	 *
-	 * @param  string $matchName Name of the tag that will activate this trigger.
-	 * @param  boolean $trackOpens Indicates if this trigger activates open tracking.
-	 * @return DynamicResponseModel
-	 */
-	function createTagTrigger($matchName, $trackOpens = true) {
-		$body = array();
-		$body["MatchName"] = $matchName;
-		$body["TrackOpens"] = $trackOpens;
-
-		return new DynamicResponseModel($this->processRestRequest('POST', '/triggers/tags', $body));
-	}
-
-	/**
-	 * Delete a Tag Trigger with the given ID.
-	 *
-	 * @param integer $id The ID of the Tag Trigger we wish to delete.
-	 * @return DynamicResponseModel
-	 */
-	function deleteTagTrigger($id) {
-		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/tags/$id"));
-	}
-
-	/**
-	 * Locate Tag Triggers matching the filter criteria.
-	 *
-	 * @param  integer $count The number of triggers to return with this request.
-	 * @param  integer $offset The number of triggers to 'skip' when 'paging' through tag triggers.
-	 * @param  string $matchName
-	 * @return DynamicResponseModel
-	 */
-	function searchTagTriggers($count = 100, $offset = 0, $matchName = NULL) {
-		$query = array();
-
-		$query["count"] = $count;
-		$query["offset"] = $offset;
-		$query["match_name"] = $matchName;
-
-		return new DynamicResponseModel($this->processRestRequest('GET', '/triggers/tags', $query));
-	}
-
-	/**
-	 * Edit an existing Tag Trigger
-	 *
-	 * @param  integer $id The ID of the Tag Trigger we wish to modify.
-	 * @param  string $matchName Name of the tag that will activate this trigger.
-	 * @param  boolean $trackOpens Indicates if this trigger activates open tracking.
-	 * @return DynamicResponseModel
-	 */
-	function editTagTrigger($id, $matchName, $trackOpens = true) {
-		$body = array();
-		$body["MatchName"] = $matchName;
-		$body["TrackOpens"] = $trackOpens;
-
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/triggers/tags/$id", $body));
-	}
-
-	/**
-	 * Retrieve information related to the associated Tag Trigger
-	 *
-	 * @param integer $id The ID of the Tag Trigger we wish to retrieve.
-	 * @return DynamicResponseModel
-	 */
-	function getTagTrigger($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/triggers/tags/$id"));
-	}
-
-	/**
 	 * Create an Inbound Rule to block messages from a single email address, or an entire domain.
 	 *
 	 * @param  string $rule The email address (or domain) that will be blocked.
@@ -1053,6 +984,83 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["layoutTemplate"] = $layoutTemplate;
 
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
+	}
+
+	/**
+	 * Get information about a specific webhook configuration.
+	 *
+	 * @param integer $id The Id of the webhook configuration you wish to retrieve.
+	 * @return DynamicResponseModel
+	 */
+	function getWebhookConfiguration($id) {
+		return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks/$id"));
+	}
+
+	/**
+	 * Get all webhook configurations associated with the Server.
+	 *
+	 * @param string $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
+	 * @return DynamicResponseModel
+	 */
+	function getWebhookConfigurations($messageStream = NULL) {
+		$query = array();
+		$query["MessageStream"] = $messageStream;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks", $query));
+	}
+
+	/**
+	 * Delete a webhook configuration.
+	 *
+	 * @param integer $id The Id of the webhook configuration you wish to delete.
+	 * @return DynamicResponseModel
+	 */
+	function deleteWebhookConfiguration($id) {
+		return new DynamicResponseModel($this->processRestRequest('DELETE', "/webhooks/$id"));
+	}
+
+	/**
+	 * Create a webhook configuration.
+	 *
+	 * @param string $url The webhook URL.
+	 * @param string $messageStream Message stream this configuration should belong to. If not provided, it will belong to the default transactional stream.
+	 * @param HttpAuth $httpAuth Optional Basic HTTP Authentication.
+	 * @param array $httpHeaders Optional list of custom HTTP headers.
+	 * @param WebhookConfigurationTriggers $triggers Optional triggers for this webhook configuration.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function createWebhookConfiguration($url, $messageStream = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL) {
+		$body = array();
+		$body["Url"] = $url;
+		$body["MessageStream"] = $messageStream;
+		$body["HttpAuth"] = $httpAuth;
+		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
+		$body["Triggers"] = $triggers;
+
+		return new DynamicResponseModel($this->processRestRequest('POST', "/webhooks", $body));
+	}
+
+	/**
+	 * Edit a webhook configuration.
+	 * Any parameters passed with NULL will be ignored (their existing values will not be modified).
+	 *
+	 * @param integer $id The Id of the webhook configuration you wish to edit.
+	 * @param string $url Optional webhook URL.
+	 * @param HttpAuth $httpAuth Optional Basic HTTP Authentication.
+	 * @param array $httpHeaders Optional list of custom HTTP headers.
+	 * @param WebhookConfigurationTriggers $triggers Optional triggers for this webhook configuration.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function editWebhookConfiguration($id, $url = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL) {
+		$body = array();
+		$body["Url"] = $url;
+		$body["HttpAuth"] = $httpAuth;
+		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
+		$body["Triggers"] = $triggers;
+
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/webhooks/$id", $body));
 	}
 }
 
