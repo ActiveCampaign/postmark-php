@@ -49,13 +49,17 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$this->assertNotEmpty($response, 'The client could not send message to the default stream.');
 		
 		// Sending with an invalid stream
-		$this->expectException(PostmarkException::class);
-		$client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-			"Hello from the PHP Postmark Client Tests! ($currentTime)",
-			'<b>Hi there!</b>',
-			'This is a text body for a test email.', NULL, true, NULL, NULL, NULL,
-			NULL, NULL, NULL, NULL, 'unknown-stream');
+		try {
+			$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+				$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+				"Hello from the PHP Postmark Client Tests! ($currentTime)",
+				'<b>Hi there!</b>',
+				'This is a text body for a test email.', NULL, true, NULL, NULL, NULL,
+				NULL, NULL, NULL, NULL, 'unknown-stream');
+		} catch(PostmarkException $ex){
+			$this->assertEquals(422, $ex->httpStatusCode);
+			$this->assertEquals("The 'MessageStream' provided does not exist on this server.", $ex->message);
+		}
 	}
 
 	function testClientCanSendMessageWithRawAttachment() {
