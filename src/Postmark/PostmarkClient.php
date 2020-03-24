@@ -40,11 +40,12 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
 	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
+	 * @param  array $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
 	 * @return DynamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL, $trackLinks = NULL, $metadata = NULL) {
+		$headers = NULL, $attachments = NULL, $trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -60,6 +61,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TrackOpens'] = $trackOpens;
 		$body['Attachments'] = $attachments;
 		$body['Metadata'] = $metadata;
+		$body['MessageStream'] = $messageStream;
 
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
@@ -88,12 +90,13 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  array $attachments  An array of PostmarkAttachment objects.
 	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
+	 * @param  array $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
 	 * @return DynamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateIdOrAlias, $templateModel, $inlineCss = true,
 		$tag = NULL, $trackOpens = true, $replyTo = NULL,
 		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL,
-		$trackLinks = NULL, $metadata = NULL) {
+		$trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
 
 		$body = array();
 		$body['From'] = $from;
@@ -108,6 +111,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['TemplateModel'] = $templateModel;
 		$body['InlineCss'] = $inlineCss;
 		$body['Metadata'] = $metadata;
+		$body['MessageStream'] = $messageStream;
 
 
 		// Since this parameter can override a per-server setting

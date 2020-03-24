@@ -8,6 +8,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Postmark\Models\PostmarkAttachment;
+use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -29,6 +30,36 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			'<b>Hi there!</b>',
 			'This is a text body for a test email.');
 		$this->assertNotEmpty($response, 'The client could not send a basic message.');
+	}
+
+	function testClientCanSetMessageStream() {
+		$tk = parent::$testKeys;
+
+		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+		$currentTime = date("c");
+		
+		//Sending with a valid stream
+		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+			"Hello from the PHP Postmark Client Tests! ($currentTime)",
+			'<b>Hi there!</b>',
+			'This is a text body for a test email via the default stream.', NULL, true, NULL, NULL, NULL,
+			NULL, NULL, NULL, NULL, 'outbound');
+		$this->assertNotEmpty($response, 'The client could not send message to the default stream.');
+		
+		// Sending with an invalid stream
+		try {
+			$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+				$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+				"Hello from the PHP Postmark Client Tests! ($currentTime)",
+				'<b>Hi there!</b>',
+				'This is a text body for a test email.', NULL, true, NULL, NULL, NULL,
+				NULL, NULL, NULL, NULL, 'unknown-stream');
+		} catch(PostmarkException $ex){
+			$this->assertEquals(422, $ex->httpStatusCode);
+			$this->assertEquals("The 'MessageStream' provided does not exist on this server.", $ex->message);
+		}
 	}
 
 	function testClientCanSendMessageWithRawAttachment() {
