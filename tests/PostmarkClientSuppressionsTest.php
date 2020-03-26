@@ -22,40 +22,40 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$emailAddress = "test-email@example.com";
-		$suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
-        
-		$messageStream = "outbound";
+        $emailAddress = "test-email@example.com";
+        $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
+
+        $messageStream = "outbound";
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
         $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
         $this->assertEquals("Suppressed", $result->Suppressions[0]->Status);
     }
-		
+
     //create suppression with default message stream
     public function testDefaultMessageStream() {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$emailAddress = "test-email@example.com";
-		$suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
-        
+        $emailAddress = "test-email@example.com";
+        $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
+
         $result = $client->createSuppressions($suppressionChanges);
 
         $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
         $this->assertEquals("Suppressed", $result->Suppressions[0]->Status);
     }
-	
-	//reactivate suppression
+
+    //reactivate suppression
     public function testClientCanReactivateSuppressions() {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$emailAddress = "test-email@example.com";
-		$suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
-        
-		$messageStream = "outbound";
+        $emailAddress = "test-email@example.com";
+        $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
+
+        $messageStream = "outbound";
 
         $result = $client->deleteSuppressions($suppressionChanges, $messageStream);
 
@@ -68,10 +68,10 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$emailAddress = "invalid-email";
-		$suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
-        
-		$messageStream = "outbound";
+        $emailAddress = "invalid-email";
+        $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
+
+        $messageStream = "outbound";
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
@@ -84,48 +84,47 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$suppressionChanges = array();
-		for($i = 0; $i < 5; $i++) {
+        $suppressionChanges = array();
+        for($i = 0; $i < 5; $i++) {
 			$emailAddress = "test-email-$i@example.com";
 			$suppressionChanges[] = new SuppressionChangeRequest($emailAddress);
-		}
+        }
 
-		$messageStream = "outbound";
+        $messageStream = "outbound";
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
-		
+
 		$this->assertNotEmpty($result->Suppressions);
         foreach($result->Suppressions as $suppressionChangeResult){
 			$this->assertEquals("Suppressed", $suppressionChangeResult->Status);
 		}
     }
-		
+
     //invalid message stream throws error
     public function testInvalidMessageStreamThrowsException() {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$emailAddress = "test-email@email.com";
-		$suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
-        
-		$messageStream = "invalid-stream";
-		
-		try {
+        $emailAddress = "test-email@email.com";
+        $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
+
+        $messageStream = "invalid-stream";
+
+        try {
 			$result = $client->createSuppressions($suppressionChanges, $messageStream);
-		} catch(PostmarkException $ex){
+        } catch(PostmarkException $ex){
 			$this->assertEquals(422, $ex->httpStatusCode);
 			$this->assertEquals("The message stream for the provided 'ID' was not found.", $ex->message);
-		}
+        }
     }
-	
-	//get suppressions
+
+    //get suppressions
     public function testGetSuppressionsIsNotEmpty() {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $result = $client->getSuppressions();
-		$this->assertNotEmpty($result);
-		var_dump($result);
+        $this->assertNotEmpty($result);
     }
 }
 
