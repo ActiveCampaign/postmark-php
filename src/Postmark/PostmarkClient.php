@@ -1110,7 +1110,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * List Suppressions that match the provided query parameters.
 	 *
-	 * @param string $messageStream Filter Suppressions by MessageStream. If not provided, Suppressions for the entire Server will be returned. (optional)
+	 * @param string $messageStream Filter Suppressions by MessageStream. If not provided, Suppressions for the default transactional stream will be returned. (optional)
 	 * @param string $suppressionReason Filter Suppressions by reason. E.g.: HardBounce, SpamComplaint, ManualSuppression. Defaults to all. (optional)
 	 * @param string $origin Filter Suppressions by the origin that created them. E.g.: Customer, Recipient, Admin. Defaults to all. (optional)
 	 * @param string $fromDate Filter suppressions from the date specified - inclusive. (optional)
