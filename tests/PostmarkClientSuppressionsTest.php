@@ -86,21 +86,21 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $suppressionChanges = array();
         for($i = 0; $i < 5; $i++) {
-			$emailAddress = "test-email-$i@example.com";
-			$suppressionChanges[] = new SuppressionChangeRequest($emailAddress);
+            $emailAddress = "test-email-$i@example.com";
+            $suppressionChanges[] = new SuppressionChangeRequest($emailAddress);
         }
 
         $messageStream = "outbound";
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
-		$this->assertNotEmpty($result->Suppressions);
+        $this->assertNotEmpty($result->Suppressions);
         foreach($result->Suppressions as $suppressionChangeResult){
-			$this->assertEquals("Suppressed", $suppressionChangeResult->Status);
-		}
+            $this->assertEquals("Suppressed", $suppressionChangeResult->Status);
+        }
     }
 
-    //invalid message stream throws error
+    //invalid message stream throws exception
     public function testInvalidMessageStreamThrowsException() {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
@@ -111,10 +111,10 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $messageStream = "invalid-stream";
 
         try {
-			$result = $client->createSuppressions($suppressionChanges, $messageStream);
+            $result = $client->createSuppressions($suppressionChanges, $messageStream);
         } catch(PostmarkException $ex){
-			$this->assertEquals(422, $ex->httpStatusCode);
-			$this->assertEquals("The message stream for the provided 'ID' was not found.", $ex->message);
+            $this->assertEquals(422, $ex->httpStatusCode);
+            $this->assertEquals("The message stream for the provided 'ID' was not found.", $ex->message);
         }
     }
 
