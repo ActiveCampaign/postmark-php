@@ -140,7 +140,8 @@ abstract class PostmarkClientBase {
 
 		switch ($response->getStatusCode()) {
 			case 200:
-				return json_decode($response->getBody(), true);
+				// Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
+				return json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
 			case 401:
 				$ex = new PostmarkException();
 				$ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
