@@ -1093,7 +1093,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
 	 * @param string $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
 	 *
-	 * Suppressions will only be reactivated if you have the required authority.
+	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
 	 * @return DynamicResponseModel
 	 */
 	function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL) {

@@ -108,7 +108,7 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $emailAddress = "test-email@email.com";
         $suppressionChanges = array(new SuppressionChangeRequest($emailAddress));
 
-        $messageStream = "invalid-stream";
+        $messageStream = "?invalid-stream?";
 
         try {
             $result = $client->createSuppressions($suppressionChanges, $messageStream);
