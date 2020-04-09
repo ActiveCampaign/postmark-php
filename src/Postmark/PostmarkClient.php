@@ -1066,6 +1066,73 @@ class PostmarkClient extends PostmarkClientBase {
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/webhooks/$id", $body));
 	}
+
+	/**
+	 * Create Suppressions for the specified recipients.
+	 *
+	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
+	 * @param string $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
+	 *
+	 * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
+	 * @return DynamicResponseModel
+	 */
+	function createSuppressions($suppressionChanges = array(), $messageStream = NULL) {
+		$body = array();
+		$body["Suppressions"] = $suppressionChanges;
+		
+		if ($messageStream === NULL) {
+			$messageStream = "outbound";
+		}
+		
+		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
+	}
+
+	/**
+	 * Reactivate Suppressions for the specified recipients.
+	 *
+	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
+	 * @param string $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
+	 *
+	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
+	 * @return DynamicResponseModel
+	 */
+	function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL) {
+		$body = array();
+		$body["Suppressions"] = $suppressionChanges;
+		
+		if ($messageStream === NULL) {
+			$messageStream = "outbound";
+		}
+		
+		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
+	}
+
+	/**
+	 * List Suppressions that match the provided query parameters.
+	 *
+	 * @param string $messageStream Filter Suppressions by MessageStream. If not provided, Suppressions for the default transactional stream will be returned. (optional)
+	 * @param string $suppressionReason Filter Suppressions by reason. E.g.: HardBounce, SpamComplaint, ManualSuppression. (optional)
+	 * @param string $origin Filter Suppressions by the origin that created them. E.g.: Customer, Recipient, Admin. (optional)
+	 * @param string $fromDate Filter suppressions from the date specified - inclusive. (optional)
+	 * @param string $toDate Filter suppressions up to the date specified - inclusive. (optional)
+	 * @param string $emailAddress Filter by a specific email address. (optional)
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function getSuppressions($messageStream = NULL, $suppressionReason = NULL, $origin = NULL, $fromDate = NULL, $toDate = NULL, $emailAddress = NULL) {
+		$query = array();
+		$query["SuppressionReason"] = $suppressionReason;
+		$query["Origin"] = $origin;
+		$query["FromDate"] = $fromDate;
+		$query["ToDate"] = $toDate;
+		$query["EmailAddress"] = $emailAddress;
+		
+		if ($messageStream === NULL) {
+			$messageStream = "outbound";
+		}
+		
+		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
+	}
 }
 
 ?>
