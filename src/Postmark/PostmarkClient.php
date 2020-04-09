@@ -248,6 +248,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Locate information on a specific email bounce.
 	 *
 	 * @param  integer $id The ID of the bounce to get.
+	 *
+	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+	 *
 	 * @return DynamicResponseModel
 	 */
 	function getBounce($id) {
@@ -258,6 +261,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get a "dump" for a specific bounce.
 	 *
 	 * @param  integer $id The ID of the bounce for which we want a dump.
+	 *
+	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+	 *
 	 * @return string
 	 */
 	function getBounceDump($id) {
@@ -268,6 +274,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Cause the email address associated with a Bounce to be reactivated.
 	 *
 	 * @param  integer $id The bounce which has a deactivated email address.
+	 *
+	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+	 *
 	 * @return DynamicResponseModel
 	 */
 	function activateBounce($id) {
