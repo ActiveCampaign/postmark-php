@@ -156,7 +156,7 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
         $tk = parent::$testKeys;
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-        return $client->createServer('test-php-streams-' . date('c'));
+        return $client->createServer('test-php-streams-' . uniqid());
     }
 }
 
