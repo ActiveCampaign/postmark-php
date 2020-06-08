@@ -139,7 +139,7 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
     }
 
     //unarchive message streams
-    public function testClientCanUnArchiveStreams() {
+    public function testClientCanUnarchiveStreams() {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);

@@ -1226,7 +1226,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * The stream will also re-appear in the Postmark UI.
 	 * A stream can be unarchived only before the stream ExpectedPurgeDate.
 	 *
-	 * @param string $id Identifier of the stream to unArchive.
+	 * @param string $id Identifier of the stream to unarchive.
 	 *
 	 * @return DynamicResponseModel
 	 */
