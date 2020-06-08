@@ -1230,7 +1230,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function unArchiveMessageStream($id) {
+	function unarchiveMessageStream($id) {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
 	}
 }
