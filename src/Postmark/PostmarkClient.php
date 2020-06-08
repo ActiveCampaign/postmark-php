@@ -1142,6 +1142,97 @@ class PostmarkClient extends PostmarkClientBase {
 		
 		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
 	}
+
+	/**
+	 * Create a new message stream on your server.
+	 *
+	 * @param string $id Identifier for your message stream, unique at server level.
+	 * @param string $messageStreamType Type of the message stream. Possible values: ["Transactional", "Inbound", "Broadcasts"].
+	 * @param string $name Friendly name for your message stream.
+	 * @param string $description Friendly description for your message stream. (optional)
+	 *
+	 * Currently, you cannot create multiple inbound streams.
+	 * @return DynamicResponseModel
+	 */
+	function createMessageStream($id, $messageStreamType, $name, $description = NULL) {
+		$body = array();
+		$body["ID"] = $id;
+		$body["MessageStreamType"] = $messageStreamType;
+		$body["Name"] = $name;
+		$body["Description"] = $description;
+
+		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams", $body));
+	}
+
+	/**
+	 * Edit the properties of a message stream.
+	 *
+	 * @param string $id The identifier for the stream you are trying to update.
+	 * @param string $name New friendly name to use. (optional)
+	 * @param string $description New description to use. (optional)
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function editMessageStream($id, $name = NULL, $description = NULL) {
+		$body = array();
+		$body["Name"] = $name;
+		$body["Description"] = $description;
+
+		return new DynamicResponseModel($this->processRestRequest('PATCH', "/message-streams/$id", $body));
+	}
+
+	/**
+	 * Retrieve details about a message stream.
+	 *
+	 * @param string $id Identifier of the stream to retrieve details for.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function getMessageStream($id) {
+		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$id"));
+	}
+
+	/**
+	 * Retrieve all message streams on the server.
+	 *
+	 * @param string $messageStreamType Filter by stream type. Possible values: ["Transactional", "Inbound", "Broadcasts", "All"]. Defaults to: All.
+	 * @param string $includeArchivedStreams Include archived streams in the result. Defaults to: false.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function listMessageStreams($messageStreamType = 'All', $includeArchivedStreams = 'false') {
+		$query = array();
+		$query["MessageStreamType"] = $messageStreamType;
+		$query["IncludeArchivedStreams"] = $includeArchivedStreams;
+
+		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams", $query));
+	}
+
+	/**
+	 * Archive a message stream. This will disable sending/receiving messages via that stream.
+	 * The stream will also stop being shown in the Postmark UI.
+	 * Once a stream has been archived, it will be deleted (alongside associated data) at the ExpectedPurgeDate in the response.
+	 *
+	 * @param string $id The identifier for the stream you are trying to update.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function archiveMessageStream($id) {
+		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/archive"));
+	}
+
+	/**
+	 * Unarchive a message stream. This will resume sending/receiving via that stream.
+	 * The stream will also re-appear in the Postmark UI.
+	 * A stream can be unarchived only before the stream ExpectedPurgeDate.
+	 *
+	 * @param string $id Identifier of the stream to unarchive.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function unarchiveMessageStream($id) {
+		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
+	}
 }
 
 ?>
