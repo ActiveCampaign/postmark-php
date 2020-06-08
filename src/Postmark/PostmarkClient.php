@@ -1222,7 +1222,7 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * UnArchive a message stream. This will resume sending/receiving via that stream.
+	 * Unarchive a message stream. This will resume sending/receiving via that stream.
 	 * The stream will also re-appear in the Postmark UI.
 	 * A stream can be unarchived only before the stream ExpectedPurgeDate.
 	 *
