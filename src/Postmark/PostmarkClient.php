@@ -44,7 +44,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @return DynamicResponseModel
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
-		$tag = NULL, $trackOpens = true, $replyTo = NULL, $cc = NULL, $bcc = NULL,
+		$tag = NULL, $trackOpens = NULL, $replyTo = NULL, $cc = NULL, $bcc = NULL,
 		$headers = NULL, $attachments = NULL, $trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
 
 		$body = array();
@@ -94,7 +94,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @return DynamicResponseModel
 	 */
 	function sendEmailWithTemplate($from, $to, $templateIdOrAlias, $templateModel, $inlineCss = true,
-		$tag = NULL, $trackOpens = true, $replyTo = NULL,
+		$tag = NULL, $trackOpens = NULL, $replyTo = NULL,
 		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL,
 		$trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
 
