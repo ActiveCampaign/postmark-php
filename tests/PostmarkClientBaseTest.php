@@ -7,7 +7,7 @@ require_once __DIR__ . "/TestingKeys.php";
 
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 
-abstract class PostmarkClientBaseTest extends \PHPUnit_Framework_TestCase {
+abstract class PostmarkClientBaseTest extends \PHPUnit\Framework\TestCase {
 
 	public static $testKeys;
 
