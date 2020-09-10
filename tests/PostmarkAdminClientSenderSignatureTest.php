@@ -104,7 +104,9 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$name = 'test-php-reverify-' . date('U');
 		$sig = $client->createSenderSignature($sender, $name);
 
-		$client->resendSenderSignatureConfirmation($sig->id);
+		$result = $client->resendSenderSignatureConfirmation($sig->id);
+
+		$this->assertEquals(0, $result->ErrorCode);
 	}
 
 	function testClientCanVerifySPFForSignature() {
@@ -117,7 +119,9 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$sender = str_replace('[TOKEN]', 'test-php-spf-' . date('U'), $i);
 
 		$sig = $client->createSenderSignature($sender, $name);
-		$client->verifySenderSignatureSPF($sig->id);
+		$result = $client->verifySenderSignatureSPF($sig->id);
+
+		$this->assertTrue($result->SPFVerified);
 	}
 
 }

@@ -70,7 +70,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
     
-    $domainName = $tk->WRITE_TEST_DOMAIN_NAME;
+		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
 
 		$name = 'test-php-delete-' . $domainName;
 		$domain = $client->createDomain($name);
@@ -82,19 +82,20 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		foreach ($domains as $key => $value) {
 			$this->assertNotSame($domain->name, $value->name);
 		}
-
 	}
 
 	function testClientCanVerifySPFForDomain() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-    $domainName = $tk->WRITE_TEST_DOMAIN_NAME;
+		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
 
 		$name = 'test-php-spf-' . $domainName;
 
 		$domain = $client->createDomain($name);
-		$client->verifyDomainSPF($domain->id);
+		$result = $client->verifyDomainSPF($domain->id);
+
+		$this->assertTrue($result->SPFVerified);
 	}
 }
 
