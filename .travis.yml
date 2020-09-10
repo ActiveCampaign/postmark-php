@@ -11,5 +11,5 @@ php:
 dist: trusty
 before_script:
 - composer self-update
-- travis_retry composer install --no-interaction --prefer-source --dev
+- composer install --no-interaction
 script: composer test
