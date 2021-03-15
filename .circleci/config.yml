@@ -1,4 +1,4 @@
-# In order for builds to pass, in CircleCI you must add all required environment variables, described in `testing_keys.json`
+# In order for builds to pass, in CircleCI you must add all required environment variables, described in `testing_keys.json.example`
 
 version: 2.1
 
