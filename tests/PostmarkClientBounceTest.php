@@ -44,13 +44,5 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 		$this->assertNotEmpty($dump);
 	}
 
-	function testClientCanGetBounceTags() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		$tags = $client->getBounceTags();
-		$this->assertNotEmpty($tags);
-		$this->assertGreaterThan(0, count($tags));
-	}
-
 }
 ?>
