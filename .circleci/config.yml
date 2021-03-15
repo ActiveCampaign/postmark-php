@@ -6,28 +6,28 @@ workflows:
   php-tests:
     jobs:
       - unit-tests:
-          name: php7-0
+          name: php70
           version: "7.0"
       - unit-tests:
-          name: php7-1
+          name: php71
           version: "7.1"
           requires:
-            - php7-0
+            - php70
       - unit-tests:
-          name: php7-2
+          name: php72
           version: "7.2"
           requires:
-            - php7-1
+            - php71
       - unit-tests:
-          name: php7-3
+          name: php73
           version: "7.3"
           requires:
-            - php7-2
+            - php72
       - unit-tests:
-          name: php7-4
+          name: php74
           version: "7.4"
           requires:
-            - php7-3
+            - php73
 
 jobs:
   unit-tests:
@@ -48,8 +48,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            composer self-update
-            composer install --no-interaction
+            sudo composer self-update
+            sudo composer install --no-interaction
       - run:
           name: Run tests
           command: composer test
