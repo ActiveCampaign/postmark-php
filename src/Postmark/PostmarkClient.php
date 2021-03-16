@@ -380,7 +380,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get information related to a specific sent message.
 	 *
-	 * @param integer $id The ID of the Message for which we want details.
+	 * @param string $id The ID of the Message for which we want details.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessageDetails($id) {
@@ -390,7 +390,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get the raw content for a message that was sent.
 	 * This response
-	 * @param  integer $id The ID of the message for which we want a dump.
+	 * @param  string $id The ID of the message for which we want a dump.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessageDump($id) {
@@ -434,7 +434,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get details for a specific inbound message.
 	 *
-	 * @param integer $id The ID of the message for which we went to get details.
+	 * @param string $id The ID of the message for which we went to get details.
 	 * @return DynamicResponseModel
 	 */
 	function getInboundMessageDetails($id) {
@@ -445,7 +445,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Allow an inbound message to be processed, even though the filtering rules would normally
 	 * prevent it from being processed.
 	 *
-	 * @param integer $id The ID for a message that we wish to unblock.
+	 * @param string $id The ID for a message that we wish to unblock.
 	 * @return DynamicResponseModel
 	 */
 	function bypassInboundMessageRules($id) {
@@ -455,7 +455,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Request that Postmark retry POSTing the specified message to the Server's Inbound Hook.
 	 *
-	 * @param integer $id The ID for a message that we wish retry the inbound hook for.
+	 * @param string $id The ID for a message that we wish retry the inbound hook for.
 	 * @return DynamicResponseModel
 	 */
 	function retryInboundMessageHook($id) {
@@ -551,7 +551,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get information about individual opens for a sent message.
 	 *
-	 * @param  integer $id The ID for the message that we want statistics for.
+	 * @param  string $id The ID for the message that we want statistics for.
 	 * @param  integer $count How many statistics should we retrieve?
 	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
 	 * @return DynamicResponseModel
@@ -568,7 +568,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get information about individual clicks for a sent message.
 	 *
-	 * @param  integer $id The ID for the message that we want statistics for.
+	 * @param  string $id The ID for the message that we want statistics for.
 	 * @param  integer $count How many statistics should we retrieve?
 	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
 	 * @return DynamicResponseModel
