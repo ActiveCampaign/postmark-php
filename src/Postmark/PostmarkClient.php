@@ -284,17 +284,6 @@ class PostmarkClient extends PostmarkClientBase {
 	}
 
 	/**
-	 * Get the list of tags associated with messages that have bounced.
-	 *
-	 * This produces an array of strings. This one of the only client API calls that does not produce a DynamicResponseModel.
-	 *
-	 * @return array
-	 */
-	function getBounceTags() {
-		return $this->processRestRequest('GET', '/bounces/tags');
-	}
-
-	/**
 	 * Get the settings for the server associated with this PostmarkClient instance
 	 * (defined by the $server_token you passed when instantiating this client)
 	 *
