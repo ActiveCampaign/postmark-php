@@ -28,10 +28,7 @@ class PostmarkResponse
             case 500:
                 throw PostmarkException::internalServerError();
             case 503:
-                $ex = new PostmarkException();
-                $ex->httpStatusCode = 503;
-                $ex->message = 'The Postmark API is currently unavailable, please try your request later.';
-                throw $ex;
+                throw PostmarkException::unavailable();
             // This should cover case 422, and any others that are possible:
             default:
                 $ex = new PostmarkException();

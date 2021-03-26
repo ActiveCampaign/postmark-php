@@ -10,6 +10,14 @@ class PostmarkException extends \Exception {
 	var $httpStatusCode;
 	var $postmarkApiErrorCode;
 
+    public static function unavailable()
+    {
+        $ex = new self();
+        $ex->httpStatusCode = 503;
+        $ex->message = 'The Postmark API is currently unavailable, please try your request later.';
+        return $ex;
+	}
+
     public static function unauthorized()
     {
         $ex = new self();
