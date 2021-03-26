@@ -19,10 +19,19 @@ class PostmarkResponse
      */
     public function toArray()
     {
+        if ($this->response->getStatusCode() !== 200) $this->throwException();
+
+        // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
+        return json_decode($this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+    }
+
+    /**
+     * @return mixed
+     * @throws PostmarkException
+     */
+    protected function throwException()
+    {
         switch ($this->response->getStatusCode()) {
-            case 200:
-                // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
-                return json_decode($this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
             case 401:
                 throw PostmarkException::unauthorized();
             case 500:
