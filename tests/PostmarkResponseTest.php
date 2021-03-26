@@ -40,7 +40,16 @@ class PostmarkResponseTest extends TestCase
         $this->assertException($statusCode, $expectedMessage);
     }
 
-    protected function assertException($statusCode, $expectedMessage, $responseBody = [])
+    public function testItThrowsA422Exception()
+    {
+        $statusCode = 422;
+        $expectedMessage = 'unavailable';
+        $postmarkApiErrorCode = 'postmark api error code';
+
+        $this->assertException($statusCode, $expectedMessage, ['ErrorCode' => $postmarkApiErrorCode, 'Message' => $expectedMessage], $postmarkApiErrorCode);
+    }
+
+    protected function assertException($statusCode, $expectedMessage, $responseBody = [], $expectedPostmarkApiErrorCode = null)
     {
         try {
             $response = $this->stubResponse($statusCode, $responseBody);
@@ -49,6 +58,7 @@ class PostmarkResponseTest extends TestCase
         } catch (PostmarkException $exception) {
             $this->assertSame($statusCode, $exception->httpStatusCode);
             $this->assertContains($expectedMessage, $exception->getMessage(), '', true);
+            if ($expectedPostmarkApiErrorCode) $this->assertSame($expectedPostmarkApiErrorCode, $exception->postmarkApiErrorCode);
         }
     }
 
