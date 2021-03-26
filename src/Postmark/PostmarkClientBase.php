@@ -51,8 +51,6 @@ abstract class PostmarkClientBase {
 
 	/** @var  Client */
 	protected $client;
-    /** @var ResponseHandler */
-    private $responseHandler;
 
     protected function __construct($token, $header, $timeout = 30) {
 		$this->authorization_header = $header;
@@ -60,7 +58,6 @@ abstract class PostmarkClientBase {
 		$this->version = phpversion();
 		$this->os = PHP_OS;
 		$this->timeout = $timeout;
-        $this->responseHandler = new ResponseHandler();
     }
 
 
@@ -141,6 +138,6 @@ abstract class PostmarkClientBase {
 
 		$response = $client->request($method, self::$BASE_URL . $path, $options);
 
-        return (new ResponseHandler())->handle($response);
+        return (new PostmarkResponse($response))->toArray();
     }
 }

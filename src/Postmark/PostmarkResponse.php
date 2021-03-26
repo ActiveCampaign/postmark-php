@@ -4,20 +4,25 @@ namespace Postmark;
 
 use Postmark\Models\PostmarkException;
 
-class ResponseHandler
+class PostmarkResponse
 {
+    private $response;
+
+    public function __construct($response)
+    {
+        $this->response = $response;
+    }
 
     /**
-     * @param $response
      * @return mixed
      * @throws PostmarkException
      */
-    public function handle($response)
+    public function toArray()
     {
-        switch ($response->getStatusCode()) {
+        switch ($this->response->getStatusCode()) {
             case 200:
                 // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
-                return json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+                return json_decode($this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
             case 401:
                 $ex = new PostmarkException();
                 $ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
@@ -39,8 +44,8 @@ class ResponseHandler
             // This should cover case 422, and any others that are possible:
             default:
                 $ex = new PostmarkException();
-                $body = json_decode($response->getBody(), true);
-                $ex->httpStatusCode = $response->getStatusCode();
+                $body = json_decode($this->response->getBody(), true);
+                $ex->httpStatusCode = $this->response->getStatusCode();
                 $ex->postmarkApiErrorCode = $body['ErrorCode'];
                 $ex->message = $body['Message'];
                 throw $ex;

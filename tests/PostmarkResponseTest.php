@@ -1,10 +1,11 @@
 <?php
 
-namespace Postmark;
+namespace Postmark\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Postmark\PostmarkResponse;
 
-class ResponseHandlerTest extends TestCase
+class PostmarkResponseTest extends TestCase
 {
     public function testItReturnsTheResponseBody()
     {
@@ -29,8 +30,8 @@ class ResponseHandlerTest extends TestCase
             }
         };
 
-        $instance = new ResponseHandler();
-        $result = $instance->handle($response);
+        $instance = new PostmarkResponse($response);
+        $result = $instance->toArray();
         $this->assertSame(['success' => true], $result);
     }
 }
