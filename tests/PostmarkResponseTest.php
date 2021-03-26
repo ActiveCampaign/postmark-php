@@ -3,6 +3,7 @@
 namespace Postmark\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Postmark\Models\PostmarkException;
 use Postmark\PostmarkResponse;
 
 class PostmarkResponseTest extends TestCase
@@ -15,9 +16,21 @@ class PostmarkResponseTest extends TestCase
         $this->assertSame(['success' => true], $result);
     }
 
-    protected function stubResponse()
+    public function testItThrowsAnUnauthorizedException()
     {
-        return new class($statusCode = 200, $body = ['success' => true]) {
+        try {
+            $response = $this->stubResponse(401, []);
+            (new PostmarkResponse($response))->toArray();
+            $this->fail('Exception was not thrown');
+        } catch (PostmarkException $exception) {
+            $this->assertSame(401, $exception->httpStatusCode);
+            $this->assertContains('unauthorized', $exception->getMessage(), '', true);
+        }
+    }
+
+    protected function stubResponse($statusCode = 200, $body = ['success' => true])
+    {
+        return new class($statusCode, $body) {
             private $statusCode;
             private $body;
 
