@@ -31,12 +31,7 @@ class PostmarkResponse
                 throw PostmarkException::unavailable();
             // This should cover case 422, and any others that are possible:
             default:
-                $ex = new PostmarkException();
-                $body = json_decode($this->response->getBody(), true);
-                $ex->httpStatusCode = $this->response->getStatusCode();
-                $ex->postmarkApiErrorCode = $body['ErrorCode'];
-                $ex->message = $body['Message'];
-                throw $ex;
+                throw PostmarkException::from($this->response);
         }
     }
 }

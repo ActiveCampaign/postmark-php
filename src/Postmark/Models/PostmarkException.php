@@ -10,6 +10,17 @@ class PostmarkException extends \Exception {
 	var $httpStatusCode;
 	var $postmarkApiErrorCode;
 
+    public static function from($response)
+    {
+        $ex = new PostmarkException();
+        $body = json_decode($response->getBody(), true);
+        $ex->httpStatusCode = $response->getStatusCode();
+        $ex->postmarkApiErrorCode = $body['ErrorCode'];
+        $ex->message = $body['Message'];
+
+        return $ex;
+	}
+
     public static function unavailable()
     {
         $ex = new self();
