@@ -24,11 +24,7 @@ class PostmarkResponse
                 // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
                 return json_decode($this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
             case 401:
-                $ex = new PostmarkException();
-                $ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
-                    'Please verify that you used the correct token when you constructed your client.';
-                $ex->httpStatusCode = 401;
-                throw $ex;
+                throw PostmarkException::unauthorized();
             case 500:
                 $ex = new PostmarkException();
                 $ex->httpStatusCode = 500;
