@@ -18,4 +18,14 @@ class PostmarkException extends \Exception {
         $ex->httpStatusCode = 401;
         return $ex;
 	}
+
+    public static function internalServerError()
+    {
+        $ex = new self();
+        $ex->httpStatusCode = 500;
+        $ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
+            'In most cases the message is lost during the process, ' .
+            'and Postmark is notified so that we can investigate the issue.';
+        return $ex;
+	}
 }

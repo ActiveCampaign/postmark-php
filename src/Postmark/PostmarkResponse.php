@@ -26,12 +26,7 @@ class PostmarkResponse
             case 401:
                 throw PostmarkException::unauthorized();
             case 500:
-                $ex = new PostmarkException();
-                $ex->httpStatusCode = 500;
-                $ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
-                    'In most cases the message is lost during the process, ' .
-                    'and Postmark is notified so that we can investigate the issue.';
-                throw $ex;
+                throw PostmarkException::internalServerError();
             case 503:
                 $ex = new PostmarkException();
                 $ex->httpStatusCode = 503;
