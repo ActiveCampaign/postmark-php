@@ -18,41 +18,41 @@ class PostmarkResponseTest extends TestCase
 
     public function testItThrowsAnUnauthorizedException()
     {
-        try {
-            $response = $this->stubResponse(401, []);
-            (new PostmarkResponse($response))->toArray();
-            $this->fail('Exception was not thrown');
-        } catch (PostmarkException $exception) {
-            $this->assertSame(401, $exception->httpStatusCode);
-            $this->assertContains('unauthorized', $exception->getMessage(), '', true);
-        }
+        $statusCode = 401;
+        $expectedMessage = 'unauthorized';
+
+        $this->assertException($statusCode, $expectedMessage);
     }
 
     public function testItThrowsAnInternalServerErrorException()
     {
-        try {
-            $response = $this->stubResponse(500, []);
-            (new PostmarkResponse($response))->toArray();
-            $this->fail('Exception was not thrown');
-        } catch (PostmarkException $exception) {
-            $this->assertSame(500, $exception->httpStatusCode);
-            $this->assertContains('internal server error', $exception->getMessage(), '', true);
-        }
+        $statusCode = 500;
+        $expectedMessage = 'internal server error';
+
+        $this->assertException($statusCode, $expectedMessage);
     }
 
     public function testItThrowsAnUnavailableException()
     {
+        $statusCode = 503;
+        $expectedMessage = 'unavailable';
+
+        $this->assertException($statusCode, $expectedMessage);
+    }
+
+    protected function assertException($statusCode, $expectedMessage, $responseBody = [])
+    {
         try {
-            $response = $this->stubResponse(503, []);
+            $response = $this->stubResponse($statusCode, $responseBody);
             (new PostmarkResponse($response))->toArray();
             $this->fail('Exception was not thrown');
         } catch (PostmarkException $exception) {
-            $this->assertSame(503, $exception->httpStatusCode);
-            $this->assertContains('unavailable', $exception->getMessage(), '', true);
+            $this->assertSame($statusCode, $exception->httpStatusCode);
+            $this->assertContains($expectedMessage, $exception->getMessage(), '', true);
         }
     }
 
-    protected function stubResponse($statusCode = 200, $body = ['success' => true])
+    private function stubResponse($statusCode = 200, $body = ['success' => true])
     {
         return new class($statusCode, $body) {
             private $statusCode;
