@@ -9,7 +9,15 @@ class PostmarkResponseTest extends TestCase
 {
     public function testItReturnsTheResponseBody()
     {
-        $response = new class($statusCode = 200, $body = ['success' => true]) {
+        $response = $this->stubResponse();
+        $instance = new PostmarkResponse($response);
+        $result = $instance->toArray();
+        $this->assertSame(['success' => true], $result);
+    }
+
+    protected function stubResponse()
+    {
+        return new class($statusCode = 200, $body = ['success' => true]) {
             private $statusCode;
             private $body;
 
@@ -29,9 +37,5 @@ class PostmarkResponseTest extends TestCase
                 return json_encode($this->body);
             }
         };
-
-        $instance = new PostmarkResponse($response);
-        $result = $instance->toArray();
-        $this->assertSame(['success' => true], $result);
     }
 }
