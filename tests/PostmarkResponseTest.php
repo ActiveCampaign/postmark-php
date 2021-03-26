@@ -40,6 +40,18 @@ class PostmarkResponseTest extends TestCase
         }
     }
 
+    public function testItThrowsAnUnavailableException()
+    {
+        try {
+            $response = $this->stubResponse(503, []);
+            (new PostmarkResponse($response))->toArray();
+            $this->fail('Exception was not thrown');
+        } catch (PostmarkException $exception) {
+            $this->assertSame(503, $exception->httpStatusCode);
+            $this->assertContains('unavailable', $exception->getMessage(), '', true);
+        }
+    }
+
     protected function stubResponse($statusCode = 200, $body = ['success' => true])
     {
         return new class($statusCode, $body) {
