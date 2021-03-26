@@ -15,8 +15,8 @@ class PostmarkException extends \Exception {
         $ex = new self();
         $body = json_decode($response->getBody(), true);
         $ex->httpStatusCode = $response->getStatusCode();
-        $ex->postmarkApiErrorCode = $body['ErrorCode'];
-        $ex->message = $body['Message'];
+        $ex->postmarkApiErrorCode = $body['ErrorCode'] ?? 'invalid-response';
+        $ex->message = $body['Message'] ?? 'This appears to be an invalid response. Please contact support.';
 
         return $ex;
 	}

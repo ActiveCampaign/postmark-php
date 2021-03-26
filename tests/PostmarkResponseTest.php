@@ -49,6 +49,15 @@ class PostmarkResponseTest extends TestCase
         $this->assertException($statusCode, $expectedMessage, ['ErrorCode' => $postmarkApiErrorCode, 'Message' => $expectedMessage], $postmarkApiErrorCode);
     }
 
+    public function testItThrowsAnExceptionIfThereAreNoBodyKeys()
+    {
+        $statusCode = 404;
+        $expectedMessage = 'This appears to be an invalid response. Please contact support.';
+        $postmarkApiErrorCode = 'invalid-response';
+
+        $this->assertException($statusCode, $expectedMessage, [], $postmarkApiErrorCode);
+    }
+
     protected function assertException($statusCode, $expectedMessage, $responseBody = [], $expectedPostmarkApiErrorCode = null)
     {
         try {
