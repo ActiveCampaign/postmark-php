@@ -224,7 +224,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $messageID Filter by MessageID
 	 * @param  string $fromdate Filter for bounces after is date.
 	 * @param  string $todate Filter for bounces before this date.
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getBounces($count = 100, $offset = 0, $type = NULL,
@@ -353,7 +353,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD
 	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
 	 * @param  string $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
@@ -483,7 +483,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $country Filter by Country.
 	 * @param  string $region Filter by Region.
 	 * @param  string $city Filter by City.
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOpenStatistics($count = 100, $offset = 0, $recipient = NULL,
@@ -528,7 +528,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $country Filter by Country.
 	 * @param  string $region Filter by Region.
 	 * @param  string $city Filter by City.
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getClickStatistics($count = 100, $offset = 0, $recipient = NULL,
@@ -597,7 +597,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -618,7 +618,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -639,7 +639,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -660,7 +660,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -681,7 +681,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -702,7 +702,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -723,7 +723,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -744,7 +744,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -784,7 +784,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundClickStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -805,7 +805,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundClickBrowserFamilyStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -827,7 +827,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundClickBrowserPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
@@ -849,7 +849,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $tag Filter by tag.
 	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
 	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null default "outbound" transactional stream.
+	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
 	function getOutboundClickLocationStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
