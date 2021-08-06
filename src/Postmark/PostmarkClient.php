@@ -266,7 +266,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
 	 *
-	 * @return string
+	 * @return DynamicResponseModel
 	 */
 	function getBounceDump($id) {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id/dump"));
