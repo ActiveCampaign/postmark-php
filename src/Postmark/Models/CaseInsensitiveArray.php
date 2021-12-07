@@ -24,7 +24,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		$this->_container = array_change_key_case($initialArray);
 	}
 
-	public function offsetSet($offset, $value) {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
 		}
@@ -36,7 +36,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		}
 	}
 
-	public function offsetExists($offset) {
+	public function offsetExists(mixed $offset): bool {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
 		}
@@ -44,7 +44,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		return isset($this->_container[$offset]);
 	}
 
-	public function offsetUnset($offset) {
+	public function offsetUnset(mixed $offset): void {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
 		}
@@ -52,7 +52,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		unset($this->_container[$offset]);
 	}
 
-	public function offsetGet($offset) {
+	public function offsetGet(mixed $offset): mixed {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
 		}
@@ -60,28 +60,28 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		$this->_container[$offset] : null;
 	}
 
-	public function current() {
+	public function current(): mixed {
 		// use "offsetGet" instead of indexes
 		// so that subclasses can override behavior if needed.
 		return $this->offsetGet($this->key());
 	}
 
-	public function key() {
+	public function key(): mixed {
         $keys = array_keys($this->_container);
 		return $keys[$this->_pointer];
 	}
 
-	public function next() {
+	public function next(): void {
 		$this->_pointer++;
 	}
 
-	public function rewind() {
+	public function rewind(): void {
 		$this->_pointer = 0;
 	}
 
-	public function valid() {
+	public function valid(): bool {
 		return count(array_keys($this->_container)) > $this->_pointer;
 	}
 }
 
-?>
+#EOF#
