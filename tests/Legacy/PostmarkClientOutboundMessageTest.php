@@ -1,10 +1,10 @@
 <?php
 
-namespace Postmark\Tests;
+namespace Postmark\Tests\Legacy;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
-use \Postmark\PostmarkClient;
+use Postmark\PostmarkClient;
 
 class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest {
 

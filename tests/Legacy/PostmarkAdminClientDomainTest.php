@@ -1,14 +1,15 @@
 <?php
 
-namespace Postmark\Tests;
+declare(strict_types=1);
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+namespace Postmark\Tests\Legacy;
 
-use Postmark\PostmarkAdminClient as PostmarkAdminClient;
+use Postmark\PostmarkAdminClient;
 
-class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
-
-	static function tearDownAfterClass() {
+class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest
+{
+	public static function tearDownAfterClass(): void
+    {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -55,7 +56,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 	function testClientCanEditDomain() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-    
+
 		$domainName = 'test-php-edit-' . $tk->WRITE_TEST_DOMAIN_NAME;
 		$returnPath = 'return.' . $domainName;
 
@@ -69,7 +70,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 	function testClientCanDeleteDomain() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-    
+
 		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
 
 		$name = 'test-php-delete-' . $domainName;
@@ -98,5 +99,3 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		$this->assertTrue($result->SPFVerified);
 	}
 }
-
-?>

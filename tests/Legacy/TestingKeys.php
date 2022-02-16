@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark\Tests;
+namespace Postmark\Tests\Legacy;
 
 class TestingKeys {
 
@@ -16,8 +16,12 @@ class TestingKeys {
 	public $WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
 	public $WRITE_TEST_DOMAIN_NAME;
 	public $BASE_URL;
+    /** @var array|false|mixed|string */
+    public $READ_SELENIUM_OPEN_TRACKING_TOKEN;
+    /** @var array|false|mixed|string */
+    public $READ_LINK_TRACKING_TEST_SERVER_TOKEN;
 
-	function __construct() {
+    function __construct() {
 		$test_keys = array();
 
 		$keyfile = __DIR__ . "/../testing_keys.json";
