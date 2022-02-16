@@ -10,6 +10,7 @@ use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationDeliveryTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
+use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
 use Postmark\PostmarkClient as PostmarkClient;
 
@@ -40,7 +41,9 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $deliveryTrigger = new WebhookConfigurationDeliveryTrigger(true);
         $bounceTrigger = new WebhookConfigurationBounceTrigger(true, true);
         $spamComplaintTrigger = new WebhookConfigurationSpamComplaintTrigger(true, true);
-        $triggers = new WebhookConfigurationTriggers($openTrigger, $clickTrigger, $deliveryTrigger, $bounceTrigger, $spamComplaintTrigger);
+        $subscriptionChangeTrigger = new WebhookConfigurationSubscriptionChange(true);
+
+        $triggers = new WebhookConfigurationTriggers($openTrigger, $clickTrigger, $deliveryTrigger, $bounceTrigger, $spamComplaintTrigger, $subscriptionChangeTrigger);
 
         $httpAuth = new HttpAuth("testUser", "testPass");
         $headers = array("X-Test-Header" => "Header");
@@ -48,7 +51,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $messageStream = "outbound";
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
-
+        
         $this->assertNotEmpty($result->ID);
         $this->assertEquals($url, $result->Url);
         $this->assertEquals($messageStream, $result->MessageStream);
@@ -64,6 +67,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($triggers->getBounceSettings()->getIncludeContent(), $result->Triggers->Bounce->IncludeContent);
         $this->assertEquals($triggers->getSpamComplaintSettings()->getEnabled(), $result->Triggers->SpamComplaint->Enabled);
         $this->assertEquals($triggers->getSpamComplaintSettings()->getIncludeContent(), $result->Triggers->SpamComplaint->IncludeContent);
+        $this->assertEquals($triggers->getSubscriptionChangeSettings()->getEnabled(), $result->Triggers->SubscriptionChange->Enabled);
     }
 
     //edit with null parameters

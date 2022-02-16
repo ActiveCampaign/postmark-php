@@ -11,6 +11,7 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
     private $delivery;
     private $bounce;
     private $spamComplaint;
+    private $subscriptionChange;
 
     /**
      * Create a new WebhookConfigurationTriggers object.
@@ -20,13 +21,15 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
      * @param WebhookConfigurationDeliveryTrigger $delivery Optional settings for Delivery webhooks.
      * @param WebhookConfigurationBounceTrigger $bounce Optional settings for Bounce webhooks.
      * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint Optional settings for SpamComplaint webhooks.
+     * @param WebhookConfigurationSubscriptionChange $subscriptionChange Optional settings for SubscriptionChange webhooks.
      */
-    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null) {
+    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null, $subscriptionChange = null) {
         $this->open = $open;
         $this->click = $click;
         $this->delivery = $delivery;
         $this->bounce = $bounce;
         $this->spamComplaint = $spamComplaint;
+        $this->subscriptionChange = $subscriptionChange;
     }
 
     public function jsonSerialize() {
@@ -52,6 +55,10 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
             $retval['SpamComplaint'] = $this->spamComplaint->jsonSerialize();
         }
 
+        if ($this->subscriptionChange !== null) {
+            $retval['SubscriptionChange'] = $this->subscriptionChange->jsonSerialize();
+        }
+
         return $retval;
     }
 
@@ -73,6 +80,10 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
 
     public function getSpamComplaintSettings() {
         return $this->spamComplaint;
+    }
+
+    public function getSubscriptionChangeSettings() {
+        return $this->subscriptionChange;
     }
 }
 
