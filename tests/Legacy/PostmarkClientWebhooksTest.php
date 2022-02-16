@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark\Tests;
+namespace Postmark\Tests\Legacy;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
@@ -18,7 +18,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
     private $testServerToken = "";
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -51,7 +52,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $messageStream = "outbound";
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
-        
+
         $this->assertNotEmpty($result->ID);
         $this->assertEquals($url, $result->Url);
         $this->assertEquals($messageStream, $result->MessageStream);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark\Tests;
+namespace Postmark\Tests\Legacy;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
@@ -11,7 +11,8 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
 	private $testServerToken = "";
 
-	static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void
+    {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -28,12 +29,12 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 	function testClientCanCreateTemplate() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		
+
 		// Creating a layout template
 		$layoutResult = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		$this->assertNotEmpty($layoutResult->TemplateId);
 		$this->assertNotEmpty($layoutResult->Alias);
-		
+
 		// Creating a standard template using that layout template
 		$standardResult = $client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", null, "Standard", $layoutResult->Alias);
 		$this->assertNotEmpty($standardResult->TemplateId);
@@ -55,15 +56,15 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$this->assertNotSame($firstVersion->Subject, $secondVersion->Subject);
 		$this->assertNotSame($firstVersion->TextBody, $secondVersion->TextBody);
 		$this->assertEquals($firstVersion->TemplateType, $secondVersion->TemplateType);
-		
+
 		// Creating a layout template
 		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
-		
+
 		// Adding a layout template to a standard template
 		$r3 = $client->editTemplate($result->TemplateId, NULL, NULL, NULL, NULL, NULL, $layoutTemplate->Alias);
 		$versionWithLayoutTemplate = $client->getTemplate($r3->TemplateId);
 		$this->assertEquals($layoutTemplate->Alias, $versionWithLayoutTemplate->LayoutTemplate);
-		
+
 		// Removing the layout template
 		$r4 = $client->editTemplate($result->TemplateId, NULL, NULL, NULL, NULL, NULL, "");
 		$versionWithoutLayoutTemplate = $client->getTemplate($r4->TemplateId);
@@ -77,16 +78,16 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		for ($i = 0; $i < 5; $i++) {
 			$client->createTemplate('test-php-template-' . $i . '-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
 		}
-		
+
 		// Listing all templates
 		$result = $client->listTemplates();
 		$this->assertNotEmpty($result->Templates);
-		
+
 		// Filtering Layout templates
 		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		$result = $client->listTemplates(100, 0, "Layout");
 		$this->assertNotEmpty($result->Templates);
-		
+
 		// Filtering by LayoutTemplate
 		$client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", null, "Standard", $layoutTemplate->Alias);
 		$result = $client->listTemplates(100, 0, "All", $layoutTemplate->Alias);
@@ -136,15 +137,15 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
 		$this->assertEquals(0, $emailResult->ErrorCode);
 	}
-	
+
 	//send batch
 	function testClientCanSendBatchMessagesWithTemplate() {
 		$tk = parent::$testKeys;
-		
+
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		
+
 		$result = $client->createTemplate('test-php-template-' . date('c'), "Subject", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
-		
+
 		$batch = array();
 
 		$attachment = PostmarkAttachment::fromRawData("attachment content", "hello.txt", "text/plain");

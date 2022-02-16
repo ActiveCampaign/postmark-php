@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark\Tests;
+namespace Postmark\Tests\Legacy;
 
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
@@ -8,7 +8,8 @@ use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
 class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
-	static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void
+    {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
