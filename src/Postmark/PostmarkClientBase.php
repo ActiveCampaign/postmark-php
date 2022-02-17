@@ -6,6 +6,7 @@ namespace Postmark;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Postmark\ClientBehaviour\Discovery;
+use Postmark\Exception\DiscoveryFailure;
 use Postmark\Exception\PostmarkException;
 use Postmark\Exception\RequestFailure;
 use Psr\Http\Client\ClientInterface;
@@ -38,9 +39,18 @@ abstract class PostmarkClientBase
     private UriFactoryInterface $uriFactory;
     private StreamFactoryInterface $streamFactory;
     private string $baseUri = 'https://api.postmarkapp.com';
+    /** @var non-empty-string */
     private string $token;
 
-    protected function __construct(
+    /**
+     * @param non-empty-string     $token      Either a 'Server' token or an 'Account' token.
+     * @param ClientInterface|null $httpClient You can provide any PSR-18 Http Client, otherwise an HTTP client will be
+     *                                         discovered from your environment. If no client can be located and none is
+     *                                         given, an exception will be thrown.
+     *
+     * @throws DiscoveryFailure If any HTTP related components cannot be discovered from your environment.
+     */
+    final public function __construct(
         string $token,
         ?ClientInterface $httpClient = null
     ) {
@@ -61,7 +71,6 @@ abstract class PostmarkClientBase
 
     public function withBaseUri(string $baseUri): self
     {
-        /** @psalm-suppress UnsafeInstantiation */
         $client = new static($this->token, $this->client);
         $client->baseUri = $baseUri;
 
