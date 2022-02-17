@@ -132,12 +132,13 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['inboundDomain'] = $inboundDomain;
         $body['inboundSpamThreshold'] = $inboundSpamThreshold;
         $body['trackLinks'] = $trackLinks;
-        $body["ClickHookUrl"] = $clickHookUrl;
-        $body["DeliveryHookUrl"] = $deliveryHookUrl;
-        $body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
+        $body['ClickHookUrl'] = $clickHookUrl;
+        $body['DeliveryHookUrl'] = $deliveryHookUrl;
+        $body['EnableSmtpApiErrorHooks'] = $enableSmtpApiErrorHooks;
 
-        $response = new DynamicResponseModel($this->processRestRequest('PUT', "/servers/$id", $body));
-        $response["ID"] = $id;
+        $response = new DynamicResponseModel($this->processRestRequest('PUT', '/servers/' . $id, $body));
+        $response['ID'] = $id;
+
         return $response;
     }
 
@@ -193,9 +194,9 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['inboundDomain'] = $inboundDomain;
         $body['inboundSpamThreshold'] = $inboundSpamThreshold;
         $body['trackLinks'] = $trackLinks;
-        $body["ClickHookUrl"] = $clickHookUrl;
-        $body["DeliveryHookUrl"] = $deliveryHookUrl;
-        $body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
+        $body['ClickHookUrl'] = $clickHookUrl;
+        $body['DeliveryHookUrl'] = $deliveryHookUrl;
+        $body['EnableSmtpApiErrorHooks'] = $enableSmtpApiErrorHooks;
 
         return new DynamicResponseModel($this->processRestRequest('POST', '/servers/', $body));
     }
