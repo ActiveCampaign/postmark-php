@@ -22,7 +22,7 @@ use function is_array;
  * $server["ID"];
  * ```
  */
-class DynamicResponseModel extends CaseInsensitiveArray
+final class DynamicResponseModel extends CaseInsensitiveArray
 {
     /**
      * Convert array values to DynamicResponseModel instances
