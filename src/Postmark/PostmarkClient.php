@@ -127,7 +127,7 @@ final class PostmarkClient extends PostmarkClientBase
         $trackLinks = null,
         $metadata = null,
         $messageStream = null
-) {
+    ) {
         $body = [];
         $body['From'] = $from;
         $body['To'] = $to;
@@ -143,7 +143,6 @@ final class PostmarkClient extends PostmarkClientBase
         $body['Metadata'] = $metadata;
         $body['MessageStream'] = $messageStream;
 
-
         // Since this parameter can override a per-server setting
         // we have to check whether it was actually set.
         // And only include it in the API call if that is the case.
@@ -151,14 +150,13 @@ final class PostmarkClient extends PostmarkClientBase
             $body['TrackLinks'] = $trackLinks;
         }
 
-        if ( is_int( $templateIdOrAlias ) ) {
+        if (is_int($templateIdOrAlias)) {
             $body['TemplateId'] = $templateIdOrAlias;
 
             // Uses the Template Alias if specified instead of Template ID.
         } else {
             $body['TemplateAlias'] = $templateIdOrAlias;
         }
-
 
         return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
     }
@@ -178,6 +176,7 @@ final class PostmarkClient extends PostmarkClientBase
                 $index++;
             }
         }
+
         return $retval;
     }
 
@@ -202,6 +201,7 @@ final class PostmarkClient extends PostmarkClientBase
                     $email[$emailIdx] = $this->fixHeaders($emailValue);
                 }
             }
+
             array_push($final, $email);
         }
 
@@ -230,6 +230,7 @@ final class PostmarkClient extends PostmarkClientBase
                     $email[$emailIdx] = $this->fixHeaders($emailValue);
                 }
             }
+
             $final[] = $email;
         }
 
