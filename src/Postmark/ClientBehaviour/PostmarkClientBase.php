@@ -87,7 +87,7 @@ abstract class PostmarkClientBase
      * The base request method for all API access.
      *
      * @param non-empty-string        $method The request VERB to use (GET, POST, PUT, DELETE)
-     * @param non-empty-string        $path   The API path.
+     * @param string                  $path   The API path.
      * @param array<array-key, mixed> $params The content to be used (either as the query, or the json post/put body)
      *
      * @return array<array-key, mixed>
