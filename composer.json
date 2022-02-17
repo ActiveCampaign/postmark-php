@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^9.0",
+        "laminas/laminas-diactoros": "^2.8",
         "php-http/mock-client": "^1.5",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.1",
