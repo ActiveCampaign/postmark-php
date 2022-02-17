@@ -12,7 +12,7 @@ class WebhookConfigurationOpenTrigger implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationOpenTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Open events.
+     * @param boolean $enabled           Specifies whether or not webhooks will be triggered by Open events.
      * @param boolean $postFirstOpenOnly If enabled, Open webhooks will only POST on first open.
      */
     public function __construct($enabled = false, $postFirstOpenOnly = false) {

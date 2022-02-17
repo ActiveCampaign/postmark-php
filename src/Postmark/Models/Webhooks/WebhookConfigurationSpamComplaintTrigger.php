@@ -12,7 +12,7 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationSpamComplaintTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by SpamComplaint events.
+     * @param boolean $enabled        Specifies whether or not webhooks will be triggered by SpamComplaint events.
      * @param boolean $includeContent Specifies whether or not the full content of the spam complaint is included in webhook POST.
      */
     public function __construct($enabled = false, $includeContent = false) {

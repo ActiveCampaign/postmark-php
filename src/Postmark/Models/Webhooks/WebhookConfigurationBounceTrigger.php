@@ -12,7 +12,7 @@ class WebhookConfigurationBounceTrigger implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationBounceTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Bounce events.
+     * @param boolean $enabled        Specifies whether or not webhooks will be triggered by Bounce events.
      * @param boolean $includeContent Specifies whether or not the full content of the email bounce is included in webhook POST.
      */
     public function __construct($enabled = false, $includeContent = false) {
