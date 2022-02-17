@@ -21,6 +21,11 @@
         <severity>0</severity>
     </rule>
 
+    <!-- The existing exception naming needs to pass cs -->
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix">
+        <exclude-pattern>PostmarkException.php</exclude-pattern>
+    </rule>
+
     <rule ref="Generic.Files.LineLength.TooLong">
         <exclude-pattern>/tests/</exclude-pattern>
     </rule>
