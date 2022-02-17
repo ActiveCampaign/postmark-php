@@ -12,7 +12,6 @@
     <!-- Paths to check -->
     <file>src</file>
     <file>tests</file>
-    <exclude-pattern>tests/Legacy/*.php</exclude-pattern>
 
     <!-- Inherit rules from Doctrine Coding Standard -->
     <rule ref="Doctrine" />
