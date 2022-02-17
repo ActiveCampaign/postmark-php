@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Postmark;
 
+use Postmark\ClientBehaviour\PostmarkClientBase;
 use Postmark\Models\DynamicResponseModel;
 
 /**

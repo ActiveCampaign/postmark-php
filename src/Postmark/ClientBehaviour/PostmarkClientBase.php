@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Postmark;
+namespace Postmark\ClientBehaviour;
 
 use Fig\Http\Message\RequestMethodInterface;
-use Postmark\ClientBehaviour\Discovery;
+use Postmark\Exception\CommunicationFailure;
 use Postmark\Exception\DiscoveryFailure;
-use Postmark\Exception\PostmarkException;
+use Postmark\Exception\InvalidRequestMethod;
 use Postmark\Exception\RequestFailure;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
+use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
@@ -34,11 +37,13 @@ abstract class PostmarkClientBase
 {
     use Discovery;
 
+    public const DEFAULT_BASE_URI = 'https://api.postmarkapp.com';
+
     private ClientInterface $client;
     private RequestFactoryInterface $requestFactory;
     private UriFactoryInterface $uriFactory;
     private StreamFactoryInterface $streamFactory;
-    private string $baseUri = 'https://api.postmarkapp.com';
+    private string $baseUri = self::DEFAULT_BASE_URI;
     /** @var non-empty-string */
     private string $token;
 
@@ -69,6 +74,7 @@ abstract class PostmarkClientBase
         return $this->uriFactory->createUri($this->baseUri);
     }
 
+    /** @return static */
     public function withBaseUri(string $baseUri): self
     {
         $client = new static($this->token, $this->client);
@@ -86,7 +92,8 @@ abstract class PostmarkClientBase
      *
      * @return array<array-key, mixed>
      *
-     * @throws PostmarkException
+     * @throws RequestFailure if for any reason the request is rejected or considered erroneous by Postmark.
+     * @throws CommunicationFailure if it was not possible to send the request at all.
      */
     protected function processRestRequest(string $method, string $path, array $params = []): array
     {
@@ -94,25 +101,26 @@ abstract class PostmarkClientBase
         $query = $body = null;
 
         $params = array_filter($params);
-        if (! empty($params)) {
-            switch ($method) {
-                case RequestMethodInterface::METHOD_GET:
-                case RequestMethodInterface::METHOD_HEAD:
-                case RequestMethodInterface::METHOD_DELETE:
-                case RequestMethodInterface::METHOD_OPTIONS:
-                    $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-                    break;
-                case RequestMethodInterface::METHOD_PUT:
-                case RequestMethodInterface::METHOD_POST:
-                case RequestMethodInterface::METHOD_PATCH:
-                    $body = $this->streamFactory->createStream(
-                        json_encode($params, JSON_THROW_ON_ERROR)
-                    );
-                    break;
-            }
+        switch ($method) {
+            case RequestMethodInterface::METHOD_GET:
+            case RequestMethodInterface::METHOD_HEAD:
+            case RequestMethodInterface::METHOD_DELETE:
+            case RequestMethodInterface::METHOD_OPTIONS:
+                $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+                break;
+            case RequestMethodInterface::METHOD_PUT:
+            case RequestMethodInterface::METHOD_POST:
+            case RequestMethodInterface::METHOD_PATCH:
+                $body = $this->streamFactory->createStream(
+                    json_encode($params, JSON_THROW_ON_ERROR)
+                );
+                break;
+
+            default:
+                throw InvalidRequestMethod::with($method);
         }
 
-        if ($query !== null) {
+        if (! empty($query)) {
             $target = $target->withQuery($query);
         }
 
@@ -132,7 +140,15 @@ abstract class PostmarkClientBase
             $request = $request->withBody($body);
         }
 
-        $response = $this->client->sendRequest($request);
+        try {
+            $response = $this->client->sendRequest($request);
+        } catch (NetworkExceptionInterface $error) {
+            throw CommunicationFailure::withNetworkError($error, $request);
+        } catch (RequestExceptionInterface $error) {
+            throw CommunicationFailure::withInvalidRequest($error, $request);
+        } catch (ClientExceptionInterface $error) {
+            throw CommunicationFailure::generic($error, $request);
+        }
 
         if ($response->getStatusCode() === 200) {
             // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
