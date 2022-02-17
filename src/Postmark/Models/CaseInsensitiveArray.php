@@ -104,9 +104,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
     /** @return array-key */
     public function key()
     {
-        $keys = array_keys($this->data);
-
-        return $keys[$this->pointer];
+        return array_keys($this->data)[$this->pointer];
     }
 
     public function next(): void
