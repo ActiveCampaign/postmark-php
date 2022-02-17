@@ -121,29 +121,3 @@ jobs:
 
       - name: "Check"
         run: /usr/local/bin/composer-require-checker check
-
-  composer-unused:
-    name: "Check for Unused Dependencies"
-    runs-on: "ubuntu-latest"
-
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
-
-      - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.stable_php }}
-          ini-values: memory_limit=-1
-          extensions: ${{ env.php_extensions }}
-
-      - uses: "ramsey/composer-install@2.1.0"
-
-      - name: "Set global composer bin-dir"
-        run: composer global config bin-dir /usr/local/bin
-
-      - name: "Install Composer Unused"
-        run: composer global require icanhazstring/composer-unused dev-main#9e79ecb3d1ec8b9d5b076678fc20b5c83c539d50
-
-      - name: "Check"
-        run: /usr/local/bin/composer-unused --output-format=github
