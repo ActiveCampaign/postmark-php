@@ -4,72 +4,96 @@ declare(strict_types=1);
 
 namespace Postmark\Models;
 
+use ArrayAccess;
+use Iterator;
+
+use function array_change_key_case;
+use function array_keys;
+use function count;
+use function is_string;
+use function str_replace;
+use function strtolower;
+
+use const CASE_LOWER;
+
 /**
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.
- *
  * This allows access to the array to be very forgiving. (i.e. If you access something
  * with the wrong CaSe, it'll still find the correct element)
  */
-class CaseInsensitiveArray implements \ArrayAccess, \Iterator
+class CaseInsensitiveArray implements ArrayAccess, Iterator
 {
-    private $_container = array();
-    private $_pointer = 0;
+    /** @var array<array-key, mixed> */
+    private array $data;
+    private int $pointer = 0;
 
-    private function fixOffsetName($offset)
+    private function normaliseOffset(string $offset): string
     {
-        return preg_replace('/_/', '', strtolower($offset));
+        return str_replace('_', '', strtolower($offset));
     }
 
     /**
      * Initialize a CaseInsensitiveArray from an existing array.
      *
-     * @param array $initialArray The base array from which to create the new array.
+     * @param array<array-key, mixed> $initialArray The base array from which to create the new array.
      */
-    public function __construct(Array $initialArray = array())
+    public function __construct(array $initialArray = [])
     {
-        $this->_container = array_change_key_case($initialArray);
+        $this->data = array_change_key_case($initialArray, CASE_LOWER);
     }
 
-    public function offsetSet($offset, $value)
+    /**
+     * @param array-key|null $offset
+     * @param mixed          $value
+     */
+    public function offsetSet($offset, $value): void
     {
         if (is_string($offset)) {
-            $offset = $this->fixOffsetName($offset);
+            $offset = $this->normaliseOffset($offset);
         }
 
-        if (is_null($offset)) {
-            $this->_container[] = $value;
+        if ($offset === null) {
+            $this->data[] = $value;
         } else {
-            $this->_container[$offset] = $value;
+            $this->data[$offset] = $value;
         }
     }
 
-    public function offsetExists($offset)
+    /** @param array-key $offset */
+    public function offsetExists($offset): bool
     {
         if (is_string($offset)) {
-            $offset = $this->fixOffsetName($offset);
+            $offset = $this->normaliseOffset($offset);
         }
 
-        return isset($this->_container[$offset]);
+        return isset($this->data[$offset]);
     }
 
-    public function offsetUnset($offset)
+    /** @param array-key $offset */
+    public function offsetUnset($offset): void
     {
         if (is_string($offset)) {
-            $offset = $this->fixOffsetName($offset);
+            $offset = $this->normaliseOffset($offset);
         }
 
-        unset($this->_container[$offset]);
+        unset($this->data[$offset]);
     }
 
+    /**
+     * @param array-key $offset
+     *
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         if (is_string($offset)) {
-            $offset = $this->fixOffsetName($offset);
+            $offset = $this->normaliseOffset($offset);
         }
-        return isset($this->_container[$offset]) ?
-        $this->_container[$offset] : null;
+
+        return $this->data[$offset] ?? null;
     }
 
+    /** @return mixed */
     public function current()
     {
         // use "offsetGet" instead of indexes
@@ -77,24 +101,26 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator
         return $this->offsetGet($this->key());
     }
 
+    /** @return array-key */
     public function key()
     {
-        $keys = array_keys($this->_container);
-        return $keys[$this->_pointer];
+        $keys = array_keys($this->data);
+
+        return $keys[$this->pointer];
     }
 
-    public function next()
+    public function next(): void
     {
-        $this->_pointer++;
+        $this->pointer++;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
-        $this->_pointer = 0;
+        $this->pointer = 0;
     }
 
-    public function valid()
+    public function valid(): bool
     {
-        return count(array_keys($this->_container)) > $this->_pointer;
+        return count(array_keys($this->data)) > $this->pointer;
     }
 }
