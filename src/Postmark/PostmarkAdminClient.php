@@ -29,10 +29,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * Request a given server by ID.
      *
      * @param int $id The Id for the server you wish to retrieve.
-     *
-     * @return DynamicResponseModel
      */
-    function getServer($id)
+    function getServer($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/servers/$id"));
     }
@@ -43,10 +41,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param int    $count  The number of servers to retrieve in the request, defaults to 100.
      * @param int    $offset The number of servers to "skip" when paging through lists of servers.
      * @param string $name   Filter by server name.
-     *
-     * @return DynamicResponseModel
      */
-    function listServers($count = 100, $offset = 0, $name = null)
+    function listServers($count = 100, $offset = 0, $name = null): DynamicResponseModel
     {
         $query = [];
         $query['count'] = $count;
@@ -62,10 +58,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * client to delete Servers.
      *
      * @param int $id The ID of the Server to delete.
-     *
-     * @return DynamicResponseModel
      */
-    function deleteServer($id)
+    function deleteServer($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('DELETE', "/servers/$id"));
     }
@@ -90,8 +84,6 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param  string $clickHookUrl            URL to POST to everytime an click event occurs.
      * @param  string $deliveryHookUrl         URL to POST to everytime an click event occurs.
      * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
-     *
-     * @return DynamicResponseModel
      */
     function editServer(
         $id,
@@ -110,7 +102,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
         $clickHookUrl = null,
         $deliveryHookUrl = null,
         $enableSmtpApiErrorHooks = null
-    ) {
+    ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
         $body['color'] = $color;
@@ -153,8 +145,6 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param string $clickHookUrl            URL to POST to everytime an click event occurs.
      * @param string $deliveryHookUrl         URL to POST to everytime an click event occurs.
      * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
-     *
-     * @return DynamicResponseModel
      */
     function createServer(
         $name,
@@ -172,7 +162,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
         $clickHookUrl = null,
         $deliveryHookUrl = null,
         $enableSmtpApiErrorHooks = null
-    ) {
+    ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
         $body['color'] = $color;
@@ -198,10 +188,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      *
      * @param int $count The number of Sender Signatures to retrieve with this request.
      * param  integer $offset The number of Sender Signatures to 'skip' when 'paging' through them.
-     *
-     * @return DynamicResponseModel
      */
-    function listSenderSignatures($count = 100, $offset = 0)
+    function listSenderSignatures($count = 100, $offset = 0): DynamicResponseModel
     {
         $query = [];
         $query['count'] = $count;
@@ -214,10 +202,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * Get information for a specific Sender Signature.
      *
      * @param int $id The ID for the Sender Signature you wish to retrieve.
-     *
-     * @return DynamicResponseModel
      */
-    function getSenderSignature($id)
+    function getSenderSignature($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/senders/$id"));
     }
@@ -231,10 +217,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param  string $name             The name of the Sender Signature.
      * @param  string $replyToEmail     The reply-to email address for the Sender Signature.
      * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
-     *
-     * @return DynamicResponseModel
      */
-    function createSenderSignature($fromEmail, $name, $replyToEmail = null, $returnPathDomain = null)
+    function createSenderSignature($fromEmail, $name, $replyToEmail = null, $returnPathDomain = null): DynamicResponseModel
     {
         $body = [];
         $body['fromEmail'] = $fromEmail;
@@ -252,10 +236,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param  string $name             The name of the Sender Signature.
      * @param  string $replyToEmail     The reply-to email address for the Sender Signature.
      * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
-     *
-     * @return DynamicResponseModel
      */
-    function editSenderSignature($id, $name = null, $replyToEmail = null, $returnPathDomain = null)
+    function editSenderSignature($id, $name = null, $replyToEmail = null, $returnPathDomain = null): DynamicResponseModel
     {
         $body = [];
         $body['name'] = $name;
@@ -269,10 +251,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * Delete a Sender Signature with the given ID.
      *
      * @param int $id The ID for the Sender Signature we wish to delete.
-     *
-     * @return DynamicResponseModel
      */
-    function deleteSenderSignature($id)
+    function deleteSenderSignature($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('DELETE', "/senders/$id"));
     }
@@ -282,10 +262,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * Sender Signatures require verification before they may be used to send email through the Postmark API.
      *
      * @param int $id The ID for the Sender Signature to which we wish to resend a verification email.
-     *
-     * @return DynamicResponseModel
      */
-    function resendSenderSignatureConfirmation($id)
+    function resendSenderSignatureConfirmation($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/resend"));
     }
@@ -298,10 +276,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @deprecated verifyDomainSPF replaces this method
      *
      * @param int $id The ID for the Sender Signature for which we wish to verify the SPF records.
-     *
-     * @return DynamicResponseModel
      */
-    function verifySenderSignatureSPF($id)
+    function verifySenderSignatureSPF($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/verifyspf"));
     }
@@ -314,10 +290,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @deprecated rotateDKIMForDomain replaces this method.
      *
      * @param int $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
-     *
-     * @return DynamicResponseModel
      */
-    function requestNewSenderSignatureDKIM($id)
+    function requestNewSenderSignatureDKIM($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/requestnewdkim"));
     }
@@ -327,10 +301,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    *
    * @param int $count The number of Domains to retrieve with this request.
    * param  integer $offset The number of Domains to 'skip' when 'paging' through them.
-   *
-   * @return DynamicResponseModel
    */
-    function listDomains($count = 100, $offset = 0)
+    function listDomains($count = 100, $offset = 0): DynamicResponseModel
     {
         $query = [];
         $query['count'] = $count;
@@ -343,10 +315,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    * Get information for a specific Domain.
    *
    * @param int $id The ID for the Domains you wish to retrieve.
-   *
-   * @return DynamicResponseModel
    */
-    function getDomain($id)
+    function getDomain($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/domains/$id"));
     }
@@ -357,10 +327,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    *
    * @param  string $name             The name of the Domain.
    * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
-   *
-   * @return DynamicResponseModel
    */
-    function createDomain($name, $returnPathDomain = null)
+    function createDomain($name, $returnPathDomain = null): DynamicResponseModel
     {
         $body = [];
         $body['name'] = $name;
@@ -374,10 +342,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    *
    * @param int    $id               The ID for the Domain we wish to modify.
    * @param  string $returnPathDomain The custom Return-Path domain for the Domain.
-   *
-   * @return DynamicResponseModel
    */
-    function editDomain($id, $returnPathDomain = null)
+    function editDomain($id, $returnPathDomain = null): DynamicResponseModel
     {
         $body = [];
         $body['returnPathDomain'] = $returnPathDomain;
@@ -389,10 +355,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    * Delete a Domain with the given ID.
    *
    * @param int $id The ID for the Domain we wish to delete.
-   *
-   * @return DynamicResponseModel
    */
-    function deleteDomain($id)
+    function deleteDomain($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('DELETE', "/domains/$id"));
     }
@@ -403,10 +367,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    * Postmark, but it is highly recommended, and can improve delivery rates.
    *
    * @param int $id The ID for the Domain for which we wish to verify the SPF records.
-   *
-   * @return DynamicResponseModel
    */
-    function verifyDomainSPF($id)
+    function verifyDomainSPF($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/verifyspf"));
     }
@@ -417,10 +379,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
    * on DKIM and its purpose, see http://www.dkim.org/
    *
    * @param int $id The ID for the Domain for which we wish to get an updated DKIM configuration.
-   *
-   * @return DynamicResponseModel
    */
-    function rotateDKIMForDomain($id)
+    function rotateDKIMForDomain($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
     }
