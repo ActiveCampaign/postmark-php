@@ -1,4 +1,5 @@
 <?php
+
 namespace Postmark\Models;
 
 /**
@@ -83,5 +84,3 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		return count(array_keys($this->_container)) > $this->_pointer;
 	}
 }
-
-?>

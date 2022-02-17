@@ -1,174 +1,184 @@
 <?php
 
-/*
- * Author:   Wildbit (http://wildbit.com)
- * License:  http://creativecommons.org/licenses/MIT/ MIT
- * Link:     https://github.com/wildbit/postmark-php/
- */
+declare(strict_types=1);
 
 namespace Postmark;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
-use Postmark\Models\PostmarkException;
+use Fig\Http\Message\RequestMethodInterface;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
+use Postmark\Exception\DiscoveryFailure;
+use Postmark\Exception\PostmarkException;
+use Postmark\Exception\RequestFailure;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
+use Psr\Http\Message\UriInterface;
+use Throwable;
 
-/**
- * This is the core class that interacts with the Postmark API. All clients should
- * inherit fromt this class.
- */
-abstract class PostmarkClientBase {
+use function array_filter;
+use function http_build_query;
+use function json_decode;
+use function json_encode;
+use function sprintf;
 
-	/**
-	 * BASE_URL is "https://api.postmarkapp.com"
-	 *
-	 * You may modify this value to disable SSL support, but it is not recommended.
-	 *
-	 * @var string
-	 */
-	public static $BASE_URL = "https://api.postmarkapp.com";
+use const JSON_BIGINT_AS_STRING;
+use const JSON_THROW_ON_ERROR;
+use const PHP_MAJOR_VERSION;
+use const PHP_MINOR_VERSION;
+use const PHP_OS_FAMILY;
+use const PHP_QUERY_RFC3986;
+use const PHP_RELEASE_VERSION;
 
-	/**
-	* VERIFY_SSL is defaulted to "true".
-	*
-	* In some PHP configurations, SSL/TLS certificates cannot be verified.
-	* Rather than disabling SSL/TLS entirely in these circumstances, you may
-	* disable certificate verification. This is dramatically better than disabling
-	* connecting to the Postmark API without TLS, as it's still encrypted,
-	* but the risk is that if your connection has been compromised, your application could
-	* be subject to a Man-in-the-middle attack. However, this is still a better outcome
-	* than using no encryption at all.
-	*
-	* If possible, you should try to resolve your PHP install's certificate issues as outline here:
-	* https://github.com/wildbit/postmark-php/wiki/SSL%20Errors%20on%20Windows
-	*/
-	public static $VERIFY_SSL= true;
+/** @internal Postmark */
+abstract class PostmarkClientBase
+{
+    private ClientInterface $client;
+    private RequestFactoryInterface $requestFactory;
+    private UriFactoryInterface $uriFactory;
+    private StreamFactoryInterface $streamFactory;
+    private string $baseUri = 'https://api.postmarkapp.com';
+    private string $token;
 
-	protected $authorization_token = NULL;
-	protected $authorization_header = NULL;
-	protected $version = NULL;
-	protected $os = NULL;
-	protected $timeout = 30;
+    protected function __construct(
+        string $token,
+        ?ClientInterface $httpClient = null
+    ) {
+        $this->client = self::resolveHttpClient($httpClient);
+        $this->requestFactory = self::resolveRequestFactory();
+        $this->uriFactory = self::resolveUriFactory();
+        $this->streamFactory = self::resolveStreamFactory();
+        $this->token = $token;
+    }
 
-	/** @var  Client */
-	protected $client;
+    /** @return non-empty-string */
+    abstract protected function authorizationHeaderName(): string;
 
-	protected function __construct($token, $header, $timeout = 30) {
-		$this->authorization_header = $header;
-		$this->authorization_token = $token;
-		$this->version = phpversion();
-		$this->os = PHP_OS;
-		$this->timeout = $timeout;
-	}
+    private static function resolveHttpClient(?ClientInterface $client): ClientInterface
+    {
+        if ($client) {
+            return $client;
+        }
 
+        try {
+            return Psr18ClientDiscovery::find();
+        } catch (Throwable $error) {
+            throw DiscoveryFailure::clientDiscoveryFailed($error);
+        }
+    }
 
-	/**
-	 * Return the injected GuzzleHttp\Client or create a default instance
-	 * @return Client
-	 */
-	protected function getClient() {
-		if(!$this->client) {
-			$this->client = new Client([
-				RequestOptions::VERIFY  => self::$VERIFY_SSL,
-				RequestOptions::TIMEOUT => $this->timeout,
-			]);
-		}
-		return $this->client;
-	}
+    private static function resolveRequestFactory(): RequestFactoryInterface
+    {
+        try {
+            return Psr17FactoryDiscovery::findRequestFactory();
+        } catch (Throwable $error) {
+            throw DiscoveryFailure::requestFactoryDiscoveryFailed($error);
+        }
+    }
 
-	/**
-	 * Provide a custom GuzzleHttp\Client to be used for HTTP requests
-	 *
-	 * @see http://docs.guzzlephp.org/en/latest/ for a full list of configuration options
-	 *
-	 * The following options will be ignored:
-	 * - http_errors
-	 * - headers
-	 * - query
-	 * - json
-	 *
-	 * @param Client $client
-	 */
-	public function setClient(Client $client) {
-		$this->client = $client;
-	}
+    private static function resolveStreamFactory(): StreamFactoryInterface
+    {
+        try {
+            return Psr17FactoryDiscovery::findStreamFactory();
+        } catch (Throwable $error) {
+            throw DiscoveryFailure::streamFactoryDiscoveryFailed($error);
+        }
+    }
 
-	/**
-	 * The base request method for all API access.
-	 *
-	 * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
-	 * @param string $path The API path.
-	 * @param array $body The content to be used (either as the query, or the json post/put body)
-	 * @return object
-	 *
-	 * @throws PostmarkException
-	 */
-	protected function processRestRequest($method = NULL, $path = NULL, array $body = []) {
-		$client = $this->getClient();
+    private static function resolveUriFactory(): UriFactoryInterface
+    {
+        try {
+            return Psr17FactoryDiscovery::findUriFactory();
+        } catch (Throwable $error) {
+            throw DiscoveryFailure::uriFactoryDiscoveryFailed($error);
+        }
+    }
 
-		$options = [
-			RequestOptions::HTTP_ERRORS => false,
-			RequestOptions::HEADERS => [
-				'User-Agent' => "Postmark-PHP (PHP Version:{$this->version}, OS:{$this->os})",
-				'Accept' => 'application/json',
-				'Content-Type' => 'application/json',
-				$this->authorization_header => $this->authorization_token
-			],
-		];
+    public function baseUri(): UriInterface
+    {
+        return $this->uriFactory->createUri($this->baseUri);
+    }
 
-		if(!empty($body)) {
+    public function withBaseUri(string $baseUri): self
+    {
+        /** @psalm-suppress UnsafeInstantiation */
+        $client = new static($this->token, $this->client);
+        $client->baseUri = $baseUri;
 
-			$cleanParams = array_filter($body, function($value) {
-				return $value !== null;
-			});
+        return $client;
+    }
 
-			switch ($method) {
-				case 'GET':
-				case 'HEAD':
-				case 'DELETE':
-				case 'OPTIONS':
-					$options[RequestOptions::QUERY] = $cleanParams;
-					break;
-				case 'PUT':
-				case 'POST':
-				case 'PATCH':
-					$options[RequestOptions::JSON] = $cleanParams;
-					break;
-			}
-		}
+    /**
+     * The base request method for all API access.
+     *
+     * @param non-empty-string        $method The request VERB to use (GET, POST, PUT, DELETE)
+     * @param non-empty-string        $path   The API path.
+     * @param array<array-key, mixed> $params The content to be used (either as the query, or the json post/put body)
+     *
+     * @return array<array-key, mixed>
+     *
+     * @throws PostmarkException
+     */
+    protected function processRestRequest(string $method, string $path, array $params = []): array
+    {
+        $target = $this->baseUri()->withPath($path);
+        $query = $body = null;
 
-		$response = $client->request($method, self::$BASE_URL . $path, $options);
+        $params = array_filter($params);
+        if (! empty($params)) {
+            switch ($method) {
+                case RequestMethodInterface::METHOD_GET:
+                case RequestMethodInterface::METHOD_HEAD:
+                case RequestMethodInterface::METHOD_DELETE:
+                case RequestMethodInterface::METHOD_OPTIONS:
+                    $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+                    break;
+                case RequestMethodInterface::METHOD_PUT:
+                case RequestMethodInterface::METHOD_POST:
+                case RequestMethodInterface::METHOD_PATCH:
+                    $body = $this->streamFactory->createStream(
+                        json_encode($params, JSON_THROW_ON_ERROR)
+                    );
+                    break;
+            }
+        }
 
-		switch ($response->getStatusCode()) {
-			case 200:
-				// Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
-				return json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
-			case 401:
-				$ex = new PostmarkException();
-				$ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
-				'Please verify that you used the correct token when you constructed your client.';
-				$ex->httpStatusCode = 401;
-				throw $ex;
-			case 500:
-				$ex = new PostmarkException();
-				$ex->httpStatusCode = 500;
-				$ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
-				'In most cases the message is lost during the process, ' .
-				'and Postmark is notified so that we can investigate the issue.';
-				throw $ex;
-			case 503:
-				$ex = new PostmarkException();
-				$ex->httpStatusCode = 503;
-				$ex->message = 'The Postmark API is currently unavailable, please try your request later.';
-				throw $ex;
-			// This should cover case 422, and any others that are possible:
-			default:
-				$ex = new PostmarkException();
-				$body = json_decode($response->getBody(), true);
-				$ex->httpStatusCode = $response->getStatusCode();
-				$ex->postmarkApiErrorCode = $body['ErrorCode'];
-				$ex->message = $body['Message'];
-				throw $ex;
-		}
+        if ($query !== null) {
+            $target = $target->withQuery($query);
+        }
 
-	}
+        $request = $this->requestFactory->createRequest($method, $target)
+            ->withHeader('User-Agent', sprintf(
+                'Postmark-PHP (PHP Version:%d.%d.%d, OS:%s)',
+                PHP_MAJOR_VERSION,
+                PHP_MINOR_VERSION,
+                PHP_RELEASE_VERSION,
+                PHP_OS_FAMILY
+            ))
+            ->withHeader('Accept', 'application/json')
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader($this->authorizationHeaderName(), $this->token);
+
+        if ($body !== null) {
+            $request = $request->withBody($body);
+        }
+
+        $response = $this->client->sendRequest($request);
+
+        if ($response->getStatusCode() === 200) {
+            // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
+            /** @psalm-var array<array-key, mixed> $body */
+            $body = json_decode(
+                (string) $response->getBody(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING
+            );
+
+            return $body;
+        }
+
+        throw RequestFailure::with($request, $response);
+    }
 }

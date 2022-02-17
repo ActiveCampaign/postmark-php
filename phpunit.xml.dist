@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
-        colors="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true">
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    bootstrap="vendor/autoload.php"
+    cacheResultFile="build/.phpunit.result.cache"
+    colors="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    convertDeprecationsToExceptions="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true">
     <testsuites>
-        <testsuite>
-            <directory>tests/</directory>
+        <testsuite name="Legacy Tests">
+            <directory>tests/Legacy</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
 
-    <logging>
-        <log type="junit" target="build/artifacts/logs/junit.xml" logIncompleteSkipped="false" />
-    </logging>
+    <coverage includeUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
 </phpunit>
