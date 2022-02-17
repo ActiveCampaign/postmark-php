@@ -8,6 +8,7 @@ use Postmark\Models\DynamicResponseModel;
 
 use function sprintf;
 
+/** @internal \Postmark */
 trait Templates
 {
     /**

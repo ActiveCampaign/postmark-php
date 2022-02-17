@@ -9,6 +9,7 @@ use Postmark\Models\Suppressions\SuppressionChangeRequest;
 
 use function sprintf;
 
+/** @internal \Postmark */
 trait Suppressions
 {
     /**
@@ -18,7 +19,7 @@ trait Suppressions
      *
      * @param list<SuppressionChangeRequest> $suppressionChanges Array of SuppressionChangeRequest objects that
      *                                                           specify what recipients to suppress.
-     * @param string|null                    $messageStream      Message stream where the recipients should be
+     * @param string                         $messageStream      Message stream where the recipients should be
      *                                                           suppressed. If not provided, they will be suppressed
      *                                                           on the default transactional stream.
      */
