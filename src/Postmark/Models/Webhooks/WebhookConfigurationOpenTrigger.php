@@ -37,5 +37,3 @@ class WebhookConfigurationOpenTrigger implements \JsonSerializable {
         return $this->postFirstOpenOnly;
     }
 }
-
-?>

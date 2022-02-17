@@ -37,5 +37,3 @@ class HttpAuth implements \JsonSerializable {
         return $this->password;
     }
 }
-
-?>

@@ -37,5 +37,3 @@ class WebhookConfigurationBounceTrigger implements \JsonSerializable {
         return $this->includeContent;
     }
 }
-
-?>

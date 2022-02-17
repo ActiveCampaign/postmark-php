@@ -29,5 +29,3 @@ class WebhookConfigurationClickTrigger implements \JsonSerializable {
         return $this->enabled;
     }
 }
-
-?>

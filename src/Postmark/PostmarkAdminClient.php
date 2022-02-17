@@ -374,4 +374,3 @@ class PostmarkAdminClient extends PostmarkClientBase
         return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
     }
 }
-?>

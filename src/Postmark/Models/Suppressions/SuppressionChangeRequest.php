@@ -29,5 +29,3 @@ class SuppressionChangeRequest implements \JsonSerializable {
         return $this->emailAddress;
     }
 }
-
-?>

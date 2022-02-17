@@ -29,5 +29,3 @@ class WebhookConfigurationDeliveryTrigger implements \JsonSerializable {
         return $this->enabled;
     }
 }
-
-?>
