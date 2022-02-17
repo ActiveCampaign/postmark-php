@@ -63,6 +63,7 @@ class DynamicResponseModel extends CaseInsensitiveArray
         if ($result != null && is_array($result)) {
             $result = new DynamicResponseModel($result);
         }
+
         return $result;
     }
 }
