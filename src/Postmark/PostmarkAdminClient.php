@@ -37,6 +37,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Request a given server by ID.
      *
      * @param int $id The Id for the server you wish to retrieve.
+     *
      * @return DynamicResponseModel
      */
     function getServer($id)
@@ -47,9 +48,10 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Get a list of all servers configured on the account.
      *
-     * @param integer $count  The number of servers to retrieve in the request, defaults to 100.
-     * @param integer $offset The number of servers to "skip" when paging through lists of servers.
-     * @param string  $name   Filter by server name.
+     * @param int    $count  The number of servers to retrieve in the request, defaults to 100.
+     * @param int    $offset The number of servers to "skip" when paging through lists of servers.
+     * @param string $name   Filter by server name.
+     *
      * @return DynamicResponseModel
      */
     function listServers($count = 100, $offset = 0, $name = NULL)
@@ -67,8 +69,9 @@ class PostmarkAdminClient extends PostmarkClientBase
      * contact support and request that they enable this feature on your account before you can use this
      * client to delete Servers.
      *
-     * @param  integer $id The ID of the Server to delete.
-     * :return DynamicResponseModel
+     * @param int $id The ID of the Server to delete.
+     *
+     * @return DynamicResponseModel
      */
     function deleteServer($id)
     {
@@ -79,22 +82,23 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Modify an existing Server. Any parameters passed with NULL will be
      * ignored (their existing values will not be modified).
      *
-     * @param integer $id                      The ID of the Server we wish to modify.
-     * @param string  $name                    Set the name of the server.
-     * @param string  $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-     * @param bool    $rawEmailEnabled         Enable raw email to be sent with inbound.
-     * @param bool    $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
-     * @param string  $inboundHookUrl          URL to POST to everytime an inbound event occurs.
-     * @param string  $bounceHookUrl           URL to POST to everytime a bounce event occurs.
-     * @param string  $openHookUrl             URL to POST to everytime an open event occurs.
-     * @param bool    $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
-     * @param bool    $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
-     * @param string  $inboundDomain           Inbound domain for MX setup.
-     * @param integer $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
-     * @param  string  $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
-     * @param  string  $clickHookUrl            URL to POST to everytime an click event occurs.
-     * @param  string  $deliveryHookUrl         URL to POST to everytime an click event occurs.
-     * @param  string  $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     * @param int    $id                      The ID of the Server we wish to modify.
+     * @param string $name                    Set the name of the server.
+     * @param string $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+     * @param bool   $rawEmailEnabled         Enable raw email to be sent with inbound.
+     * @param bool   $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
+     * @param string $inboundHookUrl          URL to POST to everytime an inbound event occurs.
+     * @param string $bounceHookUrl           URL to POST to everytime a bounce event occurs.
+     * @param string $openHookUrl             URL to POST to everytime an open event occurs.
+     * @param bool   $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+     * @param bool   $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
+     * @param string $inboundDomain           Inbound domain for MX setup.
+     * @param int    $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
+     * @param  string $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
+     * @param  string $clickHookUrl            URL to POST to everytime an click event occurs.
+     * @param  string $deliveryHookUrl         URL to POST to everytime an click event occurs.
+     * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     *
      * @return DynamicResponseModel
      */
     function editServer(
@@ -141,21 +145,22 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Create a new Server. Any parameters passed with NULL will be
      * ignored (their default values will be used).
      *
-     * @param string  $name                    Set the name of the server.
-     * @param string  $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-     * @param bool    $rawEmailEnabled         Enable raw email to be sent with inbound.
-     * @param bool    $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
-     * @param string  $inboundHookUrl          URL to POST to everytime an inbound event occurs.
-     * @param string  $bounceHookUrl           URL to POST to everytime a bounce event occurs.
-     * @param string  $openHookUrl             URL to POST to everytime an open event occurs.
-     * @param bool    $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
-     * @param bool    $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
-     * @param string  $inboundDomain           Inbound domain for MX setup.
-     * @param integer $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
-     * @param string  $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
-     * @param string  $clickHookUrl            URL to POST to everytime an click event occurs.
-     * @param string  $deliveryHookUrl         URL to POST to everytime an click event occurs.
-     * @param  string  $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     * @param string $name                    Set the name of the server.
+     * @param string $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+     * @param bool   $rawEmailEnabled         Enable raw email to be sent with inbound.
+     * @param bool   $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
+     * @param string $inboundHookUrl          URL to POST to everytime an inbound event occurs.
+     * @param string $bounceHookUrl           URL to POST to everytime a bounce event occurs.
+     * @param string $openHookUrl             URL to POST to everytime an open event occurs.
+     * @param bool   $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+     * @param bool   $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
+     * @param string $inboundDomain           Inbound domain for MX setup.
+     * @param int    $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
+     * @param string $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
+     * @param string $clickHookUrl            URL to POST to everytime an click event occurs.
+     * @param string $deliveryHookUrl         URL to POST to everytime an click event occurs.
+     * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     *
      * @return DynamicResponseModel
      */
     function createServer(
@@ -198,8 +203,9 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Get a "page" of Sender Signatures.
      *
-     * @param  integer $count The number of Sender Signatures to retrieve with this request.
-     *  param  integer $offset The number of Sender Signatures to 'skip' when 'paging' through them.
+     * @param int $count The number of Sender Signatures to retrieve with this request.
+     * param  integer $offset The number of Sender Signatures to 'skip' when 'paging' through them.
+     *
      * @return DynamicResponseModel
      */
     function listSenderSignatures($count = 100, $offset = 0)
@@ -214,7 +220,8 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Get information for a specific Sender Signature.
      *
-     * @param  integer $id The ID for the Sender Signature you wish to retrieve.
+     * @param int $id The ID for the Sender Signature you wish to retrieve.
+     *
      * @return DynamicResponseModel
      */
     function getSenderSignature($id)
@@ -231,6 +238,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param  string $name             The name of the Sender Signature.
      * @param  string $replyToEmail     The reply-to email address for the Sender Signature.
      * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
+     *
      * @return DynamicResponseModel
      */
     function createSenderSignature($fromEmail, $name, $replyToEmail = NULL, $returnPathDomain = NULL)
@@ -247,10 +255,11 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Alter the defaults for a Sender Signature.
      *
-     * @param  integer $id               The ID for the Sender Signature we wish to modify.
-     * @param  string  $name             The name of the Sender Signature.
-     * @param  string  $replyToEmail     The reply-to email address for the Sender Signature.
-     * @param  string  $returnPathDomain The custom Return-Path domain for the Sender Signature.
+     * @param int    $id               The ID for the Sender Signature we wish to modify.
+     * @param  string $name             The name of the Sender Signature.
+     * @param  string $replyToEmail     The reply-to email address for the Sender Signature.
+     * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
+     *
      * @return DynamicResponseModel
      */
     function editSenderSignature($id, $name = NULL, $replyToEmail = NULL, $returnPathDomain = NULL)
@@ -266,7 +275,8 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Delete a Sender Signature with the given ID.
      *
-     * @param  integer $id The ID for the Sender Signature we wish to delete.
+     * @param int $id The ID for the Sender Signature we wish to delete.
+     *
      * @return DynamicResponseModel
      */
     function deleteSenderSignature($id)
@@ -278,7 +288,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Cause a new verification email to be sent for an existing (unverified) Sender Signature.
      * Sender Signatures require verification before they may be used to send email through the Postmark API.
      *
-     * @param  integer $id The ID for the Sender Signature to which we wish to resend a verification email.
+     * @param int $id The ID for the Sender Signature to which we wish to resend a verification email.
+     *
      * @return DynamicResponseModel
      */
     function resendSenderSignatureConfirmation($id)
@@ -291,8 +302,10 @@ class PostmarkAdminClient extends PostmarkClientBase
      * with the Sender Signature's email address's domain. Configuring SPF is not required to use
      * Postmark, but it is highly recommended, and can improve delivery rates.
      *
-   * @deprecated verifyDomainSPF replaces this method
-     * @param  integer $id The ID for the Sender Signature for which we wish to verify the SPF records.
+     * @deprecated verifyDomainSPF replaces this method
+     *
+     * @param int $id The ID for the Sender Signature for which we wish to verify the SPF records.
+     *
      * @return DynamicResponseModel
      */
     function verifySenderSignatureSPF($id)
@@ -305,8 +318,10 @@ class PostmarkAdminClient extends PostmarkClientBase
      * to your email domain's DNS records. Including DKIM is not required, but is recommended. For more information
      * on DKIM and its purpose, see http://www.dkim.org/
      *
-   * @deprecated rotateDKIMForDomain replaces this method.
-     * @param  integer $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
+     * @deprecated rotateDKIMForDomain replaces this method.
+     *
+     * @param int $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
+     *
      * @return DynamicResponseModel
      */
     function requestNewSenderSignatureDKIM($id)
@@ -315,12 +330,13 @@ class PostmarkAdminClient extends PostmarkClientBase
     }
 
   /**
-     * Get a "page" of Domains.
-     *
-     * @param  integer $count The number of Domains to retrieve with this request.
-     *  param  integer $offset The number of Domains to 'skip' when 'paging' through them.
-     * @return DynamicResponseModel
-     */
+   * Get a "page" of Domains.
+   *
+   * @param int $count The number of Domains to retrieve with this request.
+   * param  integer $offset The number of Domains to 'skip' when 'paging' through them.
+   *
+   * @return DynamicResponseModel
+   */
     function listDomains($count = 100, $offset = 0)
     {
         $query = array();
@@ -331,11 +347,12 @@ class PostmarkAdminClient extends PostmarkClientBase
     }
 
   /**
-     * Get information for a specific Domain.
-     *
-     * @param  integer $id The ID for the Domains you wish to retrieve.
-     * @return DynamicResponseModel
-     */
+   * Get information for a specific Domain.
+   *
+   * @param int $id The ID for the Domains you wish to retrieve.
+   *
+   * @return DynamicResponseModel
+   */
     function getDomain($id)
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/domains/$id"));
@@ -343,12 +360,13 @@ class PostmarkAdminClient extends PostmarkClientBase
 
 
   /**
-     * Create a new Domain with the given Name.
-     *
-     * @param  string $name             The name of the Domain.
-     * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
-     * @return DynamicResponseModel
-     */
+   * Create a new Domain with the given Name.
+   *
+   * @param  string $name             The name of the Domain.
+   * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
+   *
+   * @return DynamicResponseModel
+   */
     function createDomain($name, $returnPathDomain = NULL)
     {
         $body = array();
@@ -359,12 +377,13 @@ class PostmarkAdminClient extends PostmarkClientBase
     }
 
   /**
-     * Alter the properties of a Domain.
-     *
-     * @param  integer $id               The ID for the Domain we wish to modify.
-     * @param  string  $returnPathDomain The custom Return-Path domain for the Domain.
-     * @return DynamicResponseModel
-     */
+   * Alter the properties of a Domain.
+   *
+   * @param int    $id               The ID for the Domain we wish to modify.
+   * @param  string $returnPathDomain The custom Return-Path domain for the Domain.
+   *
+   * @return DynamicResponseModel
+   */
     function editDomain($id, $returnPathDomain = NULL)
     {
         $body = array();
@@ -374,37 +393,40 @@ class PostmarkAdminClient extends PostmarkClientBase
     }
 
   /**
-     * Delete a Domain with the given ID.
-     *
-     * @param  integer $id The ID for the Domain we wish to delete.
-     * @return DynamicResponseModel
-     */
+   * Delete a Domain with the given ID.
+   *
+   * @param int $id The ID for the Domain we wish to delete.
+   *
+   * @return DynamicResponseModel
+   */
     function deleteDomain($id)
     {
         return new DynamicResponseModel($this->processRestRequest('DELETE', "/domains/$id"));
     }
 
   /**
-     * Request that the Postmark API verify the SPF records associated
-     * with the Domain. Configuring SPF is not required to use
-     * Postmark, but it is highly recommended, and can improve delivery rates.
-     *
-     * @param  integer $id The ID for the Domain for which we wish to verify the SPF records.
-     * @return DynamicResponseModel
-     */
+   * Request that the Postmark API verify the SPF records associated
+   * with the Domain. Configuring SPF is not required to use
+   * Postmark, but it is highly recommended, and can improve delivery rates.
+   *
+   * @param int $id The ID for the Domain for which we wish to verify the SPF records.
+   *
+   * @return DynamicResponseModel
+   */
     function verifyDomainSPF($id)
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/verifyspf"));
     }
 
   /**
-     * Rotate DKIM keys associated with the Domain. This key must be added
-     * to your DNS records. Including DKIM is not required, but is recommended. For more information
-     * on DKIM and its purpose, see http://www.dkim.org/
-     *
-     * @param  integer $id The ID for the Domain for which we wish to get an updated DKIM configuration.
-     * @return DynamicResponseModel
-     */
+   * Rotate DKIM keys associated with the Domain. This key must be added
+   * to your DNS records. Including DKIM is not required, but is recommended. For more information
+   * on DKIM and its purpose, see http://www.dkim.org/
+   *
+   * @param int $id The ID for the Domain for which we wish to get an updated DKIM configuration.
+   *
+   * @return DynamicResponseModel
+   */
     function rotateDKIMForDomain($id)
     {
         return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
