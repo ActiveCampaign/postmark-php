@@ -12,9 +12,6 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true">
     <testsuites>
-        <testsuite name="Legacy Tests">
-            <directory>tests/Legacy</directory>
-        </testsuite>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
