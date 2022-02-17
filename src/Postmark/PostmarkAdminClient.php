@@ -56,7 +56,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function listServers($count = 100, $offset = 0, $name = null)
     {
-        $query = array();
+        $query = [];
         $query['count'] = $count;
         $query['offset'] = $offset;
         $query['name'] = $name;
@@ -118,8 +118,8 @@ class PostmarkAdminClient extends PostmarkClientBase
         $clickHookUrl = null,
         $deliveryHookUrl = null,
         $enableSmtpApiErrorHooks = null
-) {
-        $body = array();
+    ) {
+        $body = [];
         $body['name'] = $name;
         $body['color'] = $color;
         $body['rawEmailEnabled'] = $rawEmailEnabled;
@@ -180,8 +180,8 @@ class PostmarkAdminClient extends PostmarkClientBase
         $clickHookUrl = null,
         $deliveryHookUrl = null,
         $enableSmtpApiErrorHooks = null
-) {
-        $body = array();
+    ) {
+        $body = [];
         $body['name'] = $name;
         $body['color'] = $color;
         $body['rawEmailEnabled'] = $rawEmailEnabled;
@@ -211,7 +211,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function listSenderSignatures($count = 100, $offset = 0)
     {
-        $query = array();
+        $query = [];
         $query['count'] = $count;
         $query['offset'] = $offset;
 
@@ -244,7 +244,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function createSenderSignature($fromEmail, $name, $replyToEmail = null, $returnPathDomain = null)
     {
-        $body = array();
+        $body = [];
         $body['fromEmail'] = $fromEmail;
         $body['name'] = $name;
         $body['replyToEmail'] = $replyToEmail;
@@ -265,7 +265,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function editSenderSignature($id, $name = null, $replyToEmail = null, $returnPathDomain = null)
     {
-        $body = array();
+        $body = [];
         $body['name'] = $name;
         $body['replyToEmail'] = $replyToEmail;
         $body['returnPathDomain'] = $returnPathDomain;
@@ -340,7 +340,7 @@ class PostmarkAdminClient extends PostmarkClientBase
    */
     function listDomains($count = 100, $offset = 0)
     {
-        $query = array();
+        $query = [];
         $query['count'] = $count;
         $query['offset'] = $offset;
 
@@ -370,7 +370,7 @@ class PostmarkAdminClient extends PostmarkClientBase
    */
     function createDomain($name, $returnPathDomain = null)
     {
-        $body = array();
+        $body = [];
         $body['name'] = $name;
         $body['returnPathDomain'] = $returnPathDomain;
 
@@ -387,7 +387,7 @@ class PostmarkAdminClient extends PostmarkClientBase
    */
     function editDomain($id, $returnPathDomain = null)
     {
-        $body = array();
+        $body = [];
         $body['returnPathDomain'] = $returnPathDomain;
 
         return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id", $body));
