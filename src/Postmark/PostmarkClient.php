@@ -7,6 +7,10 @@ namespace Postmark;
 use Postmark\Models\DynamicResponseModel;
 use Psr\Http\Client\ClientInterface;
 
+use function array_push;
+use function is_int;
+use function strtolower;
+
 final class PostmarkClient extends PostmarkClientBase
 {
     private const AUTH_HEADER_NAME = 'X-Postmark-Server-Token';

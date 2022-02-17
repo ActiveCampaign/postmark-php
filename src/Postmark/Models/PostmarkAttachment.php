@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Postmark\Models;
 
-class PostmarkAttachment implements \JsonSerializable
+use JsonSerializable;
+
+use function base64_encode;
+use function file_get_contents;
+
+class PostmarkAttachment implements JsonSerializable
 {
     private $name;
     private $mimeType;

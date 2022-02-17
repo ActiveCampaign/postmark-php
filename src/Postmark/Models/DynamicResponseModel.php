@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Postmark\Models;
 
+use function is_array;
+
 /**
  * The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.
  *
