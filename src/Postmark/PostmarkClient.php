@@ -221,8 +221,6 @@ final class PostmarkClient extends PostmarkClientBase
      * @param array $emailBatch An array of emails to be sent in one batch.
      *
      * @return DynamicResponseModel
-     *
-     * @throws Models\PostmarkException
      */
     function sendEmailBatchWithTemplate($emailBatch = [])
     {
