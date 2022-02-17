@@ -45,8 +45,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Get a list of all servers configured on the account.
      *
      * @param integer $count  The number of servers to retrieve in the request, defaults to 100.
-     * @param integer $offset  The number of servers to "skip" when paging through lists of servers.
-     * @param string $name Filter by server name.
+     * @param integer $offset The number of servers to "skip" when paging through lists of servers.
+     * @param string  $name   Filter by server name.
      * @return DynamicResponseModel
      */
     function listServers($count = 100, $offset = 0, $name = NULL) {
@@ -74,22 +74,22 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Modify an existing Server. Any parameters passed with NULL will be
      * ignored (their existing values will not be modified).
      *
-     * @param integer $id The ID of the Server we wish to modify.
-     * @param string $name Set the name of the server.
-     * @param string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-     * @param bool $rawEmailEnabled Enable raw email to be sent with inbound.
-     * @param bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
-     * @param string $inboundHookUrl URL to POST to everytime an inbound event occurs.
-     * @param string $bounceHookUrl URL to POST to everytime a bounce event occurs.
-     * @param string $openHookUrl URL to POST to everytime an open event occurs.
-     * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
-     * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
-     * @param string $inboundDomain Inbound domain for MX setup.
-     * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-     * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
-     * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
-     * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
-     * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     * @param integer $id                      The ID of the Server we wish to modify.
+     * @param string  $name                    Set the name of the server.
+     * @param string  $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+     * @param bool    $rawEmailEnabled         Enable raw email to be sent with inbound.
+     * @param bool    $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
+     * @param string  $inboundHookUrl          URL to POST to everytime an inbound event occurs.
+     * @param string  $bounceHookUrl           URL to POST to everytime a bounce event occurs.
+     * @param string  $openHookUrl             URL to POST to everytime an open event occurs.
+     * @param bool    $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+     * @param bool    $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
+     * @param string  $inboundDomain           Inbound domain for MX setup.
+     * @param integer $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
+     * @param  string  $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
+     * @param  string  $clickHookUrl            URL to POST to everytime an click event occurs.
+     * @param  string  $deliveryHookUrl         URL to POST to everytime an click event occurs.
+     * @param  string  $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
      * @return DynamicResponseModel
      */
     function editServer($id, $name = NULL, $color = NULL,
@@ -125,21 +125,21 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Create a new Server. Any parameters passed with NULL will be
      * ignored (their default values will be used).
      *
-     * @param string $name Set the name of the server.
-     * @param string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-     * @param bool $rawEmailEnabled Enable raw email to be sent with inbound.
-     * @param bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
-     * @param string $inboundHookUrl URL to POST to everytime an inbound event occurs.
-     * @param string $bounceHookUrl URL to POST to everytime a bounce event occurs.
-     * @param string $openHookUrl URL to POST to everytime an open event occurs.
-     * @param bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
-     * @param bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
-     * @param string $inboundDomain Inbound domain for MX setup.
-     * @param integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-     * @param string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
-     * @param string $clickHookUrl URL to POST to everytime an click event occurs.
-     * @param string $deliveryHookUrl URL to POST to everytime an click event occurs.
-     * @param  string $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
+     * @param string  $name                    Set the name of the server.
+     * @param string  $color                   Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+     * @param bool    $rawEmailEnabled         Enable raw email to be sent with inbound.
+     * @param bool    $smtpApiActivated        Specifies whether or not SMTP is enabled on this server.
+     * @param string  $inboundHookUrl          URL to POST to everytime an inbound event occurs.
+     * @param string  $bounceHookUrl           URL to POST to everytime a bounce event occurs.
+     * @param string  $openHookUrl             URL to POST to everytime an open event occurs.
+     * @param bool    $postFirstOpenOnly       If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+     * @param bool    $trackOpens              Indicates if all emails being sent through this server have open tracking enabled.
+     * @param string  $inboundDomain           Inbound domain for MX setup.
+     * @param integer $inboundSpamThreshold    The maximum spam score for an inbound message before it's blocked (range from 0-30).
+     * @param string  $trackLinks              Indicates if all emails being sent through this server have link tracking enabled.
+     * @param string  $clickHookUrl            URL to POST to everytime an click event occurs.
+     * @param string  $deliveryHookUrl         URL to POST to everytime an click event occurs.
+     * @param  string  $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included with bounce webhooks.
      * @return DynamicResponseModel
      */
     function createServer($name, $color = NULL,
@@ -200,9 +200,9 @@ class PostmarkAdminClient extends PostmarkClientBase
      * "verify" this Sender Signature by following a link that will be emailed to the "fromEmail"
      * address specified when calling this method.
      *
-     * @param  string $fromEmail The email address for the Sender Signature
-     * @param  string $name The name of the Sender Signature.
-     * @param  string $replyToEmail The reply-to email address for the Sender Signature.
+     * @param  string $fromEmail        The email address for the Sender Signature
+     * @param  string $name             The name of the Sender Signature.
+     * @param  string $replyToEmail     The reply-to email address for the Sender Signature.
      * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
      * @return DynamicResponseModel
      */
@@ -220,10 +220,10 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Alter the defaults for a Sender Signature.
      *
-     * @param  integer $id The ID for the Sender Signature we wish to modify.
-     * @param  string $name The name of the Sender Signature.
-     * @param  string $replyToEmail The reply-to email address for the Sender Signature.
-     * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
+     * @param  integer $id               The ID for the Sender Signature we wish to modify.
+     * @param  string  $name             The name of the Sender Signature.
+     * @param  string  $replyToEmail     The reply-to email address for the Sender Signature.
+     * @param  string  $returnPathDomain The custom Return-Path domain for the Sender Signature.
      * @return DynamicResponseModel
      */
     function editSenderSignature($id, $name = NULL, $replyToEmail = NULL, $returnPathDomain = NULL) {
@@ -313,7 +313,7 @@ class PostmarkAdminClient extends PostmarkClientBase
   /**
      * Create a new Domain with the given Name.
      *
-     * @param  string $name The name of the Domain.
+     * @param  string $name             The name of the Domain.
      * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
      * @return DynamicResponseModel
      */
@@ -328,8 +328,8 @@ class PostmarkAdminClient extends PostmarkClientBase
   /**
      * Alter the properties of a Domain.
      *
-     * @param  integer $id The ID for the Domain we wish to modify.
-     * @param  string $returnPathDomain The custom Return-Path domain for the Domain.
+     * @param  integer $id               The ID for the Domain we wish to modify.
+     * @param  string  $returnPathDomain The custom Return-Path domain for the Domain.
      * @return DynamicResponseModel
      */
     function editDomain($id, $returnPathDomain = NULL) {

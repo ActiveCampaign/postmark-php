@@ -16,12 +16,12 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationTriggers object.
      *
-     * @param WebhookConfigurationOpenTrigger $open Optional settings for Open webhooks.
-     * @param WebhookConfigurationClickTrigger $click Optional settings for Click webhooks.
-     * @param WebhookConfigurationDeliveryTrigger $delivery Optional settings for Delivery webhooks.
-     * @param WebhookConfigurationBounceTrigger $bounce Optional settings for Bounce webhooks.
-     * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint Optional settings for SpamComplaint webhooks.
-     * @param WebhookConfigurationSubscriptionChange $subscriptionChange Optional settings for SubscriptionChange webhooks.
+     * @param WebhookConfigurationOpenTrigger          $open               Optional settings for Open webhooks.
+     * @param WebhookConfigurationClickTrigger         $click              Optional settings for Click webhooks.
+     * @param WebhookConfigurationDeliveryTrigger      $delivery           Optional settings for Delivery webhooks.
+     * @param WebhookConfigurationBounceTrigger        $bounce             Optional settings for Bounce webhooks.
+     * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint      Optional settings for SpamComplaint webhooks.
+     * @param WebhookConfigurationSubscriptionChange   $subscriptionChange Optional settings for SubscriptionChange webhooks.
      */
     public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null, $subscriptionChange = null) {
         $this->open = $open;
