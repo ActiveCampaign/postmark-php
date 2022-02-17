@@ -375,22 +375,22 @@ final class PostmarkClient extends PostmarkClientBase
         $trackLinks = null,
         $clickHookUrl = null,
         $deliveryHookUrl = null
-) {
-        $body = array();
-        $body["Name"] = $name;
-        $body["Color"] = $color;
-        $body["RawEmailEnabled"] = $rawEmailEnabled;
-        $body["SmtpApiActivated"] = $smtpApiActivated;
-        $body["InboundHookUrl"] = $inboundHookUrl;
-        $body["BounceHookUrl"] = $bounceHookUrl;
-        $body["OpenHookUrl"] = $openHookUrl;
-        $body["PostFirstOpenOnly"] = $postFirstOpenOnly;
-        $body["TrackOpens"] = $trackOpens;
-        $body["InboundDomain"] = $inboundDomain;
-        $body["InboundSpamThreshold"] = $inboundSpamThreshold;
+    ) {
+        $body = [];
+        $body['Name'] = $name;
+        $body['Color'] = $color;
+        $body['RawEmailEnabled'] = $rawEmailEnabled;
+        $body['SmtpApiActivated'] = $smtpApiActivated;
+        $body['InboundHookUrl'] = $inboundHookUrl;
+        $body['BounceHookUrl'] = $bounceHookUrl;
+        $body['OpenHookUrl'] = $openHookUrl;
+        $body['PostFirstOpenOnly'] = $postFirstOpenOnly;
+        $body['TrackOpens'] = $trackOpens;
+        $body['InboundDomain'] = $inboundDomain;
+        $body['InboundSpamThreshold'] = $inboundSpamThreshold;
         $body['trackLinks'] = $trackLinks;
-        $body["ClickHookUrl"] = $clickHookUrl;
-        $body["DeliveryHookUrl"] = $deliveryHookUrl;
+        $body['ClickHookUrl'] = $clickHookUrl;
+        $body['DeliveryHookUrl'] = $deliveryHookUrl;
 
         return new DynamicResponseModel($this->processRestRequest('PUT', '/server', $body));
     }
@@ -424,17 +424,17 @@ final class PostmarkClient extends PostmarkClientBase
         $todate = null,
         $metadata = null,
         $messagestream = null
-) {
+    ) {
         $query = array();
-        $query["recipient"] = $recipient;
-        $query["fromemail"] = $fromEmail;
-        $query["tag"] = $tag;
-        $query["subject"] = $subject;
-        $query["count"] = $count;
-        $query["offset"] = $offset;
-        $query["status"] = $status;
-        $query["fromdate"] = $fromdate;
-        $query["todate"] = $todate;
+        $query['recipient'] = $recipient;
+        $query['fromemail'] = $fromEmail;
+        $query['tag'] = $tag;
+        $query['subject'] = $subject;
+        $query['count'] = $count;
+        $query['offset'] = $offset;
+        $query['status'] = $status;
+        $query['fromdate'] = $fromdate;
+        $query['todate'] = $todate;
         $query['messagestream'] = $messagestream;
 
         if($metadata != null) {
@@ -1014,7 +1014,7 @@ final class PostmarkClient extends PostmarkClientBase
     function createInboundRuleTrigger($rule)
     {
         $body = array();
-        $body["Rule"] = $rule;
+        $body['Rule'] = $rule;
 
         return new DynamicResponseModel($this->processRestRequest('POST', '/triggers/inboundrules', $body));
     }
@@ -1031,8 +1031,8 @@ final class PostmarkClient extends PostmarkClientBase
     {
         $query = array();
 
-        $query["count"] = $count;
-        $query["offset"] = $offset;
+        $query['count'] = $count;
+        $query['offset'] = $offset;
 
         return new DynamicResponseModel($this->processRestRequest('GET', '/triggers/inboundrules', $query));
     }
@@ -1077,15 +1077,15 @@ final class PostmarkClient extends PostmarkClientBase
     function createTemplate($name, $subject, $htmlBody, $textBody, $alias = null, $templateType = 'Standard', $layoutTemplate = null)
     {
         $template = array();
-        $template["name"] = $name;
-        $template["subject"] = $subject;
-        $template["htmlBody"] = $htmlBody;
-        $template["textBody"] = $textBody;
-        $template["alias"] = $alias;
-        $template["templateType"] = $templateType;
-        $template["layoutTemplate"] = $layoutTemplate;
+        $template['name'] = $name;
+        $template['subject'] = $subject;
+        $template['htmlBody'] = $htmlBody;
+        $template['textBody'] = $textBody;
+        $template['alias'] = $alias;
+        $template['templateType'] = $templateType;
+        $template['layoutTemplate'] = $layoutTemplate;
 
-        return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
+        return new DynamicResponseModel($this->processRestRequest('POST', '/templates', $template));
     }
 
     /**
@@ -1104,12 +1104,12 @@ final class PostmarkClient extends PostmarkClientBase
     function editTemplate($id, $name = null, $subject = null, $htmlBody = null, $textBody = null, $alias = null, $layoutTemplate = null)
     {
         $template = array();
-        $template["name"] = $name;
-        $template["subject"] = $subject;
-        $template["htmlBody"] = $htmlBody;
-        $template["textBody"] = $textBody;
-        $template["alias"] = $alias;
-        $template["layoutTemplate"] = $layoutTemplate;
+        $template['name'] = $name;
+        $template['subject'] = $subject;
+        $template['htmlBody'] = $htmlBody;
+        $template['textBody'] = $textBody;
+        $template['alias'] = $alias;
+        $template['layoutTemplate'] = $layoutTemplate;
 
         return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
     }
@@ -1140,12 +1140,12 @@ final class PostmarkClient extends PostmarkClientBase
     {
         $query = array();
 
-        $query["count"] = $count;
-        $query["offset"] = $offset;
-        $query["templateType"] = $templateType;
-        $query["layoutTemplate"] = $layoutTemplate;
+        $query['count'] = $count;
+        $query['offset'] = $offset;
+        $query['templateType'] = $templateType;
+        $query['layoutTemplate'] = $layoutTemplate;
 
-        return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
+        return new DynamicResponseModel($this->processRestRequest('GET', '/templates', $query));
     }
 
     /**
@@ -1165,15 +1165,15 @@ final class PostmarkClient extends PostmarkClientBase
     {
         $query = array();
 
-        $query["subject"] = $subject;
-        $query["htmlBody"] = $htmlBody;
-        $query["textBody"] = $textBody;
-        $query["testRenderModel"] = $testRenderModel;
-        $query["inlineCssForHtmlTestRender"] = $inlineCssForHtmlTestRender;
-        $query["templateType"] = $templateType;
-        $query["layoutTemplate"] = $layoutTemplate;
+        $query['subject'] = $subject;
+        $query['htmlBody'] = $htmlBody;
+        $query['textBody'] = $textBody;
+        $query['testRenderModel'] = $testRenderModel;
+        $query['inlineCssForHtmlTestRender'] = $inlineCssForHtmlTestRender;
+        $query['templateType'] = $templateType;
+        $query['layoutTemplate'] = $layoutTemplate;
 
-        return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
+        return new DynamicResponseModel($this->processRestRequest('POST', '/templates/validate', $query));
     }
 
     /**
@@ -1198,9 +1198,9 @@ final class PostmarkClient extends PostmarkClientBase
     function getWebhookConfigurations($messageStream = null)
     {
         $query = array();
-        $query["MessageStream"] = $messageStream;
+        $query['MessageStream'] = $messageStream;
 
-        return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks", $query));
+        return new DynamicResponseModel($this->processRestRequest('GET', '/webhooks', $query));
     }
 
     /**
@@ -1229,13 +1229,13 @@ final class PostmarkClient extends PostmarkClientBase
     function createWebhookConfiguration($url, $messageStream = null, $httpAuth = null, $httpHeaders = null, $triggers = null)
     {
         $body = array();
-        $body["Url"] = $url;
-        $body["MessageStream"] = $messageStream;
-        $body["HttpAuth"] = $httpAuth;
-        $body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
-        $body["Triggers"] = $triggers;
+        $body['Url'] = $url;
+        $body['MessageStream'] = $messageStream;
+        $body['HttpAuth'] = $httpAuth;
+        $body['HttpHeaders'] = $this->fixHeaders($httpHeaders);
+        $body['Triggers'] = $triggers;
 
-        return new DynamicResponseModel($this->processRestRequest('POST', "/webhooks", $body));
+        return new DynamicResponseModel($this->processRestRequest('POST', '/webhooks', $body));
     }
 
     /**
@@ -1253,10 +1253,10 @@ final class PostmarkClient extends PostmarkClientBase
     function editWebhookConfiguration($id, $url = null, $httpAuth = null, $httpHeaders = null, $triggers = null)
     {
         $body = array();
-        $body["Url"] = $url;
-        $body["HttpAuth"] = $httpAuth;
-        $body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
-        $body["Triggers"] = $triggers;
+        $body['Url'] = $url;
+        $body['HttpAuth'] = $httpAuth;
+        $body['HttpHeaders'] = $this->fixHeaders($httpHeaders);
+        $body['Triggers'] = $triggers;
 
         return new DynamicResponseModel($this->processRestRequest('PUT', "/webhooks/$id", $body));
     }
@@ -1274,10 +1274,10 @@ final class PostmarkClient extends PostmarkClientBase
     function createSuppressions($suppressionChanges = array(), $messageStream = null)
     {
         $body = array();
-        $body["Suppressions"] = $suppressionChanges;
+        $body['Suppressions'] = $suppressionChanges;
 
         if ($messageStream === null) {
-            $messageStream = "outbound";
+            $messageStream = 'outbound';
         }
 
         return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
@@ -1296,10 +1296,10 @@ final class PostmarkClient extends PostmarkClientBase
     function deleteSuppressions($suppressionChanges = array(), $messageStream = null)
     {
         $body = array();
-        $body["Suppressions"] = $suppressionChanges;
+        $body['Suppressions'] = $suppressionChanges;
 
         if ($messageStream === null) {
-            $messageStream = "outbound";
+            $messageStream = 'outbound';
         }
 
         return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
@@ -1320,14 +1320,14 @@ final class PostmarkClient extends PostmarkClientBase
     function getSuppressions($messageStream = null, $suppressionReason = null, $origin = null, $fromDate = null, $toDate = null, $emailAddress = null)
     {
         $query = array();
-        $query["SuppressionReason"] = $suppressionReason;
-        $query["Origin"] = $origin;
-        $query["FromDate"] = $fromDate;
-        $query["ToDate"] = $toDate;
-        $query["EmailAddress"] = $emailAddress;
+        $query['SuppressionReason'] = $suppressionReason;
+        $query['Origin'] = $origin;
+        $query['FromDate'] = $fromDate;
+        $query['ToDate'] = $toDate;
+        $query['EmailAddress'] = $emailAddress;
 
         if ($messageStream === null) {
-            $messageStream = "outbound";
+            $messageStream = 'outbound';
         }
 
         return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
@@ -1348,12 +1348,12 @@ final class PostmarkClient extends PostmarkClientBase
     function createMessageStream($id, $messageStreamType, $name, $description = null)
     {
         $body = array();
-        $body["ID"] = $id;
-        $body["MessageStreamType"] = $messageStreamType;
-        $body["Name"] = $name;
-        $body["Description"] = $description;
+        $body['ID'] = $id;
+        $body['MessageStreamType'] = $messageStreamType;
+        $body['Name'] = $name;
+        $body['Description'] = $description;
 
-        return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams", $body));
+        return new DynamicResponseModel($this->processRestRequest('POST', '/message-streams', $body));
     }
 
     /**
@@ -1368,8 +1368,8 @@ final class PostmarkClient extends PostmarkClientBase
     function editMessageStream($id, $name = null, $description = null)
     {
         $body = array();
-        $body["Name"] = $name;
-        $body["Description"] = $description;
+        $body['Name'] = $name;
+        $body['Description'] = $description;
 
         return new DynamicResponseModel($this->processRestRequest('PATCH', "/message-streams/$id", $body));
     }
@@ -1397,10 +1397,10 @@ final class PostmarkClient extends PostmarkClientBase
     function listMessageStreams($messageStreamType = 'All', $includeArchivedStreams = 'false')
     {
         $query = array();
-        $query["MessageStreamType"] = $messageStreamType;
-        $query["IncludeArchivedStreams"] = $includeArchivedStreams;
+        $query['MessageStreamType'] = $messageStreamType;
+        $query['IncludeArchivedStreams'] = $includeArchivedStreams;
 
-        return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams", $query));
+        return new DynamicResponseModel($this->processRestRequest('GET', '/message-streams', $query));
     }
 
     /**
