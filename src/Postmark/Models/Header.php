@@ -6,6 +6,8 @@ namespace Postmark\Models;
 
 use JsonSerializable;
 
+use function assert;
+
 final class Header implements JsonSerializable
 {
     /** @var non-empty-string */
@@ -33,7 +35,7 @@ final class Header implements JsonSerializable
     }
 
     /**
-     * @param array<non-empty-string, scalar|null> $values
+     * @param array<string, scalar|null> $values
      *
      * @return list<self>|null
      */
@@ -45,6 +47,7 @@ final class Header implements JsonSerializable
 
         $list = [];
         foreach ($values as $name => $value) {
+            assert(! empty($name));
             $list[] = new self($name, $value);
         }
 
