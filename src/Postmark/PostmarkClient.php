@@ -1,29 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Postmark;
 
-use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
-use Postmark\PostmarkClientBase as PostmarkClientBase;
+use Postmark\Models\DynamicResponseModel;
+use Psr\Http\Client\ClientInterface;
 
-/**
- * PostmarkClient provides the main functionality used to send and analyze email on a "per-Server"
- * basis. If you'd like to manage "Account-wide" configuration, see the PostmarkAdminClient.
- */
-class PostmarkClient extends PostmarkClientBase {
-
-	private $server_token = NULL;
+final class PostmarkClient extends PostmarkClientBase
+{
+    private const AUTH_HEADER_NAME = 'X-Postmark-Server-Token';
 
 	/**
 	 * Create a new PostmarkClient.
 	 *
-	 * @param string $serverToken The token associated with "Server" you'd like to use to send/receive email from.
-	 * @param integer $timeout The timeout, in seconds to wait for an API call to complete before throwing an Exception.
+	 * @param non-empty-string $serverToken The token associated with "Server" you'd like to use to send/receive email from.
 	 */
-	function __construct($serverToken, $timeout = 30) {
-		parent::__construct($serverToken, 'X-Postmark-Server-Token', $timeout);
+	public function __construct(string $serverToken, ?ClientInterface $httpClient = null) {
+		parent::__construct($serverToken, $httpClient);
 	}
 
-	/**
+    protected function authorizationHeaderName(): string
+    {
+        return self::AUTH_HEADER_NAME;
+    }
+
+    /**
 	 * Send an email.
 	 *
 	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
@@ -1109,11 +1111,11 @@ class PostmarkClient extends PostmarkClientBase {
 	function createSuppressions($suppressionChanges = array(), $messageStream = NULL) {
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
 	}
 
@@ -1129,11 +1131,11 @@ class PostmarkClient extends PostmarkClientBase {
 	function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL) {
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
 	}
 
@@ -1156,11 +1158,11 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["FromDate"] = $fromDate;
 		$query["ToDate"] = $toDate;
 		$query["EmailAddress"] = $emailAddress;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
 	}
 
