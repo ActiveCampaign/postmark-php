@@ -37,5 +37,3 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
         return $this->includeContent;
     }
 }
-
-?>

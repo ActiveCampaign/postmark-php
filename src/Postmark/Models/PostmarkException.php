@@ -10,5 +10,3 @@ class PostmarkException extends \Exception {
     var $httpStatusCode;
     var $postmarkApiErrorCode;
 }
-
-?>

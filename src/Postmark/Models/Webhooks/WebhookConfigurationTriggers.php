@@ -86,5 +86,3 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         return $this->subscriptionChange;
     }
 }
-
-?>
