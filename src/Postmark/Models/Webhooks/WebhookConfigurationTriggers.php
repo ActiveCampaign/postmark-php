@@ -4,8 +4,8 @@ namespace Postmark\Models\Webhooks;
 /**
  * All triggers available for a WebhookConfiguration.
  */
-class WebhookConfigurationTriggers implements \JsonSerializable {
-
+class WebhookConfigurationTriggers implements \JsonSerializable
+{
     private $open;
     private $click;
     private $delivery;
@@ -23,7 +23,8 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
      * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint      Optional settings for SpamComplaint webhooks.
      * @param WebhookConfigurationSubscriptionChange   $subscriptionChange Optional settings for SubscriptionChange webhooks.
      */
-    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null, $subscriptionChange = null) {
+    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null, $subscriptionChange = null)
+    {
         $this->open = $open;
         $this->click = $click;
         $this->delivery = $delivery;
@@ -32,7 +33,8 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         $this->subscriptionChange = $subscriptionChange;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $retval = array();
 
         if ($this->open !== null) {
@@ -62,27 +64,33 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         return $retval;
     }
 
-    public function getOpenSettings() {
+    public function getOpenSettings()
+    {
         return $this->open;
     }
 
-    public function getClickSettings() {
+    public function getClickSettings()
+    {
         return $this->click;
     }
 
-    public function getDeliverySettings() {
+    public function getDeliverySettings()
+    {
         return $this->delivery;
     }
 
-    public function getBounceSettings() {
+    public function getBounceSettings()
+    {
         return $this->bounce;
     }
 
-    public function getSpamComplaintSettings() {
+    public function getSpamComplaintSettings()
+    {
         return $this->spamComplaint;
     }
 
-    public function getSubscriptionChangeSettings() {
+    public function getSubscriptionChangeSettings()
+    {
         return $this->subscriptionChange;
     }
 }

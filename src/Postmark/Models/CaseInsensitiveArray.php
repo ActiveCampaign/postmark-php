@@ -8,11 +8,13 @@ namespace Postmark\Models;
  * This allows access to the array to be very forgiving. (i.e. If you access something
  * with the wrong CaSe, it'll still find the correct element)
  */
-class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
+class CaseInsensitiveArray implements \ArrayAccess, \Iterator
+{
     private $_container = array();
     private $_pointer = 0;
 
-    private function fixOffsetName($offset) {
+    private function fixOffsetName($offset)
+    {
         return preg_replace('/_/', '', strtolower($offset));
     }
 
@@ -21,11 +23,13 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
      *
      * @param array $initialArray The base array from which to create the new array.
      */
-    public function __construct(Array $initialArray = array()) {
+    public function __construct(Array $initialArray = array())
+    {
         $this->_container = array_change_key_case($initialArray);
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (is_string($offset)) {
             $offset = $this->fixOffsetName($offset);
         }
@@ -37,7 +41,8 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
         }
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         if (is_string($offset)) {
             $offset = $this->fixOffsetName($offset);
         }
@@ -45,7 +50,8 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
         return isset($this->_container[$offset]);
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         if (is_string($offset)) {
             $offset = $this->fixOffsetName($offset);
         }
@@ -53,7 +59,8 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
         unset($this->_container[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         if (is_string($offset)) {
             $offset = $this->fixOffsetName($offset);
         }
@@ -61,26 +68,31 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
         $this->_container[$offset] : null;
     }
 
-    public function current() {
+    public function current()
+    {
         // use "offsetGet" instead of indexes
         // so that subclasses can override behavior if needed.
         return $this->offsetGet($this->key());
     }
 
-    public function key() {
+    public function key()
+    {
         $keys = array_keys($this->_container);
         return $keys[$this->_pointer];
     }
 
-    public function next() {
+    public function next()
+    {
         $this->_pointer++;
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         $this->_pointer = 0;
     }
 
-    public function valid() {
+    public function valid()
+    {
         return count(array_keys($this->_container)) > $this->_pointer;
     }
 }
