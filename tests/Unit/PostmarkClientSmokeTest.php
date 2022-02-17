@@ -11,6 +11,7 @@ use Psr\Http\Message\RequestInterface;
 
 use function current;
 use function json_decode;
+use function parse_str;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -59,6 +60,26 @@ class PostmarkClientSmokeTest extends TestCase
         $data = json_decode((string) $body, true, 512, JSON_THROW_ON_ERROR);
 
         return $data;
+    }
+
+    /** @return array<array-key, mixed> */
+    private function queryParams(): array
+    {
+        $query = $this->assertLastRequest()->getUri()->getQuery();
+        if (empty($query)) {
+            return [];
+        }
+
+        parse_str($query, $values);
+
+        return $values;
+    }
+
+    private function assertQueryParameterValueEquals(string $name, string $expect): void
+    {
+        $query = $this->queryParams();
+        self::assertArrayHasKey($name, $query);
+        self::assertEquals($expect, $query[$name]);
     }
 
     /** @param mixed $expect */
@@ -174,5 +195,35 @@ class PostmarkClientSmokeTest extends TestCase
         self::assertIsArray($email);
         self::assertArrayHasKey('Headers', $email);
         self::assertEquals($expect, $email['Headers']);
+    }
+
+    /** @return array<string, array{0: string}> */
+    public function similarStatsMethodProvider(): array
+    {
+        return [
+            'getOutboundOverviewStatistics' => ['getOutboundOverviewStatistics'],
+            'getOutboundSendStatistics' => ['getOutboundSendStatistics'],
+            'getOutboundBounceStatistics' => ['getOutboundBounceStatistics'],
+            'getOutboundSpamComplaintStatistics' => ['getOutboundSpamComplaintStatistics'],
+            'getOutboundTrackedStatistics' => ['getOutboundTrackedStatistics'],
+            'getOutboundOpenStatistics' => ['getOutboundOpenStatistics'],
+            'getOutboundPlatformStatistics' => ['getOutboundPlatformStatistics'],
+            'getOutboundEmailClientStatistics' => ['getOutboundEmailClientStatistics'],
+            'getOutboundClickStatistics' => ['getOutboundClickStatistics'],
+            'getOutboundClickBrowserFamilyStatistics' => ['getOutboundClickBrowserFamilyStatistics'],
+            'getOutboundClickBrowserPlatformStatistics' => ['getOutboundClickBrowserPlatformStatistics'],
+            'getOutboundClickLocationStatistics' => ['getOutboundClickLocationStatistics'],
+        ];
+    }
+
+    /** @dataProvider similarStatsMethodProvider */
+    public function testSimilarStatsMethods(string $method): void
+    {
+        $this->client->$method('T', 'FROM', 'TO', 'stream');
+        $this->assertLastRequestMethodWas('GET');
+        $this->assertQueryParameterValueEquals('tag', 'T');
+        $this->assertQueryParameterValueEquals('fromdate', 'FROM');
+        $this->assertQueryParameterValueEquals('todate', 'TO');
+        $this->assertQueryParameterValueEquals('messagestream', 'stream');
     }
 }
