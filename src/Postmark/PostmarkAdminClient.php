@@ -2,30 +2,36 @@
 
 namespace Postmark;
 
-use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
-use Postmark\PostmarkClientBase as PostmarkClientBase;
+use Postmark\Models\DynamicResponseModel;
+use Psr\Http\Client\ClientInterface;
 
 /**
  * The PostmarkAdminClient allows users to access and modify
  *  "Account-wide" settings. At this time the API supports
  *  management of the "Sender Signatures", "Domains", and "Servers."
  */
-class PostmarkAdminClient extends PostmarkClientBase {
+class PostmarkAdminClient extends PostmarkClientBase
+{
+    private const AUTH_HEADER_NAME = 'X-Postmark-Account-Token';
 
-	/**
+    /**
 	 * Create a new PostmarkAdminClient.
 	 *
-	 * @param string $accountToken The Account Token used to access the Admin API.
+	 * @param non-empty-string $accountToken The Account Token used to access the Admin API.
 	 * This token is NOT the same as a Server Token. You can get your account token
 	 * from this page: https://postmarkapp.com/account/edit
-	 *
-	 * @param integer $timeout The timeout, in seconds, that API calls should wait before throwing an exception.
 	 */
-	function __construct($accountToken, $timeout = 30) {
-		parent::__construct($accountToken, "X-Postmark-Account-Token", $timeout);
+	public function __construct(string $accountToken, ?ClientInterface $httpClient = null)
+    {
+		parent::__construct($accountToken, $httpClient);
 	}
 
-	/**
+    protected function authorizationHeaderName(): string
+    {
+        return self::AUTH_HEADER_NAME;
+    }
+
+    /**
 	 * Request a given server by ID.
 	 *
 	 * @param int $id The Id for the server you wish to retrieve.
@@ -89,7 +95,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	function editServer($id, $name = NULL, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
-		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
+		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL,
 		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL,
 		$enableSmtpApiErrorHooks = NULL) {
 
@@ -139,7 +145,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	function createServer($name, $color = NULL,
 		$rawEmailEnabled = NULL, $smtpApiActivated = NULL, $inboundHookUrl = NULL,
 		$bounceHookUrl = NULL, $openHookUrl = NULL, $postFirstOpenOnly = NULL,
-		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL, 
+		$trackOpens = NULL, $inboundDomain = NULL, $inboundSpamThreshold = NULL,
 		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL,
 		$enableSmtpApiErrorHooks = NULL) {
 
@@ -276,7 +282,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	function requestNewSenderSignatureDKIM($id) {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/senders/$id/requestnewdkim"));
 	}
-  
+
   /**
 	 * Get a "page" of Domains.
 	 *
@@ -292,7 +298,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 
 		return new DynamicResponseModel($this->processRestRequest('GET', '/domains/', $query));
 	}
-  
+
   /**
 	 * Get information for a specific Domain.
 	 *
@@ -303,9 +309,9 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/domains/$id"));
 	}
 
-  
+
   /**
-	 * Create a new Domain with the given Name. 
+	 * Create a new Domain with the given Name.
 	 *
 	 * @param  string $name The name of the Domain.
 	 * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
@@ -318,7 +324,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 
 		return new DynamicResponseModel($this->processRestRequest('POST', '/domains/', $body));
 	}
-  
+
   /**
 	 * Alter the properties of a Domain.
 	 *
@@ -333,7 +339,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 
 		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id", $body));
 	}
-  
+
   /**
 	 * Delete a Domain with the given ID.
 	 *
@@ -343,7 +349,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	function deleteDomain($id) {
 		return new DynamicResponseModel($this->processRestRequest('DELETE', "/domains/$id"));
 	}
-  
+
   /**
 	 * Request that the Postmark API verify the SPF records associated
 	 * with the Domain. Configuring SPF is not required to use
@@ -355,7 +361,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	function verifyDomainSPF($id) {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/verifyspf"));
 	}
-  
+
   /**
 	 * Rotate DKIM keys associated with the Domain. This key must be added
 	 * to your DNS records. Including DKIM is not required, but is recommended. For more information

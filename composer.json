@@ -14,11 +14,14 @@
     "require": {
         "php": "~7.4 || ~8.0 || ~8.1",
         "ext-json": "*",
+        "fig/http-message-util": "^1.1",
         "guzzlehttp/guzzle": "^6.0|^7.0",
+        "php-http/discovery": "^1.14",
         "psr/http-client": "^1.0"
     },
     "require-dev": {
         "doctrine/coding-standard": "^9.0",
+        "php-http/mock-client": "^1.5",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.1",
         "squizlabs/php_codesniffer": "^3.6",
