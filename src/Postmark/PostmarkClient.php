@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel;
-use Psr\Http\Client\ClientInterface;
 
 use function array_push;
 use function is_int;
@@ -14,16 +13,6 @@ use function strtolower;
 final class PostmarkClient extends PostmarkClientBase
 {
     private const AUTH_HEADER_NAME = 'X-Postmark-Server-Token';
-
-    /**
-     * Create a new PostmarkClient.
-     *
-     * @param non-empty-string $serverToken The token associated with "Server" you'd like to use to send/receive email from.
-     */
-    public function __construct(string $serverToken, ?ClientInterface $httpClient = null)
-    {
-        parent::__construct($serverToken, $httpClient);
-    }
 
     protected function authorizationHeaderName(): string
     {

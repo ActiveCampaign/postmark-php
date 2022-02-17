@@ -5,28 +5,19 @@ declare(strict_types=1);
 namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel;
-use Psr\Http\Client\ClientInterface;
 
 /**
- * The PostmarkAdminClient allows users to access and modify
- *  "Account-wide" settings. At this time the API supports
- *  management of the "Sender Signatures", "Domains", and "Servers."
+ * The PostmarkAdminClient allows users to access and modify "Account-wide" settings.
+ *
+ * At this time the API supports management of the "Sender Signatures", "Domains", and "Servers".
+ * The constructor requires an Account Token. This token is NOT the same as a Server Token.
+ * You can get your account token from this page: https://postmarkapp.com/account/edit
+ *
+ * @link https://postmarkapp.com/account/edit
  */
-class PostmarkAdminClient extends PostmarkClientBase
+final class PostmarkAdminClient extends PostmarkClientBase
 {
     private const AUTH_HEADER_NAME = 'X-Postmark-Account-Token';
-
-    /**
-     * Create a new PostmarkAdminClient.
-     *
-     * @param non-empty-string $accountToken The Account Token used to access the Admin API.
-     * This token is NOT the same as a Server Token. You can get your account token
-     * from this page: https://postmarkapp.com/account/edit
-     */
-    public function __construct(string $accountToken, ?ClientInterface $httpClient = null)
-    {
-        parent::__construct($accountToken, $httpClient);
-    }
 
     protected function authorizationHeaderName(): string
     {
