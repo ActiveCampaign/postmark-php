@@ -20,6 +20,8 @@ use const CASE_LOWER;
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.
  * This allows access to the array to be very forgiving. (i.e. If you access something
  * with the wrong CaSe, it'll still find the correct element)
+ *
+ * @internal Postmark
  */
 class CaseInsensitiveArray implements ArrayAccess, Iterator
 {
