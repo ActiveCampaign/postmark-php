@@ -14,16 +14,6 @@
     <InvalidIterator occurrences="1">
       <code>$metadata</code>
     </InvalidIterator>
-    <InvalidParamDefault occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="1">
-      <code>new DynamicResponseModel($this-&gt;processRestRequest('GET', "/bounces/$id/dump"))</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>string</code>
-    </InvalidReturnType>
     <MissingParamType occurrences="1">
       <code>$headers</code>
     </MissingParamType>
@@ -38,17 +28,13 @@
       <code>$email[$emailIdx]</code>
       <code>$email[$emailIdx]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="16">
-      <code>$body['Headers']</code>
-      <code>$body['Headers']</code>
+    <MixedAssignment occurrences="13">
       <code>$email</code>
       <code>$email</code>
       <code>$emailIdx</code>
       <code>$emailIdx</code>
       <code>$emailValue</code>
       <code>$emailValue</code>
-      <code>$email[$emailIdx]</code>
-      <code>$email[$emailIdx]</code>
       <code>$final[]</code>
       <code>$key</code>
       <code>$key</code>

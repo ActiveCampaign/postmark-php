@@ -4,15 +4,32 @@ declare(strict_types=1);
 
 namespace Postmark;
 
+use Postmark\ClientBehaviour\InboundMessages;
+use Postmark\ClientBehaviour\MessageStreams;
 use Postmark\ClientBehaviour\PostmarkClientBase;
+use Postmark\ClientBehaviour\Suppressions;
+use Postmark\ClientBehaviour\Templates;
 use Postmark\Models\DynamicResponseModel;
+use Postmark\Models\Header;
+use Postmark\Models\PostmarkAttachment;
 
-use function array_push;
 use function is_int;
 use function strtolower;
 
+/**
+ * @link PostmarkAttachment
+ *
+ * @psalm-type Attachments = list<PostmarkAttachment>|null
+ * @psalm-type HeaderList = array<non-empty-string, scalar|null>|null
+ * @psalm-type MetaData = array<non-empty-string, scalar>|null
+ */
 final class PostmarkClient extends PostmarkClientBase
 {
+    use InboundMessages;
+    use MessageStreams;
+    use Suppressions;
+    use Templates;
+
     private const AUTH_HEADER_NAME = 'X-Postmark-Server-Token';
 
     protected function authorizationHeaderName(): string
@@ -23,41 +40,42 @@ final class PostmarkClient extends PostmarkClientBase
     /**
      * Send an email.
      *
-     * @param string $from          The sender of the email. (Your account must have an associated Sender Signature
-     *                              for the address used.)
-     * @param string $to            The recipient of the email.
-     * @param string $subject       The subject of the email.
-     * @param string $htmlBody      The HTML content of the message, optional if Text Body is specified.
-     * @param string $textBody      The text content of the message, optional if HTML Body is specified.
-     * @param string $tag           A tag associated with this message, useful for classifying sent messages.
-     * @param bool   $trackOpens    True if you want Postmark to track opens of HTML emails.
-     * @param string $replyTo       Reply to email address.
-     * @param string $cc            Carbon Copy recipients, comma-separated
-     * @param string $bcc           Blind Carbon Copy recipients, comma-separated.
-     * @param array  $headers       Headers to be included with the sent email message.
-     * @param array  $attachments   An array of PostmarkAttachment objects.
-     * @param string $trackLinks    Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
-     * @param array  $metadata      Add metadata to the message. The metadata is an associative array, and values will
-     *                              be evaluated as strings by Postmark.
-     * @param array  $messageStream The message stream used to send this message. If not provided, the default
-     *                              transactional stream "outbound" will be used.
+     * @param string      $from          The sender of the email. (Your account must have an associated Sender Signature
+     *                                   for the address used.)
+     * @param string      $to            The recipient of the email.
+     * @param string      $subject       The subject of the email.
+     * @param string|null $htmlBody      The HTML content of the message, optional if Text Body is specified.
+     * @param string|null $textBody      The text content of the message, optional if HTML Body is specified.
+     * @param string|null $tag           A tag associated with this message, useful for classifying sent messages.
+     * @param bool|null   $trackOpens    True if you want Postmark to track opens of HTML emails.
+     * @param string|null $replyTo       Reply to email address.
+     * @param string|null $cc            Carbon Copy recipients, comma-separated
+     * @param string|null $bcc           Blind Carbon Copy recipients, comma-separated.
+     * @param HeaderList  $headers       Headers to be included with the sent email message.
+     * @param Attachments $attachments   An array of PostmarkAttachment objects.
+     * @param string|null $trackLinks    Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link
+     *                                   tracking.
+     * @param MetaData    $metadata      Add metadata to the message. The metadata is an associative array, and values
+     *                                   will be evaluated as strings by Postmark.
+     * @param string|null $messageStream The message stream used to send this message. If not provided, the default
+     *                                   transactional stream "outbound" will be used.
      */
-    function sendEmail(
-        $from,
-        $to,
-        $subject,
-        $htmlBody = null,
-        $textBody = null,
-        $tag = null,
-        $trackOpens = null,
-        $replyTo = null,
-        $cc = null,
-        $bcc = null,
-        $headers = null,
-        $attachments = null,
-        $trackLinks = null,
-        $metadata = null,
-        $messageStream = null
+    public function sendEmail(
+        string $from,
+        string $to,
+        string $subject,
+        ?string $htmlBody = null,
+        ?string $textBody = null,
+        ?string $tag = null,
+        ?bool $trackOpens = null,
+        ?string $replyTo = null,
+        ?string $cc = null,
+        ?string $bcc = null,
+        ?array $headers = null,
+        ?array $attachments = null,
+        ?string $trackLinks = null,
+        ?array $metadata = null,
+        ?string $messageStream = null
     ): DynamicResponseModel {
         $body = [];
         $body['From'] = $from;
@@ -69,7 +87,7 @@ final class PostmarkClient extends PostmarkClientBase
         $body['TextBody'] = $textBody;
         $body['Tag'] = $tag;
         $body['ReplyTo'] = $replyTo;
-        $body['Headers'] = $this->fixHeaders($headers);
+        $body['Headers'] = Header::listFromArray($headers);
         $body['TrackOpens'] = $trackOpens;
         $body['Attachments'] = $attachments;
         $body['Metadata'] = $metadata;
@@ -88,29 +106,29 @@ final class PostmarkClient extends PostmarkClientBase
     /**
      * Send an email using a template.
      *
-     * @param string     $from              The sender of the email. (Your account must have an associated Sender
-     *                                      Signature for the address used.)
-     * @param string     $to                The recipient of the email.
-     * @param int|string $templateIdOrAlias The ID or alias of the template to use to generate the content of this
-     *                                      message.
-     * @param array      $templateModel     The values to combine with the Templated content.
-     * @param bool       $inlineCss         If the template contains an HTMLBody, CSS is automatically inlined, you
-     *                                      may opt-out of this by passing 'false' for this parameter.
-     * @param string     $tag               A tag associated with this message, useful for classifying sent messages.
-     * @param bool       $trackOpens        True if you want Postmark to track opens of HTML emails.
-     * @param string     $replyTo           Reply to email address.
-     * @param string     $cc                Carbon Copy recipients, comma-separated
-     * @param string     $bcc               Blind Carbon Copy recipients, comma-separated.
-     * @param array      $headers           Headers to be included with the sent email message.
-     * @param array      $attachments       An array of PostmarkAttachment objects.
-     * @param string     $trackLinks        Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable
-     *                                      link tracking.
-     * @param array      $metadata          Add metadata to the message. The metadata is an associative array , and
-     *                                      values will be evaluated as strings by Postmark.
-     * @param array      $messageStream     The message stream used to send this message. If not provided, the default
+     * @param string      $from              The sender of the email. (Your account must have an associated Sender
+     *                                       Signature for the address used.)
+     * @param string      $to                The recipient of the email.
+     * @param int|string  $templateIdOrAlias The ID or alias of the template to use to generate the content of this
+     *                                       message.
+     * @param array       $templateModel     The values to combine with the Templated content.
+     * @param bool        $inlineCss         If the template contains an HTMLBody, CSS is automatically inlined, you
+     *                                       may opt-out of this by passing 'false' for this parameter.
+     * @param string      $tag               A tag associated with this message, useful for classifying sent messages.
+     * @param bool        $trackOpens        True if you want Postmark to track opens of HTML emails.
+     * @param string      $replyTo           Reply to email address.
+     * @param string      $cc                Carbon Copy recipients, comma-separated
+     * @param string      $bcc               Blind Carbon Copy recipients, comma-separated.
+     * @param HeaderList  $headers           Headers to be included with the sent email message.
+     * @param Attachments $attachments       An array of PostmarkAttachment objects.
+     * @param string      $trackLinks        Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable
+     *                                       link tracking.
+     * @param MetaData    $metadata          Add metadata to the message. The metadata is an associative array , and
+     *                                       values will be evaluated as strings by Postmark.
+     * @param string      $messageStream     The message stream used to send this message. If not provided, the default
      *                                      transactional stream "outbound" will be used.
      */
-    function sendEmailWithTemplate(
+    public function sendEmailWithTemplate(
         $from,
         $to,
         $templateIdOrAlias,
@@ -134,7 +152,7 @@ final class PostmarkClient extends PostmarkClientBase
         $body['Bcc'] = $bcc;
         $body['Tag'] = $tag;
         $body['ReplyTo'] = $replyTo;
-        $body['Headers'] = $this->fixHeaders($headers);
+        $body['Headers'] = Header::listFromArray($headers);
         $body['TrackOpens'] = $trackOpens;
         $body['Attachments'] = $attachments;
         $body['TemplateModel'] = $templateModel;
@@ -188,18 +206,18 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param array $emailBatch An array of emails to be sent in one batch.
      */
-    function sendEmailBatch($emailBatch = []): DynamicResponseModel
+    public function sendEmailBatch($emailBatch = []): DynamicResponseModel
     {
         $final = [];
 
         foreach ($emailBatch as $email) {
             foreach ($email as $emailIdx => $emailValue) {
                 if (strtolower($emailIdx) == 'headers') {
-                    $email[$emailIdx] = $this->fixHeaders($emailValue);
+                    $email[$emailIdx] = Header::listFromArray($emailValue);
                 }
             }
 
-            array_push($final, $email);
+            $final[] = $email;
         }
 
         return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $final));
@@ -213,27 +231,31 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param array $emailBatch An array of emails to be sent in one batch.
      */
-    function sendEmailBatchWithTemplate($emailBatch = []): DynamicResponseModel
+    public function sendEmailBatchWithTemplate($emailBatch = []): DynamicResponseModel
     {
         $final = [];
 
         foreach ($emailBatch as $email) {
             foreach ($email as $emailIdx => $emailValue) {
-                if (strtolower($emailIdx) === 'headers') {
-                    $email[$emailIdx] = $this->fixHeaders($emailValue);
+                if (strtolower($emailIdx) !== 'headers') {
+                    continue;
                 }
+
+                $email[$emailIdx] = Header::listFromArray($emailValue);
             }
 
             $final[] = $email;
         }
 
-        return new DynamicResponseModel($this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final]));
+        return new DynamicResponseModel(
+            $this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final])
+        );
     }
 
     /**
      * Get an overview of the delivery statistics for all email that has been sent through this Server.
      */
-    function getDeliveryStatistics(): DynamicResponseModel
+    public function getDeliveryStatistics(): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', '/deliverystats'));
     }
@@ -243,16 +265,16 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param int    $count         Number of bounces to retrieve
      * @param int    $offset        How many bounces to skip (when paging through bounces.)
-     * @param  string $type          The bounce type. (see http://developer.postmarkapp.com/developer-api-bounce.html#bounce-types)
-     * @param  bool   $inactive      Specifies if the bounce caused Postmark to deactivate this email.
-     * @param  string $emailFilter   Filter by email address
-     * @param  string $tag           Filter by tag
-     * @param  string $messageID     Filter by MessageID
-     * @param  string $fromdate      Filter for bounces after is date.
-     * @param  string $todate        Filter for bounces before this date.
-     * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @param string $type          The bounce type. (see http://developer.postmarkapp.com/developer-api-bounce.html#bounce-types)
+     * @param bool   $inactive      Specifies if the bounce caused Postmark to deactivate this email.
+     * @param string $emailFilter   Filter by email address
+     * @param string $tag           Filter by tag
+     * @param string $messageID     Filter by MessageID
+     * @param string $fromdate      Filter for bounces after is date.
+     * @param string $todate        Filter for bounces before this date.
+     * @param string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getBounces(
+    public function getBounces(
         $count = 100,
         $offset = 0,
         $type = null,
@@ -285,7 +307,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param int $id The ID of the bounce to get.
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
      */
-    function getBounce($id): DynamicResponseModel
+    public function getBounce($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id"));
     }
@@ -295,10 +317,8 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param int $id The ID of the bounce for which we want a dump.
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
-     *
-     * @return string
      */
-    function getBounceDump($id): DynamicResponseModel
+    public function getBounceDump($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id/dump"));
     }
@@ -309,7 +329,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param int $id The bounce which has a deactivated email address.
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
      */
-    function activateBounce($id): DynamicResponseModel
+    public function activateBounce($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('PUT', "/bounces/$id/activate"));
     }
@@ -318,7 +338,7 @@ final class PostmarkClient extends PostmarkClientBase
      * Get the settings for the server associated with this PostmarkClient instance
      * (defined by the $server_token you passed when instantiating this client)
      */
-    function getServer(): DynamicResponseModel
+    public function getServer(): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', '/server'));
     }
@@ -327,22 +347,22 @@ final class PostmarkClient extends PostmarkClientBase
      * Modify the associated Server. Any parameters passed with NULL will be
      * ignored (their existing values will not be modified).
      *
-     * @param  string $name                 Set the name of the server.
-     * @param  string $color                Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-     * @param  bool   $rawEmailEnabled      Enable raw email to be sent with inbound.
-     * @param  bool   $smtpApiActivated     Specifies whether or not SMTP is enabled on this server.
-     * @param  string $inboundHookUrl       URL to POST to everytime an inbound event occurs.
-     * @param  string $bounceHookUrl        URL to POST to everytime a bounce event occurs.
+     * @param string $name                 Set the name of the server.
+     * @param string $color                Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+     * @param bool   $rawEmailEnabled      Enable raw email to be sent with inbound.
+     * @param bool   $smtpApiActivated     Specifies whether or not SMTP is enabled on this server.
+     * @param string $inboundHookUrl       URL to POST to everytime an inbound event occurs.
+     * @param string $bounceHookUrl        URL to POST to everytime a bounce event occurs.
      * @param string $openHookUrl          URL to POST to everytime an open event occurs.
      * @param bool   $postFirstOpenOnly    If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
      * @param bool   $trackOpens           Indicates if all emails being sent through this server have open tracking enabled.
      * @param string $inboundDomain        Inbound domain for MX setup.
      * @param int    $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-     * @param  string $trackLinks           Indicates if all emails being sent through this server have link tracking enabled.
+     * @param string $trackLinks           Indicates if all emails being sent through this server have link tracking enabled.
      * @param string $clickHookUrl         URL to POST to everytime an click event occurs.
      * @param string $deliveryHookUrl      URL to POST to everytime an click event occurs.
      */
-    function editServer(
+    public function editServer(
         $name = null,
         $color = null,
         $rawEmailEnabled = null,
@@ -392,7 +412,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param string $metadata      An associatative array of key-values that must all match values included in the metadata of matching sent messages.
      * @param string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundMessages(
+    public function getOutboundMessages(
         $count = 100,
         $offset = 0,
         $recipient = null,
@@ -431,7 +451,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param string $id The ID of the Message for which we want details.
      */
-    function getOutboundMessageDetails($id): DynamicResponseModel
+    public function getOutboundMessageDetails($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/details"));
     }
@@ -442,81 +462,9 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param  string $id The ID of the message for which we want a dump.
      */
-    function getOutboundMessageDump($id): DynamicResponseModel
+    public function getOutboundMessageDump($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/dump"));
-    }
-
-    /**
-     * Get messages sent to the inbound email address associated with this Server.
-     *
-     * @param int    $count       The number of inbounce messages to retrieve in the request (defaults to 100)
-     * @param int    $offset      The number of messages to 'skip' when 'paging' through messages (defaults to 0)
-     * @param  string $recipient   Filter by the message recipient
-     * @param  string $fromEmail   Filter by the message sender
-     * @param  string $tag         Filter by the message tag
-     * @param  string $subject     Filter by the message subject
-     * @param  string $mailboxHash Filter by the mailboxHash
-     * @param  string $status      Filter by status ('blocked' or 'processed')
-     * @param  string $fromdate    Filter to messages on or after YYYY-MM-DD
-     * @param  string $todate      Filter to messages on or before YYYY-MM-DD
-     */
-    function getInboundMessages(
-        $count = 100,
-        $offset = 0,
-        $recipient = null,
-        $fromEmail = null,
-        $tag = null,
-        $subject = null,
-        $mailboxHash = null,
-        $status = null,
-        $fromdate = null,
-        $todate = null
-    ): DynamicResponseModel {
-        $query = [];
-        $query['recipient'] = $recipient;
-        $query['fromemail'] = $fromEmail;
-        $query['tag'] = $tag;
-        $query['subject'] = $subject;
-        $query['mailboxhash'] = $mailboxHash;
-        $query['count'] = $count;
-        $query['status'] = $status;
-        $query['offset'] = $offset;
-        $query['fromdate'] = $fromdate;
-        $query['todate'] = $todate;
-
-        return new DynamicResponseModel($this->processRestRequest('GET', '/messages/inbound', $query));
-    }
-
-    /**
-     * Get details for a specific inbound message.
-     *
-     * @param string $id The ID of the message for which we went to get details.
-     */
-    function getInboundMessageDetails($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('GET', "/messages/inbound/$id/details"));
-    }
-
-    /**
-     * Allow an inbound message to be processed, even though the filtering rules would normally
-     * prevent it from being processed.
-     *
-     * @param string $id The ID for a message that we wish to unblock.
-     */
-    function bypassInboundMessageRules($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/bypass"));
-    }
-
-    /**
-     * Request that Postmark retry POSTing the specified message to the Server's Inbound Hook.
-     *
-     * @param string $id The ID for a message that we wish retry the inbound hook for.
-     */
-    function retryInboundMessageHook($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/retry"));
     }
 
     /**
@@ -538,7 +486,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $city          Filter by City.
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOpenStatistics(
+    public function getOpenStatistics(
         $count = 100,
         $offset = 0,
         $recipient = null,
@@ -594,7 +542,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $city          Filter by City.
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getClickStatistics(
+    public function getClickStatistics(
         $count = 100,
         $offset = 0,
         $recipient = null,
@@ -638,7 +586,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param int    $count  How many statistics should we retrieve?
      * @param int    $offset How many should we 'skip' when 'paging' through statistics.
      */
-    function getOpenStatisticsForMessage($id, $count = 100, $offset = 0): DynamicResponseModel
+    public function getOpenStatisticsForMessage($id, $count = 100, $offset = 0): DynamicResponseModel
     {
         $query = [];
 
@@ -655,7 +603,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param int    $count  How many statistics should we retrieve?
      * @param int    $offset How many should we 'skip' when 'paging' through statistics.
      */
-    function getClickStatisticsForMessage($id, $count = 100, $offset = 0): DynamicResponseModel
+    public function getClickStatisticsForMessage($id, $count = 100, $offset = 0): DynamicResponseModel
     {
         $query = [];
 
@@ -674,7 +622,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundOverviewStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundOverviewStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -695,7 +643,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundSendStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundSendStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -716,7 +664,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundBounceStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundBounceStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -737,7 +685,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundSpamComplaintStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundSpamComplaintStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -758,7 +706,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundTrackedStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundTrackedStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -779,7 +727,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundOpenStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundOpenStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -800,7 +748,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -821,7 +769,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundEmailClientStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundEmailClientStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -841,7 +789,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $fromdate must be of the format 'YYYY-MM-DD'
      * @param  string $todate   must be of the format 'YYYY-MM-DD'
      */
-    function getOutboundReadTimeStatistics($tag = null, $fromdate = null, $todate = null): DynamicResponseModel
+    public function getOutboundReadTimeStatistics($tag = null, $fromdate = null, $todate = null): DynamicResponseModel
     {
         $query = [];
 
@@ -861,7 +809,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundClickStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundClickStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -882,7 +830,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundClickBrowserFamilyStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundClickBrowserFamilyStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -904,7 +852,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundClickBrowserPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundClickBrowserPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -926,7 +874,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param  string $todate        must be of the format 'YYYY-MM-DD'
      * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
-    function getOutboundClickLocationStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
+    public function getOutboundClickLocationStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null): DynamicResponseModel
     {
         $query = [];
 
@@ -939,165 +887,11 @@ final class PostmarkClient extends PostmarkClientBase
     }
 
     /**
-     * Create an Inbound Rule to block messages from a single email address, or an entire domain.
-     *
-     * @param  string $rule The email address (or domain) that will be blocked.
-     */
-    function createInboundRuleTrigger($rule): DynamicResponseModel
-    {
-        $body = [];
-        $body['Rule'] = $rule;
-
-        return new DynamicResponseModel($this->processRestRequest('POST', '/triggers/inboundrules', $body));
-    }
-
-    /**
-     * Get a list of all existing Inbound Rule Triggers.
-     *
-     * @param int $count  The number of rule triggers to return with this request.
-     * @param int $offset The number of triggers to 'skip' when 'paging' through rule triggers.
-     */
-    function listInboundRuleTriggers($count = 100, $offset = 0): DynamicResponseModel
-    {
-        $query = [];
-
-        $query['count'] = $count;
-        $query['offset'] = $offset;
-
-        return new DynamicResponseModel($this->processRestRequest('GET', '/triggers/inboundrules', $query));
-    }
-
-    /**
-     * Delete an Inbound Rule Trigger.
-     *
-     * @param int $id The ID of the rule trigger we wish to delete.
-     */
-    function deleteInboundRuleTrigger($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
-    }
-
-    /**
-     * Delete a template.
-     *
-     * @param string $id The ID or alias of the template to delete.
-     */
-    function deleteTemplate($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('DELETE', "/templates/$id"));
-    }
-
-    /**
-     * Create a template
-     *
-     * @param string $name           The friendly name for this template.
-     * @param string $subject        The template to be used for the 'subject' of emails sent using this template.
-     * @param string $htmlBody       The template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL.
-     * @param string $textBody       The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
-     * @param string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-     * @param string $templateType   Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
-     * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
-     */
-    function createTemplate($name, $subject, $htmlBody, $textBody, $alias = null, $templateType = 'Standard', $layoutTemplate = null): DynamicResponseModel
-    {
-        $template = [];
-        $template['name'] = $name;
-        $template['subject'] = $subject;
-        $template['htmlBody'] = $htmlBody;
-        $template['textBody'] = $textBody;
-        $template['alias'] = $alias;
-        $template['templateType'] = $templateType;
-        $template['layoutTemplate'] = $layoutTemplate;
-
-        return new DynamicResponseModel($this->processRestRequest('POST', '/templates', $template));
-    }
-
-    /**
-     * Edit a template
-     *
-     * @param string $id             The ID or alias of the template you wish to update.
-     * @param string $name           The friendly name for this template.
-     * @param string $subject        The template to be used for the 'subject' of emails sent using this template.
-     * @param string $htmlBody       The template to be used for the 'htmlBody' of emails sent using this template.
-     * @param string $textBody       The template to be used for the 'textBody' of emails sent using this template.
-     * @param string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-     * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
-     */
-    function editTemplate($id, $name = null, $subject = null, $htmlBody = null, $textBody = null, $alias = null, $layoutTemplate = null): DynamicResponseModel
-    {
-        $template = [];
-        $template['name'] = $name;
-        $template['subject'] = $subject;
-        $template['htmlBody'] = $htmlBody;
-        $template['textBody'] = $textBody;
-        $template['alias'] = $alias;
-        $template['layoutTemplate'] = $layoutTemplate;
-
-        return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
-    }
-
-    /**
-     * Get the current information for a specific template.
-     *
-     * @param string $id the Id or alias for the template info you wish to retrieve.
-     */
-    function getTemplate($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('GET', "/templates/$id"));
-    }
-
-    /**
-     * Get all templates associated with the Server.
-     *
-     * @param int    $count          The total number of templates to get at once (default is 100)
-     * @param int    $offset         The number of templates to "Skip" before returning results.
-     * @param string $templateType   Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
-     * @param string $layoutTemplate Filters the results based on the layout template alias. Defaults to NULL.
-     */
-    function listTemplates($count = 100, $offset = 0, $templateType = 'All', $layoutTemplate = null): DynamicResponseModel
-    {
-        $query = [];
-
-        $query['count'] = $count;
-        $query['offset'] = $offset;
-        $query['templateType'] = $templateType;
-        $query['layoutTemplate'] = $layoutTemplate;
-
-        return new DynamicResponseModel($this->processRestRequest('GET', '/templates', $query));
-    }
-
-    /**
-     * Confirm that your template content can be parsed/rendered, get a test rendering of your template, and a suggested model to use with your templates.
-     *
-     * @param string $subject                    The Subject template you wish to test.
-     * @param string $htmlBody                   The HTML template you wish to test
-     * @param string $textBody                   The number of templates to "Skip" before returning results.
-     * @param object $testRenderModel            The model to be used when doing test renders of the templates that successfully parse in this request.
-     * @param bool   $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
-     * @param string $templateType               Validates templates based on template type (layout template or standard template). Possible options: Standard or Layout. Defaults to Standard.
-     * @param string $layoutTemplate             An optional string to specify which layout template alias to use to validate a standard template. If not provided a standard template will not use a layout template.
-     */
-    function validateTemplate($subject = null, $htmlBody = null, $textBody = null, $testRenderModel = null, $inlineCssForHtmlTestRender = true, $templateType = 'Standard', $layoutTemplate = null): DynamicResponseModel
-    {
-        $query = [];
-
-        $query['subject'] = $subject;
-        $query['htmlBody'] = $htmlBody;
-        $query['textBody'] = $textBody;
-        $query['testRenderModel'] = $testRenderModel;
-        $query['inlineCssForHtmlTestRender'] = $inlineCssForHtmlTestRender;
-        $query['templateType'] = $templateType;
-        $query['layoutTemplate'] = $layoutTemplate;
-
-        return new DynamicResponseModel($this->processRestRequest('POST', '/templates/validate', $query));
-    }
-
-    /**
      * Get information about a specific webhook configuration.
      *
      * @param int $id The Id of the webhook configuration you wish to retrieve.
      */
-    function getWebhookConfiguration($id): DynamicResponseModel
+    public function getWebhookConfiguration($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks/$id"));
     }
@@ -1107,7 +901,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param string $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
      */
-    function getWebhookConfigurations($messageStream = null): DynamicResponseModel
+    public function getWebhookConfigurations($messageStream = null): DynamicResponseModel
     {
         $query = [];
         $query['MessageStream'] = $messageStream;
@@ -1120,7 +914,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @param int $id The Id of the webhook configuration you wish to delete.
      */
-    function deleteWebhookConfiguration($id): DynamicResponseModel
+    public function deleteWebhookConfiguration($id): DynamicResponseModel
     {
         return new DynamicResponseModel($this->processRestRequest('DELETE', "/webhooks/$id"));
     }
@@ -1134,7 +928,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param array                        $httpHeaders   Optional list of custom HTTP headers.
      * @param WebhookConfigurationTriggers $triggers      Optional triggers for this webhook configuration.
      */
-    function createWebhookConfiguration($url, $messageStream = null, $httpAuth = null, $httpHeaders = null, $triggers = null): DynamicResponseModel
+    public function createWebhookConfiguration($url, $messageStream = null, $httpAuth = null, $httpHeaders = null, $triggers = null): DynamicResponseModel
     {
         $body = [];
         $body['Url'] = $url;
@@ -1156,7 +950,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param array                        $httpHeaders Optional list of custom HTTP headers.
      * @param WebhookConfigurationTriggers $triggers    Optional triggers for this webhook configuration.
      */
-    function editWebhookConfiguration($id, $url = null, $httpAuth = null, $httpHeaders = null, $triggers = null): DynamicResponseModel
+    public function editWebhookConfiguration($id, $url = null, $httpAuth = null, $httpHeaders = null, $triggers = null): DynamicResponseModel
     {
         $body = [];
         $body['Url'] = $url;
@@ -1165,157 +959,5 @@ final class PostmarkClient extends PostmarkClientBase
         $body['Triggers'] = $triggers;
 
         return new DynamicResponseModel($this->processRestRequest('PUT', "/webhooks/$id", $body));
-    }
-
-    /**
-     * Create Suppressions for the specified recipients.
-     *
-     * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
-     * @param string $messageStream      Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
-     *
-     *      Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
-     */
-    function createSuppressions($suppressionChanges = [], $messageStream = null): DynamicResponseModel
-    {
-        $body = [];
-        $body['Suppressions'] = $suppressionChanges;
-
-        if ($messageStream === null) {
-            $messageStream = 'outbound';
-        }
-
-        return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
-    }
-
-    /**
-     * Reactivate Suppressions for the specified recipients.
-     *
-     * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
-     * @param string $messageStream      Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
-     *
-     *      Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
-     */
-    function deleteSuppressions($suppressionChanges = [], $messageStream = null): DynamicResponseModel
-    {
-        $body = [];
-        $body['Suppressions'] = $suppressionChanges;
-
-        if ($messageStream === null) {
-            $messageStream = 'outbound';
-        }
-
-        return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
-    }
-
-    /**
-     * List Suppressions that match the provided query parameters.
-     *
-     * @param string $messageStream     Filter Suppressions by MessageStream. If not provided, Suppressions for the default transactional stream will be returned. (optional)
-     * @param string $suppressionReason Filter Suppressions by reason. E.g.: HardBounce, SpamComplaint, ManualSuppression. (optional)
-     * @param string $origin            Filter Suppressions by the origin that created them. E.g.: Customer, Recipient, Admin. (optional)
-     * @param string $fromDate          Filter suppressions from the date specified - inclusive. (optional)
-     * @param string $toDate            Filter suppressions up to the date specified - inclusive. (optional)
-     * @param string $emailAddress      Filter by a specific email address. (optional)
-     */
-    function getSuppressions($messageStream = null, $suppressionReason = null, $origin = null, $fromDate = null, $toDate = null, $emailAddress = null): DynamicResponseModel
-    {
-        $query = [];
-        $query['SuppressionReason'] = $suppressionReason;
-        $query['Origin'] = $origin;
-        $query['FromDate'] = $fromDate;
-        $query['ToDate'] = $toDate;
-        $query['EmailAddress'] = $emailAddress;
-
-        if ($messageStream === null) {
-            $messageStream = 'outbound';
-        }
-
-        return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
-    }
-
-    /**
-     * Create a new message stream on your server.
-     *
-     * @param string $id                Identifier for your message stream, unique at server level.
-     * @param string $messageStreamType Type of the message stream. Possible values: ["Transactional", "Inbound", "Broadcasts"].
-     * @param string $name              Friendly name for your message stream.
-     * @param string $description       Friendly description for your message stream. (optional)
-     *
-     *       Currently, you cannot create multiple inbound streams.
-     */
-    function createMessageStream($id, $messageStreamType, $name, $description = null): DynamicResponseModel
-    {
-        $body = [];
-        $body['ID'] = $id;
-        $body['MessageStreamType'] = $messageStreamType;
-        $body['Name'] = $name;
-        $body['Description'] = $description;
-
-        return new DynamicResponseModel($this->processRestRequest('POST', '/message-streams', $body));
-    }
-
-    /**
-     * Edit the properties of a message stream.
-     *
-     * @param string $id          The identifier for the stream you are trying to update.
-     * @param string $name        New friendly name to use. (optional)
-     * @param string $description New description to use. (optional)
-     */
-    function editMessageStream($id, $name = null, $description = null): DynamicResponseModel
-    {
-        $body = [];
-        $body['Name'] = $name;
-        $body['Description'] = $description;
-
-        return new DynamicResponseModel($this->processRestRequest('PATCH', "/message-streams/$id", $body));
-    }
-
-    /**
-     * Retrieve details about a message stream.
-     *
-     * @param string $id Identifier of the stream to retrieve details for.
-     */
-    function getMessageStream($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$id"));
-    }
-
-    /**
-     * Retrieve all message streams on the server.
-     *
-     * @param string $messageStreamType      Filter by stream type. Possible values: ["Transactional", "Inbound", "Broadcasts", "All"]. Defaults to: All.
-     * @param string $includeArchivedStreams Include archived streams in the result. Defaults to: false.
-     */
-    function listMessageStreams($messageStreamType = 'All', $includeArchivedStreams = 'false'): DynamicResponseModel
-    {
-        $query = [];
-        $query['MessageStreamType'] = $messageStreamType;
-        $query['IncludeArchivedStreams'] = $includeArchivedStreams;
-
-        return new DynamicResponseModel($this->processRestRequest('GET', '/message-streams', $query));
-    }
-
-    /**
-     * Archive a message stream. This will disable sending/receiving messages via that stream.
-     * The stream will also stop being shown in the Postmark UI.
-     * Once a stream has been archived, it will be deleted (alongside associated data) at the ExpectedPurgeDate in the response.
-     *
-     * @param string $id The identifier for the stream you are trying to update.
-     */
-    function archiveMessageStream($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/archive"));
-    }
-
-    /**
-     * Unarchive a message stream. This will resume sending/receiving via that stream.
-     * The stream will also re-appear in the Postmark UI.
-     * A stream can be unarchived only before the stream ExpectedPurgeDate.
-     *
-     * @param string $id Identifier of the stream to unarchive.
-     */
-    function unarchiveMessageStream($id): DynamicResponseModel
-    {
-        return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
     }
 }
