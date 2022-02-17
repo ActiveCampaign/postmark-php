@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Postmark;
 
 use Fig\Http\Message\RequestMethodInterface;
@@ -16,13 +18,12 @@ use Psr\Http\Message\UriInterface;
 use Throwable;
 
 use function array_filter;
-use function assert;
 use function http_build_query;
-use function is_array;
 use function json_decode;
 use function json_encode;
 use function sprintf;
 
+use const JSON_BIGINT_AS_STRING;
 use const JSON_THROW_ON_ERROR;
 use const PHP_MAJOR_VERSION;
 use const PHP_MINOR_VERSION;
@@ -48,8 +49,8 @@ abstract class PostmarkClientBase
         $this->requestFactory = self::resolveRequestFactory();
         $this->uriFactory = self::resolveUriFactory();
         $this->streamFactory = self::resolveStreamFactory();
-		$this->token = $token;
-	}
+        $this->token = $token;
+    }
 
     /** @return non-empty-string */
     abstract protected function authorizationHeaderName(): string;
@@ -101,44 +102,47 @@ abstract class PostmarkClientBase
 
     public function withBaseUri(string $baseUri): self
     {
+        /** @psalm-suppress UnsafeInstantiation */
         $client = new static($this->token, $this->client);
         $client->baseUri = $baseUri;
 
         return $client;
     }
 
-	/**
-	 * The base request method for all API access.
-	 *
-	 * @param non-empty-string $method The request VERB to use (GET, POST, PUT, DELETE)
-	 * @param non-empty-string $path The API path.
-	 * @param array<array-key, mixed> $params The content to be used (either as the query, or the json post/put body)
-	 *
-	 * @throws PostmarkException
-	 */
-	protected function processRestRequest(string $method, string $path, array $params = []): array
+    /**
+     * The base request method for all API access.
+     *
+     * @param non-empty-string        $method The request VERB to use (GET, POST, PUT, DELETE)
+     * @param non-empty-string        $path   The API path.
+     * @param array<array-key, mixed> $params The content to be used (either as the query, or the json post/put body)
+     *
+     * @return array<array-key, mixed>
+     *
+     * @throws PostmarkException
+     */
+    protected function processRestRequest(string $method, string $path, array $params = []): array
     {
         $target = $this->baseUri()->withPath($path);
         $query = $body = null;
 
         $params = array_filter($params);
-		if (! empty($params)) {
-			switch ($method) {
-				case RequestMethodInterface::METHOD_GET:
-				case RequestMethodInterface::METHOD_HEAD:
-				case RequestMethodInterface::METHOD_DELETE:
-				case RequestMethodInterface::METHOD_OPTIONS:
+        if (! empty($params)) {
+            switch ($method) {
+                case RequestMethodInterface::METHOD_GET:
+                case RequestMethodInterface::METHOD_HEAD:
+                case RequestMethodInterface::METHOD_DELETE:
+                case RequestMethodInterface::METHOD_OPTIONS:
                     $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-					break;
-				case RequestMethodInterface::METHOD_PUT:
-				case RequestMethodInterface::METHOD_POST:
-				case RequestMethodInterface::METHOD_PATCH:
-					$body = $this->streamFactory->createStream(
+                    break;
+                case RequestMethodInterface::METHOD_PUT:
+                case RequestMethodInterface::METHOD_POST:
+                case RequestMethodInterface::METHOD_PATCH:
+                    $body = $this->streamFactory->createStream(
                         json_encode($params, JSON_THROW_ON_ERROR)
                     );
-					break;
-			}
-		}
+                    break;
+            }
+        }
 
         if ($query !== null) {
             $target = $target->withQuery($query);
@@ -160,21 +164,21 @@ abstract class PostmarkClientBase
             $request = $request->withBody($body);
         }
 
-		$response = $this->client->sendRequest($request);
+        $response = $this->client->sendRequest($request);
 
-		if ($response->getStatusCode() === 200) {
+        if ($response->getStatusCode() === 200) {
             // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
+            /** @psalm-var array<array-key, mixed> $body */
             $body = json_decode(
                 (string) $response->getBody(),
                 true,
                 512,
                 JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING
             );
-            assert(is_array($body));
 
             return $body;
         }
 
         throw RequestFailure::with($request, $response);
-	}
+    }
 }
