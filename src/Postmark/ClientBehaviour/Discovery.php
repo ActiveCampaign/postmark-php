@@ -16,6 +16,7 @@ use Throwable;
 /** @internal Postmark */
 trait Discovery
 {
+    /** @throws DiscoveryFailure */
     private static function resolveHttpClient(?ClientInterface $client): ClientInterface
     {
         if ($client) {
@@ -29,6 +30,7 @@ trait Discovery
         }
     }
 
+    /** @throws DiscoveryFailure */
     private static function resolveRequestFactory(): RequestFactoryInterface
     {
         try {
@@ -38,6 +40,7 @@ trait Discovery
         }
     }
 
+    /** @throws DiscoveryFailure */
     private static function resolveStreamFactory(): StreamFactoryInterface
     {
         try {
@@ -47,6 +50,7 @@ trait Discovery
         }
     }
 
+    /** @throws DiscoveryFailure */
     private static function resolveUriFactory(): UriFactoryInterface
     {
         try {
