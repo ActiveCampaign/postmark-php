@@ -4,8 +4,8 @@ namespace Postmark\Models\Webhooks;
 /**
  * Settings for SpamComplaint webhooks.
  */
-class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
-
+class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable
+{
     private $enabled;
     private $includeContent;
 
@@ -15,12 +15,14 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
      * @param boolean $enabled        Specifies whether or not webhooks will be triggered by SpamComplaint events.
      * @param boolean $includeContent Specifies whether or not the full content of the spam complaint is included in webhook POST.
      */
-    public function __construct($enabled = false, $includeContent = false) {
+    public function __construct($enabled = false, $includeContent = false)
+    {
         $this->enabled = $enabled;
         $this->includeContent = $includeContent;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $retval = array(
             "Enabled" => $this->enabled,
             "IncludeContent" => $this->includeContent
@@ -29,11 +31,13 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled()
+    {
         return $this->enabled;
     }
 
-    public function getIncludeContent() {
+    public function getIncludeContent()
+    {
         return $this->includeContent;
     }
 }

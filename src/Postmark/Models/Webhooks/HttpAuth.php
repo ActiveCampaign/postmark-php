@@ -4,8 +4,8 @@ namespace Postmark\Models\Webhooks;
 /**
  * Model describing Basic HTTP Authentication.
  */
-class HttpAuth implements \JsonSerializable {
-
+class HttpAuth implements \JsonSerializable
+{
     private $username;
     private $password;
 
@@ -15,12 +15,14 @@ class HttpAuth implements \JsonSerializable {
      * @param string $username Username to use.
      * @param string $password Password to use.
      */
-    public function __construct($username = null, $password = null) {
+    public function __construct($username = null, $password = null)
+    {
         $this->username = $username;
         $this->password = $password;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $retval = array(
             "Username" => $this->username,
             "Password" => $this->password
@@ -29,11 +31,13 @@ class HttpAuth implements \JsonSerializable {
         return $retval;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 }

@@ -21,14 +21,15 @@ namespace Postmark\Models;
  * $server["ID"];
  * ```
  */
-class DynamicResponseModel extends CaseInsensitiveArray {
-
+class DynamicResponseModel extends CaseInsensitiveArray
+{
     /**
      * Create a new DynamicResponseModel from an associative array.
      *
      * @param array $data The source associative array.
      */
-    function __construct(array $data) {
+    function __construct(array $data)
+    {
         parent::__construct($data);
     }
 
@@ -37,8 +38,8 @@ class DynamicResponseModel extends CaseInsensitiveArray {
      *
      * @param mixed $name Name of element to get from the dynamic response model.
      */
-    public function __get($name) {
-
+    public function __get($name)
+    {
         $value = $this[$name];
 
         // If there's a value and it's an array,
@@ -53,7 +54,8 @@ class DynamicResponseModel extends CaseInsensitiveArray {
     /**
      * Infrastructure. Allows indexer to return a DynamicResponseModel.
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         $result = parent::offsetGet($offset);
         if ($result != NULL && is_array($result)) {
             $result = new DynamicResponseModel($result);

@@ -5,8 +5,8 @@ namespace Postmark\Models\Webhooks;
 /**
  * Settings for SubscriptionChange webhooks.
  */
-class WebhookConfigurationSubscriptionChange implements \JsonSerializable {
-
+class WebhookConfigurationSubscriptionChange implements \JsonSerializable
+{
     private $enabled;
 
     /**
@@ -14,11 +14,13 @@ class WebhookConfigurationSubscriptionChange implements \JsonSerializable {
      *
      * @param boolean $enabled Specifies whether or not webhooks will be triggered by SubscriptionChange events.
      */
-    public function __construct($enabled = false) {
+    public function __construct($enabled = false)
+    {
         $this->enabled = $enabled;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $retval = array(
             "Enabled" => $this->enabled
         );
@@ -26,7 +28,8 @@ class WebhookConfigurationSubscriptionChange implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled()
+    {
         return $this->enabled;
     }
 }

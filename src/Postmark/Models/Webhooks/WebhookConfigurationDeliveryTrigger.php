@@ -4,8 +4,8 @@ namespace Postmark\Models\Webhooks;
 /**
  * Settings for Delivery webhooks.
  */
-class WebhookConfigurationDeliveryTrigger implements \JsonSerializable {
-
+class WebhookConfigurationDeliveryTrigger implements \JsonSerializable
+{
     private $enabled;
 
     /**
@@ -13,11 +13,13 @@ class WebhookConfigurationDeliveryTrigger implements \JsonSerializable {
      *
      * @param boolean $enabled Specifies whether or not webhooks will be triggered by Delivery events.
      */
-    public function __construct($enabled = false) {
+    public function __construct($enabled = false)
+    {
         $this->enabled = $enabled;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $retval = array(
             "Enabled" => $this->enabled
         );
@@ -25,7 +27,8 @@ class WebhookConfigurationDeliveryTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled()
+    {
         return $this->enabled;
     }
 }
