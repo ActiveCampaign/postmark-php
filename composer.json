@@ -16,7 +16,6 @@
         "php": "~7.4 || ~8.0 || ~8.1",
         "ext-json": "*",
         "fig/http-message-util": "^1.1",
-        "guzzlehttp/guzzle": "^6.0|^7.0",
         "php-http/discovery": "^1.14",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",

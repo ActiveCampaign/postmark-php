@@ -1,306 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.20.0@f82a70e7edfc6cf2705e9374c8a0b6a974a779ed">
-  <file src="src/Postmark/Models/CaseInsensitiveArray.php">
-    <MissingParamType occurrences="1">
-      <code>$offset</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$_container</code>
-      <code>$_pointer</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>fixOffsetName</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="3">
-      <code>$offset</code>
-      <code>$this-&gt;_container</code>
-      <code>$this-&gt;_container</code>
-    </MixedArgument>
-    <MixedArrayAccess occurrences="2">
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[$offset]</code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="2">
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[]</code>
-    </MixedArrayAssignment>
-    <MixedArrayOffset occurrences="6">
-      <code>$keys[$this-&gt;_pointer]</code>
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[$offset]</code>
-      <code>$this-&gt;_container[$offset]</code>
-    </MixedArrayOffset>
-    <MixedAssignment occurrences="4">
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$offset</code>
-    </MixedAssignment>
-    <MixedOperand occurrences="1">
-      <code>$this-&gt;_pointer</code>
-    </MixedOperand>
-    <MixedReturnStatement occurrences="2">
-      <code>$this-&gt;offsetGet($this-&gt;key())</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="src/Postmark/Models/DynamicResponseModel.php">
-    <MixedArrayOffset occurrences="1">
-      <code>$this[$name]</code>
-    </MixedArrayOffset>
-    <MixedAssignment occurrences="2">
-      <code>$result</code>
-      <code>$value</code>
-    </MixedAssignment>
-    <MixedReturnStatement occurrences="1">
-      <code>$result</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="src/Postmark/Models/PostmarkAttachment.php">
-    <MissingParamType occurrences="16">
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$base64EncodedData</code>
-      <code>$base64EncodedData</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$data</code>
-      <code>$filePath</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$contentId</code>
-      <code>$data</code>
-      <code>$mimeType</code>
-      <code>$name</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>fromBase64EncodedData</code>
-      <code>fromFile</code>
-      <code>fromRawData</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>$data</code>
-      <code>$filePath</code>
-    </MixedArgument>
-  </file>
-  <file src="src/Postmark/Models/PostmarkException.php">
-    <MissingPropertyType occurrences="2">
-      <code>$httpStatusCode</code>
-      <code>$postmarkApiErrorCode</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/Postmark/Models/Suppressions/SuppressionChangeRequest.php">
-    <MissingPropertyType occurrences="1">
-      <code>$emailAddress</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getEmailAddress</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/HttpAuth.php">
-    <MissingPropertyType occurrences="2">
-      <code>$password</code>
-      <code>$username</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getPassword</code>
-      <code>getUsername</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationBounceTrigger.php">
-    <MissingPropertyType occurrences="2">
-      <code>$enabled</code>
-      <code>$includeContent</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getEnabled</code>
-      <code>getIncludeContent</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationClickTrigger.php">
-    <MissingPropertyType occurrences="1">
-      <code>$enabled</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getEnabled</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationDeliveryTrigger.php">
-    <MissingPropertyType occurrences="1">
-      <code>$enabled</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getEnabled</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationOpenTrigger.php">
-    <MissingPropertyType occurrences="2">
-      <code>$enabled</code>
-      <code>$postFirstOpenOnly</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getEnabled</code>
-      <code>getPostFirstOpenOnly</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationSpamComplaintTrigger.php">
-    <MissingPropertyType occurrences="2">
-      <code>$enabled</code>
-      <code>$includeContent</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getEnabled</code>
-      <code>getIncludeContent</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationSubscriptionChange.php">
-    <MissingPropertyType occurrences="1">
-      <code>$enabled</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getEnabled</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Postmark/Models/Webhooks/WebhookConfigurationTriggers.php">
-    <MissingPropertyType occurrences="6">
-      <code>$bounce</code>
-      <code>$click</code>
-      <code>$delivery</code>
-      <code>$open</code>
-      <code>$spamComplaint</code>
-      <code>$subscriptionChange</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="6">
-      <code>getBounceSettings</code>
-      <code>getClickSettings</code>
-      <code>getDeliverySettings</code>
-      <code>getOpenSettings</code>
-      <code>getSpamComplaintSettings</code>
-      <code>getSubscriptionChangeSettings</code>
-    </MissingReturnType>
-    <MixedAssignment occurrences="6">
-      <code>$retval['Bounce']</code>
-      <code>$retval['Click']</code>
-      <code>$retval['Delivery']</code>
-      <code>$retval['Open']</code>
-      <code>$retval['SpamComplaint']</code>
-      <code>$retval['SubscriptionChange']</code>
-    </MixedAssignment>
-    <MixedMethodCall occurrences="6">
-      <code>jsonSerialize</code>
-      <code>jsonSerialize</code>
-      <code>jsonSerialize</code>
-      <code>jsonSerialize</code>
-      <code>jsonSerialize</code>
-      <code>jsonSerialize</code>
-    </MixedMethodCall>
-  </file>
   <file src="src/Postmark/PostmarkAdminClient.php">
-    <InvalidArgument occurrences="20">
-      <code>$this-&gt;processRestRequest('DELETE', "/domains/$id")</code>
-      <code>$this-&gt;processRestRequest('DELETE', "/senders/$id")</code>
-      <code>$this-&gt;processRestRequest('DELETE', "/servers/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/domains/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/senders/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/servers/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', '/domains/', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/senders/', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/servers/', $query)</code>
-      <code>$this-&gt;processRestRequest('POST', "/domains/$id/rotatedkim")</code>
-      <code>$this-&gt;processRestRequest('POST', "/domains/$id/verifyspf")</code>
-      <code>$this-&gt;processRestRequest('POST', "/senders/$id/requestnewdkim")</code>
-      <code>$this-&gt;processRestRequest('POST', "/senders/$id/resend")</code>
-      <code>$this-&gt;processRestRequest('POST', "/senders/$id/verifyspf")</code>
-      <code>$this-&gt;processRestRequest('POST', '/domains/', $body)</code>
-      <code>$this-&gt;processRestRequest('POST', '/senders/', $body)</code>
-      <code>$this-&gt;processRestRequest('POST', '/servers/', $body)</code>
-      <code>$this-&gt;processRestRequest('PUT', "/domains/$id", $body)</code>
-      <code>$this-&gt;processRestRequest('PUT', "/senders/$id", $body)</code>
-      <code>$this-&gt;processRestRequest('PUT', "/servers/$id", $body)</code>
-    </InvalidArgument>
     <MissingParamType occurrences="2">
       <code>$offset</code>
       <code>$offset</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>deleteServer</code>
-    </MissingReturnType>
     <MixedAssignment occurrences="2">
       <code>$query['offset']</code>
       <code>$query['offset']</code>
     </MixedAssignment>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>PostmarkAdminClient</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="src/Postmark/PostmarkClient.php">
-    <InvalidArgument occurrences="56">
-      <code>$this-&gt;processRestRequest('DELETE', "/templates/$id")</code>
-      <code>$this-&gt;processRestRequest('DELETE', "/triggers/inboundrules/$id")</code>
-      <code>$this-&gt;processRestRequest('DELETE', "/webhooks/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/bounces/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/bounces/$id/dump")</code>
-      <code>$this-&gt;processRestRequest('GET', "/message-streams", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/message-streams/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/messages/inbound/$id/details")</code>
-      <code>$this-&gt;processRestRequest('GET', "/messages/outbound/$id/details")</code>
-      <code>$this-&gt;processRestRequest('GET', "/messages/outbound/$id/dump")</code>
-      <code>$this-&gt;processRestRequest('GET', "/messages/outbound/clicks/$id", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/messages/outbound/opens/$id", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/templates", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/templates/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', "/webhooks", $query)</code>
-      <code>$this-&gt;processRestRequest('GET', "/webhooks/$id")</code>
-      <code>$this-&gt;processRestRequest('GET', '/bounces', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/deliverystats')</code>
-      <code>$this-&gt;processRestRequest('GET', '/messages/inbound', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/messages/outbound', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/messages/outbound/clicks', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/messages/outbound/opens', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/server')</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/bounces', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/clicks', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/clicks/browserfamilies', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/clicks/location', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/clicks/platforms', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/opens', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/opens/emailclients', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/opens/platforms', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/opens/readtimes', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/sends', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/spam', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/stats/outbound/tracked', $query)</code>
-      <code>$this-&gt;processRestRequest('GET', '/triggers/inboundrules', $query)</code>
-      <code>$this-&gt;processRestRequest('PATCH', "/message-streams/$id", $body)</code>
-      <code>$this-&gt;processRestRequest('POST', "/message-streams", $body)</code>
-      <code>$this-&gt;processRestRequest('POST', "/message-streams/$id/archive")</code>
-      <code>$this-&gt;processRestRequest('POST', "/message-streams/$id/unarchive")</code>
-      <code>$this-&gt;processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body)</code>
-      <code>$this-&gt;processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body)</code>
-      <code>$this-&gt;processRestRequest('POST', "/templates", $template)</code>
-      <code>$this-&gt;processRestRequest('POST', "/templates/validate", $query)</code>
-      <code>$this-&gt;processRestRequest('POST', '/email', $body)</code>
-      <code>$this-&gt;processRestRequest('POST', '/email/batch', $final)</code>
-      <code>$this-&gt;processRestRequest('POST', '/email/batchWithTemplates', array('Messages' =&gt; $final))</code>
-      <code>$this-&gt;processRestRequest('POST', '/email/withTemplate', $body)</code>
-      <code>$this-&gt;processRestRequest('POST', '/triggers/inboundrules', $body)</code>
-      <code>$this-&gt;processRestRequest('PUT', "/bounces/$id/activate")</code>
-      <code>$this-&gt;processRestRequest('PUT', "/messages/inbound/$id/bypass")</code>
-      <code>$this-&gt;processRestRequest('PUT', "/messages/inbound/$id/retry")</code>
-      <code>$this-&gt;processRestRequest('PUT', "/templates/$id", $template)</code>
-      <code>$this-&gt;processRestRequest('PUT', '/server', $body)</code>
-    </InvalidArgument>
     <InvalidIterator occurrences="1">
       <code>$metadata</code>
     </InvalidIterator>
@@ -317,9 +27,6 @@
     <MissingParamType occurrences="1">
       <code>$headers</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$server_token</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="1">
       <code>fixHeaders</code>
     </MissingReturnType>
@@ -331,10 +38,6 @@
       <code>$email[$emailIdx]</code>
       <code>$email[$emailIdx]</code>
     </MixedArrayAssignment>
-    <MixedArrayOffset occurrences="2">
-      <code>$email[$emailIdx]</code>
-      <code>$email[$emailIdx]</code>
-    </MixedArrayOffset>
     <MixedAssignment occurrences="16">
       <code>$body['Headers']</code>
       <code>$body['Headers']</code>
@@ -357,61 +60,11 @@
       <code>DynamicResponseModel</code>
       <code>DynamicResponseModel</code>
     </MixedInferredReturnType>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>PostmarkClient</code>
-    </PropertyNotSetInConstructor>
     <UndefinedDocblockClass occurrences="4">
       <code>HttpAuth</code>
       <code>HttpAuth</code>
       <code>WebhookConfigurationTriggers</code>
       <code>WebhookConfigurationTriggers</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/Postmark/PostmarkClientBase.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>!$this-&gt;client</code>
-      <code>$this-&gt;client</code>
-    </DocblockTypeContradiction>
-    <ImplicitToStringCast occurrences="2">
-      <code>$response-&gt;getBody()</code>
-      <code>$response-&gt;getBody()</code>
-    </ImplicitToStringCast>
-    <MissingParamType occurrences="3">
-      <code>$header</code>
-      <code>$timeout</code>
-      <code>$token</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="6">
-      <code>$VERIFY_SSL</code>
-      <code>$authorization_header</code>
-      <code>$authorization_token</code>
-      <code>$os</code>
-      <code>$timeout</code>
-      <code>$version</code>
-    </MissingPropertyType>
-    <MixedArrayAccess occurrences="2">
-      <code>$body['ErrorCode']</code>
-      <code>$body['Message']</code>
-    </MixedArrayAccess>
-    <MixedArrayOffset occurrences="1"/>
-    <MixedAssignment occurrences="2">
-      <code>$body</code>
-      <code>$ex-&gt;message</code>
-    </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
-      <code>object</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>json_decode($response-&gt;getBody(), true, 512, JSON_BIGINT_AS_STRING)</code>
-    </MixedReturnStatement>
-    <PossiblyNullArgument occurrences="1">
-      <code>$method</code>
-    </PossiblyNullArgument>
-    <PossiblyNullOperand occurrences="1">
-      <code>$path</code>
-    </PossiblyNullOperand>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>$client</code>
-    </PropertyNotSetInConstructor>
   </file>
 </files>

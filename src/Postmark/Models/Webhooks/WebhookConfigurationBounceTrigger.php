@@ -1,41 +1,45 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Postmark\Models\Webhooks;
 
 /**
  * Settings for Bounce webhooks.
  */
-class WebhookConfigurationBounceTrigger implements \JsonSerializable {
-
-    private $enabled;
-    private $includeContent;
+class WebhookConfigurationBounceTrigger implements WebhookConfiguration
+{
+    private bool $enabled;
+    private bool $includeContent;
 
     /**
      * Create a new WebhookConfigurationBounceTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Bounce events.
-     * @param boolean $includeContent Specifies whether or not the full content of the email bounce is included in webhook POST.
+     * @param bool $enabled        Specifies whether webhooks will be triggered by Bounce events.
+     * @param bool $includeContent Specifies whether the full content of the email bounce is included in webhook POST.
      */
-    public function __construct($enabled = false, $includeContent = false) {
+    public function __construct(bool $enabled = false, bool $includeContent = false)
+    {
         $this->enabled = $enabled;
         $this->includeContent = $includeContent;
     }
 
-    public function jsonSerialize() {
-        $retval = array(
-            "Enabled" => $this->enabled,
-            "IncludeContent" => $this->includeContent
-        );
-
-        return $retval;
+    /** @return array{Enabled: bool, IncludeContent:bool} */
+    public function jsonSerialize(): array
+    {
+        return [
+            'Enabled' => $this->enabled,
+            'IncludeContent' => $this->includeContent,
+        ];
     }
 
-    public function getEnabled() {
+    public function getEnabled(): bool
+    {
         return $this->enabled;
     }
 
-    public function getIncludeContent() {
+    public function getIncludeContent(): bool
+    {
         return $this->includeContent;
     }
 }
-
-?>

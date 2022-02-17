@@ -1,19 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Postmark\Models;
+
+use function is_array;
 
 /**
  * The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.
- *
  * Most responses from the PostmarkClient return a DynamicResponseModel, so understanding how it works is useful.
- *
- * Essentially, you can use either object or array index notation to lookup values. The member names are case insensitive,
- * so that each of these are acceptable ways of accessing "id" on a server response, for example:
- *
+ * Essentially, you can use either object or array index notation to lookup values. The member names are case
+ * insensitive, so that each of these are acceptable ways of accessing "id" on a server response, for example:
  * ```
  * //Create a client instance and get server info.
  * $client = new PostmarkClient($server_token);
  * $server = $client->getServer();
- *
  * //You have many ways of accessing the same members:
  * $server->id;
  * $server->Id;
@@ -21,45 +22,35 @@ namespace Postmark\Models;
  * $server["ID"];
  * ```
  */
-class DynamicResponseModel extends CaseInsensitiveArray {
+final class DynamicResponseModel extends CaseInsensitiveArray
+{
+    /**
+     * Convert array values to DynamicResponseModel instances
+     *
+     * @param string $name Name of element to get from the dynamic response model.
+     *
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        /** @psalm-var mixed|null $value */
+        $value = $this[$name];
 
-	/**
-	 * Create a new DynamicResponseModel from an associative array.
-	 *
-	 * @param array $data The source associative array.
-	 */
-	function __construct(array $data) {
-		parent::__construct($data);
-	}
+        return is_array($value) ? new self($value) : $value;
+    }
 
-	/**
-	 * Infrastructure. Get an element by name.
-	 *
-	 * @param mixed $name Name of element to get from the dynamic response model.
-	 */
-	public function __get($name) {
+    /**
+     * Convert array values to DynamicResponseModel instances
+     *
+     * @param array-key $offset
+     *
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        /** @psalm-var mixed|null $value */
+        $value = parent::offsetGet($offset);
 
-		$value = $this[$name];
-
-		// If there's a value and it's an array,
-		// convert it to a dynamic response object, too.
-		if ($value != NULL && is_array($value)) {
-			$value = new DynamicResponseModel($value);
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Infrastructure. Allows indexer to return a DynamicResponseModel.
-	 */
-	public function offsetGet($offset) {
-		$result = parent::offsetGet($offset);
-		if ($result != NULL && is_array($result)) {
-			$result = new DynamicResponseModel($result);
-		}
-		return $result;
-	}
+        return is_array($value) ? new self($value) : $value;
+    }
 }
-
-?>

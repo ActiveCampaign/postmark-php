@@ -1,86 +1,126 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Postmark\Models;
+
+use ArrayAccess;
+use Iterator;
+
+use function array_change_key_case;
+use function array_keys;
+use function count;
+use function is_string;
+use function str_replace;
+use function strtolower;
+
+use const CASE_LOWER;
 
 /**
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.
- *
  * This allows access to the array to be very forgiving. (i.e. If you access something
  * with the wrong CaSe, it'll still find the correct element)
+ *
+ * @internal Postmark
  */
-class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
-	private $_container = array();
-	private $_pointer = 0;
+class CaseInsensitiveArray implements ArrayAccess, Iterator
+{
+    /** @var array<array-key, mixed> */
+    private array $data;
+    private int $pointer = 0;
 
-	private function fixOffsetName($offset) {
-		return preg_replace('/_/', '', strtolower($offset));
-	}
+    private function normaliseOffset(string $offset): string
+    {
+        return str_replace('_', '', strtolower($offset));
+    }
 
-	/**
-	 * Initialize a CaseInsensitiveArray from an existing array.
-	 *
-	 * @param array $initialArray The base array from which to create the new array.
-	 */
-	public function __construct(Array $initialArray = array()) {
-		$this->_container = array_change_key_case($initialArray);
-	}
+    /**
+     * Initialize a CaseInsensitiveArray from an existing array.
+     *
+     * @param array<array-key, mixed> $initialArray The base array from which to create the new array.
+     */
+    public function __construct(array $initialArray = [])
+    {
+        $this->data = array_change_key_case($initialArray, CASE_LOWER);
+    }
 
-	public function offsetSet($offset, $value) {
-		if (is_string($offset)) {
-			$offset = $this->fixOffsetName($offset);
-		}
+    /**
+     * @param array-key|null $offset
+     * @param mixed          $value
+     */
+    public function offsetSet($offset, $value): void
+    {
+        if (is_string($offset)) {
+            $offset = $this->normaliseOffset($offset);
+        }
 
-		if (is_null($offset)) {
-			$this->_container[] = $value;
-		} else {
-			$this->_container[$offset] = $value;
-		}
-	}
+        if ($offset === null) {
+            $this->data[] = $value;
+        } else {
+            $this->data[$offset] = $value;
+        }
+    }
 
-	public function offsetExists($offset) {
-		if (is_string($offset)) {
-			$offset = $this->fixOffsetName($offset);
-		}
+    /** @param array-key $offset */
+    public function offsetExists($offset): bool
+    {
+        if (is_string($offset)) {
+            $offset = $this->normaliseOffset($offset);
+        }
 
-		return isset($this->_container[$offset]);
-	}
+        return isset($this->data[$offset]);
+    }
 
-	public function offsetUnset($offset) {
-		if (is_string($offset)) {
-			$offset = $this->fixOffsetName($offset);
-		}
+    /** @param array-key $offset */
+    public function offsetUnset($offset): void
+    {
+        if (is_string($offset)) {
+            $offset = $this->normaliseOffset($offset);
+        }
 
-		unset($this->_container[$offset]);
-	}
+        unset($this->data[$offset]);
+    }
 
-	public function offsetGet($offset) {
-		if (is_string($offset)) {
-			$offset = $this->fixOffsetName($offset);
-		}
-		return isset($this->_container[$offset]) ?
-		$this->_container[$offset] : null;
-	}
+    /**
+     * @param array-key $offset
+     *
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        if (is_string($offset)) {
+            $offset = $this->normaliseOffset($offset);
+        }
 
-	public function current() {
-		// use "offsetGet" instead of indexes
-		// so that subclasses can override behavior if needed.
-		return $this->offsetGet($this->key());
-	}
+        return $this->data[$offset] ?? null;
+    }
 
-	public function key() {
-        $keys = array_keys($this->_container);
-		return $keys[$this->_pointer];
-	}
+    /** @return mixed */
+    public function current()
+    {
+        // use "offsetGet" instead of indexes
+        // so that subclasses can override behavior if needed.
+        return $this->offsetGet($this->key());
+    }
 
-	public function next() {
-		$this->_pointer++;
-	}
+    /** @return array-key */
+    public function key()
+    {
+        return array_keys($this->data)[$this->pointer];
+    }
 
-	public function rewind() {
-		$this->_pointer = 0;
-	}
+    public function next(): void
+    {
+        $this->pointer++;
+    }
 
-	public function valid() {
-		return count(array_keys($this->_container)) > $this->_pointer;
-	}
+    public function rewind(): void
+    {
+        $this->pointer = 0;
+    }
+
+    public function valid(): bool
+    {
+        return count(array_keys($this->data)) > $this->pointer;
+    }
 }

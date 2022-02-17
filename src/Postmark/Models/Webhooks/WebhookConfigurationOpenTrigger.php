@@ -1,41 +1,45 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Postmark\Models\Webhooks;
 
 /**
  * Settings for Open webhooks.
  */
-class WebhookConfigurationOpenTrigger implements \JsonSerializable {
-
-    private $enabled;
-    private $postFirstOpenOnly;
+class WebhookConfigurationOpenTrigger implements WebhookConfiguration
+{
+    private bool $enabled;
+    private bool $postFirstOpenOnly;
 
     /**
      * Create a new WebhookConfigurationOpenTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Open events.
-     * @param boolean $postFirstOpenOnly If enabled, Open webhooks will only POST on first open.
+     * @param bool $enabled           Specifies whether webhooks will be triggered by Open events.
+     * @param bool $postFirstOpenOnly If enabled, Open webhooks will only POST on first open.
      */
-    public function __construct($enabled = false, $postFirstOpenOnly = false) {
+    public function __construct(bool $enabled = false, bool $postFirstOpenOnly = false)
+    {
         $this->enabled = $enabled;
         $this->postFirstOpenOnly = $postFirstOpenOnly;
     }
 
-    public function jsonSerialize() {
-        $retval = array(
-            "Enabled" => $this->enabled,
-            "PostFirstOpenOnly" => $this->postFirstOpenOnly
-        );
-
-        return $retval;
+    /** @return array{Enabled: bool, PostFirstOpenOnly: bool} */
+    public function jsonSerialize(): array
+    {
+        return [
+            'Enabled' => $this->enabled,
+            'PostFirstOpenOnly' => $this->postFirstOpenOnly,
+        ];
     }
 
-    public function getEnabled() {
+    public function getEnabled(): bool
+    {
         return $this->enabled;
     }
 
-    public function getPostFirstOpenOnly() {
+    public function getPostFirstOpenOnly(): bool
+    {
         return $this->postFirstOpenOnly;
     }
 }
-
-?>
