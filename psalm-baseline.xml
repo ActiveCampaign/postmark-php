@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.20.0@f82a70e7edfc6cf2705e9374c8a0b6a974a779ed">
-  <file src="src/Postmark/Models/PostmarkAttachment.php">
-    <MissingParamType occurrences="16">
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$attachmentName</code>
-      <code>$base64EncodedData</code>
-      <code>$base64EncodedData</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$contentId</code>
-      <code>$data</code>
-      <code>$filePath</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-      <code>$mimeType</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$contentId</code>
-      <code>$data</code>
-      <code>$mimeType</code>
-      <code>$name</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>fromBase64EncodedData</code>
-      <code>fromFile</code>
-      <code>fromRawData</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>$data</code>
-      <code>$filePath</code>
-    </MixedArgument>
-  </file>
   <file src="src/Postmark/PostmarkAdminClient.php">
     <MissingParamType occurrences="2">
       <code>$offset</code>
