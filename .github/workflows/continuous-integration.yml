@@ -1,0 +1,149 @@
+name: "Continuous Integration"
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+env:
+  php_extensions: curl,pcov,json
+  default_php: 7.4
+  stable_php: 8.1
+
+jobs:
+
+  cs-check:
+    name: CS Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v2
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.default_php }}
+          extensions: ${{ env.php_extensions }}
+          tools: cs2pr
+
+      - uses: "ramsey/composer-install@2.1.0"
+
+      - name: "Check CS"
+        run: vendor/bin/phpcs --report=checkstyle -q | cs2pr
+
+  psalm:
+    name: Psalm Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v2
+
+      - name: "Setup PHP"
+        if: hashFiles('psalm.xml') != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.default_php }}
+          extensions: ${{ env.php_extensions }}
+          tools: cs2pr
+
+      - uses: "ramsey/composer-install@2.1.0"
+        if: hashFiles('psalm.xml') != ''
+
+      - name: "Psalm"
+        if: hashFiles('psalm.xml') != ''
+        run: vendor/bin/psalm --output-format=github
+
+  run-unit-tests:
+
+    name: PHPUnit on ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+        include:
+          - php-version: '8.2'
+            composer-options: "--ignore-platform-reqs"
+
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v2
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: ${{ env.php_extensions }}
+          coverage: pcov
+          ini-values: pcov.enabled=1
+
+      - uses: "ramsey/composer-install@2.1.0"
+        with:
+          composer-options: "${{ matrix.composer-options }}"
+
+      - name: "Run Tests"
+        run: php ./vendor/bin/phpunit --testsuite="Unit" --coverage-clover=coverage.xml
+
+      - name: "Upload Coverage to CodeCov"
+        uses: codecov/codecov-action@v2.1.0
+        env:
+          PHP_VERSION: ${{ matrix.php-version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: false
+          env_vars: PHP_VERSION
+
+  composer-require-checker:
+    name: "Check for missing dependencies"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.stable_php }}
+          ini-values: memory_limit=-1
+          extensions: ${{ env.php_extensions }}
+
+      - uses: "ramsey/composer-install@2.1.0"
+
+      - name: "Set global composer bin-dir"
+        run: composer global config bin-dir /usr/local/bin
+
+      - name: "Install require checker"
+        run: composer global require -W maglnet/composer-require-checker
+
+      - name: "Check"
+        run: /usr/local/bin/composer-require-checker check
+
+  composer-unused:
+    name: "Check for Unused Dependencies"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.stable_php }}
+          ini-values: memory_limit=-1
+          extensions: ${{ env.php_extensions }}
+
+      - uses: "ramsey/composer-install@2.1.0"
+
+      - name: "Set global composer bin-dir"
+        run: composer global config bin-dir /usr/local/bin
+
+      - name: "Install Composer Unused"
+        run: composer global require icanhazstring/composer-unused dev-main#9e79ecb3d1ec8b9d5b076678fc20b5c83c539d50
+
+      - name: "Check"
+        run: /usr/local/bin/composer-unused --output-format=github
