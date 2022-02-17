@@ -7,11 +7,8 @@ namespace Postmark\Models;
 use Exception;
 
 /**
- * The exception thrown when the Postmark Client receives an error from the API.
+ * @deprecated
  */
 class PostmarkException extends Exception
 {
-    var $message;
-    var $httpStatusCode;
-    var $postmarkApiErrorCode;
 }

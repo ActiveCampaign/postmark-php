@@ -35,12 +35,6 @@
       <code>$filePath</code>
     </MixedArgument>
   </file>
-  <file src="src/Postmark/Models/PostmarkException.php">
-    <MissingPropertyType occurrences="2">
-      <code>$httpStatusCode</code>
-      <code>$postmarkApiErrorCode</code>
-    </MissingPropertyType>
-  </file>
   <file src="src/Postmark/PostmarkAdminClient.php">
     <MissingParamType occurrences="2">
       <code>$offset</code>
