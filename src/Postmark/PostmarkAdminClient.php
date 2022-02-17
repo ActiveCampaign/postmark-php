@@ -54,7 +54,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function listServers($count = 100, $offset = 0, $name = NULL)
+    function listServers($count = 100, $offset = 0, $name = null)
     {
         $query = array();
         $query['count'] = $count;
@@ -103,21 +103,21 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function editServer(
         $id,
-        $name = NULL,
-        $color = NULL,
-        $rawEmailEnabled = NULL,
-        $smtpApiActivated = NULL,
-        $inboundHookUrl = NULL,
-        $bounceHookUrl = NULL,
-        $openHookUrl = NULL,
-        $postFirstOpenOnly = NULL,
-        $trackOpens = NULL,
-        $inboundDomain = NULL,
-        $inboundSpamThreshold = NULL,
-        $trackLinks = NULL,
-        $clickHookUrl = NULL,
-        $deliveryHookUrl = NULL,
-        $enableSmtpApiErrorHooks = NULL
+        $name = null,
+        $color = null,
+        $rawEmailEnabled = null,
+        $smtpApiActivated = null,
+        $inboundHookUrl = null,
+        $bounceHookUrl = null,
+        $openHookUrl = null,
+        $postFirstOpenOnly = null,
+        $trackOpens = null,
+        $inboundDomain = null,
+        $inboundSpamThreshold = null,
+        $trackLinks = null,
+        $clickHookUrl = null,
+        $deliveryHookUrl = null,
+        $enableSmtpApiErrorHooks = null
 ) {
         $body = array();
         $body['name'] = $name;
@@ -165,20 +165,20 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function createServer(
         $name,
-        $color = NULL,
-        $rawEmailEnabled = NULL,
-        $smtpApiActivated = NULL,
-        $inboundHookUrl = NULL,
-        $bounceHookUrl = NULL,
-        $openHookUrl = NULL,
-        $postFirstOpenOnly = NULL,
-        $trackOpens = NULL,
-        $inboundDomain = NULL,
-        $inboundSpamThreshold = NULL,
-        $trackLinks = NULL,
-        $clickHookUrl = NULL,
-        $deliveryHookUrl = NULL,
-        $enableSmtpApiErrorHooks = NULL
+        $color = null,
+        $rawEmailEnabled = null,
+        $smtpApiActivated = null,
+        $inboundHookUrl = null,
+        $bounceHookUrl = null,
+        $openHookUrl = null,
+        $postFirstOpenOnly = null,
+        $trackOpens = null,
+        $inboundDomain = null,
+        $inboundSpamThreshold = null,
+        $trackLinks = null,
+        $clickHookUrl = null,
+        $deliveryHookUrl = null,
+        $enableSmtpApiErrorHooks = null
 ) {
         $body = array();
         $body['name'] = $name;
@@ -241,7 +241,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function createSenderSignature($fromEmail, $name, $replyToEmail = NULL, $returnPathDomain = NULL)
+    function createSenderSignature($fromEmail, $name, $replyToEmail = null, $returnPathDomain = null)
     {
         $body = array();
         $body['fromEmail'] = $fromEmail;
@@ -262,7 +262,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function editSenderSignature($id, $name = NULL, $replyToEmail = NULL, $returnPathDomain = NULL)
+    function editSenderSignature($id, $name = null, $replyToEmail = null, $returnPathDomain = null)
     {
         $body = array();
         $body['name'] = $name;
@@ -367,7 +367,7 @@ class PostmarkAdminClient extends PostmarkClientBase
    *
    * @return DynamicResponseModel
    */
-    function createDomain($name, $returnPathDomain = NULL)
+    function createDomain($name, $returnPathDomain = null)
     {
         $body = array();
         $body['name'] = $name;
@@ -384,7 +384,7 @@ class PostmarkAdminClient extends PostmarkClientBase
    *
    * @return DynamicResponseModel
    */
-    function editDomain($id, $returnPathDomain = NULL)
+    function editDomain($id, $returnPathDomain = null)
     {
         $body = array();
         $body['returnPathDomain'] = $returnPathDomain;

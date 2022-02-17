@@ -51,18 +51,18 @@ final class PostmarkClient extends PostmarkClientBase
         $from,
         $to,
         $subject,
-        $htmlBody = NULL,
-        $textBody = NULL,
-        $tag = NULL,
-        $trackOpens = NULL,
-        $replyTo = NULL,
-        $cc = NULL,
-        $bcc = NULL,
-        $headers = NULL,
-        $attachments = NULL,
-        $trackLinks = NULL,
-        $metadata = NULL,
-        $messageStream = NULL
+        $htmlBody = null,
+        $textBody = null,
+        $tag = null,
+        $trackOpens = null,
+        $replyTo = null,
+        $cc = null,
+        $bcc = null,
+        $headers = null,
+        $attachments = null,
+        $trackLinks = null,
+        $metadata = null,
+        $messageStream = null
 ) {
         $body = array();
         $body['From'] = $from;
@@ -83,7 +83,7 @@ final class PostmarkClient extends PostmarkClientBase
         // Since this parameter can override a per-server setting
         // we have to check whether it was actually set.
         // And only include it in the API call if that is the case.
-        if ($trackLinks !== NULL) {
+        if ($trackLinks !== null) {
             $body['TrackLinks'] = $trackLinks;
         }
 
@@ -117,16 +117,16 @@ final class PostmarkClient extends PostmarkClientBase
         $templateIdOrAlias,
         $templateModel,
         $inlineCss = true,
-        $tag = NULL,
-        $trackOpens = NULL,
-        $replyTo = NULL,
-        $cc = NULL,
-        $bcc = NULL,
-        $headers = NULL,
-        $attachments = NULL,
-        $trackLinks = NULL,
-        $metadata = NULL,
-        $messageStream = NULL
+        $tag = null,
+        $trackOpens = null,
+        $replyTo = null,
+        $cc = null,
+        $bcc = null,
+        $headers = null,
+        $attachments = null,
+        $trackLinks = null,
+        $metadata = null,
+        $messageStream = null
 ) {
         $body = array();
         $body['From'] = $from;
@@ -147,7 +147,7 @@ final class PostmarkClient extends PostmarkClientBase
         // Since this parameter can override a per-server setting
         // we have to check whether it was actually set.
         // And only include it in the API call if that is the case.
-        if ($trackLinks !== NULL) {
+        if ($trackLinks !== null) {
             $body['TrackLinks'] = $trackLinks;
         }
 
@@ -169,8 +169,8 @@ final class PostmarkClient extends PostmarkClientBase
      */
     private function fixHeaders($headers)
     {
-        $retval = NULL;
-        if ($headers != NULL) {
+        $retval = null;
+        if ($headers != null) {
             $retval = array();
             $index = 0;
             foreach ($headers as $key => $value) {
@@ -265,14 +265,14 @@ final class PostmarkClient extends PostmarkClientBase
     function getBounces(
         $count = 100,
         $offset = 0,
-        $type = NULL,
-        $inactive = NULL,
-        $emailFilter = NULL,
-        $tag = NULL,
-        $messageID = NULL,
-        $fromdate = NULL,
-        $todate = NULL,
-        $messagestream = NULL
+        $type = null,
+        $inactive = null,
+        $emailFilter = null,
+        $tag = null,
+        $messageID = null,
+        $fromdate = null,
+        $todate = null,
+        $messagestream = null
 ) {
         $query = array();
         $query['type'] = $type;
@@ -361,20 +361,20 @@ final class PostmarkClient extends PostmarkClientBase
      * @return DynamicResponseModel
      */
     function editServer(
-        $name = NULL,
-        $color = NULL,
-        $rawEmailEnabled = NULL,
-        $smtpApiActivated = NULL,
-        $inboundHookUrl = NULL,
-        $bounceHookUrl = NULL,
-        $openHookUrl = NULL,
-        $postFirstOpenOnly = NULL,
-        $trackOpens = NULL,
-        $inboundDomain = NULL,
-        $inboundSpamThreshold = NULL,
-        $trackLinks = NULL,
-        $clickHookUrl = NULL,
-        $deliveryHookUrl = NULL
+        $name = null,
+        $color = null,
+        $rawEmailEnabled = null,
+        $smtpApiActivated = null,
+        $inboundHookUrl = null,
+        $bounceHookUrl = null,
+        $openHookUrl = null,
+        $postFirstOpenOnly = null,
+        $trackOpens = null,
+        $inboundDomain = null,
+        $inboundSpamThreshold = null,
+        $trackLinks = null,
+        $clickHookUrl = null,
+        $deliveryHookUrl = null
 ) {
         $body = array();
         $body["Name"] = $name;
@@ -415,15 +415,15 @@ final class PostmarkClient extends PostmarkClientBase
     function getOutboundMessages(
         $count = 100,
         $offset = 0,
-        $recipient = NULL,
-        $fromEmail = NULL,
-        $tag = NULL,
-        $subject = NULL,
-        $status = NULL,
-        $fromdate = NULL,
-        $todate = NULL,
-        $metadata = NULL,
-        $messagestream = NULL
+        $recipient = null,
+        $fromEmail = null,
+        $tag = null,
+        $subject = null,
+        $status = null,
+        $fromdate = null,
+        $todate = null,
+        $metadata = null,
+        $messagestream = null
 ) {
         $query = array();
         $query["recipient"] = $recipient;
@@ -437,7 +437,7 @@ final class PostmarkClient extends PostmarkClientBase
         $query["todate"] = $todate;
         $query['messagestream'] = $messagestream;
 
-        if($metadata != NULL) {
+        if($metadata != null) {
             foreach($metadata as $key => $value) {
                 $query["metadata_$key"] = $value;
             }
@@ -490,14 +490,14 @@ final class PostmarkClient extends PostmarkClientBase
     function getInboundMessages(
         $count = 100,
         $offset = 0,
-        $recipient = NULL,
-        $fromEmail = NULL,
-        $tag = NULL,
-        $subject = NULL,
-        $mailboxHash = NULL,
-        $status = NULL,
-        $fromdate = NULL,
-        $todate = NULL
+        $recipient = null,
+        $fromEmail = null,
+        $tag = null,
+        $subject = null,
+        $mailboxHash = null,
+        $status = null,
+        $fromdate = null,
+        $todate = null
 ) {
         $query = array();
         $query['recipient'] = $recipient;
@@ -575,19 +575,19 @@ final class PostmarkClient extends PostmarkClientBase
     function getOpenStatistics(
         $count = 100,
         $offset = 0,
-        $recipient = NULL,
-        $tag = NULL,
-        $clientName = NULL,
-        $clientCompany = NULL,
-        $clientFamily = NULL,
-        $osName = NULL,
-        $osFamily = NULL,
-        $osCompany = NULL,
-        $platform = NULL,
-        $country = NULL,
-        $region = NULL,
-        $city = NULL,
-        $messagestream = NULL
+        $recipient = null,
+        $tag = null,
+        $clientName = null,
+        $clientCompany = null,
+        $clientFamily = null,
+        $osName = null,
+        $osFamily = null,
+        $osCompany = null,
+        $platform = null,
+        $country = null,
+        $region = null,
+        $city = null,
+        $messagestream = null
 ) {
         $query = array();
         $query['count'] = $count;
@@ -633,19 +633,19 @@ final class PostmarkClient extends PostmarkClientBase
     function getClickStatistics(
         $count = 100,
         $offset = 0,
-        $recipient = NULL,
-        $tag = NULL,
-        $clientName = NULL,
-        $clientCompany = NULL,
-        $clientFamily = NULL,
-        $osName = NULL,
-        $osFamily = NULL,
-        $osCompany = NULL,
-        $platform = NULL,
-        $country = NULL,
-        $region = NULL,
-        $city = NULL,
-        $messagestream = NULL
+        $recipient = null,
+        $tag = null,
+        $clientName = null,
+        $clientCompany = null,
+        $clientFamily = null,
+        $osName = null,
+        $osFamily = null,
+        $osCompany = null,
+        $platform = null,
+        $country = null,
+        $region = null,
+        $city = null,
+        $messagestream = null
 ) {
         $query = array();
         $query['count'] = $count;
@@ -716,7 +716,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundOverviewStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -739,7 +739,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundSendStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -762,7 +762,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundBounceStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -785,7 +785,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundSpamComplaintStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -808,7 +808,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundTrackedStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -831,7 +831,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundOpenStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundOpenStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -854,7 +854,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -877,7 +877,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundEmailClientStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundEmailClientStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -899,7 +899,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundReadTimeStatistics($tag = NULL, $fromdate = NULL, $todate = NULL)
+    function getOutboundReadTimeStatistics($tag = null, $fromdate = null, $todate = null)
     {
         $query = array();
 
@@ -921,7 +921,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundClickStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundClickStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -944,7 +944,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundClickBrowserFamilyStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundClickBrowserFamilyStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -968,7 +968,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundClickBrowserPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundClickBrowserPlatformStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -992,7 +992,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getOutboundClickLocationStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL)
+    function getOutboundClickLocationStatistics($tag = null, $fromdate = null, $todate = null, $messagestream = null)
     {
         $query = array();
 
@@ -1074,7 +1074,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function createTemplate($name, $subject, $htmlBody, $textBody, $alias = NULL, $templateType = 'Standard', $layoutTemplate = NULL)
+    function createTemplate($name, $subject, $htmlBody, $textBody, $alias = null, $templateType = 'Standard', $layoutTemplate = null)
     {
         $template = array();
         $template["name"] = $name;
@@ -1101,7 +1101,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL, $alias = NULL, $layoutTemplate = NULL)
+    function editTemplate($id, $name = null, $subject = null, $htmlBody = null, $textBody = null, $alias = null, $layoutTemplate = null)
     {
         $template = array();
         $template["name"] = $name;
@@ -1136,7 +1136,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function listTemplates($count = 100, $offset = 0, $templateType = 'All', $layoutTemplate = NULL)
+    function listTemplates($count = 100, $offset = 0, $templateType = 'All', $layoutTemplate = null)
     {
         $query = array();
 
@@ -1161,7 +1161,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true, $templateType = 'Standard', $layoutTemplate = NULL)
+    function validateTemplate($subject = null, $htmlBody = null, $textBody = null, $testRenderModel = null, $inlineCssForHtmlTestRender = true, $templateType = 'Standard', $layoutTemplate = null)
     {
         $query = array();
 
@@ -1195,7 +1195,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getWebhookConfigurations($messageStream = NULL)
+    function getWebhookConfigurations($messageStream = null)
     {
         $query = array();
         $query["MessageStream"] = $messageStream;
@@ -1226,7 +1226,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function createWebhookConfiguration($url, $messageStream = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL)
+    function createWebhookConfiguration($url, $messageStream = null, $httpAuth = null, $httpHeaders = null, $triggers = null)
     {
         $body = array();
         $body["Url"] = $url;
@@ -1250,7 +1250,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function editWebhookConfiguration($id, $url = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL)
+    function editWebhookConfiguration($id, $url = null, $httpAuth = null, $httpHeaders = null, $triggers = null)
     {
         $body = array();
         $body["Url"] = $url;
@@ -1271,12 +1271,12 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function createSuppressions($suppressionChanges = array(), $messageStream = NULL)
+    function createSuppressions($suppressionChanges = array(), $messageStream = null)
     {
         $body = array();
         $body["Suppressions"] = $suppressionChanges;
 
-        if ($messageStream === NULL) {
+        if ($messageStream === null) {
             $messageStream = "outbound";
         }
 
@@ -1293,12 +1293,12 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL)
+    function deleteSuppressions($suppressionChanges = array(), $messageStream = null)
     {
         $body = array();
         $body["Suppressions"] = $suppressionChanges;
 
-        if ($messageStream === NULL) {
+        if ($messageStream === null) {
             $messageStream = "outbound";
         }
 
@@ -1317,7 +1317,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function getSuppressions($messageStream = NULL, $suppressionReason = NULL, $origin = NULL, $fromDate = NULL, $toDate = NULL, $emailAddress = NULL)
+    function getSuppressions($messageStream = null, $suppressionReason = null, $origin = null, $fromDate = null, $toDate = null, $emailAddress = null)
     {
         $query = array();
         $query["SuppressionReason"] = $suppressionReason;
@@ -1326,7 +1326,7 @@ final class PostmarkClient extends PostmarkClientBase
         $query["ToDate"] = $toDate;
         $query["EmailAddress"] = $emailAddress;
 
-        if ($messageStream === NULL) {
+        if ($messageStream === null) {
             $messageStream = "outbound";
         }
 
@@ -1345,7 +1345,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function createMessageStream($id, $messageStreamType, $name, $description = NULL)
+    function createMessageStream($id, $messageStreamType, $name, $description = null)
     {
         $body = array();
         $body["ID"] = $id;
@@ -1365,7 +1365,7 @@ final class PostmarkClient extends PostmarkClientBase
      *
      * @return DynamicResponseModel
      */
-    function editMessageStream($id, $name = NULL, $description = NULL)
+    function editMessageStream($id, $name = null, $description = null)
     {
         $body = array();
         $body["Name"] = $name;
