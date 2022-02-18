@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Postmark;
 
+use JsonSerializable;
 use Postmark\ClientBehaviour\Bounces;
 use Postmark\ClientBehaviour\InboundMessages;
 use Postmark\ClientBehaviour\MessageStreams;
@@ -21,7 +22,8 @@ use function is_int;
 use function strtolower;
 
 /**
- * @link PostmarkAttachment
+ * @link PostmarkAttachment (Preserve Import)
+ * @link JsonSerializable (Preserve Import)
  *
  * @psalm-type Attachments = list<PostmarkAttachment>|null
  * @psalm-type HeaderList = array<string, scalar|null>
@@ -45,7 +47,7 @@ use function strtolower;
  * }
  * @psalm-type EmailBatch = list<EmailMessage>
  * @psalm-type TemplateModelObject = array<string, scalar>
- * @psalm-type TemplateModel = array<string, scalar|TemplateModelObject>
+ * @psalm-type TemplateModel = array<string, scalar|TemplateModelObject>|JsonSerializable
  * @psalm-type TemplateMessage = array{
  *     TemplateId?: int,
  *     TemplateAlias?: string,
@@ -181,7 +183,7 @@ final class PostmarkClient extends PostmarkClientBase
         string $from,
         string $to,
         $templateIdOrAlias,
-        array $templateModel,
+        $templateModel,
         bool $inlineCss = true,
         ?string $tag = null,
         ?bool $trackOpens = null,

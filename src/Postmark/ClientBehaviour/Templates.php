@@ -15,6 +15,7 @@ use function sprintf;
  * @see PostmarkClient
  *
  * @psalm-import-type TemplateId from PostmarkClient
+ * @psalm-import-type TemplateModel from PostmarkClient
  */
 trait Templates
 {
@@ -149,27 +150,27 @@ trait Templates
      * Confirm that your template content can be parsed/rendered…
      * …get a test rendering of your template, and a suggested model to use with your templates.
      *
-     * @param string|null $subject                    The Subject template you wish to test.
-     * @param string|null $htmlBody                   The HTML template you wish to test
-     * @param string|null $textBody                   The number of templates to "Skip" before returning results.
-     * @param object|null $testRenderModel            The model to be used when doing test renders of the templates
-     *                                                that successfully parse in this request.
-     * @param bool        $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do
-     *                                                CSS Inlining for the HTML content. You may opt-out of this
-     *                                                behavior by passing 'false' for this parameter.
-     * @param string      $templateType               Validates templates based on template type (layout template or
-     *                                                standard template). Possible options: Standard or Layout.
-     *                                                Defaults to Standard.
-     * @param string|null $layoutTemplate             An optional string to specify which layout template alias to use
-     *                                                to validate a standard template. If not provided a standard
-     *                                                template will not use a layout template.
+     * @param string|null        $subject         The Subject template you wish to test.
+     * @param string|null        $htmlBody        The HTML template you wish to test
+     * @param string|null        $textBody        The number of templates to "Skip" before returning results.
+     * @param TemplateModel|null $testRenderModel The model to be used when doing test renders of the templates
+     *                                            that successfully parse in this request.
+     * @param bool               $inlineCss       If htmlBody is specified, the test render will automatically do
+     *                                            CSS Inlining for the HTML content. You may opt-out of this
+     *                                            behavior by passing 'false' for this parameter.
+     * @param string             $templateType    Validates templates based on template type (layout template or
+     *                                            standard template). Possible options: Standard or Layout.
+     *                                            Defaults to Standard.
+     * @param string|null        $layoutTemplate  An optional string to specify which layout template alias to use
+     *                                            to validate a standard template. If not provided a standard
+     *                                            template will not use a layout template.
      */
     public function validateTemplate(
         ?string $subject = null,
         ?string $htmlBody = null,
         ?string $textBody = null,
-        ?object $testRenderModel = null,
-        bool $inlineCssForHtmlTestRender = true,
+        $testRenderModel = null,
+        bool $inlineCss = true,
         string $templateType = 'Standard',
         ?string $layoutTemplate = null
     ): DynamicResponseModel {
@@ -179,7 +180,7 @@ trait Templates
         $query['htmlBody'] = $htmlBody;
         $query['textBody'] = $textBody;
         $query['testRenderModel'] = $testRenderModel;
-        $query['inlineCssForHtmlTestRender'] = $inlineCssForHtmlTestRender;
+        $query['inlineCssForHtmlTestRender'] = $inlineCss;
         $query['templateType'] = $templateType;
         $query['layoutTemplate'] = $layoutTemplate;
 
