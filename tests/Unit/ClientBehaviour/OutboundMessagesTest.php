@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
 use Postmark\ClientBehaviour\OutboundMessages;
-use PHPUnit\Framework\TestCase;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
