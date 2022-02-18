@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
 use Postmark\ClientBehaviour\Webhooks;
-use PHPUnit\Framework\TestCase;
 use Postmark\Models\Webhooks\HttpAuth;
 use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
