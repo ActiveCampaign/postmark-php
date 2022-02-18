@@ -61,7 +61,7 @@ class MessageStreamsTest extends MockClientTestCase
 
     public function testEditMessageStream(): void
     {
-        $this->client->editMessageStream('my-id', 'name', null);
+        $this->client->editMessageStream('my-id', 'name');
         $this->assertLastRequestMethodWas('PATCH');
         $this->assertLastRequestPathEquals('/message-streams/my-id');
         $this->assertBodyParameterValueEquals('Name', 'name');
