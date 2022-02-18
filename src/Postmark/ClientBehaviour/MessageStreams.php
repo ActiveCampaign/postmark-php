@@ -71,17 +71,16 @@ trait MessageStreams
      *
      * @param non-empty-string $messageStreamType      Filter by stream type. Possible values:
      *                                                 ["Transactional", "Inbound", "Broadcasts", "All"]. Default: All
-     * @param non-empty-string $includeArchivedStreams Include archived streams in the result. Defaults to: false.
+     * @param bool             $includeArchivedStreams Include archived streams in the result. Defaults to: false.
      */
     public function listMessageStreams(
         string $messageStreamType = 'All',
-        string $includeArchivedStreams = 'false'
+        bool $includeArchivedStreams = false
     ): DynamicResponseModel {
-        $query = [];
-        $query['MessageStreamType'] = $messageStreamType;
-        $query['IncludeArchivedStreams'] = $includeArchivedStreams;
-
-        return new DynamicResponseModel($this->processRestRequest('GET', '/message-streams', $query));
+        return new DynamicResponseModel($this->processRestRequest('GET', '/message-streams', [
+            'MessageStreamType' => $messageStreamType,
+            'IncludeArchivedStreams' => $this->stringifyBoolean($includeArchivedStreams),
+        ]));
     }
 
     /**
