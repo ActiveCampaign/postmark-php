@@ -157,6 +157,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
         } catch (CommunicationFailure $error) {
             self::assertSame($exception, $error->getPrevious());
             self::assertEquals('The request failed to send due to a network error: Network Error', $error->getMessage());
+            self::assertSame($this->assertLastRequest(), $error->request());
         }
     }
 
@@ -170,6 +171,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
         } catch (CommunicationFailure $error) {
             self::assertSame($exception, $error->getPrevious());
             self::assertEquals('The request was not sent because it is considered invalid: Invalid Request', $error->getMessage());
+            self::assertSame($this->assertLastRequest(), $error->request());
         }
     }
 
@@ -183,6 +185,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
         } catch (CommunicationFailure $error) {
             self::assertSame($exception, $error->getPrevious());
             self::assertEquals('An unknown error occurred during request dispatch: Other Error', $error->getMessage());
+            self::assertSame($this->assertLastRequest(), $error->request());
         }
     }
 }
