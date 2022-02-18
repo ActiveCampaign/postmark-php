@@ -6,6 +6,7 @@ namespace Postmark\Models;
 
 use ArrayAccess;
 use Iterator;
+use ReturnTypeWillChange; // phpcs:ignore
 
 use function array_change_key_case;
 use function array_keys;
@@ -86,6 +87,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
      *
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (is_string($offset)) {
@@ -96,6 +98,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
     }
 
     /** @return mixed */
+    #[ReturnTypeWillChange]
     public function current()
     {
         // use "offsetGet" instead of indexes
@@ -104,6 +107,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
     }
 
     /** @return array-key */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return array_keys($this->data)[$this->pointer];
