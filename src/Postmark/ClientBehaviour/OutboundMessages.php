@@ -7,6 +7,7 @@ namespace Postmark\ClientBehaviour;
 use Postmark\Models\DynamicResponseModel;
 use Postmark\PostmarkClient;
 
+use function is_string;
 use function sprintf;
 
 /**
@@ -62,6 +63,11 @@ trait OutboundMessages
 
         if ($metadata !== null) {
             foreach ($metadata as $name => $value) {
+                /** @psalm-suppress DocblockTypeContradiction */
+                if (! is_string($name) || empty($value)) {
+                    continue;
+                }
+
                 $key = sprintf('metadata_%s', $name);
                 $query[$key] = $value;
             }
