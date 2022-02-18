@@ -5,16 +5,24 @@ declare(strict_types=1);
 namespace Postmark\ClientBehaviour;
 
 use Postmark\Models\DynamicResponseModel;
+use Postmark\PostmarkClient;
 
 use function sprintf;
 
-/** @internal \Postmark */
+/**
+ * @internal \Postmark
+ *
+ * @see PostmarkClient
+ *
+ * @psalm-import-type TemplateId from PostmarkClient
+ */
 trait Templates
 {
     /**
      * Delete a template.
      *
-     * @param non-empty-string|positive-int $id The ID or alias of the template to delete.
+     * @param string|int $id The ID or alias of the template to delete.
+     * @psalm-param TemplateId $id
      */
     public function deleteTemplate($id): DynamicResponseModel
     {
@@ -65,7 +73,7 @@ trait Templates
     /**
      * Edit a template
      *
-     * @param string      $id             The ID or alias of the template you wish to update.
+     * @param TemplateId  $id             The ID or alias of the template you wish to update.
      * @param string|null $name           The friendly name for this template.
      * @param string|null $subject        The template to be used for the 'subject' of emails sent using this template.
      * @param string|null $htmlBody       The template to be used for the 'htmlBody' of emails sent using this template.
@@ -78,7 +86,7 @@ trait Templates
      *                                    template.
      */
     public function editTemplate(
-        string $id,
+        $id,
         ?string $name = null,
         ?string $subject = null,
         ?string $htmlBody = null,
@@ -102,7 +110,8 @@ trait Templates
     /**
      * Get the current information for a specific template.
      *
-     * @param non-empty-string|positive-int $id the Id or alias for the template info you wish to retrieve.
+     * @param string|int $id the Id or alias for the template info you wish to retrieve.
+     * @psalm-param TemplateId $id
      */
     public function getTemplate($id): DynamicResponseModel
     {

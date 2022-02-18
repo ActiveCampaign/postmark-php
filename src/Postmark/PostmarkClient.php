@@ -26,6 +26,7 @@ use function strtolower;
  * @psalm-type Attachments = list<PostmarkAttachment>|null
  * @psalm-type HeaderList = array<string, scalar|null>
  * @psalm-type MetaData = array<string, scalar>
+ * @psalm-type TemplateId = non-empty-string|positive-int
  * @psalm-type EmailMessage = array{
  *     From: non-empty-string,
  *     To: non-empty-string,
@@ -154,7 +155,7 @@ final class PostmarkClient extends PostmarkClientBase
      * @param string          $from              The sender of the email. (Your account must have an associated Sender
      *                                           Signature for the address used.)
      * @param string          $to                The recipient of the email.
-     * @param int|string      $templateIdOrAlias The ID or alias of the template to use to generate the content of this
+     * @param TemplateId      $templateIdOrAlias The ID or alias of the template to use to generate the content of this
      *                                           message.
      * @param TemplateModel   $templateModel     The values to combine with the Templated content.
      * @param bool            $inlineCss         If the template contains an HTMLBody, CSS is automatically inlined, you
