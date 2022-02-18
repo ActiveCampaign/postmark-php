@@ -197,6 +197,36 @@ class PostmarkClientSmokeTest extends TestCase
         self::assertEquals($expect, $email['Headers']);
     }
 
+    public function testGetServer(): void
+    {
+        $this->client->getServer();
+        $this->assertLastRequestMethodWas('GET');
+        $this->assertLastRequestPathEquals('/server');
+    }
+
+    public function testEditServerWithoutParams(): void
+    {
+        $this->client->editServer();
+        $this->assertLastRequestMethodWas('PUT');
+        $this->assertLastRequestPathEquals('/server');
+    }
+
+    public function testEditServerParams(): void
+    {
+        $this->client->editServer(
+            'Fred',
+            'green',
+            true,
+            false,
+            'Hook In'
+        );
+        $this->assertBodyParameterValueEquals('Name', 'Fred');
+        $this->assertBodyParameterValueEquals('Color', 'green');
+        $this->assertBodyParameterValueEquals('RawEmailEnabled', true);
+        $this->assertBodyParameterValueEquals('SmtpApiActivated', false);
+        $this->assertBodyParameterValueEquals('InboundHookUrl', 'Hook In');
+    }
+
     /** @return array<string, array{0: string}> */
     public function similarStatsMethodProvider(): array
     {
