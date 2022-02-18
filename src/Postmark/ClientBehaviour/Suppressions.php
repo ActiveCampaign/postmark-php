@@ -27,11 +27,12 @@ trait Suppressions
         array $suppressionChanges = [],
         string $messageStream = 'outbound'
     ): DynamicResponseModel {
-        $body = [];
-        $body['Suppressions'] = $suppressionChanges;
-
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/message-streams/%s/suppressions', $messageStream), $body)
+            $this->processRestRequest(
+                'POST',
+                sprintf('/message-streams/%s/suppressions', $messageStream),
+                ['Suppressions' => $suppressionChanges]
+            )
         );
     }
 
@@ -51,11 +52,12 @@ trait Suppressions
         array $suppressionChanges = [],
         string $messageStream = 'outbound'
     ): DynamicResponseModel {
-        $body = [];
-        $body['Suppressions'] = $suppressionChanges;
-
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/message-streams/%s/suppressions/delete', $messageStream), $body)
+            $this->processRestRequest(
+                'POST',
+                sprintf('/message-streams/%s/suppressions/delete', $messageStream),
+                ['Suppressions' => $suppressionChanges]
+            )
         );
     }
 
