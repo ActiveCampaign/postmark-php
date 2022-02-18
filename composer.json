@@ -1,7 +1,12 @@
 {
-    "name": "wildbit/postmark-php",
+    "name": "gsteel/postmark-php",
     "license": "MIT",
-    "description": "The officially supported client for Postmark (https://postmarkapp.com)",
+    "description": "Postmark API Client Fork for PHP 8.1",
+    "keywords": [
+        "postmark",
+        "email",
+        "api-client"
+    ],
     "config": {
         "sort-packages": true,
         "platform": {
@@ -11,6 +16,9 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "composer/package-versions-deprecated": true
         }
+    },
+    "replace": {
+        "wildbit/postmark-php": "4.0.2"
     },
     "require": {
         "php": "~7.4 || ~8.0 || ~8.1",
