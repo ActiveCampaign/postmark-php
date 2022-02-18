@@ -80,7 +80,7 @@ class StatisticsTest extends MockClientTestCase
     }
 
     /**
-     * @covers PostmarkClient::getOutboundReadTimeStatistics
+     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundReadTimeStatistics
      * @dataProvider similarThreeArgumentStatsMethodsProvider
      */
     public function testSimilarThreeArgumentStatsMethods(string $method, string $expectedPath): void
