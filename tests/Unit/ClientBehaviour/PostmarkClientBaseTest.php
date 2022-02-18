@@ -8,24 +8,21 @@ use Fig\Http\Message\RequestMethodInterface;
 use Http\Client\Exception\NetworkException;
 use Http\Client\Exception\RequestException;
 use Http\Client\Exception\TransferException;
-use Http\Mock\Client as MockClient;
-use PHPUnit\Framework\TestCase;
 use Postmark\ClientBehaviour\PostmarkClientBase;
 use Postmark\Exception\CommunicationFailure;
 use Postmark\Exception\InvalidRequestMethod;
 use Postmark\Exception\RequestFailure;
+use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 use Psr\Http\Message\RequestInterface;
 
-class PostmarkClientBaseTest extends TestCase
+class PostmarkClientBaseTest extends MockClientTestCase
 {
-    private MockClient $mockClient;
     private StubClient $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mockClient = new MockClient();
         $stubClient = new StubClient('token', $this->mockClient);
         $this->client = $stubClient->withBaseUri('https://example.com');
     }
@@ -63,14 +60,6 @@ class PostmarkClientBaseTest extends TestCase
         $this->expectExceptionMessage('The request method "" is invalid');
         /** @psalm-suppress InvalidArgument */
         $this->client->send('', '/foo', []);
-    }
-
-    private function assertLastRequest(): RequestInterface
-    {
-        $request = $this->mockClient->getLastRequest();
-        self::assertInstanceOf(RequestInterface::class, $request);
-
-        return $request;
     }
 
     public function testThatThePathWillBeAppendedToTheBaseUri(): void
@@ -113,9 +102,26 @@ class PostmarkClientBaseTest extends TestCase
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();
         $this->mockClient->setDefaultResponse($response);
         $this->client->send($method, '/foo', ['foo' => 'bar']);
-        $expectBody = '{"foo":"bar"}';
-        $request = $this->assertLastRequest();
-        self::assertJsonStringEqualsJsonString($expectBody, (string) $request->getBody());
+        $this->assertBodyParameterValueEquals('foo', 'bar');
+    }
+
+    public function testThatOnlyNullParametersAreExcludedFromTheBodyPayload(): void
+    {
+        $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();
+        $this->mockClient->setDefaultResponse($response);
+        $this->client->send('POST', '/foo', [
+            'Null' => null,
+            'True' => true,
+            'False' => false,
+            'Zero' => 0,
+            'EmptyString' => '',
+        ]);
+
+        $this->assertBodyParameterIsAbsent('Null');
+        $this->assertBodyParameterValueEquals('True', true);
+        $this->assertBodyParameterValueEquals('False', false);
+        $this->assertBodyParameterValueEquals('Zero', 0);
+        $this->assertBodyParameterValueEquals('EmptyString', '');
     }
 
     /**
