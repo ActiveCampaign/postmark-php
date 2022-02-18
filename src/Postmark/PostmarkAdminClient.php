@@ -96,7 +96,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
      *                                             link tracking enabled.
      * @param string|null $clickHookUrl            URL to POST to everytime a click event occurs.
      * @param string|null $deliveryHookUrl         URL to POST to everytime a click event occurs.
-     * @param string|null $enableSmtpApiErrorHooks Specifies whether SMTP API Errors will be included
+     * @param bool|null   $enableSmtpApiErrorHooks Specifies whether SMTP API Errors will be included
      *                                             with bounce webhooks.
      */
     public function editServer(
@@ -115,7 +115,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
         ?string $trackLinks = null,
         ?string $clickHookUrl = null,
         ?string $deliveryHookUrl = null,
-        ?string $enableSmtpApiErrorHooks = null
+        ?bool $enableSmtpApiErrorHooks = null
     ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
@@ -165,7 +165,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
      *                                             have link tracking enabled.
      * @param string|null $clickHookUrl            URL to POST to everytime an click event occurs.
      * @param string|null $deliveryHookUrl         URL to POST to everytime an click event occurs.
-     * @param string|null $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included
+     * @param bool|null   $enableSmtpApiErrorHooks Specifies whether or not SMTP API Errors will be included
      *                                             with bounce webhooks.
      */
     public function createServer(
@@ -183,7 +183,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
         ?string $trackLinks = null,
         ?string $clickHookUrl = null,
         ?string $deliveryHookUrl = null,
-        ?string $enableSmtpApiErrorHooks = null
+        ?bool $enableSmtpApiErrorHooks = null
     ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
@@ -304,38 +304,6 @@ final class PostmarkAdminClient extends PostmarkClientBase
     {
         return new DynamicResponseModel(
             $this->processRestRequest('POST', sprintf('/senders/%s/resend', $id))
-        );
-    }
-
-    /**
-     * Request that the Postmark API updates verify the SPF records associated
-     * with the Sender Signature's email address's domain. Configuring SPF is not required to use
-     * Postmark, but it is highly recommended, and can improve delivery rates.
-     *
-     * @deprecated verifyDomainSPF replaces this method
-     *
-     * @param int $id The ID for the Sender Signature for which we wish to verify the SPF records.
-     */
-    public function verifySenderSignatureSPF(int $id): DynamicResponseModel
-    {
-        return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/senders/%s/verifyspf', $id))
-        );
-    }
-
-    /**
-     * Cause a new DKIM key to be generated and associated with the Sender Signature. This key must be added
-     * to your email domain's DNS records. Including DKIM is not required, but is recommended. For more information
-     * on DKIM and its purpose, see http://www.dkim.org/
-     *
-     * @deprecated rotateDKIMForDomain replaces this method.
-     *
-     * @param int $id The ID for the Sender Signature for which we wish to get an updated DKIM configuration.
-     */
-    public function requestNewSenderSignatureDKIM(int $id): DynamicResponseModel
-    {
-        return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/senders/%s/requestnewdkim', $id))
         );
     }
 
