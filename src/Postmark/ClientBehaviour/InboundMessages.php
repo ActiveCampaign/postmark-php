@@ -14,7 +14,7 @@ trait InboundMessages
     /**
      * Get messages sent to the inbound email address associated with this Server.
      *
-     * @param int         $count       The number of inbounce messages to retrieve in the request (defaults to 100)
+     * @param int         $count       The number of inbound messages to retrieve in the request (defaults to 100)
      * @param int         $offset      The number of messages to 'skip' when 'paging' through messages (defaults to 0)
      * @param string|null $recipient   Filter by the message recipient
      * @param string|null $fromEmail   Filter by the message sender
