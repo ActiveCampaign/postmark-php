@@ -4,96 +4,21 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit;
 
-use Http\Mock\Client as MockClient;
-use PHPUnit\Framework\TestCase;
 use Postmark\PostmarkClient;
-use Psr\Http\Message\RequestInterface;
 
 use function current;
-use function json_decode;
-use function parse_str;
 
-use const JSON_THROW_ON_ERROR;
-
-class PostmarkClientSmokeTest extends TestCase
+class PostmarkClientTest extends MockClientTestCase
 {
-    private MockClient $mockClient;
     private PostmarkClient $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mockClient = new MockClient();
         $client = new PostmarkClient('token', $this->mockClient);
         $this->client = $client->withBaseUri('https://example.com');
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();
         $this->mockClient->setDefaultResponse($response);
-    }
-
-    private function assertLastRequest(): RequestInterface
-    {
-        $request = $this->mockClient->getLastRequest();
-        self::assertInstanceOf(RequestInterface::class, $request);
-
-        return $request;
-    }
-
-    private function assertLastRequestMethodWas(string $method): void
-    {
-        $request = $this->assertLastRequest();
-        self::assertEquals($method, $request->getMethod());
-    }
-
-    private function assertLastRequestPathEquals(string $expected): void
-    {
-        $request = $this->assertLastRequest();
-        self::assertEquals($expected, $request->getUri()->getPath());
-    }
-
-    /** @return array<string, mixed> */
-    private function bodyParams(): array
-    {
-        $body = $this->assertLastRequest()->getBody();
-        self::assertJson((string) $body, 'Request body was not JSON');
-
-        /** @psalm-var array<string, mixed> $data */
-        $data = json_decode((string) $body, true, 512, JSON_THROW_ON_ERROR);
-
-        return $data;
-    }
-
-    /** @return array<array-key, mixed> */
-    private function queryParams(): array
-    {
-        $query = $this->assertLastRequest()->getUri()->getQuery();
-        if (empty($query)) {
-            return [];
-        }
-
-        parse_str($query, $values);
-
-        return $values;
-    }
-
-    private function assertQueryParameterValueEquals(string $name, string $expect): void
-    {
-        $query = $this->queryParams();
-        self::assertArrayHasKey($name, $query);
-        self::assertEquals($expect, $query[$name]);
-    }
-
-    /** @param mixed $expect */
-    private function assertBodyParameterValueEquals(string $name, $expect): void
-    {
-        $body = $this->bodyParams();
-        self::assertArrayHasKey($name, $body);
-        self::assertEquals($expect, $body[$name]);
-    }
-
-    private function assertBodyParameterIsAbsent(string $name): void
-    {
-        $body = $this->bodyParams();
-        self::assertArrayNotHasKey($name, $body);
     }
 
     public function testSendEmailDoesNotHaveLinkTrackingValueWhenAbsent(): void
@@ -218,42 +143,37 @@ class PostmarkClientSmokeTest extends TestCase
             'green',
             true,
             false,
-            'Hook In'
+            'Hook In',
+            'Bounce Hook',
+            'Open Hook',
+            false,
+            true,
+            'Inbound Domain',
+            20,
+            'Track Links',
+            'Click Hook',
+            'Delivery Hook'
         );
-        $this->assertBodyParameterValueEquals('Name', 'Fred');
-        $this->assertBodyParameterValueEquals('Color', 'green');
-        $this->assertBodyParameterValueEquals('RawEmailEnabled', true);
-        $this->assertBodyParameterValueEquals('SmtpApiActivated', false);
-        $this->assertBodyParameterValueEquals('InboundHookUrl', 'Hook In');
-    }
 
-    /** @return array<string, array{0: string}> */
-    public function similarStatsMethodProvider(): array
-    {
-        return [
-            'getOutboundOverviewStatistics' => ['getOutboundOverviewStatistics'],
-            'getOutboundSendStatistics' => ['getOutboundSendStatistics'],
-            'getOutboundBounceStatistics' => ['getOutboundBounceStatistics'],
-            'getOutboundSpamComplaintStatistics' => ['getOutboundSpamComplaintStatistics'],
-            'getOutboundTrackedStatistics' => ['getOutboundTrackedStatistics'],
-            'getOutboundOpenStatistics' => ['getOutboundOpenStatistics'],
-            'getOutboundPlatformStatistics' => ['getOutboundPlatformStatistics'],
-            'getOutboundEmailClientStatistics' => ['getOutboundEmailClientStatistics'],
-            'getOutboundClickStatistics' => ['getOutboundClickStatistics'],
-            'getOutboundClickBrowserFamilyStatistics' => ['getOutboundClickBrowserFamilyStatistics'],
-            'getOutboundClickBrowserPlatformStatistics' => ['getOutboundClickBrowserPlatformStatistics'],
-            'getOutboundClickLocationStatistics' => ['getOutboundClickLocationStatistics'],
+        $expect = [
+            'Name' => 'Fred',
+            'Color' => 'green',
+            'RawEmailEnabled' => true,
+            'SmtpApiActivated' => false,
+            'InboundHookUrl' => 'Hook In',
+            'BounceHookUrl' => 'Bounce Hook',
+            'OpenHookUrl' => 'Open Hook',
+            'PostFirstOpenOnly' => false,
+            'TrackOpens' => true,
+            'InboundDomain' => 'Inbound Domain',
+            'InboundSpamThreshold' => 20,
+            'trackLinks' => 'Track Links',
+            'ClickHookUrl' => 'Click Hook',
+            'DeliveryHookUrl' => 'Delivery Hook',
         ];
-    }
 
-    /** @dataProvider similarStatsMethodProvider */
-    public function testSimilarStatsMethods(string $method): void
-    {
-        $this->client->$method('T', 'FROM', 'TO', 'stream');
-        $this->assertLastRequestMethodWas('GET');
-        $this->assertQueryParameterValueEquals('tag', 'T');
-        $this->assertQueryParameterValueEquals('fromdate', 'FROM');
-        $this->assertQueryParameterValueEquals('todate', 'TO');
-        $this->assertQueryParameterValueEquals('messagestream', 'stream');
+        foreach ($expect as $name => $value) {
+            $this->assertBodyParameterValueEquals($name, $value);
+        }
     }
 }

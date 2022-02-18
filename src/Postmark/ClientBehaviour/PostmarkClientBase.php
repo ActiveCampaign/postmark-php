@@ -100,7 +100,7 @@ abstract class PostmarkClientBase
         $target = $this->baseUri()->withPath($path);
         $query = $body = null;
 
-        $params = array_filter($params);
+        $params = array_filter($params, static fn ($value): bool => $value !== null);
         switch ($method) {
             case RequestMethodInterface::METHOD_GET:
             case RequestMethodInterface::METHOD_HEAD:
@@ -164,5 +164,14 @@ abstract class PostmarkClientBase
         }
 
         throw RequestFailure::with($request, $response);
+    }
+
+    protected function stringifyBoolean(?bool $bool = null): ?string
+    {
+        if ($bool === null) {
+            return null;
+        }
+
+        return $bool ? 'true' : 'false';
     }
 }

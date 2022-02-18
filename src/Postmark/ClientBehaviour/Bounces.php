@@ -42,7 +42,7 @@ trait Bounces
     ): DynamicResponseModel {
         $query = [];
         $query['type'] = $type;
-        $query['inactive'] = $inactive;
+        $query['inactive'] = $this->stringifyBoolean($inactive);
         $query['emailFilter'] = $emailFilter;
         $query['tag'] = $tag;
         $query['messageID'] = $messageID;
