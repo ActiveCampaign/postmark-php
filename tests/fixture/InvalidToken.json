@@ -1,0 +1,1 @@
+{"ErrorCode":10,"Message":"The Server Token you provided in the X-Postmark-Server-Token request header was invalid. Please verify that you are using a valid token."}

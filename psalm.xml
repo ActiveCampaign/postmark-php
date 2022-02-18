@@ -12,7 +12,6 @@
         <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />
-            <directory name="tests/Legacy" />
         </ignoreFiles>
     </projectFiles>
 
