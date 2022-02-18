@@ -19,6 +19,12 @@ class CaseInsensitiveArrayTest extends TestCase
         self::assertSame(1, $data['value']);
     }
 
+    public function testThatOffsetGetDoesNotIssueANoticeOnPHP81(): void
+    {
+        $data = new CaseInsensitiveArray(['hey' => 'there']);
+        self::assertEquals('there', $data->offsetGet('hey'));
+    }
+
     public function testValuesCanBeMutatedInACaseInsensitiveWay(): void
     {
         $data = new CaseInsensitiveArray(['value' => 1]);
