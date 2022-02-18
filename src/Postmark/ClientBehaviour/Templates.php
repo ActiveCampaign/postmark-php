@@ -14,9 +14,9 @@ trait Templates
     /**
      * Delete a template.
      *
-     * @param non-empty-string $id The ID or alias of the template to delete.
+     * @param non-empty-string|positive-int $id The ID or alias of the template to delete.
      */
-    public function deleteTemplate(string $id): DynamicResponseModel
+    public function deleteTemplate($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('DELETE', sprintf('/templates/%s', $id))
@@ -102,9 +102,9 @@ trait Templates
     /**
      * Get the current information for a specific template.
      *
-     * @param string $id the Id or alias for the template info you wish to retrieve.
+     * @param non-empty-string|positive-int $id the Id or alias for the template info you wish to retrieve.
      */
-    public function getTemplate(string $id): DynamicResponseModel
+    public function getTemplate($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', sprintf('/templates/%s', $id))
