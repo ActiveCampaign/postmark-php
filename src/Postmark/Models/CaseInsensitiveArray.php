@@ -36,6 +36,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		}
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetExists($offset) {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
@@ -52,6 +53,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Iterator {
 		unset($this->_container[$offset]);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset) {
 		if (is_string($offset)) {
 			$offset = $this->fixOffsetName($offset);
