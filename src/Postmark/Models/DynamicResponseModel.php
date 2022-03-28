@@ -53,6 +53,7 @@ class DynamicResponseModel extends CaseInsensitiveArray {
 	/**
 	 * Infrastructure. Allows indexer to return a DynamicResponseModel.
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset) {
 		$result = parent::offsetGet($offset);
 		if ($result != NULL && is_array($result)) {

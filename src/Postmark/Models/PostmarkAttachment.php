@@ -21,6 +21,7 @@ class PostmarkAttachment implements \JsonSerializable {
 		return new PostmarkAttachment(base64_encode(file_get_contents($filePath)), $attachmentName, $mimeType, $contentId);
 	}
 
+	#[\ReturnTypeWillChange]
 	function jsonSerialize() {
 
 		$retval = array(
