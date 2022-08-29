@@ -32,7 +32,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
         $expect = PostmarkClientBase::DEFAULT_BASE_URI;
         self::assertEquals(
             $expect,
-            (string) (new StubClient('foo'))->baseUri()
+            (string) (new StubClient('foo'))->baseUri(),
         );
     }
 

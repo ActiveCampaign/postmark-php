@@ -15,7 +15,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
             'A PSR-18 HTTP Client could not be discovered. Make sure that you install one with composer, '
             . 'for example: `composer require php-http/curl-client`',
             0,
-            $previous
+            $previous,
         );
     }
 
@@ -25,7 +25,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
             'A PSR-17 Request Factory implementation could not be found. Please install one first, '
             . 'for example: `composer require laminas/laminas-diactoros`',
             0,
-            $previous
+            $previous,
         );
     }
 
@@ -35,7 +35,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
             'A PSR-17 URI Factory implementation could not be found. Please install one first, '
             . 'for example: `composer require laminas/laminas-diactoros`',
             0,
-            $previous
+            $previous,
         );
     }
 
@@ -45,7 +45,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
             'A PSR-17 Stream Factory implementation could not be found. Please install one first, '
             . 'for example: `composer require laminas/laminas-diactoros`',
             0,
-            $previous
+            $previous,
         );
     }
 }

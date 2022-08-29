@@ -65,7 +65,7 @@ trait Bounces
     public function getBounce($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/bounces/%s', $id))
+            $this->processRestRequest('GET', sprintf('/bounces/%s', $id)),
         );
     }
 
@@ -79,7 +79,7 @@ trait Bounces
     public function getBounceDump($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/bounces/%s/dump', $id))
+            $this->processRestRequest('GET', sprintf('/bounces/%s/dump', $id)),
         );
     }
 
@@ -93,7 +93,7 @@ trait Bounces
     public function activateBounce($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/bounces/%s/activate', $id))
+            $this->processRestRequest('PUT', sprintf('/bounces/%s/activate', $id)),
         );
     }
 }

@@ -9,9 +9,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @link Statistics
- */
+/** @link Statistics */
 class StatisticsTest extends MockClientTestCase
 {
     private PostmarkClient $client;

@@ -31,8 +31,8 @@ trait Suppressions
             $this->processRestRequest(
                 'POST',
                 sprintf('/message-streams/%s/suppressions', $messageStream),
-                ['Suppressions' => $suppressionChanges]
-            )
+                ['Suppressions' => $suppressionChanges],
+            ),
         );
     }
 
@@ -56,8 +56,8 @@ trait Suppressions
             $this->processRestRequest(
                 'POST',
                 sprintf('/message-streams/%s/suppressions/delete', $messageStream),
-                ['Suppressions' => $suppressionChanges]
-            )
+                ['Suppressions' => $suppressionChanges],
+            ),
         );
     }
 
@@ -90,7 +90,7 @@ trait Suppressions
         $query['EmailAddress'] = $emailAddress;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/message-streams/%s/suppressions/dump', $messageStream), $query)
+            $this->processRestRequest('GET', sprintf('/message-streams/%s/suppressions/dump', $messageStream), $query),
         );
     }
 }

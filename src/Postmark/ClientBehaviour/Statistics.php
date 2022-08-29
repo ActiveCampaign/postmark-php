@@ -74,7 +74,7 @@ trait Statistics
         $query['messagestream'] = $messagestream;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', '/messages/outbound/opens', $query)
+            $this->processRestRequest('GET', '/messages/outbound/opens', $query),
         );
     }
 
@@ -133,7 +133,7 @@ trait Statistics
         $query['messagestream'] = $messagestream;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', '/messages/outbound/clicks', $query)
+            $this->processRestRequest('GET', '/messages/outbound/clicks', $query),
         );
     }
 
@@ -156,8 +156,8 @@ trait Statistics
                 [
                     'count' => $count,
                     'offset' => $offset,
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -180,8 +180,8 @@ trait Statistics
                 [
                     'count' => $count,
                     'offset' => $offset,
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -201,8 +201,8 @@ trait Statistics
                     'fromdate' => $fromDate,
                     'todate' => $toDate,
                     'messagestream' => $messageStream,
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -379,8 +379,8 @@ trait Statistics
                     'tag' => $tag,
                     'fromdate' => $fromdate,
                     'todate' => $todate,
-                ]
-            )
+                ],
+            ),
         );
     }
 

@@ -152,7 +152,7 @@ class PostmarkClientTest extends MockClientTestCase
             20,
             'Track Links',
             'Click Hook',
-            'Delivery Hook'
+            'Delivery Hook',
         );
 
         $expect = [

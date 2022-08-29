@@ -112,7 +112,7 @@ abstract class PostmarkClientBase
             case RequestMethodInterface::METHOD_POST:
             case RequestMethodInterface::METHOD_PATCH:
                 $body = $this->streamFactory->createStream(
-                    json_encode($params, JSON_THROW_ON_ERROR)
+                    json_encode($params, JSON_THROW_ON_ERROR),
                 );
                 break;
 
@@ -130,7 +130,7 @@ abstract class PostmarkClientBase
                 PHP_MAJOR_VERSION,
                 PHP_MINOR_VERSION,
                 PHP_RELEASE_VERSION,
-                PHP_OS_FAMILY
+                PHP_OS_FAMILY,
             ))
             ->withHeader('Accept', 'application/json')
             ->withHeader('Content-Type', 'application/json')
@@ -157,7 +157,7 @@ abstract class PostmarkClientBase
                 (string) $response->getBody(),
                 true,
                 512,
-                JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING
+                JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING,
             );
 
             return $body;

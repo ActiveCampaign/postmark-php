@@ -121,7 +121,7 @@ class PostmarkAdminClientTest extends MockClientTestCase
             'Track',
             'Click',
             'Deliver',
-            true
+            true,
         );
 
         $expected = [
@@ -194,7 +194,7 @@ class PostmarkAdminClientTest extends MockClientTestCase
             'Track',
             'Click',
             'Deliver',
-            true
+            true,
         );
 
         $expected = [

@@ -9,9 +9,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @link Bounces
- */
+/** @link Bounces */
 class BouncesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -79,7 +77,7 @@ class BouncesTest extends MockClientTestCase
             'msg-id',
             'FROM',
             'TO',
-            'Stream'
+            'Stream',
         );
 
         $this->assertQueryParameterValueEquals('count', '42');

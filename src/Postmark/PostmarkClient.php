@@ -285,7 +285,7 @@ final class PostmarkClient extends PostmarkClientBase
         }
 
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final])
+            $this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final]),
         );
     }
 

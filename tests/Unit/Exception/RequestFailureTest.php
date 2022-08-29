@@ -34,8 +34,8 @@ class RequestFailureTest extends TestCase
     {
         $this->response = $this->response->withBody(
             $this->streamFactory->createStream(
-                json_encode($body, JSON_THROW_ON_ERROR)
-            )
+                json_encode($body, JSON_THROW_ON_ERROR),
+            ),
         );
     }
 
@@ -51,7 +51,7 @@ class RequestFailureTest extends TestCase
         $exception = RequestFailure::with($this->request, $this->response);
         self::assertEquals(
             'A request error occurred and there was no message encoded in the response.',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 

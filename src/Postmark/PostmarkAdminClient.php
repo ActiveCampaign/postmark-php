@@ -35,7 +35,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function getServer(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/servers/%s', $id))
+            $this->processRestRequest('GET', sprintf('/servers/%s', $id)),
         );
     }
 
@@ -53,7 +53,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
                 'count' => $count,
                 'offset' => $offset,
                 'name' => $name,
-            ])
+            ]),
         );
     }
 
@@ -67,7 +67,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function deleteServer(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/servers/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/servers/%s', $id)),
         );
     }
 
@@ -217,7 +217,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
             $this->processRestRequest('GET', '/senders/', [
                 'count' => $count,
                 'offset' => $offset,
-            ])
+            ]),
         );
     }
 
@@ -229,7 +229,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function getSenderSignature(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/senders/%s', $id))
+            $this->processRestRequest('GET', sprintf('/senders/%s', $id)),
         );
     }
 
@@ -255,7 +255,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
                 'name' => $name,
                 'replyToEmail' => $replyToEmail,
                 'returnPathDomain' => $returnPathDomain,
-            ])
+            ]),
         );
     }
 
@@ -278,7 +278,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
                 'name' => $name,
                 'replyToEmail' => $replyToEmail,
                 'returnPathDomain' => $returnPathDomain,
-            ])
+            ]),
         );
     }
 
@@ -290,7 +290,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function deleteSenderSignature(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/senders/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/senders/%s', $id)),
         );
     }
 
@@ -303,7 +303,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function resendSenderSignatureConfirmation(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/senders/%s/resend', $id))
+            $this->processRestRequest('POST', sprintf('/senders/%s/resend', $id)),
         );
     }
 
@@ -319,7 +319,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
             $this->processRestRequest('GET', '/domains/', [
                 'count' => $count,
                 'offset' => $offset,
-            ])
+            ]),
         );
     }
 
@@ -331,7 +331,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function getDomain(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/domains/%s', $id))
+            $this->processRestRequest('GET', sprintf('/domains/%s', $id)),
         );
     }
 
@@ -347,7 +347,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
             $this->processRestRequest('POST', '/domains/', [
                 'returnPathDomain' => $returnPathDomain,
                 'name' => $name,
-            ])
+            ]),
         );
     }
 
@@ -360,7 +360,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function editDomain(int $id, ?string $returnPathDomain = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/domains/%s', $id), ['returnPathDomain' => $returnPathDomain])
+            $this->processRestRequest('PUT', sprintf('/domains/%s', $id), ['returnPathDomain' => $returnPathDomain]),
         );
     }
 
@@ -372,7 +372,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function deleteDomain(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/domains/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/domains/%s', $id)),
         );
     }
 
@@ -386,7 +386,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function verifyDomainSPF(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/domains/%s/verifyspf', $id))
+            $this->processRestRequest('POST', sprintf('/domains/%s/verifyspf', $id)),
         );
     }
 
@@ -400,7 +400,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function rotateDKIMForDomain(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/domains/%s/rotatedkim', $id))
+            $this->processRestRequest('POST', sprintf('/domains/%s/rotatedkim', $id)),
         );
     }
 }

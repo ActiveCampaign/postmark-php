@@ -14,7 +14,7 @@ final class InvalidRequestMethod extends InvalidArgumentException implements Pos
     {
         return new self(sprintf(
             'The request method "%s" is invalid',
-            $method
+            $method,
         ));
     }
 }

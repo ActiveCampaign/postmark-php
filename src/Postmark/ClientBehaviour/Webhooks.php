@@ -29,7 +29,7 @@ trait Webhooks
     public function getWebhookConfiguration(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/webhooks/%s', $id))
+            $this->processRestRequest('GET', sprintf('/webhooks/%s', $id)),
         );
     }
 
@@ -42,7 +42,7 @@ trait Webhooks
     public function getWebhookConfigurations(?string $messageStream = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', '/webhooks', ['MessageStream' => $messageStream])
+            $this->processRestRequest('GET', '/webhooks', ['MessageStream' => $messageStream]),
         );
     }
 
@@ -54,7 +54,7 @@ trait Webhooks
     public function deleteWebhookConfiguration(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/webhooks/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/webhooks/%s', $id)),
         );
     }
 
@@ -111,7 +111,7 @@ trait Webhooks
         $body['Triggers'] = $triggers;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/webhooks/%s', $id), $body)
+            $this->processRestRequest('PUT', sprintf('/webhooks/%s', $id), $body),
         );
     }
 }
