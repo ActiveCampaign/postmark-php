@@ -34,7 +34,7 @@ final class RequestFailure extends RuntimeException implements PostmarkException
                     'Unauthorized: Missing or incorrect API token in header. '
                     . 'Please verify that you used the correct token when you constructed your client.',
                     $request,
-                    $response
+                    $response,
                 );
 
             case 500:
@@ -43,14 +43,14 @@ final class RequestFailure extends RuntimeException implements PostmarkException
                     . 'In most cases the message is lost during the process, '
                     . 'and Postmark is notified so that we can investigate the issue.',
                     $request,
-                    $response
+                    $response,
                 );
 
             case 503:
                 return new self(
                     'The Postmark API is currently unavailable, please try your request later.',
                     $request,
-                    $response
+                    $response,
                 );
 
             default:
@@ -58,7 +58,7 @@ final class RequestFailure extends RuntimeException implements PostmarkException
                     self::retrieveErrorMessage($response)
                         ?: 'A request error occurred and there was no message encoded in the response.',
                     $request,
-                    $response
+                    $response,
                 );
         }
     }

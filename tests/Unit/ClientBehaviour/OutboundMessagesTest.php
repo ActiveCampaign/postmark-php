@@ -11,9 +11,7 @@ use Postmark\Tests\Unit\ResponseFixture;
 
 use function array_keys;
 
-/**
- * @see OutboundMessages
- */
+/** @see OutboundMessages */
 class OutboundMessagesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -79,7 +77,7 @@ class OutboundMessagesTest extends MockClientTestCase
             'FromDate',
             'ToDate',
             null,
-            'Stream'
+            'Stream',
         );
         $this->assertLastRequestMethodWas('GET');
         $this->assertLastRequestPathEquals('/messages/outbound');

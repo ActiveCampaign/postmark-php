@@ -10,9 +10,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @see Suppressions
- */
+/** @see Suppressions */
 class SuppressionsTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -119,7 +117,7 @@ class SuppressionsTest extends MockClientTestCase
             'Origin',
             'FromDate',
             'ToDate',
-            'Email'
+            'Email',
         );
         $this->assertLastRequestMethodWas('GET');
         $this->assertLastRequestPathEquals('/message-streams/other/suppressions/dump');

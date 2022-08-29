@@ -15,7 +15,7 @@ final class AttachmentFileCannotBeLoaded extends RuntimeException implements Pos
     {
         return new self(sprintf(
             'The file at "%s" cannot be loaded. Either because it does not exist, or couldn’t be read',
-            $filePath
+            $filePath,
         ), 0);
     }
 }

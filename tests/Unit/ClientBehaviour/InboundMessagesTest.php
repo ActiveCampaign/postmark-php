@@ -9,9 +9,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @see InboundMessages
- */
+/** @see InboundMessages */
 class InboundMessagesTest extends MockClientTestCase
 {
     private PostmarkClient $client;

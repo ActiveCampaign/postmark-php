@@ -28,7 +28,7 @@ trait Templates
     public function deleteTemplate($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/templates/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/templates/%s', $id)),
         );
     }
 
@@ -104,7 +104,7 @@ trait Templates
         $template['layoutTemplate'] = $layoutTemplate;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/templates/%s', $id), $template)
+            $this->processRestRequest('PUT', sprintf('/templates/%s', $id), $template),
         );
     }
 
@@ -117,7 +117,7 @@ trait Templates
     public function getTemplate($id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/templates/%s', $id))
+            $this->processRestRequest('GET', sprintf('/templates/%s', $id)),
         );
     }
 

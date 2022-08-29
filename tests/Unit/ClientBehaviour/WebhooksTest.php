@@ -12,9 +12,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @see Webhooks
- */
+/** @see Webhooks */
 class WebhooksTest extends MockClientTestCase
 {
     private PostmarkClient $client;

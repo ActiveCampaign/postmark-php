@@ -84,7 +84,7 @@ trait OutboundMessages
     public function getOutboundMessageDetails(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/messages/outbound/%s/details', $id))
+            $this->processRestRequest('GET', sprintf('/messages/outbound/%s/details', $id)),
         );
     }
 
@@ -97,7 +97,7 @@ trait OutboundMessages
     public function getOutboundMessageDump(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/messages/outbound/%s/dump', $id))
+            $this->processRestRequest('GET', sprintf('/messages/outbound/%s/dump', $id)),
         );
     }
 }

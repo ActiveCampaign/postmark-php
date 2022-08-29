@@ -94,7 +94,7 @@ trait MessageStreams
     public function archiveMessageStream(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/message-streams/%s/archive', $id))
+            $this->processRestRequest('POST', sprintf('/message-streams/%s/archive', $id)),
         );
     }
 
@@ -108,7 +108,7 @@ trait MessageStreams
     public function unarchiveMessageStream(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', sprintf('/message-streams/%s/unarchive', $id))
+            $this->processRestRequest('POST', sprintf('/message-streams/%s/unarchive', $id)),
         );
     }
 }

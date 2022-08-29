@@ -95,7 +95,7 @@ final class PostmarkAttachment implements JsonSerializable
             $data,
             $attachmentName,
             $mimeType,
-            $contentId
+            $contentId,
         );
     }
 

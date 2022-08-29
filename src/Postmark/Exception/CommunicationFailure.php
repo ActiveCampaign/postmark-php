@@ -26,7 +26,7 @@ final class CommunicationFailure extends RuntimeException implements PostmarkExc
     {
         return new self(sprintf(
             'The request failed to send due to a network error: %s',
-            $error->getMessage()
+            $error->getMessage(),
         ), $request, $error);
     }
 
@@ -34,7 +34,7 @@ final class CommunicationFailure extends RuntimeException implements PostmarkExc
     {
         return new self(sprintf(
             'The request was not sent because it is considered invalid: %s',
-            $error->getMessage()
+            $error->getMessage(),
         ), $request, $error);
     }
 
@@ -42,7 +42,7 @@ final class CommunicationFailure extends RuntimeException implements PostmarkExc
     {
         return new self(sprintf(
             'An unknown error occurred during request dispatch: %s',
-            $error->getMessage()
+            $error->getMessage(),
         ), $request, $error);
     }
 

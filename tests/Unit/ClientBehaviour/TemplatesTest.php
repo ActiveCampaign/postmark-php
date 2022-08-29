@@ -9,9 +9,7 @@ use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
-/**
- * @see Templates
- */
+/** @see Templates */
 class TemplatesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -59,7 +57,7 @@ class TemplatesTest extends MockClientTestCase
             'TEXT',
             'alias',
             'Type',
-            'Layout'
+            'Layout',
         );
 
         $this->assertLastRequestMethodWas('POST');
@@ -190,7 +188,7 @@ class TemplatesTest extends MockClientTestCase
             $model,
             false,
             'Foo',
-            'Baz'
+            'Baz',
         );
 
         $this->assertLastRequestMethodWas('POST');

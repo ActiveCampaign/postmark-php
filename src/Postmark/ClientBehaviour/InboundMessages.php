@@ -60,7 +60,7 @@ trait InboundMessages
     public function getInboundMessageDetails(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', sprintf('/messages/inbound/%s/details', $id))
+            $this->processRestRequest('GET', sprintf('/messages/inbound/%s/details', $id)),
         );
     }
 
@@ -73,7 +73,7 @@ trait InboundMessages
     public function bypassInboundMessageRules(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/messages/inbound/%s/bypass', $id))
+            $this->processRestRequest('PUT', sprintf('/messages/inbound/%s/bypass', $id)),
         );
     }
 
@@ -85,7 +85,7 @@ trait InboundMessages
     public function retryInboundMessageHook(string $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('PUT', sprintf('/messages/inbound/%s/retry', $id))
+            $this->processRestRequest('PUT', sprintf('/messages/inbound/%s/retry', $id)),
         );
     }
 
@@ -100,7 +100,7 @@ trait InboundMessages
         $body['Rule'] = $rule;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('POST', '/triggers/inboundrules', $body)
+            $this->processRestRequest('POST', '/triggers/inboundrules', $body),
         );
     }
 
@@ -118,7 +118,7 @@ trait InboundMessages
         $query['offset'] = $offset;
 
         return new DynamicResponseModel(
-            $this->processRestRequest('GET', '/triggers/inboundrules', $query)
+            $this->processRestRequest('GET', '/triggers/inboundrules', $query),
         );
     }
 
@@ -130,7 +130,7 @@ trait InboundMessages
     public function deleteInboundRuleTrigger(int $id): DynamicResponseModel
     {
         return new DynamicResponseModel(
-            $this->processRestRequest('DELETE', sprintf('/triggers/inboundrules/%s', $id))
+            $this->processRestRequest('DELETE', sprintf('/triggers/inboundrules/%s', $id)),
         );
     }
 }
