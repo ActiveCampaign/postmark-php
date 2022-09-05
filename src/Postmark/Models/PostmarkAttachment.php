@@ -51,10 +51,7 @@ final class PostmarkAttachment implements JsonSerializable
         ?string $mimeType = null,
         ?string $contentId = null
     ): self {
-        /** @psalm-var non-empty-string $encoded */
-        $encoded = base64_encode($data);
-
-        return new PostmarkAttachment($encoded, $attachmentName, $mimeType, $contentId);
+        return new PostmarkAttachment(base64_encode($data), $attachmentName, $mimeType, $contentId);
     }
 
     /**
