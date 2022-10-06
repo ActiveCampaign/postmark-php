@@ -17,6 +17,7 @@ class SuppressionChangeRequest implements \JsonSerializable {
         $this->emailAddress = $emailAddress;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize() {
         $retval = array(
             "EmailAddress" => $this->emailAddress
