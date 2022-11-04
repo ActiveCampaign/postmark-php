@@ -21,14 +21,14 @@ class SuppressionChangeRequestTest extends TestCase
     }
 
     /** @dataProvider possibleValueProvider */
-    public function testWhatGoesInComesOut(?string $input, ?string $expect): void
+    public function testWhatGoesInComesOut(string|null $input, string|null $expect): void
     {
         $value = new SuppressionChangeRequest($input);
         self::assertSame($expect, $value->getEmailAddress());
     }
 
     /** @dataProvider possibleValueProvider */
-    public function testSerializationToTheExpectedValue(?string $input, ?string $expect): void
+    public function testSerializationToTheExpectedValue(string|null $input, string|null $expect): void
     {
         $value = new SuppressionChangeRequest($input);
         self::assertSame(['EmailAddress' => $expect], $value->jsonSerialize());

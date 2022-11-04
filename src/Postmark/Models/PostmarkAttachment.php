@@ -16,10 +16,7 @@ final class PostmarkAttachment implements JsonSerializable
 {
     private const DEFAULT_MIMETYPE = 'application/octet-stream';
 
-    private string $name;
     private string $mimeType;
-    private string $data;
-    private ?string $contentId;
 
     /**
      * @param non-empty-string      $base64EncodedData
@@ -28,15 +25,12 @@ final class PostmarkAttachment implements JsonSerializable
      * @param non-empty-string|null $contentId
      */
     private function __construct(
-        string $base64EncodedData,
-        string $attachmentName,
-        ?string $mimeType = null,
-        ?string $contentId = null
+        private string $base64EncodedData,
+        private string $attachmentName,
+        string|null $mimeType = null,
+        private string|null $contentId = null,
     ) {
-        $this->name = $attachmentName;
-        $this->data = $base64EncodedData;
         $this->mimeType = $mimeType ?: self::DEFAULT_MIMETYPE;
-        $this->contentId = $contentId;
     }
 
     /**
@@ -48,8 +42,8 @@ final class PostmarkAttachment implements JsonSerializable
     public static function fromRawData(
         string $data,
         string $attachmentName,
-        ?string $mimeType = null,
-        ?string $contentId = null
+        string|null $mimeType = null,
+        string|null $contentId = null,
     ): self {
         return new PostmarkAttachment(base64_encode($data), $attachmentName, $mimeType, $contentId);
     }
@@ -63,8 +57,8 @@ final class PostmarkAttachment implements JsonSerializable
     public static function fromBase64EncodedData(
         string $base64EncodedData,
         string $attachmentName,
-        ?string $mimeType = null,
-        ?string $contentId = null
+        string|null $mimeType = null,
+        string|null $contentId = null,
     ): self {
         return new PostmarkAttachment($base64EncodedData, $attachmentName, $mimeType, $contentId);
     }
@@ -78,8 +72,8 @@ final class PostmarkAttachment implements JsonSerializable
     public static function fromFile(
         string $filePath,
         string $attachmentName,
-        ?string $mimeType = null,
-        ?string $contentId = null
+        string|null $mimeType = null,
+        string|null $contentId = null,
     ): self {
         if (! file_exists($filePath) || ! is_readable($filePath)) {
             throw AttachmentFileCannotBeLoaded::fromPath($filePath);
@@ -100,10 +94,10 @@ final class PostmarkAttachment implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'Name' => $this->name,
-            'Content' => $this->data,
+            'Name' => $this->attachmentName,
+            'Content' => $this->base64EncodedData,
             'ContentType' => $this->mimeType ?: 'application/octet-stream',
-            'ContentId' => $this->contentId ?: $this->name,
+            'ContentId' => $this->contentId ?: $this->attachmentName,
         ];
     }
 }

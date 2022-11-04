@@ -39,15 +39,15 @@ trait OutboundMessages
     public function getOutboundMessages(
         int $count = 100,
         int $offset = 0,
-        ?string $recipient = null,
-        ?string $fromEmail = null,
-        ?string $tag = null,
-        ?string $subject = null,
-        ?string $status = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?array $metadata = null,
-        string $messagestream = 'outbound'
+        string|null $recipient = null,
+        string|null $fromEmail = null,
+        string|null $tag = null,
+        string|null $subject = null,
+        string|null $status = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        array|null $metadata = null,
+        string $messagestream = 'outbound',
     ): DynamicResponseModel {
         $query = [];
         $query['recipient'] = $recipient;

@@ -13,30 +13,17 @@ use function array_filter;
  */
 class WebhookConfigurationTriggers implements JsonSerializable
 {
-    private ?WebhookConfigurationOpenTrigger $open;
-    private ?WebhookConfigurationClickTrigger $click;
-    private ?WebhookConfigurationDeliveryTrigger $delivery;
-    private ?WebhookConfigurationBounceTrigger $bounce;
-    private ?WebhookConfigurationSpamComplaintTrigger $spamComplaint;
-    private ?WebhookConfigurationSubscriptionChange $subscriptionChange;
-
     /**
      * Create a new WebhookConfigurationTriggers object.
      */
     public function __construct(
-        ?WebhookConfigurationOpenTrigger $open = null,
-        ?WebhookConfigurationClickTrigger $click = null,
-        ?WebhookConfigurationDeliveryTrigger $delivery = null,
-        ?WebhookConfigurationBounceTrigger $bounce = null,
-        ?WebhookConfigurationSpamComplaintTrigger $spamComplaint = null,
-        ?WebhookConfigurationSubscriptionChange $subscriptionChange = null
+        private WebhookConfigurationOpenTrigger|null $open = null,
+        private WebhookConfigurationClickTrigger|null $click = null,
+        private WebhookConfigurationDeliveryTrigger|null $delivery = null,
+        private WebhookConfigurationBounceTrigger|null $bounce = null,
+        private WebhookConfigurationSpamComplaintTrigger|null $spamComplaint = null,
+        private WebhookConfigurationSubscriptionChange|null $subscriptionChange = null,
     ) {
-        $this->open = $open;
-        $this->click = $click;
-        $this->delivery = $delivery;
-        $this->bounce = $bounce;
-        $this->spamComplaint = $spamComplaint;
-        $this->subscriptionChange = $subscriptionChange;
     }
 
     /** @return array<string, WebhookConfiguration> */
@@ -52,32 +39,32 @@ class WebhookConfigurationTriggers implements JsonSerializable
         ]);
     }
 
-    public function getOpenSettings(): ?WebhookConfigurationOpenTrigger
+    public function getOpenSettings(): WebhookConfigurationOpenTrigger|null
     {
         return $this->open;
     }
 
-    public function getClickSettings(): ?WebhookConfigurationClickTrigger
+    public function getClickSettings(): WebhookConfigurationClickTrigger|null
     {
         return $this->click;
     }
 
-    public function getDeliverySettings(): ?WebhookConfigurationDeliveryTrigger
+    public function getDeliverySettings(): WebhookConfigurationDeliveryTrigger|null
     {
         return $this->delivery;
     }
 
-    public function getBounceSettings(): ?WebhookConfigurationBounceTrigger
+    public function getBounceSettings(): WebhookConfigurationBounceTrigger|null
     {
         return $this->bounce;
     }
 
-    public function getSpamComplaintSettings(): ?WebhookConfigurationSpamComplaintTrigger
+    public function getSpamComplaintSettings(): WebhookConfigurationSpamComplaintTrigger|null
     {
         return $this->spamComplaint;
     }
 
-    public function getSubscriptionChangeSettings(): ?WebhookConfigurationSubscriptionChange
+    public function getSubscriptionChangeSettings(): WebhookConfigurationSubscriptionChange|null
     {
         return $this->subscriptionChange;
     }

@@ -10,19 +10,12 @@ use function assert;
 
 final class Header implements JsonSerializable
 {
-    /** @var non-empty-string */
-    private string $name;
-    /** @var scalar|null */
-    private $value;
-
     /**
      * @param non-empty-string $name
      * @param scalar|null      $value
      */
-    public function __construct(string $name, $value)
+    public function __construct(private string $name, private $value) // phpcs:ignore
     {
-        $this->name = $name;
-        $this->value = $value;
     }
 
     /** @return array{Name: non-empty-string, Value: scalar|null} */
@@ -39,7 +32,7 @@ final class Header implements JsonSerializable
      *
      * @return list<self>|null
      */
-    public static function listFromArray(?array $values): ?array
+    public static function listFromArray(array|null $values): array|null
     {
         if ($values === [] || $values === null) {
             return null;

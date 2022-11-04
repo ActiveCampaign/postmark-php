@@ -25,7 +25,7 @@ trait Templates
      * @param string|int $id The ID or alias of the template to delete.
      * @psalm-param TemplateId $id
      */
-    public function deleteTemplate($id): DynamicResponseModel
+    public function deleteTemplate($id): DynamicResponseModel // phpcs:ignore
     {
         return new DynamicResponseModel(
             $this->processRestRequest('DELETE', sprintf('/templates/%s', $id)),
@@ -55,9 +55,9 @@ trait Templates
         string $subject,
         string $htmlBody,
         string $textBody,
-        ?string $alias = null,
+        string|null $alias = null,
         string $templateType = 'Standard',
-        ?string $layoutTemplate = null
+        string|null $layoutTemplate = null,
     ): DynamicResponseModel {
         $template = [];
         $template['name'] = $name;
@@ -88,12 +88,12 @@ trait Templates
      */
     public function editTemplate(
         $id,
-        ?string $name = null,
-        ?string $subject = null,
-        ?string $htmlBody = null,
-        ?string $textBody = null,
-        ?string $alias = null,
-        ?string $layoutTemplate = null
+        string|null $name = null,
+        string|null $subject = null,
+        string|null $htmlBody = null,
+        string|null $textBody = null,
+        string|null $alias = null,
+        string|null $layoutTemplate = null,
     ): DynamicResponseModel {
         $template = [];
         $template['name'] = $name;
@@ -114,7 +114,7 @@ trait Templates
      * @param string|int $id the Id or alias for the template info you wish to retrieve.
      * @psalm-param TemplateId $id
      */
-    public function getTemplate($id): DynamicResponseModel
+    public function getTemplate($id): DynamicResponseModel // phpcs:ignore
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', sprintf('/templates/%s', $id)),
@@ -134,7 +134,7 @@ trait Templates
         int $count = 100,
         int $offset = 0,
         string $templateType = 'All',
-        ?string $layoutTemplate = null
+        string|null $layoutTemplate = null,
     ): DynamicResponseModel {
         $query = [];
 
@@ -166,13 +166,13 @@ trait Templates
      *                                            template will not use a layout template.
      */
     public function validateTemplate(
-        ?string $subject = null,
-        ?string $htmlBody = null,
-        ?string $textBody = null,
+        string|null $subject = null,
+        string|null $htmlBody = null,
+        string|null $textBody = null,
         $testRenderModel = null,
         bool $inlineCss = true,
         string $templateType = 'Standard',
-        ?string $layoutTemplate = null
+        string|null $layoutTemplate = null,
     ): DynamicResponseModel {
         $query = [];
 

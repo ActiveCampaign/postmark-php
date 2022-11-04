@@ -46,7 +46,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
      * @param int         $offset The number of servers to "skip" when paging through lists of servers.
      * @param string|null $name   Filter by server name.
      */
-    public function listServers(int $count = 100, int $offset = 0, ?string $name = null): DynamicResponseModel
+    public function listServers(int $count = 100, int $offset = 0, string|null $name = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', '/servers/', [
@@ -101,21 +101,21 @@ final class PostmarkAdminClient extends PostmarkClientBase
      */
     public function editServer(
         int $id,
-        ?string $name = null,
-        ?string $color = null,
-        ?bool $rawEmailEnabled = null,
-        ?bool $smtpApiActivated = null,
-        ?string $inboundHookUrl = null,
-        ?string $bounceHookUrl = null,
-        ?string $openHookUrl = null,
-        ?bool $postFirstOpenOnly = null,
-        ?bool $trackOpens = null,
-        ?string $inboundDomain = null,
-        ?int $inboundSpamThreshold = null,
-        ?string $trackLinks = null,
-        ?string $clickHookUrl = null,
-        ?string $deliveryHookUrl = null,
-        ?bool $enableSmtpApiErrorHooks = null
+        string|null $name = null,
+        string|null $color = null,
+        bool|null $rawEmailEnabled = null,
+        bool|null $smtpApiActivated = null,
+        string|null $inboundHookUrl = null,
+        string|null $bounceHookUrl = null,
+        string|null $openHookUrl = null,
+        bool|null $postFirstOpenOnly = null,
+        bool|null $trackOpens = null,
+        string|null $inboundDomain = null,
+        int|null $inboundSpamThreshold = null,
+        string|null $trackLinks = null,
+        string|null $clickHookUrl = null,
+        string|null $deliveryHookUrl = null,
+        bool|null $enableSmtpApiErrorHooks = null,
     ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
@@ -170,20 +170,20 @@ final class PostmarkAdminClient extends PostmarkClientBase
      */
     public function createServer(
         string $name,
-        ?string $color = null,
-        ?bool $rawEmailEnabled = null,
-        ?bool $smtpApiActivated = null,
-        ?string $inboundHookUrl = null,
-        ?string $bounceHookUrl = null,
-        ?string $openHookUrl = null,
-        ?bool $postFirstOpenOnly = null,
-        ?bool $trackOpens = null,
-        ?string $inboundDomain = null,
-        ?int $inboundSpamThreshold = null,
-        ?string $trackLinks = null,
-        ?string $clickHookUrl = null,
-        ?string $deliveryHookUrl = null,
-        ?bool $enableSmtpApiErrorHooks = null
+        string|null $color = null,
+        bool|null $rawEmailEnabled = null,
+        bool|null $smtpApiActivated = null,
+        string|null $inboundHookUrl = null,
+        string|null $bounceHookUrl = null,
+        string|null $openHookUrl = null,
+        bool|null $postFirstOpenOnly = null,
+        bool|null $trackOpens = null,
+        string|null $inboundDomain = null,
+        int|null $inboundSpamThreshold = null,
+        string|null $trackLinks = null,
+        string|null $clickHookUrl = null,
+        string|null $deliveryHookUrl = null,
+        bool|null $enableSmtpApiErrorHooks = null,
     ): DynamicResponseModel {
         $body = [];
         $body['name'] = $name;
@@ -246,8 +246,8 @@ final class PostmarkAdminClient extends PostmarkClientBase
     public function createSenderSignature(
         string $fromEmail,
         string $name,
-        ?string $replyToEmail = null,
-        ?string $returnPathDomain = null
+        string|null $replyToEmail = null,
+        string|null $returnPathDomain = null,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest('POST', '/senders/', [
@@ -269,9 +269,9 @@ final class PostmarkAdminClient extends PostmarkClientBase
      */
     public function editSenderSignature(
         int $id,
-        ?string $name = null,
-        ?string $replyToEmail = null,
-        ?string $returnPathDomain = null
+        string|null $name = null,
+        string|null $replyToEmail = null,
+        string|null $returnPathDomain = null,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest('PUT', sprintf('/senders/%s', $id), [
@@ -341,7 +341,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     * @param string      $name             The name of the Domain.
     * @param string|null $returnPathDomain The custom Return-Path domain for the Sender Signature.
     */
-    public function createDomain(string $name, ?string $returnPathDomain = null): DynamicResponseModel
+    public function createDomain(string $name, string|null $returnPathDomain = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('POST', '/domains/', [
@@ -357,7 +357,7 @@ final class PostmarkAdminClient extends PostmarkClientBase
     * @param int         $id               The ID for the Domain we wish to modify.
     * @param string|null $returnPathDomain The custom Return-Path domain for the Domain.
     */
-    public function editDomain(int $id, ?string $returnPathDomain = null): DynamicResponseModel
+    public function editDomain(int $id, string|null $returnPathDomain = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('PUT', sprintf('/domains/%s', $id), ['returnPathDomain' => $returnPathDomain]),

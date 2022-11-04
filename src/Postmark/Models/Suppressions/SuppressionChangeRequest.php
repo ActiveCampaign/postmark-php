@@ -11,16 +11,13 @@ use JsonSerializable;
  */
 class SuppressionChangeRequest implements JsonSerializable
 {
-    private ?string $emailAddress;
-
     /**
      * Create a new SuppressionChangeRequest.
      *
      * @param string|null $emailAddress Address of the recipient whose suppression status should be changed.
      */
-    public function __construct(?string $emailAddress = null)
+    public function __construct(private string|null $emailAddress = null)
     {
-        $this->emailAddress = $emailAddress;
     }
 
     /** @return array{EmailAddress: string|null} */
@@ -31,7 +28,7 @@ class SuppressionChangeRequest implements JsonSerializable
         ];
     }
 
-    public function getEmailAddress(): ?string
+    public function getEmailAddress(): string|null
     {
         return $this->emailAddress;
     }
