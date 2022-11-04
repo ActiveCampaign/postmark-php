@@ -21,7 +21,7 @@
         "wildbit/postmark-php": "4.0.2"
     },
     "require": {
-        "php": "~8.0 || ~8.1",
+        "php": "~8.0 || ~8.1 || ~8.2",
         "ext-json": "*",
         "fig/http-message-util": "^1.1",
         "php-http/discovery": "^1.14.3",
