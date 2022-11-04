@@ -1,95 +1,37 @@
 name: "Continuous Integration"
+
 on:
+  pull_request:
   push:
     branches:
-      - main
-      - master
-  pull_request:
+      - 'main'
+      - 'master'
+      - '[0-9]+.[0-9]+.x'
+    tags:
 
 env:
-  php_extensions: curl,pcov,json
   default_php: 7.4
   stable_php: 8.1
 
+
 jobs:
+  ci:
+    uses: laminas/workflow-continuous-integration/.github/workflows/continuous-integration.yml@1.x
 
-  cs-check:
-    name: CS Checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout Code"
-        uses: actions/checkout@v3
-
-      - name: "Setup PHP"
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.default_php }}
-          extensions: ${{ env.php_extensions }}
-          tools: cs2pr
-
-      - uses: "ramsey/composer-install@2.1.0"
-
-      - name: "Check CS"
-        run: vendor/bin/phpcs --report=checkstyle -q | cs2pr
-
-  psalm:
-    name: Psalm Static Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout Code"
-        uses: actions/checkout@v3
-
-      - name: "Setup PHP"
-        if: hashFiles('psalm.xml') != ''
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.default_php }}
-          extensions: ${{ env.php_extensions }}
-          tools: cs2pr
-
-      - uses: "ramsey/composer-install@2.1.0"
-        if: hashFiles('psalm.xml') != ''
-
-      - name: "Psalm"
-        if: hashFiles('psalm.xml') != ''
-        run: vendor/bin/psalm --shepherd --stats --output-format=github
-
-  run-unit-tests:
+  test-coverage:
 
     name: PHPUnit on ${{ matrix.php-version }}
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2']
-        include:
-          - php-version: '8.2'
-            composer-options: "--ignore-platform-reqs"
-
     steps:
-      - name: "Checkout Code"
-        uses: actions/checkout@v3
-
-      - name: "Setup PHP"
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
-          extensions: ${{ env.php_extensions }}
+          php-version: ${{ env.stable_php }}
           coverage: pcov
           ini-values: pcov.enabled=1
-
       - uses: "ramsey/composer-install@2.1.0"
-        with:
-          composer-options: "${{ matrix.composer-options }}"
-
-      - name: "Run Tests"
-        run: php ./vendor/bin/phpunit --coverage-clover=coverage.xml
-
-      - name: "Upload Coverage to CodeCov"
-        uses: codecov/codecov-action@v3
-        env:
-          PHP_VERSION: ${{ matrix.php-version }}
+      - run: php ./vendor/bin/phpunit --coverage-clover=coverage.xml
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
@@ -99,25 +41,14 @@ jobs:
   composer-require-checker:
     name: "Check for missing dependencies"
     runs-on: "ubuntu-latest"
-
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v3
-
-      - name: "Install PHP"
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.stable_php }}
           ini-values: memory_limit=-1
           extensions: ${{ env.php_extensions }}
-
       - uses: "ramsey/composer-install@2.1.0"
-
-      - name: "Set global composer bin-dir"
-        run: composer global config bin-dir /usr/local/bin
-
-      - name: "Install require checker"
-        run: composer global require -W maglnet/composer-require-checker
-
-      - name: "Check"
-        run: /usr/local/bin/composer-require-checker check
+      - run: composer global config bin-dir /usr/local/bin
+      - run: composer global require -W maglnet/composer-require-checker
+      - run: /usr/local/bin/composer-require-checker check
