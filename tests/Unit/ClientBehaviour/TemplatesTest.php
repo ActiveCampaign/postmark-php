@@ -35,13 +35,11 @@ class TemplatesTest extends MockClientTestCase
     }
 
     /**
-     * @param string|int $id
-     *
      * @covers \Postmark\ClientBehaviour\Templates::deleteTemplate
      * @covers \Postmark\ClientBehaviour\Templates::getTemplate
      * @dataProvider singleStringIdArgumentMethodProvider
      */
-    public function testSingleStringIdMethods(string $method, $id, string $expectPath, string $httpMethod): void
+    public function testSingleStringIdMethods(string $method, string|int $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);
         $this->assertLastRequestMethodWas($httpMethod);

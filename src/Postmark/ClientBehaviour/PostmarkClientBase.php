@@ -44,8 +44,6 @@ abstract class PostmarkClientBase
     private UriFactoryInterface $uriFactory;
     private StreamFactoryInterface $streamFactory;
     private string $baseUri = self::DEFAULT_BASE_URI;
-    /** @var non-empty-string */
-    private string $token;
 
     /**
      * @param non-empty-string     $token      Either a 'Server' token or an 'Account' token.
@@ -56,14 +54,13 @@ abstract class PostmarkClientBase
      * @throws DiscoveryFailure If any HTTP related components cannot be discovered from your environment.
      */
     final public function __construct(
-        string $token,
-        ?ClientInterface $httpClient = null
+        private string $token,
+        ClientInterface|null $httpClient = null,
     ) {
         $this->client = self::resolveHttpClient($httpClient);
         $this->requestFactory = self::resolveRequestFactory();
         $this->uriFactory = self::resolveUriFactory();
         $this->streamFactory = self::resolveStreamFactory();
-        $this->token = $token;
     }
 
     /** @return non-empty-string */
@@ -166,7 +163,7 @@ abstract class PostmarkClientBase
         throw RequestFailure::with($request, $response);
     }
 
-    protected function stringifyBoolean(?bool $bool = null): ?string
+    protected function stringifyBoolean(bool|null $bool = null): string|null
     {
         if ($bool === null) {
             return null;

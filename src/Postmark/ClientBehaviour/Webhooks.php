@@ -39,7 +39,7 @@ trait Webhooks
      * @param string|null $messageStream Optional message stream to filter results by. If not provided,
      *                                   all configurations for the server will be returned.
      */
-    public function getWebhookConfigurations(?string $messageStream = null): DynamicResponseModel
+    public function getWebhookConfigurations(string|null $messageStream = null): DynamicResponseModel
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', '/webhooks', ['MessageStream' => $messageStream]),
@@ -71,10 +71,10 @@ trait Webhooks
      */
     public function createWebhookConfiguration(
         string $url,
-        ?string $messageStream = null,
-        ?HttpAuth $httpAuth = null,
-        ?array $httpHeaders = null,
-        ?WebhookConfigurationTriggers $triggers = null
+        string|null $messageStream = null,
+        HttpAuth|null $httpAuth = null,
+        array|null $httpHeaders = null,
+        WebhookConfigurationTriggers|null $triggers = null,
     ): DynamicResponseModel {
         $body = [];
         $body['Url'] = $url;
@@ -99,10 +99,10 @@ trait Webhooks
      */
     public function editWebhookConfiguration(
         int $id,
-        ?string $url = null,
-        ?HttpAuth $httpAuth = null,
-        ?array $httpHeaders = null,
-        ?WebhookConfigurationTriggers $triggers = null
+        string|null $url = null,
+        HttpAuth|null $httpAuth = null,
+        array|null $httpHeaders = null,
+        WebhookConfigurationTriggers|null $triggers = null,
     ): DynamicResponseModel {
         $body = [];
         $body['Url'] = $url;

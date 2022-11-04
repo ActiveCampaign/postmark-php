@@ -26,7 +26,7 @@ trait MessageStreams
         string $id,
         string $messageStreamType,
         string $name,
-        ?string $description = null
+        string|null $description = null,
     ): DynamicResponseModel {
         $body = [];
         $body['ID'] = $id;
@@ -46,8 +46,8 @@ trait MessageStreams
      */
     public function editMessageStream(
         string $id,
-        ?string $name = null,
-        ?string $description = null
+        string|null $name = null,
+        string|null $description = null,
     ): DynamicResponseModel {
         $body = [];
         $body['Name'] = $name;
@@ -75,7 +75,7 @@ trait MessageStreams
      */
     public function listMessageStreams(
         string $messageStreamType = 'All',
-        bool $includeArchivedStreams = false
+        bool $includeArchivedStreams = false,
     ): DynamicResponseModel {
         return new DynamicResponseModel($this->processRestRequest('GET', '/message-streams', [
             'MessageStreamType' => $messageStreamType,

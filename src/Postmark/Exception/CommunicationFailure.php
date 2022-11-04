@@ -14,12 +14,9 @@ use function sprintf;
 
 final class CommunicationFailure extends RuntimeException implements PostmarkException
 {
-    private RequestInterface $request;
-
-    public function __construct(string $message, RequestInterface $request, ClientExceptionInterface $previous)
+    public function __construct(string $message, private RequestInterface $request, ClientExceptionInterface $previous)
     {
         parent::__construct($message, (int) $previous->getCode(), $previous);
-        $this->request = $request;
     }
 
     public static function withNetworkError(NetworkExceptionInterface $error, RequestInterface $request): self

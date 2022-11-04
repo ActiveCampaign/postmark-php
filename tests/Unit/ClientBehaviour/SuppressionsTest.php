@@ -56,7 +56,7 @@ class SuppressionsTest extends MockClientTestCase
      * @covers \Postmark\ClientBehaviour\Suppressions::deleteSuppressions
      * @dataProvider createAndDeleteSuppressionsDataProvider
      */
-    public function testCreateSuppressionsWithoutList(string $method, ?string $stream, string $expectPath): void
+    public function testCreateSuppressionsWithoutList(string $method, string|null $stream, string $expectPath): void
     {
         if ($stream === null) {
             $this->client->$method();
@@ -74,7 +74,7 @@ class SuppressionsTest extends MockClientTestCase
      * @covers \Postmark\ClientBehaviour\Suppressions::deleteSuppressions
      * @dataProvider createAndDeleteSuppressionsDataProvider
      */
-    public function testCreateSuppressionsWithNonEmptySuppressionList(string $method, ?string $stream, string $expectPath): void
+    public function testCreateSuppressionsWithNonEmptySuppressionList(string $method, string|null $stream, string $expectPath): void
     {
         $suppression = new SuppressionChangeRequest('me@mine.com');
         $expect = [

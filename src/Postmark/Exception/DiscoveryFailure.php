@@ -9,7 +9,7 @@ use Throwable;
 
 final class DiscoveryFailure extends RuntimeException implements PostmarkException
 {
-    public static function clientDiscoveryFailed(?Throwable $previous = null): self
+    public static function clientDiscoveryFailed(Throwable|null $previous = null): self
     {
         return new self(
             'A PSR-18 HTTP Client could not be discovered. Make sure that you install one with composer, '
@@ -19,7 +19,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
         );
     }
 
-    public static function requestFactoryDiscoveryFailed(?Throwable $previous = null): self
+    public static function requestFactoryDiscoveryFailed(Throwable|null $previous = null): self
     {
         return new self(
             'A PSR-17 Request Factory implementation could not be found. Please install one first, '
@@ -29,7 +29,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
         );
     }
 
-    public static function uriFactoryDiscoveryFailed(?Throwable $previous): self
+    public static function uriFactoryDiscoveryFailed(Throwable|null $previous): self
     {
         return new self(
             'A PSR-17 URI Factory implementation could not be found. Please install one first, '
@@ -39,7 +39,7 @@ final class DiscoveryFailure extends RuntimeException implements PostmarkExcepti
         );
     }
 
-    public static function streamFactoryDiscoveryFailed(?Throwable $previous): self
+    public static function streamFactoryDiscoveryFailed(Throwable|null $previous): self
     {
         return new self(
             'A PSR-17 Stream Factory implementation could not be found. Please install one first, '

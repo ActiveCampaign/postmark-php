@@ -14,7 +14,7 @@ final class DiscoveryStub
 {
     use Discovery;
 
-    public function client(?ClientInterface $client): ClientInterface
+    public function client(ClientInterface|null $client): ClientInterface
     {
         return self::resolveHttpClient($client);
     }

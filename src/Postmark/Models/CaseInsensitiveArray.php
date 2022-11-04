@@ -6,7 +6,6 @@ namespace Postmark\Models;
 
 use ArrayAccess;
 use Iterator;
-use ReturnTypeWillChange; // phpcs:ignore
 
 use function array_change_key_case;
 use function array_keys;
@@ -45,11 +44,8 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
         $this->data = array_change_key_case($initialArray, CASE_LOWER);
     }
 
-    /**
-     * @param array-key|null $offset
-     * @param mixed          $value
-     */
-    public function offsetSet($offset, $value): void
+    /** @param array-key|null $offset */
+    public function offsetSet($offset, mixed $value): void
     {
         if (is_string($offset)) {
             $offset = $this->normaliseOffset($offset);
@@ -82,13 +78,8 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
         unset($this->data[$offset]);
     }
 
-    /**
-     * @param array-key $offset
-     *
-     * @return mixed
-     */
-    #[ReturnTypeWillChange]
-    public function offsetGet($offset)
+    /** @param array-key $offset */
+    public function offsetGet($offset): mixed
     {
         if (is_string($offset)) {
             $offset = $this->normaliseOffset($offset);
@@ -97,9 +88,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
         return $this->data[$offset] ?? null;
     }
 
-    /** @return mixed */
-    #[ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         // use "offsetGet" instead of indexes
         // so that subclasses can override behavior if needed.
@@ -107,8 +96,7 @@ class CaseInsensitiveArray implements ArrayAccess, Iterator
     }
 
     /** @return array-key */
-    #[ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         return array_keys($this->data)[$this->pointer];
     }

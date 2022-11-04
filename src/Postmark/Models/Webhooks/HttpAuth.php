@@ -11,19 +11,14 @@ use JsonSerializable;
  */
 class HttpAuth implements JsonSerializable
 {
-    private ?string $username;
-    private ?string $password;
-
     /**
      * Create a new HttpAuth.
      *
      * @param string|null $username Username to use.
      * @param string|null $password Password to use.
      */
-    public function __construct(?string $username = null, ?string $password = null)
+    public function __construct(private string|null $username = null, private string|null $password = null)
     {
-        $this->username = $username;
-        $this->password = $password;
     }
 
     /** @return array{Username: string|null, Password: string|null} */
@@ -35,12 +30,12 @@ class HttpAuth implements JsonSerializable
         ];
     }
 
-    public function getUsername(): ?string
+    public function getUsername(): string|null
     {
         return $this->username;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string|null
     {
         return $this->password;
     }

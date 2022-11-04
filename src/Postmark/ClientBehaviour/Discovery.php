@@ -17,7 +17,7 @@ use Throwable;
 trait Discovery
 {
     /** @throws DiscoveryFailure */
-    private static function resolveHttpClient(?ClientInterface $client): ClientInterface
+    private static function resolveHttpClient(ClientInterface|null $client): ClientInterface
     {
         if ($client) {
             return $client;

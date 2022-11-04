@@ -9,16 +9,13 @@ namespace Postmark\Models\Webhooks;
  */
 class WebhookConfigurationClickTrigger implements WebhookConfiguration
 {
-    private bool $enabled;
-
     /**
      * Create a new WebhookConfigurationClickTrigger.
      *
      * @param bool $enabled Specifies whether webhooks will be triggered by Click events.
      */
-    public function __construct(bool $enabled = false)
+    public function __construct(private bool $enabled = false)
     {
-        $this->enabled = $enabled;
     }
 
     /** @return array{Enabled: bool} */

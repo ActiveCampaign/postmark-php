@@ -16,14 +16,12 @@ use function sprintf;
 
 final class ResponseFixture
 {
-    private int $responseCode;
     private StreamInterface $jsonBody;
 
     public function __construct(
-        int $responseCode,
-        string $jsonBody
+        private int $responseCode,
+        string $jsonBody,
     ) {
-        $this->responseCode = $responseCode;
         $this->jsonBody = (new StreamFactory())->createStream($jsonBody);
     }
 

@@ -28,14 +28,14 @@ trait InboundMessages
     public function getInboundMessages(
         int $count = 100,
         int $offset = 0,
-        ?string $recipient = null,
-        ?string $fromEmail = null,
-        ?string $tag = null,
-        ?string $subject = null,
-        ?string $mailboxHash = null,
-        ?string $status = null,
-        ?string $fromdate = null,
-        ?string $todate = null
+        string|null $recipient = null,
+        string|null $fromEmail = null,
+        string|null $tag = null,
+        string|null $subject = null,
+        string|null $mailboxHash = null,
+        string|null $status = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
     ): DynamicResponseModel {
         $query = [];
         $query['recipient'] = $recipient;

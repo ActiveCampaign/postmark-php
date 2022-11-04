@@ -25,7 +25,7 @@ trait Suppressions
      */
     public function createSuppressions(
         array $suppressionChanges = [],
-        string $messageStream = 'outbound'
+        string $messageStream = 'outbound',
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -50,7 +50,7 @@ trait Suppressions
      */
     public function deleteSuppressions(
         array $suppressionChanges = [],
-        string $messageStream = 'outbound'
+        string $messageStream = 'outbound',
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -76,11 +76,11 @@ trait Suppressions
      */
     public function getSuppressions(
         string $messageStream = 'outbound',
-        ?string $suppressionReason = null,
-        ?string $origin = null,
-        ?string $fromDate = null,
-        ?string $toDate = null,
-        ?string $emailAddress = null
+        string|null $suppressionReason = null,
+        string|null $origin = null,
+        string|null $fromDate = null,
+        string|null $toDate = null,
+        string|null $emailAddress = null,
     ): DynamicResponseModel {
         $query = [];
         $query['SuppressionReason'] = $suppressionReason;

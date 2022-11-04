@@ -28,10 +28,8 @@ final class DynamicResponseModel extends CaseInsensitiveArray
      * Convert array values to DynamicResponseModel instances
      *
      * @param string $name Name of element to get from the dynamic response model.
-     *
-     * @return mixed
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         /** @psalm-var mixed|null $value */
         $value = $this[$name];
@@ -43,10 +41,8 @@ final class DynamicResponseModel extends CaseInsensitiveArray
      * Convert array values to DynamicResponseModel instances
      *
      * @param array-key $offset
-     *
-     * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         /** @psalm-var mixed|null $value */
         $value = parent::offsetGet($offset);

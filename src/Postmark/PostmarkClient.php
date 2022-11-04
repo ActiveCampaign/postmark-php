@@ -112,18 +112,18 @@ final class PostmarkClient extends PostmarkClientBase
         string $from,
         string $to,
         string $subject,
-        ?string $htmlBody = null,
-        ?string $textBody = null,
-        ?string $tag = null,
-        ?bool $trackOpens = null,
-        ?string $replyTo = null,
-        ?string $cc = null,
-        ?string $bcc = null,
-        ?array $headers = null,
-        ?array $attachments = null,
-        ?string $trackLinks = null,
-        ?array $metadata = null,
-        ?string $messageStream = null
+        string|null $htmlBody = null,
+        string|null $textBody = null,
+        string|null $tag = null,
+        bool|null $trackOpens = null,
+        string|null $replyTo = null,
+        string|null $cc = null,
+        string|null $bcc = null,
+        array|null $headers = null,
+        array|null $attachments = null,
+        string|null $trackLinks = null,
+        array|null $metadata = null,
+        string|null $messageStream = null,
     ): DynamicResponseModel {
         $body = [];
         $body['From'] = $from;
@@ -185,16 +185,16 @@ final class PostmarkClient extends PostmarkClientBase
         $templateIdOrAlias,
         $templateModel,
         bool $inlineCss = true,
-        ?string $tag = null,
-        ?bool $trackOpens = null,
-        ?string $replyTo = null,
-        ?string $cc = null,
-        ?string $bcc = null,
-        ?array $headers = null,
-        ?array $attachments = null,
-        ?string $trackLinks = null,
-        ?array $metadata = null,
-        ?string $messageStream = null
+        string|null $tag = null,
+        bool|null $trackOpens = null,
+        string|null $replyTo = null,
+        string|null $cc = null,
+        string|null $bcc = null,
+        array|null $headers = null,
+        array|null $attachments = null,
+        string|null $trackLinks = null,
+        array|null $metadata = null,
+        string|null $messageStream = null,
     ): DynamicResponseModel {
         $body = [];
         $body['From'] = $from;
@@ -324,20 +324,20 @@ final class PostmarkClient extends PostmarkClientBase
      * @param string|null $deliveryHookUrl      URL to POST to everytime an click event occurs.
      */
     public function editServer(
-        ?string $name = null,
-        ?string $color = null,
-        ?bool $rawEmailEnabled = null,
-        ?bool $smtpApiActivated = null,
-        ?string $inboundHookUrl = null,
-        ?string $bounceHookUrl = null,
-        ?string $openHookUrl = null,
-        ?bool $postFirstOpenOnly = null,
-        ?bool $trackOpens = null,
-        ?string $inboundDomain = null,
-        ?int $inboundSpamThreshold = null,
-        ?string $trackLinks = null,
-        ?string $clickHookUrl = null,
-        ?string $deliveryHookUrl = null
+        string|null $name = null,
+        string|null $color = null,
+        bool|null $rawEmailEnabled = null,
+        bool|null $smtpApiActivated = null,
+        string|null $inboundHookUrl = null,
+        string|null $bounceHookUrl = null,
+        string|null $openHookUrl = null,
+        bool|null $postFirstOpenOnly = null,
+        bool|null $trackOpens = null,
+        string|null $inboundDomain = null,
+        int|null $inboundSpamThreshold = null,
+        string|null $trackLinks = null,
+        string|null $clickHookUrl = null,
+        string|null $deliveryHookUrl = null,
     ): DynamicResponseModel {
         $body = [];
         $body['Name'] = $name;

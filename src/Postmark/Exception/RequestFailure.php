@@ -16,14 +16,9 @@ use const JSON_THROW_ON_ERROR;
 
 final class RequestFailure extends RuntimeException implements PostmarkException
 {
-    private RequestInterface $request;
-    private ResponseInterface $response;
-
-    public function __construct(string $message, RequestInterface $request, ResponseInterface $response)
+    public function __construct(string $message, private RequestInterface $request, private ResponseInterface $response)
     {
         parent::__construct($message, $response->getStatusCode());
-        $this->request = $request;
-        $this->response = $response;
     }
 
     public static function with(RequestInterface $request, ResponseInterface $response): self
@@ -74,12 +69,12 @@ final class RequestFailure extends RuntimeException implements PostmarkException
     }
 
     /** @return non-empty-string|null */
-    public function postmarkErrorMessage(): ?string
+    public function postmarkErrorMessage(): string|null
     {
         return self::retrieveErrorMessage($this->response);
     }
 
-    public function postmarkErrorCode(): ?int
+    public function postmarkErrorCode(): int|null
     {
         $body = self::responseBody($this->response);
         $code = isset($body['ErrorCode']) && is_numeric($body['ErrorCode']) && ! empty($body['ErrorCode'])
@@ -90,7 +85,7 @@ final class RequestFailure extends RuntimeException implements PostmarkException
     }
 
     /** @return non-empty-string|null */
-    private static function retrieveErrorMessage(ResponseInterface $response): ?string
+    private static function retrieveErrorMessage(ResponseInterface $response): string|null
     {
         $body = self::responseBody($response);
 

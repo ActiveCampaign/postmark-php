@@ -81,8 +81,7 @@ abstract class MockClientTestCase extends TestCase
         self::assertArrayNotHasKey($name, $query);
     }
 
-    /** @param mixed $expect */
-    protected function assertBodyParameterValueEquals(string $name, $expect): void
+    protected function assertBodyParameterValueEquals(string $name, mixed $expect): void
     {
         $body = $this->bodyParams();
         self::assertArrayHasKey($name, $body);

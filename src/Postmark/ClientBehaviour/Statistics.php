@@ -42,19 +42,19 @@ trait Statistics
     public function getOpenStatistics(
         int $count = 100,
         int $offset = 0,
-        ?string $recipient = null,
-        ?string $tag = null,
-        ?string $clientName = null,
-        ?string $clientCompany = null,
-        ?string $clientFamily = null,
-        ?string $osName = null,
-        ?string $osFamily = null,
-        ?string $osCompany = null,
-        ?string $platform = null,
-        ?string $country = null,
-        ?string $region = null,
-        ?string $city = null,
-        ?string $messagestream = null
+        string|null $recipient = null,
+        string|null $tag = null,
+        string|null $clientName = null,
+        string|null $clientCompany = null,
+        string|null $clientFamily = null,
+        string|null $osName = null,
+        string|null $osFamily = null,
+        string|null $osCompany = null,
+        string|null $platform = null,
+        string|null $country = null,
+        string|null $region = null,
+        string|null $city = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         $query = [];
         $query['count'] = $count;
@@ -101,19 +101,19 @@ trait Statistics
     public function getClickStatistics(
         int $count = 100,
         int $offset = 0,
-        ?string $recipient = null,
-        ?string $tag = null,
-        ?string $clientName = null,
-        ?string $clientCompany = null,
-        ?string $clientFamily = null,
-        ?string $osName = null,
-        ?string $osFamily = null,
-        ?string $osCompany = null,
-        ?string $platform = null,
-        ?string $country = null,
-        ?string $region = null,
-        ?string $city = null,
-        ?string $messagestream = null
+        string|null $recipient = null,
+        string|null $tag = null,
+        string|null $clientName = null,
+        string|null $clientCompany = null,
+        string|null $clientFamily = null,
+        string|null $osName = null,
+        string|null $osFamily = null,
+        string|null $osCompany = null,
+        string|null $platform = null,
+        string|null $country = null,
+        string|null $region = null,
+        string|null $city = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         $query = [];
         $query['count'] = $count;
@@ -147,7 +147,7 @@ trait Statistics
     public function getOpenStatisticsForMessage(
         string $id,
         int $count = 100,
-        int $offset = 0
+        int $offset = 0,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -171,7 +171,7 @@ trait Statistics
     public function getClickStatisticsForMessage(
         string $id,
         int $count = 100,
-        int $offset = 0
+        int $offset = 0,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -187,10 +187,10 @@ trait Statistics
 
     private function stats(
         string $path,
-        ?string $tag,
-        ?string $fromDate,
-        ?string $toDate,
-        ?string $messageStream
+        string|null $tag,
+        string|null $fromDate,
+        string|null $toDate,
+        string|null $messageStream,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -217,10 +217,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundOverviewStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound', $tag, $fromdate, $todate, $messagestream);
     }
@@ -236,10 +236,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundSendStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/sends', $tag, $fromdate, $todate, $messagestream);
     }
@@ -255,10 +255,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundBounceStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/bounces', $tag, $fromdate, $todate, $messagestream);
     }
@@ -274,10 +274,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundSpamComplaintStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/spam', $tag, $fromdate, $todate, $messagestream);
     }
@@ -293,10 +293,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundTrackedStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/tracked', $tag, $fromdate, $todate, $messagestream);
     }
@@ -312,10 +312,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundOpenStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/opens', $tag, $fromdate, $todate, $messagestream);
     }
@@ -331,10 +331,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundPlatformStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/opens/platforms', $tag, $fromdate, $todate, $messagestream);
     }
@@ -350,10 +350,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundEmailClientStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/opens/emailclients', $tag, $fromdate, $todate, $messagestream);
     }
@@ -367,9 +367,9 @@ trait Statistics
      * @param string|null $todate   must be of the format 'YYYY-MM-DD'
      */
     public function getOutboundReadTimeStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
     ): DynamicResponseModel {
         return new DynamicResponseModel(
             $this->processRestRequest(
@@ -395,10 +395,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundClickStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/clicks', $tag, $fromdate, $todate, $messagestream);
     }
@@ -414,10 +414,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundClickBrowserFamilyStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/clicks/browserfamilies', $tag, $fromdate, $todate, $messagestream);
     }
@@ -434,10 +434,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundClickBrowserPlatformStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/clicks/platforms', $tag, $fromdate, $todate, $messagestream);
     }
@@ -454,10 +454,10 @@ trait Statistics
      *                                   transactional stream will be used.
      */
     public function getOutboundClickLocationStatistics(
-        ?string $tag = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $tag = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         return $this->stats('/stats/outbound/clicks/location', $tag, $fromdate, $todate, $messagestream);
     }

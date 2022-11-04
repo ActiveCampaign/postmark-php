@@ -31,14 +31,14 @@ trait Bounces
     public function getBounces(
         int $count = 100,
         int $offset = 0,
-        ?string $type = null,
-        ?bool $inactive = null,
-        ?string $emailFilter = null,
-        ?string $tag = null,
-        ?string $messageID = null,
-        ?string $fromdate = null,
-        ?string $todate = null,
-        ?string $messagestream = null
+        string|null $type = null,
+        bool|null $inactive = null,
+        string|null $emailFilter = null,
+        string|null $tag = null,
+        string|null $messageID = null,
+        string|null $fromdate = null,
+        string|null $todate = null,
+        string|null $messagestream = null,
     ): DynamicResponseModel {
         $query = [];
         $query['type'] = $type;
@@ -62,7 +62,7 @@ trait Bounces
      *
      * @param int|numeric-string $id The ID of the bounce to get.
      */
-    public function getBounce($id): DynamicResponseModel
+    public function getBounce($id): DynamicResponseModel // phpcs:ignore
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', sprintf('/bounces/%s', $id)),
@@ -76,7 +76,7 @@ trait Bounces
      *
      * @param int|numeric-string $id The ID of the bounce for which we want a dump.
      */
-    public function getBounceDump($id): DynamicResponseModel
+    public function getBounceDump($id): DynamicResponseModel // phpcs:ignore
     {
         return new DynamicResponseModel(
             $this->processRestRequest('GET', sprintf('/bounces/%s/dump', $id)),
@@ -90,7 +90,7 @@ trait Bounces
      *
      * @param int|numeric-string $id The bounce which has a deactivated email address.
      */
-    public function activateBounce($id): DynamicResponseModel
+    public function activateBounce($id): DynamicResponseModel // phpcs:ignore
     {
         return new DynamicResponseModel(
             $this->processRestRequest('PUT', sprintf('/bounces/%s/activate', $id)),
