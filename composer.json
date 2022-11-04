@@ -10,7 +10,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.4.99"
+            "php": "8.0.99"
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -21,7 +21,7 @@
         "wildbit/postmark-php": "4.0.2"
     },
     "require": {
-        "php": "~7.4 || ~8.0 || ~8.1",
+        "php": "~8.0 || ~8.1",
         "ext-json": "*",
         "fig/http-message-util": "^1.1",
         "php-http/discovery": "^1.14",
@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^10.0.0",
-        "laminas/laminas-diactoros": "^2.17",
+        "laminas/laminas-diactoros": "^2.20",
         "php-http/curl-client": "^2.2.1",
         "php-http/mock-client": "^1.5",
         "phpunit/phpunit": "^9.5.26",
