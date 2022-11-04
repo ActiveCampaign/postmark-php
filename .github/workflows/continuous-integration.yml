@@ -29,7 +29,7 @@ jobs:
           php-version: ${{ env.stable_php }}
           coverage: pcov
           ini-values: pcov.enabled=1
-      - uses: "ramsey/composer-install@2.1.0"
+      - uses: "ramsey/composer-install@2.2.0"
       - run: php ./vendor/bin/phpunit --coverage-clover=coverage.xml
       - uses: codecov/codecov-action@v3
         with:
@@ -48,7 +48,7 @@ jobs:
           php-version: ${{ env.stable_php }}
           ini-values: memory_limit=-1
           extensions: ${{ env.php_extensions }}
-      - uses: "ramsey/composer-install@2.1.0"
+      - uses: "ramsey/composer-install@2.2.0"
       - run: composer global config bin-dir /usr/local/bin
       - run: composer global require -W maglnet/composer-require-checker
       - run: /usr/local/bin/composer-require-checker check
