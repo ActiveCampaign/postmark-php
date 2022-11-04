@@ -24,7 +24,7 @@
         "php": "~8.0 || ~8.1",
         "ext-json": "*",
         "fig/http-message-util": "^1.1",
-        "php-http/discovery": "^1.14",
+        "php-http/discovery": "^1.14.3",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0"
