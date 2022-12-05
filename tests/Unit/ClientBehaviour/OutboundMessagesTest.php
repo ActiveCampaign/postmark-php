@@ -123,7 +123,7 @@ class OutboundMessagesTest extends MockClientTestCase
             0 => 'foo',
             1 => 'bar',
         ];
-        /** @psalm-suppress InvalidScalarArgument */
+        /** @psalm-suppress InvalidArgument */
         $this->client->getOutboundMessages(100, 0, null, null, null, null, null, null, null, $meta);
         foreach (array_keys($this->queryParams()) as $key) {
             self::assertIsString($key);
