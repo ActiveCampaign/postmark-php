@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.20.0@f82a70e7edfc6cf2705e9374c8a0b6a974a779ed"/>
+<files psalm-version="5.1.0@4defa177c89397c5e14737a80fe4896584130674">
+  <file src="src/Postmark/Models/CaseInsensitiveArray.php">
+    <MissingTemplateParam occurrences="2">
+      <code>ArrayAccess</code>
+      <code>Iterator</code>
+    </MissingTemplateParam>
+  </file>
+</files>
