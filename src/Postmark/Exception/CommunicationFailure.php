@@ -16,7 +16,7 @@ final class CommunicationFailure extends RuntimeException implements PostmarkExc
 {
     public function __construct(string $message, private RequestInterface $request, ClientExceptionInterface $previous)
     {
-        parent::__construct($message, (int) $previous->getCode(), $previous);
+        parent::__construct($message, $previous->getCode(), $previous);
     }
 
     public static function withNetworkError(NetworkExceptionInterface $error, RequestInterface $request): self
