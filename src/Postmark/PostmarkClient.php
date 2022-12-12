@@ -19,7 +19,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $serverToken The token associated with "Server" you'd like to use to send/receive email from.
 	 * @param integer $timeout The timeout, in seconds to wait for an API call to complete before throwing an Exception.
 	 */
-	function __construct($serverToken, $timeout = 30) {
+	function __construct($serverToken, $timeout = 60) {
 		parent::__construct($serverToken, 'X-Postmark-Server-Token', $timeout);
 	}
 
