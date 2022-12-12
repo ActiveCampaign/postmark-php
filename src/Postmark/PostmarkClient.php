@@ -1109,11 +1109,11 @@ class PostmarkClient extends PostmarkClientBase {
 	function createSuppressions($suppressionChanges = array(), $messageStream = NULL) {
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
 	}
 
@@ -1129,11 +1129,11 @@ class PostmarkClient extends PostmarkClientBase {
 	function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL) {
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
 	}
 
@@ -1156,11 +1156,11 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["FromDate"] = $fromDate;
 		$query["ToDate"] = $toDate;
 		$query["EmailAddress"] = $emailAddress;
-		
+
 		if ($messageStream === NULL) {
 			$messageStream = "outbound";
 		}
-		
+
 		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
 	}
 
