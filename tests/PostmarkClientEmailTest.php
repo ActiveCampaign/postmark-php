@@ -58,7 +58,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 				NULL, NULL, NULL, NULL, 'unknown-stream');
 		} catch(PostmarkException $ex){
 			$this->assertEquals(422, $ex->httpStatusCode);
-			$this->assertEquals("The 'MessageStream' provided does not exist on this server.", $ex->message);
+			$this->assertEquals("The stream provided: 'unknown-stream' does not exist on this server.", $ex->message);
 		}
 	}
 
