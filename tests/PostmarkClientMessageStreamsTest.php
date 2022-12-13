@@ -98,11 +98,11 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
 
         $broadcastsStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
 
-        $this->assertEquals(3, $client->listMessageStreams()->TotalCount); // Includes default streams
+        $this->assertEquals(4, $client->listMessageStreams()->TotalCount); // Includes 3 default streams
 
         $filteredStreams = $client->listMessageStreams("Broadcasts");
 
-        $this->assertEquals(1, $filteredStreams->TotalCount); // Filter only our Broadcasts stream
+        $this->assertEquals(2, $filteredStreams->TotalCount); // Filter only our Broadcasts streams
     }
 
     //list archived message streams
@@ -112,13 +112,17 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
         $newStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
+
+        // 2 broadcast streams, including the default one
+        $this->assertEquals(2, $client->listMessageStreams("Broadcasts")->TotalCount);
+
         $client->archiveMessageStream($newStream->Id);
 
         // Filtering out archived streams by default
-        $this->assertEquals(0, $client->listMessageStreams("Broadcasts")->TotalCount);
+        $this->assertEquals(1, $client->listMessageStreams("Broadcasts")->TotalCount);
 
         // Allowing archived streams in the result
-        $this->assertEquals(1, $client->listMessageStreams("Broadcasts", "true")->TotalCount);
+        $this->assertEquals(2, $client->listMessageStreams("Broadcasts", "true")->TotalCount);
     }
 
     //archive message streams
