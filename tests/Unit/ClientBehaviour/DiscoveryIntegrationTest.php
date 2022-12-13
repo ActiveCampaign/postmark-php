@@ -22,6 +22,7 @@ class DiscoveryIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->stub = new DiscoveryStub();
 
         self::$strategyBackup = ClassDiscovery::getStrategies();
@@ -30,6 +31,7 @@ class DiscoveryIntegrationTest extends TestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         ClassDiscovery::setStrategies(self::$strategyBackup);
     }
 

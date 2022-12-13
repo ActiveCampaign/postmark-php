@@ -20,6 +20,7 @@ class WebhooksTest extends MockClientTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $client = new PostmarkClient('token', $this->mockClient);
         $this->client = $client->withBaseUri('https://example.com');
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();

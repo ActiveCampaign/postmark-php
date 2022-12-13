@@ -23,6 +23,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $stubClient = new StubClient('token', $this->mockClient);
         $this->client = $stubClient->withBaseUri('https://example.com');
     }
