@@ -38,7 +38,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$currentTime = date("c");
-		
+
 		//Sending with a valid stream
 		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
@@ -47,7 +47,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 			'This is a text body for a test email via the default stream.', NULL, true, NULL, NULL, NULL,
 			NULL, NULL, NULL, NULL, 'outbound');
 		$this->assertNotEmpty($response, 'The client could not send message to the default stream.');
-		
+
 		// Sending with an invalid stream
 		try {
 			$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
