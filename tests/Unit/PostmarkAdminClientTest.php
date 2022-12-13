@@ -13,6 +13,7 @@ class PostmarkAdminClientTest extends MockClientTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $client = new PostmarkAdminClient('token', $this->mockClient);
         $this->client = $client->withBaseUri('https://example.com');
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();

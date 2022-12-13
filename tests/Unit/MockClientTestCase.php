@@ -20,6 +20,7 @@ abstract class MockClientTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->mockClient = new MockClient();
     }
 
