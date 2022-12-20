@@ -47,12 +47,12 @@ abstract class PostmarkClientBase {
 	protected $authorization_header = NULL;
 	protected $version = NULL;
 	protected $os = NULL;
-	protected $timeout = 30;
+	protected $timeout = 60;
 
 	/** @var  Client */
 	protected $client;
 
-	protected function __construct($token, $header, $timeout = 30) {
+	protected function __construct($token, $header, $timeout = 60) {
 		$this->authorization_header = $header;
 		$this->authorization_token = $token;
 		$this->version = phpversion();
