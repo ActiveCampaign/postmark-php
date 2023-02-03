@@ -41,8 +41,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
 	 * @param  array $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+         * @throws Models\PostmarkException
+         *
 	 * @return DynamicResponseModel
-	 * @throws Models\PostmarkException
 	 */
 	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
 		$tag = NULL, $trackOpens = NULL, $replyTo = NULL, $cc = NULL, $bcc = NULL,
