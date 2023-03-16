@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\PostmarkAdminClient;
 
+#[CoversClass(PostmarkAdminClient::class)]
 class PostmarkAdminClientTest extends MockClientTestCase
 {
     private PostmarkAdminClient $client;
@@ -21,7 +24,7 @@ class PostmarkAdminClientTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: int, 2: string, 3: string}> */
-    public function singleIntegerIdArgumentMethodProvider(): array
+    public static function singleIntegerIdArgumentMethodProvider(): array
     {
         return [
             'getServer' => ['getServer', 41, '/servers/41', 'GET'],
@@ -36,18 +39,7 @@ class PostmarkAdminClientTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\PostmarkAdminClient::getServer
-     * @covers \Postmark\PostmarkAdminClient::deleteServer
-     * @covers \Postmark\PostmarkAdminClient::getSenderSignature
-     * @covers \Postmark\PostmarkAdminClient::deleteSenderSignature
-     * @covers \Postmark\PostmarkAdminClient::resendSenderSignatureConfirmation
-     * @covers \Postmark\PostmarkAdminClient::getDomain
-     * @covers \Postmark\PostmarkAdminClient::deleteDomain
-     * @covers \Postmark\PostmarkAdminClient::verifyDomainSPF
-     * @covers \Postmark\PostmarkAdminClient::rotateDKIMForDomain
-     * @dataProvider singleIntegerIdArgumentMethodProvider
-     */
+    #[DataProvider('singleIntegerIdArgumentMethodProvider')]
     public function testSingleIntegerIdMethods(string $method, int $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);

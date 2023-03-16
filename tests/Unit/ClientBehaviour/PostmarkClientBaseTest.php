@@ -8,6 +8,7 @@ use Fig\Http\Message\RequestMethodInterface;
 use Http\Client\Exception\NetworkException;
 use Http\Client\Exception\RequestException;
 use Http\Client\Exception\TransferException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\PostmarkClientBase;
 use Postmark\Exception\CommunicationFailure;
 use Postmark\Exception\InvalidRequestMethod;
@@ -73,7 +74,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: non-empty-string}> */
-    public function requestBodyMethodProvider(): array
+    public static function requestBodyMethodProvider(): array
     {
         return [
             RequestMethodInterface::METHOD_PUT => [RequestMethodInterface::METHOD_PUT],
@@ -83,7 +84,7 @@ class PostmarkClientBaseTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: non-empty-string}> */
-    public function queryParamMethodProvider(): array
+    public static function queryParamMethodProvider(): array
     {
         return [
             RequestMethodInterface::METHOD_GET => [RequestMethodInterface::METHOD_GET],
@@ -93,11 +94,8 @@ class PostmarkClientBaseTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $method
-     *
-     * @dataProvider requestBodyMethodProvider
-     */
+    /** @param non-empty-string $method */
+    #[DataProvider('requestBodyMethodProvider')]
     public function testThatParamsAreEncodedInTheBodyWhenAppropriate(string $method): void
     {
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();
@@ -125,11 +123,8 @@ class PostmarkClientBaseTest extends MockClientTestCase
         $this->assertBodyParameterValueEquals('EmptyString', '');
     }
 
-    /**
-     * @param non-empty-string $method
-     *
-     * @dataProvider queryParamMethodProvider
-     */
+    /** @param non-empty-string $method */
+    #[DataProvider('queryParamMethodProvider')]
     public function testThatParamsAreEncodedInTheQueryWhenAppropriate(string $method): void
     {
         $response = ResponseFixture::fromFileName('EmptyStubResponse.json', 200)->toResponse();

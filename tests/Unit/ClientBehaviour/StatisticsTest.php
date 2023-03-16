@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\Statistics;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @link Statistics */
+#[CoversClass(Statistics::class)]
 class StatisticsTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -25,7 +28,7 @@ class StatisticsTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1:string}> */
-    public function similarFourArgumentStatsMethodProvider(): array
+    public static function similarFourArgumentStatsMethodProvider(): array
     {
         return [
             'getOutboundOverviewStatistics' => ['getOutboundOverviewStatistics', '/stats/outbound'],
@@ -43,22 +46,7 @@ class StatisticsTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Statistics::stats
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundOverviewStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundSendStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundBounceStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundSpamComplaintStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundTrackedStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundOpenStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundPlatformStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundEmailClientStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundClickStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundClickBrowserFamilyStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundClickBrowserPlatformStatistics
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundClickLocationStatistics
-     * @dataProvider similarFourArgumentStatsMethodProvider
-     */
+    #[DataProvider('similarFourArgumentStatsMethodProvider')]
     public function testSimilarFourArgumentStatsMethods(string $method, string $expectedPath): void
     {
         $this->client->$method('T', 'FROM', 'TO', 'stream');
@@ -71,17 +59,14 @@ class StatisticsTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1:string}> */
-    public function similarThreeArgumentStatsMethodsProvider(): array
+    public static function similarThreeArgumentStatsMethodsProvider(): array
     {
         return [
             'getOutboundReadTimeStatistics' => ['getOutboundReadTimeStatistics', '/stats/outbound/opens/readtimes'],
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Statistics::getOutboundReadTimeStatistics
-     * @dataProvider similarThreeArgumentStatsMethodsProvider
-     */
+    #[DataProvider('similarThreeArgumentStatsMethodsProvider')]
     public function testSimilarThreeArgumentStatsMethods(string $method, string $expectedPath): void
     {
         $this->client->$method('T', 'FROM', 'TO');
