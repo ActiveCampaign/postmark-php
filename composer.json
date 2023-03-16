@@ -14,7 +14,8 @@
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": false
         }
     },
     "replace": {
@@ -37,7 +38,7 @@
         "phpunit/phpunit": "^9.6.5",
         "psalm/plugin-phpunit": "^0.18.4",
         "squizlabs/php_codesniffer": "^3.7.2",
-        "symfony/options-resolver": "^5.3.7 || ^6",
+        "symfony/options-resolver": "^5.3.7 || ^6.0.19",
         "vimeo/psalm": "^5.8.0"
     },
     "autoload": {
