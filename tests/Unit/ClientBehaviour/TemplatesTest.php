@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\Templates;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @see Templates */
+#[CoversClass(Templates::class)]
 class TemplatesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -25,7 +28,7 @@ class TemplatesTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: string|int, 2: string, 3: string}> */
-    public function singleStringIdArgumentMethodProvider(): array
+    public static function singleStringIdArgumentMethodProvider(): array
     {
         return [
             'deleteTemplate with alias' => ['deleteTemplate', 'some-id', '/templates/some-id', 'DELETE'],
@@ -35,11 +38,7 @@ class TemplatesTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Templates::deleteTemplate
-     * @covers \Postmark\ClientBehaviour\Templates::getTemplate
-     * @dataProvider singleStringIdArgumentMethodProvider
-     */
+    #[DataProvider('singleStringIdArgumentMethodProvider')]
     public function testSingleStringIdMethods(string $method, string|int $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);

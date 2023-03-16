@@ -3,27 +3,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
     bootstrap="vendor/autoload.php"
-    cacheResultFile="build/.phpunit.result.cache"
     colors="true"
     processIsolation="false"
     stopOnFailure="false"
-    convertDeprecationsToExceptions="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true">
+    displayDetailsOnSkippedTests="true"
+    displayDetailsOnIncompleteTests="true"
+    displayDetailsOnTestsThatTriggerWarnings="true"
+    displayDetailsOnTestsThatTriggerNotices="true"
+    displayDetailsOnTestsThatTriggerDeprecations="true"
+    displayDetailsOnTestsThatTriggerErrors="true"
+    cacheDirectory=".phpunit.cache">
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
-
     <coverage includeUncoveredFiles="true">
         <include>
             <directory suffix=".php">./src</directory>
         </include>
     </coverage>
-
     <php>
-        <ini name="error_reporting" value="E_ALL" />
+        <ini name="error_reporting" value="E_ALL"/>
     </php>
 </phpunit>

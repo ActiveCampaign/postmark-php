@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\Bounces;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @link Bounces */
+#[CoversClass(Bounces::class)]
 class BouncesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -25,7 +28,7 @@ class BouncesTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: string, 2: string, 3: string}> */
-    public function messageRelatedMethodProvider(): array
+    public static function messageRelatedMethodProvider(): array
     {
         return [
             'getBounce' => ['getBounce', 'some-id', '/bounces/some-id', 'GET'],
@@ -34,12 +37,7 @@ class BouncesTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Bounces::getBounce
-     * @covers \Postmark\ClientBehaviour\Bounces::getBounceDump
-     * @covers \Postmark\ClientBehaviour\Bounces::activateBounce
-     * @dataProvider messageRelatedMethodProvider
-     */
+    #[DataProvider('messageRelatedMethodProvider')]
     public function testMessageRelatedMethods(string $method, string $messageId, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($messageId);

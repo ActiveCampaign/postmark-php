@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\Suppressions;
 use Postmark\Models\Suppressions\SuppressionChangeRequest;
 use Postmark\PostmarkClient;
@@ -11,6 +13,7 @@ use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @see Suppressions */
+#[CoversClass(Suppressions::class)]
 class SuppressionsTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -26,7 +29,7 @@ class SuppressionsTest extends MockClientTestCase
     }
 
     /** @return array<array-key, array{0: string, 1: string|null, 2: string}> */
-    public function createAndDeleteSuppressionsDataProvider(): array
+    public static function createAndDeleteSuppressionsDataProvider(): array
     {
         return [
             [
@@ -52,11 +55,7 @@ class SuppressionsTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Suppressions::createSuppressions
-     * @covers \Postmark\ClientBehaviour\Suppressions::deleteSuppressions
-     * @dataProvider createAndDeleteSuppressionsDataProvider
-     */
+    #[DataProvider('createAndDeleteSuppressionsDataProvider')]
     public function testCreateSuppressionsWithoutList(string $method, string|null $stream, string $expectPath): void
     {
         if ($stream === null) {
@@ -70,11 +69,7 @@ class SuppressionsTest extends MockClientTestCase
         $this->assertBodyParameterValueEquals('Suppressions', []);
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Suppressions::createSuppressions
-     * @covers \Postmark\ClientBehaviour\Suppressions::deleteSuppressions
-     * @dataProvider createAndDeleteSuppressionsDataProvider
-     */
+    #[DataProvider('createAndDeleteSuppressionsDataProvider')]
     public function testCreateSuppressionsWithNonEmptySuppressionList(string $method, string|null $stream, string $expectPath): void
     {
         $suppression = new SuppressionChangeRequest('me@mine.com');

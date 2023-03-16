@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\MessageStreams;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @see MessageStreams */
+#[CoversClass(MessageStreams::class)]
 class MessageStreamsTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -25,7 +28,7 @@ class MessageStreamsTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: string, 2: string, 3: string}> */
-    public function singleStringIdArgumentMethodProvider(): array
+    public static function singleStringIdArgumentMethodProvider(): array
     {
         return [
             'getMessageStream' => ['getMessageStream', 'some-id', '/message-streams/some-id', 'GET'],
@@ -34,12 +37,7 @@ class MessageStreamsTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\MessageStreams::getMessageStream
-     * @covers \Postmark\ClientBehaviour\MessageStreams::archiveMessageStream
-     * @covers \Postmark\ClientBehaviour\MessageStreams::unarchiveMessageStream
-     * @dataProvider singleStringIdArgumentMethodProvider
-     */
+    #[DataProvider('singleStringIdArgumentMethodProvider')]
     public function testSingleStringIdMethods(string $method, string $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);

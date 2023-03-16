@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\Models\Webhooks;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationBounceTrigger;
@@ -18,7 +19,7 @@ use function assert;
 class WebhookConfigurationTest extends TestCase
 {
     /** @return array<array-key, array{0: class-string<WebhookConfiguration>}> */
-    public function knownClassProvider(): array
+    public static function knownClassProvider(): array
     {
         return [
             [WebhookConfigurationBounceTrigger::class],
@@ -30,11 +31,8 @@ class WebhookConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @param class-string<WebhookConfiguration> $class
-     *
-     * @dataProvider knownClassProvider
-     */
+    /** @param class-string<WebhookConfiguration> $class */
+    #[DataProvider('knownClassProvider')]
     public function testThatByDefaultAllTypesAreDisabled(string $class): void
     {
         $object = new $class();

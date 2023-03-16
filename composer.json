@@ -35,7 +35,7 @@
         "laminas/laminas-diactoros": "^2.24.0",
         "php-http/curl-client": "^2.2.1",
         "php-http/mock-client": "^1.5",
-        "phpunit/phpunit": "^9.6.5",
+        "phpunit/phpunit": "^10.0.16",
         "psalm/plugin-phpunit": "^0.18.4",
         "squizlabs/php_codesniffer": "^3.7.2",
         "symfony/options-resolver": "^5.3.7 || ^6.2.7",

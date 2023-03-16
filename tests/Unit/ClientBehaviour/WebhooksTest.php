@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\Webhooks;
 use Postmark\Models\Webhooks\HttpAuth;
 use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
@@ -13,6 +15,7 @@ use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @see Webhooks */
+#[CoversClass(Webhooks::class)]
 class WebhooksTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -28,7 +31,7 @@ class WebhooksTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: int, 2: string, 3: string}> */
-    public function singleIntegerIdArgumentMethodProvider(): array
+    public static function singleIntegerIdArgumentMethodProvider(): array
     {
         return [
             'getWebhookConfiguration' => ['getWebhookConfiguration', 41, '/webhooks/41', 'GET'],
@@ -36,11 +39,7 @@ class WebhooksTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\Webhooks::getWebhookConfiguration
-     * @covers \Postmark\ClientBehaviour\Webhooks::deleteWebhookConfiguration
-     * @dataProvider singleIntegerIdArgumentMethodProvider
-     */
+    #[DataProvider('singleIntegerIdArgumentMethodProvider')]
     public function testSingleIntegerIdMethods(string $method, int $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);

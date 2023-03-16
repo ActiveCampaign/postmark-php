@@ -7,6 +7,7 @@ namespace Postmark\Tests\Unit\Exception;
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\StreamFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Postmark\Exception\RequestFailure;
 
@@ -80,7 +81,7 @@ class RequestFailureTest extends TestCase
     }
 
     /** @return array<int, array{0: int, 1: string}> */
-    public function specialErrorCodeProvider(): array
+    public static function specialErrorCodeProvider(): array
     {
         return [
             401 => [
@@ -105,7 +106,7 @@ class RequestFailureTest extends TestCase
         ];
     }
 
-    /** @dataProvider specialErrorCodeProvider */
+    #[DataProvider('specialErrorCodeProvider')]
     public function testThatSpecialCaseHttpStatusCodesYieldTheExpectedMessage(int $code, string $expectedMessage): void
     {
         $exception = RequestFailure::with($this->request, $this->response->withStatus($code));
@@ -113,7 +114,7 @@ class RequestFailureTest extends TestCase
     }
 
     /** @return array<int, array{0: int, 1: int, 2: string}> */
-    public function typicalErrorProvider(): array
+    public static function typicalErrorProvider(): array
     {
         return [
             409 => [
@@ -129,7 +130,7 @@ class RequestFailureTest extends TestCase
         ];
     }
 
-    /** @dataProvider typicalErrorProvider */
+    #[DataProvider('typicalErrorProvider')]
     public function testTypicalApiErrorResponses(int $httpCode, int $code, string $expectedMessage): void
     {
         $this->responseHasJsonBody([

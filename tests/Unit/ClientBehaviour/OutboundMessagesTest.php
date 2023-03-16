@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\OutboundMessages;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
@@ -12,6 +14,7 @@ use Postmark\Tests\Unit\ResponseFixture;
 use function array_keys;
 
 /** @see OutboundMessages */
+#[CoversClass(OutboundMessages::class)]
 class OutboundMessagesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -27,7 +30,7 @@ class OutboundMessagesTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: string, 2: string, 3: string}> */
-    public function singleStringIdArgumentMethodProvider(): array
+    public static function singleStringIdArgumentMethodProvider(): array
     {
         return [
             'getOutboundMessageDetails' => ['getOutboundMessageDetails', 'some-id', '/messages/outbound/some-id/details', 'GET'],
@@ -35,11 +38,7 @@ class OutboundMessagesTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\OutboundMessages::getOutboundMessageDetails
-     * @covers \Postmark\ClientBehaviour\OutboundMessages::getOutboundMessageDump
-     * @dataProvider singleStringIdArgumentMethodProvider
-     */
+    #[DataProvider('singleStringIdArgumentMethodProvider')]
     public function testSingleStringIdMethods(string $method, string $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);

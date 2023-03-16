@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Postmark\Tests\Unit\ClientBehaviour;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Postmark\ClientBehaviour\InboundMessages;
 use Postmark\PostmarkClient;
 use Postmark\Tests\Unit\MockClientTestCase;
 use Postmark\Tests\Unit\ResponseFixture;
 
 /** @see InboundMessages */
+#[CoversClass(InboundMessages::class)]
 class InboundMessagesTest extends MockClientTestCase
 {
     private PostmarkClient $client;
@@ -25,7 +28,7 @@ class InboundMessagesTest extends MockClientTestCase
     }
 
     /** @return array<string, array{0: string, 1: string, 2: string, 3: string}> */
-    public function singleStringIdArgumentMethodProvider(): array
+    public static function singleStringIdArgumentMethodProvider(): array
     {
         return [
             'getInboundMessageDetails' => ['getInboundMessageDetails', 'some-id', '/messages/inbound/some-id/details', 'GET'],
@@ -34,12 +37,7 @@ class InboundMessagesTest extends MockClientTestCase
         ];
     }
 
-    /**
-     * @covers \Postmark\ClientBehaviour\InboundMessages::getInboundMessageDetails
-     * @covers \Postmark\ClientBehaviour\InboundMessages::bypassInboundMessageRules
-     * @covers \Postmark\ClientBehaviour\InboundMessages::retryInboundMessageHook
-     * @dataProvider singleStringIdArgumentMethodProvider
-     */
+    #[DataProvider('singleStringIdArgumentMethodProvider')]
     public function testSingleStringIdMethods(string $method, string $id, string $expectPath, string $httpMethod): void
     {
         $this->client->$method($id);
