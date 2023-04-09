@@ -32,7 +32,7 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^11.1.0",
-        "laminas/laminas-diactoros": "^2.24.0",
+        "laminas/laminas-diactoros": "^2.25.1",
         "php-http/curl-client": "^2.2.1",
         "php-http/mock-client": "^1.5",
         "phpunit/phpunit": "^10.0.19",
