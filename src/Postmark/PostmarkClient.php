@@ -1102,7 +1102,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Create Suppressions for the specified recipients.
 	 *
-	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
+	 * @param array $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
 	 * @param string $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
 	 *
 	 * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
@@ -1122,7 +1122,7 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Reactivate Suppressions for the specified recipients.
 	 *
-	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
+	 * @param array $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
 	 * @param string $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
 	 *
 	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
