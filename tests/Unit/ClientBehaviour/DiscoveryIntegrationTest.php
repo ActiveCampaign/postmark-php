@@ -16,7 +16,7 @@ use Psr\Http\Message\UriFactoryInterface;
 class DiscoveryIntegrationTest extends TestCase
 {
     private DiscoveryStub $stub;
-    /** @var array<array-key, mixed> */
+    /** @var array<array-key, string> */
     private static array $strategyBackup;
 
     protected function setUp(): void
