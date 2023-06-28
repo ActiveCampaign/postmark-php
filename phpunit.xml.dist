@@ -18,11 +18,11 @@
             <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <coverage includeUncoveredFiles="true">
+    <source>
         <include>
             <directory suffix=".php">./src</directory>
         </include>
-    </coverage>
+    </source>
     <php>
         <ini name="error_reporting" value="E_ALL"/>
     </php>
