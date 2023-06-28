@@ -31,7 +31,7 @@
         "psr/http-message": "^1.1 || ^2.0"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^11.1.0",
+        "doctrine/coding-standard": "^12.0.0",
         "laminas/laminas-diactoros": "^3.0.0",
         "php-http/curl-client": "^2.3",
         "php-http/mock-client": "^1.6",
