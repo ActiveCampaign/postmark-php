@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: shivammathur/setup-php@2.25.4
+      - uses: shivammathur/setup-php@2.25.5
         with:
           php-version: ${{ env.stable_php }}
           coverage: pcov
@@ -43,7 +43,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v3
-      - uses: shivammathur/setup-php@2.25.4
+      - uses: shivammathur/setup-php@2.25.5
         with:
           php-version: ${{ env.stable_php }}
           ini-values: memory_limit=-1
