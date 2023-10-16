@@ -1,0 +1,52 @@
+# In order for builds to pass, in CircleCI you must add all required environment variables, described in `testing_keys.json.example`
+
+version: 2.1
+
+workflows:
+  php-tests:
+    jobs:
+      - unit-tests:
+          name: php74
+          version: "7.4"
+          requires:
+            - php74
+      - unit-tests:
+          name: php80
+          version: "8.0"
+          requires:
+            - php80
+      - unit-tests:
+          name: php81
+          version: "8.1"
+          requires:
+            - php81
+      - unit-tests:
+          name: php82
+          version: "8.2"
+          requires:
+            - php82
+
+jobs:
+  unit-tests:
+    parameters:
+      version:
+        description: "PHP version tag"
+        type: string
+
+    docker:
+      - image: circleci/php:<< parameters.version >>
+
+    steps:
+      - checkout
+      - run:
+          name: Version
+          command: |
+            echo "PHP: $(php --version)"
+      - run:
+          name: Install dependencies
+          command: |
+            sudo composer self-update
+            sudo composer install --no-interaction
+      - run:
+          name: Run tests
+          command: composer test
