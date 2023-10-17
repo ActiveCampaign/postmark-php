@@ -1,7 +1,7 @@
 {
     "name": "gsteel/postmark-php",
     "license": "MIT",
-    "description": "Postmark API Client Fork for PHP 8.1",
+    "description": "The officially supported client for Postmark (http://postmarkapp.com)",
     "keywords": [
         "postmark",
         "email",
