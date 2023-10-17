@@ -49,7 +49,7 @@ trait Webhooks
     /**
      * Delete a webhook configuration.
      *
-     * @param int $id The Id of the webhook configuration you wish to delete.
+     * @param int $id The id of the webhook configuration you wish to delete.
      */
     public function deleteWebhookConfiguration(int $id): DynamicResponseModel
     {
