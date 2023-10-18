@@ -368,21 +368,19 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
 	}
 
-	/**
+  /**
 	 * This endpoint allows you to erase recipient data from a specific account - for example when you’re processing
 	 * Data Subject Requests (DSR) under GDPR or CCPA
 	 *
-	 * @param string $requestedBy The email address of the user that is making the request
-	 * @param string $requestedFor The email address of the recipient who's asking for their data to be removed.
-	 * @param bool $notifyWhenCompleted Specifies whether the RequestedBy email address is notified when the data
+	 * @param string $requestedBy         The email address of the user that is making the request
+	 * @param string $requestedFor        The email address of the recipient who's asking for their data to be removed.
+	 * @param bool   $notifyWhenCompleted Specifies whether the RequestedBy email address is notified when the data
 	 * removal request is complete
-	 * @return DynamicResponseModel
-	 * @throws Models\PostmarkException
 	 */
 	public function createDataRemovalRequest(
 		string $requestedBy,
 		string $requestedFor,
-		bool $notifyWhenCompleted
+		bool $notifyWhenCompleted,
     ): DynamicResponseModel {
 		$body = [];
 		$body['RequestedBy'] = $requestedBy;
@@ -390,7 +388,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['NotifyWhenCompleted'] = $notifyWhenCompleted;
 
 		return new DynamicResponseModel(
-			$this->processRestRequest('POST', '/data-removals', $body)
+			$this->processRestRequest('POST', '/data-removals', $body),
         );
 	}
 
@@ -402,7 +400,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	public function getDataRemoval(int $id): DynamicResponseModel
 	{
 		return new DynamicResponseModel(
-			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id))
+			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id)),
         );
 	}
 }
