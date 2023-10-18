@@ -382,7 +382,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	public function createDataRemovalRequest(
 		string $requestedBy,
 		string $requestedFor,
-		bool $notifyWhenCompleted,
+		bool $notifyWhenCompleted
     ): DynamicResponseModel {
 		$body = [];
 		$body['RequestedBy'] = $requestedBy;
