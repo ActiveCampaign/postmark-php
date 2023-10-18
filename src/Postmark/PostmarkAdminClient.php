@@ -390,7 +390,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['NotifyWhenCompleted'] = $notifyWhenCompleted;
 
 		return new DynamicResponseModel(
-			$this->processRestRequest('POST', '/data-removals', $body),
+			$this->processRestRequest('POST', '/data-removals', $body)
         );
 	}
 
@@ -402,7 +402,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	public function getDataRemoval(int $id): DynamicResponseModel
 	{
 		return new DynamicResponseModel(
-			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id)),
+			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id))
         );
 	}
 }
