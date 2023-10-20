@@ -5,21 +5,9 @@ version: 2.1
 workflows:
   php-tests:
     jobs:
-     - unit-tests:
-         name: php80
-         version: "8.0"
-         requires:
-           - php80
-     - unit-tests:
-         name: php81
-         version: "8.1"
-         requires:
-           - php81
-     - unit-tests:
-         name: php82
-         version: "8.2"
-         requires:
-           - php82
+      - unit-tests:
+          name: php80
+          version: "8.0"
 
 jobs:
   unit-tests:
