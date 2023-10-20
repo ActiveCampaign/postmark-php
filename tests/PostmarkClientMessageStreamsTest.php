@@ -9,7 +9,7 @@ use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
 class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
