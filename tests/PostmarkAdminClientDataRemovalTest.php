@@ -6,7 +6,7 @@ require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
 use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
-class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
+class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
 
 	static function tearDownAfterClass() {
 		$tk = parent::$testKeys;
