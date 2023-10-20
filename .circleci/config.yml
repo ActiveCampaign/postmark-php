@@ -5,29 +5,6 @@ version: 2.1
 workflows:
   php-tests:
     jobs:
-#      - unit-tests:
-#          name: php70
-#          version: "7.0"
-#      - unit-tests:
-#          name: php71
-#          version: "7.1"
-#          requires:
-#            - php70
-#      - unit-tests:
-#          name: php72
-#          version: "7.2"
-#          requires:
-#            - php71
-#      - unit-tests:
-#          name: php73
-#          version: "7.3"
-#          requires:
-#            - php72
-#      - unit-tests:
-#          name: php74
-#          version: "7.4"
-#          requires:
-#            - php73
       - unit-tests:
           name: php80
           version: "8.0"
