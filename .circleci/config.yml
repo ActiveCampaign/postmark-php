@@ -10,6 +10,16 @@ workflows:
          version: "8.0"
          requires:
            - php80
+     - unit-tests:
+         name: php81
+         version: "8.1"
+         requires:
+           - php81
+     - unit-tests:
+         name: php82
+         version: "8.2"
+         requires:
+           - php82
 
 jobs:
   unit-tests:
