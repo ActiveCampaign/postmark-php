@@ -8,7 +8,7 @@ use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
 class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
 
-    private $testId;
+    private $testId = 0;
 
 	function testClientCanCreateRequest() {
 		$tk = parent::$testKeys;
