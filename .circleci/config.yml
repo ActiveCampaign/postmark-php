@@ -23,7 +23,7 @@ jobs:
         type: string
 
     docker:
-      - image: circleci/php:<< parameters.version >>
+      - image: cimg/php:<< parameters.version >>[-variant]
 
     steps:
       - checkout
