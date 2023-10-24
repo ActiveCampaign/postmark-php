@@ -23,7 +23,7 @@ jobs:
         type: string
 
     docker:
-      - image: cimg/php:<< parameters.version >>[-variant]
+      - image: cimg/php:<< parameters.version >>
 
     steps:
       - checkout
