@@ -17,6 +17,7 @@ class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
 		$drr = $client->createDataRemovalRequest("test@activecampaign.com", "test2@activecampaign.com", true);
 
         $this->testId = $drr->ID;
+        fwrite(STDERR, print_r("!!!!!!!!!!! ---------- This is the data removal request ID ". $drr->ID, TRUE));
 		$this->assertNotEmpty($drr->ID);
         $this->assertNotEmpty($drr->Status);
 	}
