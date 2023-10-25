@@ -16,7 +16,7 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
         $servers = $client->listServers();
 
         foreach ($servers->servers as $key => $value) {
-            if (preg_match('/^test-php-streams.+/', $value->name) > 0) {
+            if (preg_match('/^test-php-streams.+/', $value->name) > 0 && !empty($value->id)) {
                 $client->deleteServer($value->id);
             }
         }

@@ -21,7 +21,7 @@ class PostmarkClientServerTest extends PostmarkClientBaseTest {
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$originalServer = $client->getServer();
 
-		$server = $client->editServer('testing-server-' . date('c'));
+		$server = $client->editServer('testing-server-' . rand(0, 1000). '-' . date('c') );
 
 		//set it back to the original name.
 		$client->editServer($originalServer->Name);
