@@ -345,15 +345,25 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	}
 
   /**
-	 * Request that the Postmark API verify the SPF records associated
-	 * with the Domain. Configuring SPF is not required to use
-	 * Postmark, but it is highly recommended, and can improve delivery rates.
+	 * Request that the Postmark API verify DKIM keys associated
+     * with the Domain.
 	 *
-	 * @param  integer $id The ID for the Domain for which we wish to verify the SPF records.
+	 * @param  integer $id The ID of the Domain we wish to verify DKIM keys on.
 	 * @return DynamicResponseModel
 	 */
-	function verifyDomainSPF($id) {
-		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/verifyspf"));
+	function verifyDKIM($id) {
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyDkim"));
+	}
+
+  /**
+	 * Request that the Postmark API verify Return-Path DNS records associated
+     * with the Domain.
+	 *
+	 * @param  integer $id The ID of the Domain we wish to verify Return-Path DNS record on.
+	 * @return DynamicResponseModel
+	 */
+	function verifyReturnPath($id) {
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyReturnPath"));
 	}
 
   /**

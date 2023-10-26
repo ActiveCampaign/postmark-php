@@ -84,19 +84,32 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		}
 	}
 
-	function testClientCanVerifySPFForDomain() {
+	function testClientCanVerifyDKIM() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
+		$domains = $client->listDomains()->domains;
+		foreach ($domains as $key => $value) {
+			$verify = $client->verifyDKIM($value->ID);
 
-		$name = 'test-php-spf-' . $domainName;
-
-		$domain = $client->createDomain($name);
-		$result = $client->verifyDomainSPF($domain->id);
-
-		$this->assertTrue($result->SPFVerified);
+			$this->assertSame($verify->ID, $value->ID);
+			$this->assertSame($verify->Name, $value->Name);
+		}
 	}
+
+	function testClientCanVerifyReturnPath() {
+		$tk = parent::$testKeys;
+		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+
+		$domains = $client->listDomains()->domains;
+		foreach ($domains as $key => $value) {
+			$verify = $client->verifyReturnPath($value->ID);
+
+			$this->assertSame($verify->ID, $value->ID);
+			$this->assertSame($verify->Name, $value->Name);
+		}
+	}
+
 }
 
 ?>
