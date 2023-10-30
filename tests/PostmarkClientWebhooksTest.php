@@ -26,7 +26,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $configurations = $client->getWebhookConfigurations();
 
         foreach ($configurations->webhooks as $key => $value) {
-            if (preg_match('/test-php-url/', $value->Url) > 0 && !empty($value->ID)) {
+            if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
         }
@@ -39,7 +39,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $configurations = $client->getWebhookConfigurations();
 
         foreach ($configurations->webhooks as $key => $value) {
-            if (preg_match('/test-php-url/', $value->Url) > 0 && !empty($value->ID)) {
+            if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
         }
@@ -65,7 +65,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $messageStream = "outbound";
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
-        
+
         $this->assertNotEmpty($result->ID);
         $this->assertEquals($url, $result->Url);
         $this->assertEquals($messageStream, $result->MessageStream);
