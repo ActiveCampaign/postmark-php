@@ -12,7 +12,7 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
     private $testServerToken = "";
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
     }

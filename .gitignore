@@ -8,3 +8,6 @@ testing_keys.json
 docs/_build
 *.swp
 /composer.lock
+.idea
+.phpunit.cache/
+.phpunit.result.cache

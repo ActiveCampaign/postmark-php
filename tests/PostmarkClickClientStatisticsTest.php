@@ -9,7 +9,7 @@ use \Postmark\PostmarkClient;
 
 class PostmarkClickClientStatisticsTest extends PostmarkClientBaseTest {
 
-	function testClientCanGetClickOverviewStatistics() {
+	function testClientCanGetClickOverviewStatistics(): void {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 

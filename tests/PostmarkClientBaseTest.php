@@ -11,7 +11,7 @@ abstract class PostmarkClientBaseTest extends \PHPUnit\Framework\TestCase {
 
 	public static $testKeys;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		//get the config keys for the various tests
 		self::$testKeys = new TestingKeys();
 		PostmarkClientBase::$BASE_URL = self::$testKeys->BASE_URL ?: 'https://api.postmarkapp.com';
