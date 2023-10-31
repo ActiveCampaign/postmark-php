@@ -17,21 +17,7 @@ use Postmark\PostmarkClient as PostmarkClient;
 class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
     private $testServerToken = "";
-
-    // This is here to make it harder to hit the 10 limit for webhooks
-    public static function setUpBeforeClass(): void {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-        $configurations = $client->getWebhookConfigurations();
-
-        foreach ($configurations->webhooks as $key => $value) {
-            if (preg_match('/test-php-url/', $value->Url)) {
-                $client->deleteWebhookConfiguration($value->ID);
-            }
-        }
-    }
-
+    
     public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
