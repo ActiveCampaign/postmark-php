@@ -30,5 +30,3 @@ class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
         $this->assertEquals($checkRequest->ID, $createRequest->ID);
     }
 }
-
-?>

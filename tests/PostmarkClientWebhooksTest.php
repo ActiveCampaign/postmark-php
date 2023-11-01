@@ -173,5 +173,3 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals(0, $deleteResult->ErrorCode);
     }
 }
-
-?>

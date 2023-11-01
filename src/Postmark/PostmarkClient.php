@@ -1059,14 +1059,15 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Create a webhook configuration.
 	 *
 	 * @param string $url The webhook URL.
-	 * @param string $messageStream Message stream this configuration should belong to. If not provided, it will belong to the default transactional stream.
-	 * @param HttpAuth $httpAuth Optional Basic HTTP Authentication.
-	 * @param array $httpHeaders Optional list of custom HTTP headers.
-	 * @param WebhookConfigurationTriggers $triggers Optional triggers for this webhook configuration.
+	 * @param string|null $messageStream Message stream this configuration should belong to. If not provided, it will belong to the default transactional stream.
+	 * @param object|null $httpAuth Optional Basic HTTP Authentication.
+	 * @param array|null $httpHeaders Optional list of custom HTTP headers.
+	 * @param object|null $triggers Optional triggers for this webhook configuration.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function createWebhookConfiguration($url, $messageStream = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL) {
+	function createWebhookConfiguration(string $url, string $messageStream = NULL, object $httpAuth = NULL, array $httpHeaders = NULL, object $triggers = NULL): DynamicResponseModel
+	{
 		$body = array();
 		$body["Url"] = $url;
 		$body["MessageStream"] = $messageStream;
@@ -1082,14 +1083,14 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Any parameters passed with NULL will be ignored (their existing values will not be modified).
 	 *
 	 * @param integer $id The Id of the webhook configuration you wish to edit.
-	 * @param string $url Optional webhook URL.
-	 * @param HttpAuth $httpAuth Optional Basic HTTP Authentication.
-	 * @param array $httpHeaders Optional list of custom HTTP headers.
-	 * @param WebhookConfigurationTriggers $triggers Optional triggers for this webhook configuration.
+	 * @param string|null $url Optional webhook URL.
+	 * @param object|null $httpAuth Optional Basic HTTP Authentication.
+	 * @param array|null $httpHeaders Optional list of custom HTTP headers.
+	 * @param object|null $triggers Optional triggers for this webhook configuration.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function editWebhookConfiguration($id, $url = NULL, $httpAuth = NULL, $httpHeaders = NULL, $triggers = NULL) {
+	function editWebhookConfiguration(int $id, string $url = NULL, object $httpAuth = NULL, array $httpHeaders = NULL, object $triggers = NULL) {
 		$body = array();
 		$body["Url"] = $url;
 		$body["HttpAuth"] = $httpAuth;
@@ -1102,13 +1103,14 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Create Suppressions for the specified recipients.
 	 *
-	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
-	 * @param string $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
+	 * @param array|string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to suppress.
+	 * @param string|null $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
 	 *
 	 * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
 	 * @return DynamicResponseModel
 	 */
-	function createSuppressions($suppressionChanges = array(), $messageStream = NULL) {
+	function createSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): DynamicResponseModel
+	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
 
@@ -1122,13 +1124,14 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Reactivate Suppressions for the specified recipients.
 	 *
-	 * @param string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
-	 * @param string $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
+	 * @param array|string $suppressionChanges Array of SuppressionChangeRequest objects that specify what recipients to reactivate.
+	 * @param string|null $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
 	 *
 	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
 	 * @return DynamicResponseModel
 	 */
-	function deleteSuppressions($suppressionChanges = array(), $messageStream = NULL) {
+	function deleteSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): DynamicResponseModel
+	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
 
@@ -1257,5 +1260,3 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
 	}
 }
-
-?>
