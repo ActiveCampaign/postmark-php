@@ -32,7 +32,8 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         $this->subscriptionChange = $subscriptionChange;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array();
 
         if ($this->open !== null) {
@@ -62,29 +63,33 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         return $retval;
     }
 
-    public function getOpenSettings() {
+    public function getOpenSettings(): ?WebhookConfigurationOpenTrigger
+    {
         return $this->open;
     }
 
-    public function getClickSettings() {
+    public function getClickSettings(): ?WebhookConfigurationClickTrigger
+    {
         return $this->click;
     }
 
-    public function getDeliverySettings() {
+    public function getDeliverySettings(): ?WebhookConfigurationDeliveryTrigger
+    {
         return $this->delivery;
     }
 
-    public function getBounceSettings() {
+    public function getBounceSettings(): ?WebhookConfigurationBounceTrigger
+    {
         return $this->bounce;
     }
 
-    public function getSpamComplaintSettings() {
+    public function getSpamComplaintSettings(): ?WebhookConfigurationSpamComplaintTrigger
+    {
         return $this->spamComplaint;
     }
 
-    public function getSubscriptionChangeSettings() {
+    public function getSubscriptionChangeSettings(): ?WebhookConfigurationSubscriptionChange
+    {
         return $this->subscriptionChange;
     }
 }
-
-?>

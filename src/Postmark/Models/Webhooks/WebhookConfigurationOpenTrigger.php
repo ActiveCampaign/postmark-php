@@ -20,7 +20,8 @@ class WebhookConfigurationOpenTrigger implements \JsonSerializable {
         $this->postFirstOpenOnly = $postFirstOpenOnly;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array(
             "Enabled" => $this->enabled,
             "PostFirstOpenOnly" => $this->postFirstOpenOnly
@@ -29,13 +30,13 @@ class WebhookConfigurationOpenTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled(): bool
+    {
         return $this->enabled;
     }
 
-    public function getPostFirstOpenOnly() {
+    public function getPostFirstOpenOnly(): bool
+    {
         return $this->postFirstOpenOnly;
     }
 }
-
-?>

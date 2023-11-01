@@ -9,14 +9,14 @@ use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
 class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $servers = $client->listServers();
 
         foreach ($servers->servers as $key => $value) {
-            if (preg_match('/^test-php-streams.+/', $value->name) > 0) {
+            if (preg_match('/^test-php-streams.+/', $value->name) > 0 && !empty($value->id)) {
                 $client->deleteServer($value->id);
             }
         }

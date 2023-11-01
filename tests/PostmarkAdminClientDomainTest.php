@@ -8,7 +8,7 @@ use Postmark\PostmarkAdminClient as PostmarkAdminClient;
 
 class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 
-	static function tearDownAfterClass() {
+	static function tearDownAfterClass(): void {
 		$tk = parent::$testKeys;
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 

@@ -20,7 +20,8 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
         $this->includeContent = $includeContent;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array(
             "Enabled" => $this->enabled,
             "IncludeContent" => $this->includeContent
@@ -29,13 +30,13 @@ class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled(): bool
+    {
         return $this->enabled;
     }
 
-    public function getIncludeContent() {
+    public function getIncludeContent(): bool
+    {
         return $this->includeContent;
     }
 }
-
-?>
