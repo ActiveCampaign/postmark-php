@@ -11,8 +11,6 @@ use Postmark\PostmarkClientBase as PostmarkClientBase;
  */
 class PostmarkClient extends PostmarkClientBase {
 
-	private $server_token = NULL;
-
 	/**
 	 * Create a new PostmarkClient.
 	 *
@@ -1035,10 +1033,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get all webhook configurations associated with the Server.
 	 *
-	 * @param string $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
+	 * @param string|null $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
 	 * @return DynamicResponseModel
 	 */
-	function getWebhookConfigurations($messageStream = NULL) {
+	function getWebhookConfigurations(string $messageStream = NULL): DynamicResponseModel
+    {
 		$query = array();
 		$query["MessageStream"] = $messageStream;
 
