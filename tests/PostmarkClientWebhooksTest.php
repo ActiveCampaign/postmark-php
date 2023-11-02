@@ -14,10 +14,9 @@ use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
 use Postmark\PostmarkClient as PostmarkClient;
 
+
 class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
-    private $testServerToken = "";
-    
     public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
