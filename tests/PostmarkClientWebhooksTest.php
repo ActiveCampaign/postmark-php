@@ -52,7 +52,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $this->assertNotEmpty($result->ID);
+        $this->assertNotEmpty($result->getID());
         $this->assertEquals($url, $result->Url);
         $this->assertEquals($messageStream, $result->MessageStream);
         $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());

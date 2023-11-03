@@ -15,6 +15,11 @@ class WebhookConfiguration implements \JsonSerializable
     public array $HttpHeaders;
     public WebhookConfigurationTriggers $Triggers;
 
+    public function __construct()
+    {
+        $this->setID(0);
+    }
+
     public function jsonSerialize(): array
     {
         return array(

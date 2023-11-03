@@ -13,12 +13,12 @@ use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
  */
 class WebhookConfigurationTriggers implements \JsonSerializable {
 
-    private WebhookConfigurationOpenTrigger $open;
-    private WebhookConfigurationClickTrigger $click;
-    private WebhookConfigurationDeliveryTrigger $delivery;
-    private WebhookConfigurationBounceTrigger $bounce;
-    private WebhookConfigurationSpamComplaintTrigger $spamComplaint;
-    private WebhookConfigurationSubscriptionChange $subscriptionChange;
+    private ?WebhookConfigurationOpenTrigger $open;
+    private ?WebhookConfigurationClickTrigger $click;
+    private ?WebhookConfigurationDeliveryTrigger $delivery;
+    private ?WebhookConfigurationBounceTrigger $bounce;
+    private ?WebhookConfigurationSpamComplaintTrigger $spamComplaint;
+    private ?WebhookConfigurationSubscriptionChange $subscriptionChange;
 
     /**
      * Create a new WebhookConfigurationTriggers object.
