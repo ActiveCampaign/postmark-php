@@ -25,8 +25,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $configurations = $client->getWebhookConfigurations();
 
         foreach ($configurations->Webhooks as $key => $value) {
-            if (preg_match('/test-php-url/', $value->Url)) {
-                $client->deleteWebhookConfiguration($value->ID);
+            if (preg_match('/test-php-url/', $value->getUrl())) {
+                $client->deleteWebhookConfiguration($value->getID());
             }
         }
     }
@@ -53,8 +53,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
         $this->assertNotEmpty($result->getID());
-        $this->assertEquals($url, $result->Url);
-        $this->assertEquals($messageStream, $result->MessageStream);
+        $this->assertEquals($url, $result->getUrl(),);
+        $this->assertEquals($messageStream, $result->getMessageStream());
         $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());
         $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->getPassword());
         $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
@@ -85,11 +85,11 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $result = $client->editWebhookConfiguration($configuration->ID, $url);
+        $result = $client->editWebhookConfiguration($configuration->getID(), $url);
 
-        $this->assertEquals($configuration->ID, $result->ID);
-        $this->assertEquals($configuration->Url, $result->Url);
-        $this->assertEquals($configuration->MessageStream, $result->MessageStream);
+        $this->assertEquals($configuration->getID(), $result->getID());
+        $this->assertEquals($configuration->getUrl(), $result->getUrl());
+        $this->assertEquals($configuration->getMessageStream(), $result->getMessageStream());
         $this->assertEquals($configuration->HttpAuth->getUsername(), $result->HttpAuth->getUsername());
         $this->assertEquals($configuration->HttpAuth->getPassword(), $result->HttpAuth->getPassword());
         $this->assertEquals($configuration->HttpHeaders[0]->Name, $result->HttpHeaders[0]->Name);
@@ -120,9 +120,9 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $newOpenTrigger = new WebhookConfigurationOpenTrigger(false, false);
         $newTriggers = new WebhookConfigurationTriggers($newOpenTrigger);
 
-        $result = $client->editWebhookConfiguration($configuration->ID, $newUrl, $newHttpAuth, $newHeaders, $newTriggers);
+        $result = $client->editWebhookConfiguration($configuration->getID(), $newUrl, $newHttpAuth, $newHeaders, $newTriggers);
 
-        $this->assertEquals($newUrl, $result->Url);
+        $this->assertEquals($newUrl, $result->getUrl());
         $this->assertEquals($newHttpAuth->getUsername(), $result->HttpAuth->getUsername());
         $this->assertEquals($newHttpAuth->getPassword(), $result->HttpAuth->getPassword());
         $this->assertEquals("X-Test-New-Header", $result->HttpHeaders[0]->Name);
@@ -140,10 +140,10 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url);
 
-        $result = $client->getWebhookConfiguration($configuration->ID);
+        $result = $client->getWebhookConfiguration($configuration->getID());
 
-        $this->assertEquals($configuration->ID, $result->ID);
-        $this->assertEquals($configuration->Url, $result->Url);
+        $this->assertEquals($configuration->getID(), $result->getID());
+        $this->assertEquals($configuration->getUrl(), $result->getUrl());
     }
 
     //list
@@ -168,7 +168,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url);
 
-        $deleteResult = $client->deleteWebhookConfiguration($configuration->ID);
+        $deleteResult = $client->deleteWebhookConfiguration($configuration->getID());
 
         $this->assertEquals(0, $deleteResult->ErrorCode);
     }
