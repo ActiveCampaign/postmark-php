@@ -31,6 +31,19 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         }
     }
 
+    public static function setUpBeforeClass(): void {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $configurations = $client->getWebhookConfigurations();
+
+        foreach ($configurations->Webhooks as $key => $value) {
+            if (preg_match('/test-php-url/', $value->getUrl())) {
+                $client->deleteWebhookConfiguration($value->getID());
+            }
+        }
+    }
+
     //create
     public function testClientCanCreateWebhookConfiguration() {
         $tk = parent::$testKeys;

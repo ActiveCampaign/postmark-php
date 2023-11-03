@@ -7,6 +7,14 @@ class WebhookConfigurationListingResponse
     public array $Webhooks;
 
     /**
+     * @param array $Webhooks
+     */
+    public function __construct(array $Webhooks)
+    {
+        $this->Webhooks = $Webhooks;
+    }
+
+    /**
      * @return array
      */
     public function getWebhooks(): array
