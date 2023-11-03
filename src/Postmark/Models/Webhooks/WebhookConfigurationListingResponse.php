@@ -2,6 +2,8 @@
 
 namespace Postmark\Models\Webhooks;
 
+use Postmark\Models\Webhooks\WebhookConfiguration;
+
 class WebhookConfigurationListingResponse
 {
     public array $Webhooks;
@@ -11,7 +13,7 @@ class WebhookConfigurationListingResponse
      */
     public function __construct(array $Webhooks)
     {
-        $this->Webhooks = $Webhooks;
+        $this->setWebhooks($Webhooks);
     }
 
     /**
@@ -28,7 +30,10 @@ class WebhookConfigurationListingResponse
      */
     public function setWebhooks(array $Webhooks): WebhookConfigurationListingResponse
     {
-        $this->Webhooks = $Webhooks;
+        foreach ($Webhooks as $webhook)
+        {
+            $this->Webhooks[] = json_decode(json_encode($webhook));;
+        }
         return $this;
     }
 }
