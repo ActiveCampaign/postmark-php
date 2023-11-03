@@ -4,6 +4,9 @@ namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
+use Postmark\Models\PostmarkResponse;
+use Postmark\Models\Webhooks\WebhookConfiguration;
+use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 
 /**
  * PostmarkClient provides the main functionality used to send and analyze email on a "per-Server"
@@ -1020,38 +1023,43 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
 
-	/**
-	 * Get information about a specific webhook configuration.
-	 *
-	 * @param integer $id The Id of the webhook configuration you wish to retrieve.
-	 * @return DynamicResponseModel
-	 */
-	function getWebhookConfiguration($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks/$id"));
+//	/**
+//	 * Get information about a specific webhook configuration.
+//	 *
+//	 * @param integer $id The Id of the webhook configuration you wish to retrieve.
+//	 * @return WebhookConfiguration
+//	 */
+    /***
+     * @param int $id
+     * @return WebhookConfiguration
+     */
+	function getWebhookConfiguration(int $id): WebhookConfiguration
+    {
+		return new WebhookConfiguration($this->processRestRequest('GET', "/webhooks/$id"));
 	}
 
 	/**
 	 * Get all webhook configurations associated with the Server.
 	 *
 	 * @param string|null $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
-	 * @return DynamicResponseModel
+	 * @return WebhookConfigurationListingResponse
 	 */
-	function getWebhookConfigurations(string $messageStream = NULL): DynamicResponseModel
+	function getWebhookConfigurations(string $messageStream = NULL): WebhookConfigurationListingResponse
     {
 		$query = array();
 		$query["MessageStream"] = $messageStream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/webhooks", $query));
+		return new WebhookConfigurationListingResponse($this->processRestRequest('GET', "/webhooks", $query));
 	}
 
 	/**
 	 * Delete a webhook configuration.
 	 *
 	 * @param integer $id The Id of the webhook configuration you wish to delete.
-	 * @return DynamicResponseModel
+	 * @return PostmarkResponse
 	 */
 	function deleteWebhookConfiguration($id) {
-		return new DynamicResponseModel($this->processRestRequest('DELETE', "/webhooks/$id"));
+		return new PostmarkResponse($this->processRestRequest('DELETE', "/webhooks/$id"));
 	}
 
 	/**
@@ -1063,9 +1071,14 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param array|null $httpHeaders Optional list of custom HTTP headers.
 	 * @param object|null $triggers Optional triggers for this webhook configuration.
 	 *
-	 * @return DynamicResponseModel
+	 * @return WebhookConfiguration
 	 */
-	function createWebhookConfiguration(string $url, string $messageStream = NULL, object $httpAuth = NULL, array $httpHeaders = NULL, object $triggers = NULL): DynamicResponseModel
+	function createWebhookConfiguration(
+        string $url,
+        string $messageStream = NULL,
+        object $httpAuth = NULL,
+        array $httpHeaders = NULL,
+        object $triggers = NULL): WebhookConfiguration
 	{
 		$body = array();
 		$body["Url"] = $url;
@@ -1074,7 +1087,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
 		$body["Triggers"] = $triggers;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/webhooks", $body));
+		return new WebhookConfiguration($this->processRestRequest('POST', "/webhooks", $body));
 	}
 
 	/**
@@ -1087,16 +1100,22 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param array|null $httpHeaders Optional list of custom HTTP headers.
 	 * @param object|null $triggers Optional triggers for this webhook configuration.
 	 *
-	 * @return DynamicResponseModel
+	 * @return WebhookConfiguration
 	 */
-	function editWebhookConfiguration(int $id, string $url = NULL, object $httpAuth = NULL, array $httpHeaders = NULL, object $triggers = NULL) {
+	function editWebhookConfiguration(
+        int $id,
+        string $url = NULL,
+        object $httpAuth = NULL,
+        array $httpHeaders = NULL,
+        object $triggers = NULL): WebhookConfiguration
+    {
 		$body = array();
 		$body["Url"] = $url;
 		$body["HttpAuth"] = $httpAuth;
 		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
 		$body["Triggers"] = $triggers;
 
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/webhooks/$id", $body));
+		return new WebhookConfiguration($this->processRestRequest('PUT', "/webhooks/$id", $body));
 	}
 
 	/**
