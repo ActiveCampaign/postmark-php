@@ -430,14 +430,85 @@ class PostmarkAdminClient extends PostmarkClientBase
         return new DataRemovalRequestResponse($this->processRestRequest('POST', '/data-removals', $body));
     }
 
-    /**
-     * Review the status of your data removal requests
-     *
-     * @param int $id ID of data removal request
-     * @return DataRemovalRequestResponse
-     */
-    public function getDataRemoval(int $id): DataRemovalRequestResponse
-    {
-        return new DataRemovalRequestResponse($this->processRestRequest('GET', sprintf('/data-removals/%s', $id)));
-    }
+  /**
+	 * Delete a Domain with the given ID.
+	 *
+	 * @param  integer $id The ID for the Domain we wish to delete.
+	 * @return DynamicResponseModel
+	 */
+	function deleteDomain($id) {
+		return new DynamicResponseModel($this->processRestRequest('DELETE', "/domains/$id"));
+	}
+
+  /**
+	 * Request that the Postmark API verify DKIM keys associated
+     * with the Domain.
+	 *
+	 * @param  integer $id The ID of the Domain we wish to verify DKIM keys on.
+	 * @return DynamicResponseModel
+	 */
+	function verifyDKIM($id) {
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyDkim"));
+	}
+
+  /**
+	 * Request that the Postmark API verify Return-Path DNS records associated
+     * with the Domain.
+	 *
+	 * @param  integer $id The ID of the Domain we wish to verify Return-Path DNS record on.
+	 * @return DynamicResponseModel
+	 */
+	function verifyReturnPath($id) {
+		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyReturnPath"));
+	}
+
+  /**
+	 * Rotate DKIM keys associated with the Domain. This key must be added
+	 * to your DNS records. Including DKIM is not required, but is recommended. For more information
+	 * on DKIM and its purpose, see http://www.dkim.org/
+	 *
+	 * @param  integer $id The ID for the Domain for which we wish to get an updated DKIM configuration.
+	 * @return DynamicResponseModel
+	 */
+	function rotateDKIMForDomain($id) {
+		return new DynamicResponseModel($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
+	}
+
+	/**
+	 * This endpoint allows you to erase recipient data from a specific account - for example when you’re processing
+	 * Data Subject Requests (DSR) under GDPR or CCPA
+	 *
+	 * @param string $requestedBy The email address of the user that is making the request
+	 * @param string $requestedFor The email address of the recipient who's asking for their data to be removed.
+	 * @param bool $notifyWhenCompleted Specifies whether the RequestedBy email address is notified when the data
+	 * removal request is complete
+	 * @return DynamicResponseModel
+	 * @throws Models\PostmarkException
+	 */
+	public function createDataRemovalRequest(
+		string $requestedBy,
+		string $requestedFor,
+		bool $notifyWhenCompleted
+    ): DynamicResponseModel {
+		$body = [];
+		$body['RequestedBy'] = $requestedBy;
+		$body['RequestedFor'] = $requestedFor;
+		$body['NotifyWhenCompleted'] = $notifyWhenCompleted;
+
+		return new DynamicResponseModel(
+			$this->processRestRequest('POST', '/data-removals', $body)
+        );
+	}
+
+  /**
+	 * Review the status of your data removal requests
+	 *
+	 * @param int $id ID of data removal request
+	 */
+	public function getDataRemoval(int $id): DynamicResponseModel
+	{
+		return new DynamicResponseModel(
+			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id))
+        );
+	}
 }

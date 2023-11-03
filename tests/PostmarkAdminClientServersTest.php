@@ -14,9 +14,9 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 		$servers = $client->listServers();
 
-		foreach ($servers->getServers() as $key => $value) {
-			if (preg_match('/^test-php.+/', $value->getName()) > 0 && !empty($value->getID())) {
-				$client->deleteServer($value->getID());
+		foreach ($servers->servers as $key => $value) {
+			if (preg_match('/^test-php.+/', $value->name) > 0 && !empty($value->ID)) {
+				$client->deleteServer($value->ID);
 			}
 		}
 	}

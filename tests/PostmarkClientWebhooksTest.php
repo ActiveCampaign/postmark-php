@@ -18,21 +18,8 @@ use Postmark\PostmarkClient as PostmarkClient;
 
 class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
-    public static function setUpBeforeClass(): void {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-        $configurations = $client->getWebhookConfigurations();
-        $hooks = $configurations->getWebhooks();
-
-        foreach ($hooks as $key => $value) {
-
-            if (preg_match('/test-php-url/', $value->Url)) {
-                $client->deleteWebhookConfiguration($value->ID);
-            }
-        }
-    }
-
+    private $testServerToken = "";
+    
     public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
@@ -40,8 +27,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $configurations = $client->getWebhookConfigurations();
         $webhooks = $configurations->getWebhooks();
 
-        foreach ($webhooks as $key => $value) {
-            //fwrite(STDERR, "-------------------------!!! ". print_r($value, TRUE));
+        foreach ($configurations->webhooks as $key => $value) {
             if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
@@ -69,17 +55,11 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $local_triggers = $result->getTriggers();
-//        fwrite(STDERR, "000-------------------------!!! ". print_r($local_triggers, TRUE));
-//        fwrite(STDERR, "111-------------------------!!! ". print_r($local_triggers->getOpenSettings(), TRUE));
-//        fwrite(STDERR, "222-------------------------!!! ". print_r($triggers, TRUE));
-//        fwrite(STDERR, "333-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
-
-        $this->assertNotEmpty($result->getID());
-        $this->assertEquals($url, $result->getUrl(),);
-        $this->assertEquals($messageStream, $result->getMessageStream());
-        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());
-        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->getPassword());
+        $this->assertNotEmpty($result->ID);
+        $this->assertEquals($url, $result->Url);
+        $this->assertEquals($messageStream, $result->MessageStream);
+        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->Username);
+        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->Password);
         $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($headers["X-Test-Header"], $result->HttpHeaders[0]->Value);
         $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
