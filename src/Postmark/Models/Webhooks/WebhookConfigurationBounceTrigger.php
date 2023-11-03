@@ -1,9 +1,6 @@
 <?php
 namespace Postmark\Models\Webhooks;
 
-/**
- * Settings for Bounce webhooks.
- */
 class WebhookConfigurationBounceTrigger implements \JsonSerializable {
 
     private $enabled;
