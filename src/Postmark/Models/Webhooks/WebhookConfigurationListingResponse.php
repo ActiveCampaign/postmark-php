@@ -4,6 +4,7 @@ namespace Postmark\Models\Webhooks;
 
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
+use Postmark\Models\Webhooks\HttpAuth;
 
 class WebhookConfigurationListingResponse
 {
@@ -31,12 +32,15 @@ class WebhookConfigurationListingResponse
      */
     public function setWebhooks(array $Webhooks): WebhookConfigurationListingResponse
     {
-        foreach ($Webhooks as $webhook)
+        //fwrite(STDERR, "first setWebhooks -------------------------!!! ". print_r($Webhooks, TRUE));
+        foreach ($Webhooks['Webhooks'] as $webhook)
         {
             $obj = json_decode(json_encode($webhook));
             // TODO add null checks
-            $triggers = new WebhookConfigurationTriggers($obj->Triggers->Open, $obj->Triggers->Click, $obj->Triggers->Delivery, $obj->Triggers->Bounce, $obj->Triggers->SpamComplaint, $obj->Triggers->SubscriptionChange);
-            $webhookConfig = new WebhookConfiguration((int)$obj->ID, $obj->Url = "", $obj->MessageStream, null, null, $triggers);
+            fwrite(STDERR, "second setWebhooks -------------------------!!! ". print_r($obj, TRUE));
+            $triggers = new WebhookConfigurationTriggers();
+            $httpAuth = new HttpAuth();
+            $webhookConfig = new WebhookConfiguration((int)$obj->ID, $obj->Url, $obj->MessageStream, $httpAuth, array(), $triggers);
 
             $this->Webhooks[] = $webhookConfig;
         }
