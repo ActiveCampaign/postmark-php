@@ -11,7 +11,7 @@ class WebhookConfiguration implements \JsonSerializable
     public int $ID;
     public string $Url;
     public string $MessageStream;
-    public HttpAuth $HttpAuth;
+    public ?HttpAuth $HttpAuth;
     public array $HttpHeaders;
     public WebhookConfigurationTriggers $Triggers;
 
@@ -23,7 +23,13 @@ class WebhookConfiguration implements \JsonSerializable
      * @param array $HttpHeaders
      * @param \Postmark\Models\Webhooks\WebhookConfigurationTriggers $Triggers
      */
-    public function __construct(int $ID, string $Url, string $MessageStream, HttpAuth $HttpAuth, array $HttpHeaders, WebhookConfigurationTriggers $Triggers)
+    public function __construct(
+        int $ID = 0,
+        string $Url = null,
+        string $MessageStream = null,
+        ?HttpAuth $HttpAuth = null,
+        array $HttpHeaders = array(),
+        WebhookConfigurationTriggers $Triggers = null)
     {
         $this->ID = $ID;
         $this->Url = $Url;
