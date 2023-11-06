@@ -36,7 +36,7 @@ class WebhookConfigurationListingResponse
             $obj = json_decode(json_encode($webhook));
             // TODO add null checks
             $triggers = new WebhookConfigurationTriggers($obj->Triggers->Open, $obj->Triggers->Click, $obj->Triggers->Delivery, $obj->Triggers->Bounce, $obj->Triggers->SpamComplaint, $obj->Triggers->SubscriptionChange);
-            $webhookConfig = new WebhookConfiguration((int)$obj->ID, $obj->Url, $obj->MessageStream, null, null, $triggers);
+            $webhookConfig = new WebhookConfiguration((int)$obj->ID, $obj->Url = "", $obj->MessageStream, null, null, $triggers);
 
             $this->Webhooks[] = $webhookConfig;
         }
