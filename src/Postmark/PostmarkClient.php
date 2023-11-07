@@ -1084,7 +1084,9 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
 		$body["Triggers"] = $triggers;
 
-		return new WebhookConfiguration($this->processRestRequest('POST', "/webhooks", $body));
+        $response = $this->processRestRequest('POST', "/webhooks", $body);
+        $webhook = new WebhookConfiguration($response);
+		return $webhook;
 	}
 
 	/**
