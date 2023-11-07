@@ -1023,14 +1023,10 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
 	}
 
-//	/**
-//	 * Get information about a specific webhook configuration.
-//	 *
-//	 * @param integer $id The Id of the webhook configuration you wish to retrieve.
-//	 * @return WebhookConfiguration
-//	 */
-    /***
-     * @param int $id
+    /**
+     * Get information about a specific webhook configuration.
+     *
+     * @param int $id The Id of the webhook configuration you wish to retrieve.
      * @return WebhookConfiguration
      */
 	function getWebhookConfiguration(int $id): WebhookConfiguration
