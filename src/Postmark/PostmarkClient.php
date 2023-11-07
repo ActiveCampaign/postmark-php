@@ -1073,7 +1073,8 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @return WebhookConfiguration
 	 */
-	function createWebhookConfiguration(
+	function
+    createWebhookConfiguration(
         string $url,
         string $messageStream = NULL,
         object $httpAuth = NULL,
