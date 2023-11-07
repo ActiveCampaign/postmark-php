@@ -40,7 +40,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $hooks = $configurations->getWebhooks();
 
         foreach ($hooks as $key => $value) {
-            fwrite(STDERR, "-------------------------!!! ". print_r($value, TRUE));
+
             if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
