@@ -15,6 +15,49 @@ class WebhookConfiguration implements \JsonSerializable
     public array $HttpHeaders;
     public WebhookConfigurationTriggers $Triggers;
 
+
+    public function __construct()
+    {
+        $arguments = func_get_args();
+        $numberOfArguments = func_num_args();
+
+        if ($numberOfArguments === 1)
+        {
+            $obj = json_decode(json_encode($arguments[0]));
+
+            //fwrite(STDERR, "-------------------------!!! ". print_r($obj, TRUE));
+            $httpAuth = !empty($obj->HttpAuth) ? new HttpAuth($obj->HttpAuth->Username, $obj->HttpAuth->Password) : new HttpAuth();
+
+            $local_open = !empty($obj->Triggers->open) ? $obj->Triggers->open : null;
+            $local_click = !empty($obj->Triggers->click) ? $obj->Triggers->click : null;
+            $local_delivery = !empty($obj->Triggers->delivery) ? $obj->Triggers->delivery : null;
+            $local_bounce = !empty($obj->Triggers->bounce) ? $obj->Triggers->bounce : null;
+            $local_spamComplaint = !empty($obj->Triggers->spamComplaint) ? $obj->Triggers->spamComplaint : null;
+            $local_subscriptionChange = !empty($obj->Triggers->subscriptionChange) ? $obj->Triggers->subscriptionChange : null;
+
+            $triggers = new WebhookConfigurationTriggers(
+                $local_open,
+                $local_click,
+                $local_delivery,
+                $local_bounce,
+                $local_spamComplaint,
+                $local_subscriptionChange);
+
+            $local_id = !empty($obj->ID) ? $obj->ID : 0;
+            $local_url = !empty($obj->Url) ? $obj->Url : "";
+            $local_message = !empty($obj->MessageStream) ? $obj->MessageStream : "";
+            $local_httpauth = $httpAuth;
+            $local_httpheaders = !empty($obj->HttpHeaders) ? $obj->HttpHeaders : array();
+            $local_triggers = $triggers;
+
+            $this->Build($local_id, $local_url, $local_message, $local_httpauth, $local_httpheaders, $local_triggers);
+        }
+        else
+        {
+            $this->Build($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
+        }
+    }
+
     /**
      * @param int $ID
      * @param string $Url
@@ -23,7 +66,7 @@ class WebhookConfiguration implements \JsonSerializable
      * @param array $HttpHeaders
      * @param \Postmark\Models\Webhooks\WebhookConfigurationTriggers $Triggers
      */
-    public function __construct(
+    public function Build(
         int $ID = 0,
         string $Url = null,
         string $MessageStream = null,
