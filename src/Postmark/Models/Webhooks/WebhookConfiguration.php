@@ -4,7 +4,12 @@ namespace Postmark\Models\Webhooks;
 
 use Postmark\Models\Webhooks\HttpAuth as HttpAuth;
 use Postmark\Models\Webhooks\HttpHeader as HttpHeader;
+use Postmark\Models\Webhooks\WebhookConfigurationBounceTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
+use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
+use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
+use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
+use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChangeTrigger;
 
 class WebhookConfiguration implements \JsonSerializable
 {
@@ -15,7 +20,6 @@ class WebhookConfiguration implements \JsonSerializable
     public array $HttpHeaders;
     public WebhookConfigurationTriggers $Triggers;
 
-
     public function __construct()
     {
         $arguments = func_get_args();
@@ -25,15 +29,16 @@ class WebhookConfiguration implements \JsonSerializable
         {
             $obj = json_decode(json_encode($arguments[0]));
 
-            //fwrite(STDERR, "-------------------------!!! ". print_r($obj, TRUE));
+            //fwrite(STDERR, "aaa-------------------------!!! ". print_r($obj, TRUE));
             $httpAuth = !empty($obj->HttpAuth) ? new HttpAuth($obj->HttpAuth->Username, $obj->HttpAuth->Password) : new HttpAuth();
 
-            $local_open = !empty($obj->Triggers->open) ? $obj->Triggers->open : null;
-            $local_click = !empty($obj->Triggers->click) ? $obj->Triggers->click : null;
-            $local_delivery = !empty($obj->Triggers->delivery) ? $obj->Triggers->delivery : null;
-            $local_bounce = !empty($obj->Triggers->bounce) ? $obj->Triggers->bounce : null;
-            $local_spamComplaint = !empty($obj->Triggers->spamComplaint) ? $obj->Triggers->spamComplaint : null;
-            $local_subscriptionChange = !empty($obj->Triggers->subscriptionChange) ? $obj->Triggers->subscriptionChange : null;
+            $local_triggers = $obj->Triggers;
+            $local_open = !empty($local_triggers->Open) ? new WebhookConfigurationOpenTrigger($local_triggers->Open->Enabled, $local_triggers->Open->PostFirstOpenOnly) : null;
+            $local_click = !empty($local_triggers->Click) ? new WebhookConfigurationClickTrigger($local_triggers->Click->Enabled) : null;
+            $local_delivery = !empty($local_triggers->Delivery) ? new WebhookConfigurationDeliveryTrigger($local_triggers->Delivery->Enabled) : null;
+            $local_bounce = !empty($local_triggers->Bounce) ? new WebhookConfigurationBounceTrigger($local_triggers->Bounce->Enabled, $local_triggers->Bounce->IncludeContent) : null;
+            $local_spamComplaint = !empty($local_triggers->SpamComplaint) ? new WebhookConfigurationSpamComplaintTrigger($local_triggers->SpamComplaint->Enabled, $local_triggers->SpamComplaint->IncludeContent) : null;
+            $local_subscriptionChange = !empty($local_triggers->SubscriptionChange) ? new WebhookConfigurationSubscriptionChangeTrigger($local_triggers->SubscriptionChange->Enabled) : null;
 
             $triggers = new WebhookConfigurationTriggers(
                 $local_open,
@@ -150,7 +155,7 @@ class WebhookConfiguration implements \JsonSerializable
     /**
      * @return \Postmark\Models\Webhooks\HttpAuth
      */
-    public function getHttpAuth(): \Postmark\Models\Webhooks\HttpAuth
+    public function getHttpAuth(): HttpAuth
     {
         return $this->HttpAuth;
     }
@@ -159,7 +164,7 @@ class WebhookConfiguration implements \JsonSerializable
      * @param \Postmark\Models\Webhooks\HttpAuth $HttpAuth
      * @return WebhookConfiguration
      */
-    public function setHttpAuth(\Postmark\Models\Webhooks\HttpAuth $HttpAuth): WebhookConfiguration
+    public function setHttpAuth(HttpAuth $HttpAuth): WebhookConfiguration
     {
         $this->HttpAuth = $HttpAuth;
         return $this;
@@ -186,7 +191,7 @@ class WebhookConfiguration implements \JsonSerializable
     /**
      * @return \Postmark\Models\Webhooks\WebhookConfigurationTriggers
      */
-    public function getTriggers(): \Postmark\Models\Webhooks\WebhookConfigurationTriggers
+    public function getTriggers(): WebhookConfigurationTriggers
     {
         return $this->Triggers;
     }
@@ -195,7 +200,7 @@ class WebhookConfiguration implements \JsonSerializable
      * @param \Postmark\Models\Webhooks\WebhookConfigurationTriggers $Triggers
      * @return WebhookConfiguration
      */
-    public function setTriggers(\Postmark\Models\Webhooks\WebhookConfigurationTriggers $Triggers): WebhookConfiguration
+    public function setTriggers(WebhookConfigurationTriggers $Triggers): WebhookConfiguration
     {
         $this->Triggers = $Triggers;
         return $this;

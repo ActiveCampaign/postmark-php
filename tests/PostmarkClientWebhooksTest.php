@@ -11,7 +11,7 @@ use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationDeliveryTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
+use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChangeTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
 use Postmark\PostmarkClient as PostmarkClient;
 
@@ -58,7 +58,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $deliveryTrigger = new WebhookConfigurationDeliveryTrigger(true);
         $bounceTrigger = new WebhookConfigurationBounceTrigger(true, true);
         $spamComplaintTrigger = new WebhookConfigurationSpamComplaintTrigger(true, true);
-        $subscriptionChangeTrigger = new WebhookConfigurationSubscriptionChange(true);
+        $subscriptionChangeTrigger = new WebhookConfigurationSubscriptionChangeTrigger(true);
 
         $triggers = new WebhookConfigurationTriggers($openTrigger, $clickTrigger, $deliveryTrigger, $bounceTrigger, $spamComplaintTrigger, $subscriptionChangeTrigger);
 
@@ -69,8 +69,11 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        fwrite(STDERR, "111-------------------------!!! ". print_r($triggers, TRUE));
-            fwrite(STDERR, "222-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
+        $local_triggers = $result->getTriggers();
+//        fwrite(STDERR, "000-------------------------!!! ". print_r($local_triggers, TRUE));
+//        fwrite(STDERR, "111-------------------------!!! ". print_r($local_triggers->getOpenSettings(), TRUE));
+//        fwrite(STDERR, "222-------------------------!!! ". print_r($triggers, TRUE));
+//        fwrite(STDERR, "333-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
 
         $this->assertNotEmpty($result->getID());
         $this->assertEquals($url, $result->getUrl(),);
@@ -190,6 +193,6 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $deleteResult = $client->deleteWebhookConfiguration($configuration->getID());
 
-        $this->assertEquals(0, $deleteResult->ErrorCode);
+        $this->assertEquals(0, $deleteResult->getErrorCode());
     }
 }

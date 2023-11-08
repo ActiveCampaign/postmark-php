@@ -1054,8 +1054,10 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param integer $id The Id of the webhook configuration you wish to delete.
 	 * @return PostmarkResponse
 	 */
-	function deleteWebhookConfiguration($id) {
-		return new PostmarkResponse($this->processRestRequest('DELETE', "/webhooks/$id"));
+	function deleteWebhookConfiguration(int $id): PostmarkResponse
+    {
+        $response = $this->processRestRequest('DELETE', "/webhooks/$id");
+		return new PostmarkResponse($response['ErrorCode'], $response['Message']);
 	}
 
 	/**
@@ -1085,8 +1087,8 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["Triggers"] = $triggers;
 
         $response = $this->processRestRequest('POST', "/webhooks", $body);
-        $webhook = new WebhookConfiguration($response);
-		return $webhook;
+        //fwrite(STDERR, "zzz-------------------------!!! ". print_r($webhook, TRUE));
+		return new WebhookConfiguration($response);
 	}
 
 	/**
