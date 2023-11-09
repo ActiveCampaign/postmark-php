@@ -10,8 +10,6 @@ use Postmark\PostmarkClient as PostmarkClient;
 
 class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
-    private $testServerToken = "";
-
     public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
@@ -29,8 +27,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
-        $this->assertEquals("Suppressed", $result->Suppressions[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->getEmailAddress());
+        $this->assertEquals("Suppressed", $result->getSuppressions()[0]->getStatus());
     }
 
     //create suppression with default message stream
@@ -43,8 +41,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges);
 
-        $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
-        $this->assertEquals("Suppressed", $result->Suppressions[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
+        $this->assertEquals("Suppressed", $result->getSuppressions()[0]->Status);
     }
 
     //reactivate suppression
@@ -59,8 +57,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->deleteSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
-        $this->assertEquals("Deleted", $result->Suppressions[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
+        $this->assertEquals("Deleted", $result->getSuppressions()[0]->Status);
     }
 
     //invalid request returns failed Status
@@ -75,8 +73,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertEquals($emailAddress, $result->Suppressions[0]->EmailAddress);
-        $this->assertEquals("Failed", $result->Suppressions[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
+        $this->assertEquals("Failed", $result->getSuppressions()[0]->Status);
     }
 
     //multiple requests are supported
@@ -94,9 +92,10 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertNotEmpty($result->Suppressions);
-        foreach($result->Suppressions as $suppressionChangeResult){
-            $this->assertEquals("Suppressed", $suppressionChangeResult->Status);
+        $this->assertNotEmpty($result->getSuppressions());
+        foreach($result->getSuppressions() as $suppressionChangeResult)
+        {
+            $this->assertEquals("Suppressed", $suppressionChangeResult->getStatus());
         }
     }
 
