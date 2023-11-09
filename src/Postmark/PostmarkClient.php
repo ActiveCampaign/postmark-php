@@ -5,6 +5,8 @@ namespace Postmark;
 use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 use Postmark\Models\PostmarkResponse;
+use Postmark\Models\PostmarkTemplate;
+use Postmark\Models\PostmarkTemplateList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 
@@ -79,28 +81,40 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send an email using a template.
 	 *
-	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-	 * @param  string $to The recipient of the email.
-	 * @param  integer|string $templateIdOrAlias  The ID or alias of the template to use to generate the content of this message.
-	 * @param  array $templateModel  The values to combine with the Templated content.
-	 * @param  boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
-	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
-	 * @param  boolean $trackOpens  True if you want Postmark to track opens of HTML emails.
-	 * @param  string $replyTo  Reply to email address.
-	 * @param  string $cc  Carbon Copy recipients, comma-separated
-	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
-	 * @param  array $headers  Headers to be included with the sent email message.
-	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
-	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
-	 * @param  array $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
-	 * @return DynamicResponseModel
+	 * @param string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param string $to The recipient of the email.
+	 * @param integer|string $templateIdOrAlias  The ID or alias of the template to use to generate the content of this message.
+	 * @param array $templateModel  The values to combine with the Templated content.
+	 * @param boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
+	 * @param string|null $tag  A tag associated with this message, useful for classifying sent messages.
+	 * @param boolean|null $trackOpens  True if you want Postmark to track opens of HTML emails.
+	 * @param string|null $replyTo  Reply to email address.
+	 * @param string|null $cc  Carbon Copy recipients, comma-separated
+	 * @param string|null $bcc  Blind Carbon Copy recipients, comma-separated.
+	 * @param array|null $headers  Headers to be included with the sent email message.
+	 * @param array|null $attachments  An array of PostmarkAttachment objects.
+	 * @param string|null $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param array|null $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
+	 * @param array|null $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+	 * @return PostmarkResponse
 	 */
-	function sendEmailWithTemplate($from, $to, $templateIdOrAlias, $templateModel, $inlineCss = true,
-		$tag = NULL, $trackOpens = NULL, $replyTo = NULL,
-		$cc = NULL, $bcc = NULL, $headers = NULL, $attachments = NULL,
-		$trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
-
+	function sendEmailWithTemplate(
+        string     $from,
+        string     $to,
+        int|string $templateIdOrAlias,
+        array  $templateModel,
+        bool   $inlineCss = true,
+        string $tag = NULL,
+        bool   $trackOpens = NULL,
+        string $replyTo = NULL,
+        string $cc = NULL,
+        string $bcc = NULL,
+        array  $headers = NULL,
+        array  $attachments = NULL,
+        string $trackLinks = NULL,
+        array  $metadata = NULL,
+        array  $messageStream = NULL): PostmarkResponse
+    {
 		$body = array();
 		$body['From'] = $from;
 		$body['To'] = $to;
@@ -115,7 +129,6 @@ class PostmarkClient extends PostmarkClientBase {
 		$body['InlineCss'] = $inlineCss;
 		$body['Metadata'] = $metadata;
 		$body['MessageStream'] = $messageStream;
-
 
 		// Since this parameter can override a per-server setting
 		// we have to check whether it was actually set.
@@ -132,8 +145,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$body['TemplateAlias'] = $templateIdOrAlias;
 		}
 
-
-		return new DynamicResponseModel($this->processRestRequest('POST', '/email/withTemplate', $body));
+		return new PostmarkResponse($this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
 
 	/**
@@ -929,10 +941,11 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Delete a template.
 	 *
 	 * @param string $id The ID or alias of the template to delete.
-	 * @return DynamicResponseModel
+	 * @return PostmarkResponse
 	 */
-	function deleteTemplate($id) {
-		return new DynamicResponseModel($this->processRestRequest('DELETE', "/templates/$id"));
+	function deleteTemplate(string $id): PostmarkResponse
+    {
+		return new PostmarkResponse($this->processRestRequest('DELETE', "/templates/$id"));
 	}
 
 	/**
@@ -942,13 +955,21 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
 	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL.
 	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL.
-	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+	 * @param string|null $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
 	 * @param string $templateType Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
-	 * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
+	 * @param string|null $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkTemplate
 	 */
-	function createTemplate($name, $subject, $htmlBody, $textBody, $alias = NULL, $templateType = 'Standard', $layoutTemplate = NULL) {
+	function createTemplate(
+        string $name,
+        string $subject,
+        string $htmlBody,
+        string $textBody,
+        string $alias = NULL,
+        string $templateType = 'Standard',
+        string $layoutTemplate = NULL): PostmarkTemplate
+    {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
@@ -958,23 +979,31 @@ class PostmarkClient extends PostmarkClientBase {
 		$template["templateType"] = $templateType;
 		$template["layoutTemplate"] = $layoutTemplate;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/templates", $template));
+		return new PostmarkTemplate($this->processRestRequest('POST', "/templates", $template));
 	}
 
 	/**
 	 * Edit a template
 	 *
 	 * @param string $id The ID or alias of the template you wish to update.
-	 * @param string $name The friendly name for this template.
-	 * @param string $subject The template to be used for the 'subject' of emails sent using this template.
-	 * @param string $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
-	 * @param string $textBody The template to be used for the 'textBody' of emails sent using this template.
-	 * @param string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-	 * @param string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
+	 * @param string|null $name The friendly name for this template.
+	 * @param string|null $subject The template to be used for the 'subject' of emails sent using this template.
+	 * @param string|null $htmlBody The template to be used for the 'htmlBody' of emails sent using this template.
+	 * @param string|null $textBody The template to be used for the 'textBody' of emails sent using this template.
+	 * @param string|null $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+	 * @param string|null $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkTemplate
 	 */
-	function editTemplate($id, $name = NULL, $subject = NULL, $htmlBody = NULL, $textBody = NULL, $alias = NULL, $layoutTemplate = NULL) {
+	function editTemplate(
+        string $id,
+        string $name = NULL,
+        string $subject = NULL,
+        string $htmlBody = NULL,
+        string $textBody = NULL,
+        string $alias = NULL,
+        string $layoutTemplate = NULL): PostmarkTemplate
+    {
 		$template = array();
 		$template["name"] = $name;
 		$template["subject"] = $subject;
@@ -983,18 +1012,30 @@ class PostmarkClient extends PostmarkClientBase {
 		$template["alias"] = $alias;
 		$template["layoutTemplate"] = $layoutTemplate;
 
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/templates/$id", $template));
+		return new PostmarkTemplate($this->processRestRequest('PUT', "/templates/$id", $template));
 	}
 
-	/**
-	 * Get the current information for a specific template.
-	 *
-	 * @param string $id the Id or alias for the template info you wish to retrieve.
-	 * @return DynamicResponseModel
-	 */
-	function getTemplate($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/templates/$id"));
+    /**
+     * Get the current information for a specific template.
+     *
+     * @param int $id the Id for the template info you wish to retrieve.
+     * @return PostmarkTemplate
+     */
+	function getTemplate(int $id): PostmarkTemplate
+    {
+		return new PostmarkTemplate($this->processRestRequest('GET', "/templates/$id"));
 	}
+
+    /**
+     * Get the current information for a specific template.
+     *
+     * @param string $alias the alias for the template info you wish to retrieve.
+     * @return PostmarkTemplate
+     */
+    function getTemplateByAlias(string $alias): PostmarkTemplate
+    {
+        return new PostmarkTemplate($this->processRestRequest('GET', "/templates/$alias"));
+    }
 
 	/**
 	 * Get all templates associated with the Server.
@@ -1002,11 +1043,16 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param integer $count The total number of templates to get at once (default is 100)
 	 * @param integer $offset The number of templates to "Skip" before returning results.
 	 * @param string $templateType Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
-	 * @param string $layoutTemplate Filters the results based on the layout template alias. Defaults to NULL.
+	 * @param string|null $layoutTemplate Filters the results based on the layout template alias. Defaults to NULL.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkTemplateList
 	 */
-	function listTemplates($count = 100, $offset = 0, $templateType = 'All', $layoutTemplate = NULL) {
+	function listTemplates(
+        int $count = 100,
+        int $offset = 0,
+        string $templateType = 'All',
+        string $layoutTemplate = NULL): PostmarkTemplateList
+    {
 		$query = array();
 
 		$query["count"] = $count;
@@ -1014,7 +1060,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["templateType"] = $templateType;
 		$query["layoutTemplate"] = $layoutTemplate;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/templates", $query));
+		return new PostmarkTemplateList($this->processRestRequest('GET', "/templates", $query));
 	}
 
 	/**
