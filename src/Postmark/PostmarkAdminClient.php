@@ -4,6 +4,10 @@ namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
+use Postmark\Models\DataRemovalRequestResponse as DataRemovalRequestResponse;
+use Postmark\Models\PostmarkDomain;
+use Postmark\Models\PostmarkDomainDetails;
+use Postmark\Models\PostmarkDomainList;
 
 /**
  * The PostmarkAdminClient allows users to access and modify
@@ -282,56 +286,62 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 *
 	 * @param  integer $count The number of Domains to retrieve with this request.
 	 *  param  integer $offset The number of Domains to 'skip' when 'paging' through them.
-	 * @return DynamicResponseModel
-	 */
-	function listDomains($count = 100, $offset = 0) {
+	 * @return PostmarkDomainList
+   */
+	function listDomains($count = 100, $offset = 0):PostmarkDomainList  {
 
 		$query = array();
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/domains/', $query));
+        $response = $this->processRestRequest('GET', '/domains/', $query);
+
+		return new PostmarkDomainList($response);
 	}
 
   /**
 	 * Get information for a specific Domain.
 	 *
-	 * @param  integer $id The ID for the Domains you wish to retrieve.
-	 * @return DynamicResponseModel
-	 */
-	function getDomain($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/domains/$id"));
+	 * @param integer $id The ID for the Domains you wish to retrieve.
+	 * @return PostmarkDomainDetails
+   */
+	function getDomain(int $id): PostmarkDomainDetails {
+        $tempDomain = $this->processRestRequest('GET', "/domains/$id");
+		return new PostmarkDomainDetails($tempDomain);
 	}
 
 
   /**
 	 * Create a new Domain with the given Name.
 	 *
-	 * @param  string $name The name of the Domain.
-	 * @param  string $returnPathDomain The custom Return-Path domain for the Sender Signature.
-	 * @return DynamicResponseModel
+	 * @param string $name The name of the Domain.
+	 * @param string|null $returnPathDomain The custom Return-Path domain for the Sender Signature.
+	 * @return PostmarkDomainDetails
 	 */
-	function createDomain($name, $returnPathDomain = NULL) {
+	function createDomain(string $name, string $returnPathDomain = NULL): PostmarkDomainDetails
+    {
 		$body = array();
 		$body['name'] = $name;
 		$body['returnPathDomain'] = $returnPathDomain;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', '/domains/', $body));
+        $tempDomain = $this->processRestRequest('POST', '/domains/', $body);
+        return new PostmarkDomainDetails($tempDomain);
 	}
 
   /**
 	 * Alter the properties of a Domain.
 	 *
-	 * @param  integer $id The ID for the Domain we wish to modify.
-	 * @param  string $returnPathDomain The custom Return-Path domain for the Domain.
-	 * @return DynamicResponseModel
+	 * @param integer $id The ID for the Domain we wish to modify.
+	 * @param string|null $returnPathDomain The custom Return-Path domain for the Domain.
+	 * @return PostmarkDomainDetails
 	 */
-	function editDomain($id, $returnPathDomain = NULL) {
-
+	function editDomain(int $id, string $returnPathDomain = NULL): PostmarkDomainDetails
+    {
 		$body = array();
 		$body['returnPathDomain'] = $returnPathDomain;
 
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id", $body));
+        $tempDomain = $this->processRestRequest('PUT', "/domains/$id", $body);
+        return new PostmarkDomainDetails($tempDomain);
 	}
 
   /**
@@ -348,22 +358,26 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * Request that the Postmark API verify DKIM keys associated
      * with the Domain.
 	 *
-	 * @param  integer $id The ID of the Domain we wish to verify DKIM keys on.
-	 * @return DynamicResponseModel
+	 * @param integer $id The ID of the Domain we wish to verify DKIM keys on.
+	 * @return PostmarkDomainDetails
 	 */
-	function verifyDKIM($id) {
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyDkim"));
+	function verifyDKIM(int $id): PostmarkDomainDetails
+    {
+        $tempDomain = $this->processRestRequest('PUT', "/domains/$id/verifyDkim");
+        return new PostmarkDomainDetails($tempDomain);
 	}
 
   /**
 	 * Request that the Postmark API verify Return-Path DNS records associated
      * with the Domain.
 	 *
-	 * @param  integer $id The ID of the Domain we wish to verify Return-Path DNS record on.
-	 * @return DynamicResponseModel
+	 * @param integer $id The ID of the Domain we wish to verify Return-Path DNS record on.
+	 * @return PostmarkDomainDetails
 	 */
-	function verifyReturnPath($id) {
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/domains/$id/verifyReturnPath"));
+	function verifyReturnPath(int $id): PostmarkDomainDetails
+    {
+        $tempDomain = $this->processRestRequest('PUT', "/domains/$id/verifyReturnPath");
+        return new PostmarkDomainDetails($tempDomain);
 	}
 
   /**
@@ -386,33 +400,35 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 * @param string $requestedFor The email address of the recipient who's asking for their data to be removed.
 	 * @param bool $notifyWhenCompleted Specifies whether the RequestedBy email address is notified when the data
 	 * removal request is complete
-	 * @return DynamicResponseModel
+	 * @return DataRemovalRequestResponse
 	 * @throws Models\PostmarkException
 	 */
 	public function createDataRemovalRequest(
 		string $requestedBy,
 		string $requestedFor,
 		bool $notifyWhenCompleted
-    ): DynamicResponseModel {
+    ): DataRemovalRequestResponse
+    {
 		$body = [];
 		$body['RequestedBy'] = $requestedBy;
 		$body['RequestedFor'] = $requestedFor;
 		$body['NotifyWhenCompleted'] = $notifyWhenCompleted;
 
-		return new DynamicResponseModel(
-			$this->processRestRequest('POST', '/data-removals', $body)
-        );
+        $array = $this->processRestRequest('POST', '/data-removals', $body);
+
+		return new DataRemovalRequestResponse($array["ID"], $array["Status"]);
 	}
 
-  /**
-	 * Review the status of your data removal requests
-	 *
-	 * @param int $id ID of data removal request
-	 */
-	public function getDataRemoval(int $id): DynamicResponseModel
+    /**
+     * Review the status of your data removal requests
+     *
+     * @param int $id ID of data removal request
+     * @return DataRemovalRequestResponse
+     */
+	public function getDataRemoval(int $id): DataRemovalRequestResponse
 	{
-		return new DynamicResponseModel(
-			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id))
-        );
+        $array = $this->processRestRequest('GET', sprintf('/data-removals/%s', $id));
+
+        return new DataRemovalRequestResponse($array["ID"], $array["Status"]);
 	}
 }

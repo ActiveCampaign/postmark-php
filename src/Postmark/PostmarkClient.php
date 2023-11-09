@@ -215,24 +215,33 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('GET', '/deliverystats'));
 	}
 
-	/**
-	 * Get a batch of bounces to be processed.
-	 *
-	 * @param  integer $count Number of bounces to retrieve
-	 * @param  integer $offset How many bounces to skip (when paging through bounces.)
-	 * @param  string $type The bounce type. (see http://developer.postmarkapp.com/developer-api-bounce.html#bounce-types)
-	 * @param  bool $inactive Specifies if the bounce caused Postmark to deactivate this email.
-	 * @param  string $emailFilter Filter by email address
-	 * @param  string $tag Filter by tag
-	 * @param  string $messageID Filter by MessageID
-	 * @param  string $fromdate Filter for bounces after is date.
-	 * @param  string $todate Filter for bounces before this date.
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-	 * @return DynamicResponseModel
-	 */
-	function getBounces($count = 100, $offset = 0, $type = NULL,
-		$inactive = NULL, $emailFilter = NULL, $tag = NULL, $messageID = NULL,
-	        $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+    /**
+     * Get a batch of bounces to be processed.
+     *
+     * @param integer $count Number of bounces to retrieve
+     * @param integer $offset How many bounces to skip (when paging through bounces.)
+     * @param string|null $type The bounce type. (see http://developer.postmarkapp.com/developer-api-bounce.html#bounce-types)
+     * @param bool|null $inactive Specifies if the bounce caused Postmark to deactivate this email.
+     * @param string|null $emailFilter Filter by email address
+     * @param string|null $tag Filter by tag
+     * @param int|null $messageID Filter by MessageID
+     * @param string|null $fromdate Filter for bounces after is date.
+     * @param string|null $todate Filter for bounces before this date.
+     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @return DynamicResponseModel
+     */
+	function getBounces(
+        int  $count = 100,
+        int $offset = 0,
+        ?string $type = NULL,
+        ?bool $inactive = NULL,
+        ?string $emailFilter = NULL,
+        ?string $tag = NULL,
+        ?int $messageID = NULL,
+        ?string $fromdate = NULL,
+        ?string $todate = NULL,
+        ?string $messagestream = NULL)
+    {
 
 		$query = array();
 		$query['type'] = $type;
@@ -252,26 +261,28 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Locate information on a specific email bounce.
 	 *
-	 * @param  integer $id The ID of the bounce to get.
+	 * @param integer $id The ID of the bounce to get.
 	 *
 	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
 	 *
 	 * @return DynamicResponseModel
 	 */
-	function getBounce($id) {
+	function getBounce(int $id): DynamicResponseModel
+    {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id"));
 	}
 
-	/**
-	 * Get a "dump" for a specific bounce.
-	 *
-	 * @param  integer $id The ID of the bounce for which we want a dump.
-	 *
-	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
-	 *
-	 * @return string
-	 */
-	function getBounceDump($id) {
+    /**
+     * Get a "dump" for a specific bounce.
+     *
+     * @param integer $id The ID of the bounce for which we want a dump.
+     *
+     * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+     *
+     * @return DynamicResponseModel|string
+     */
+	function getBounceDump(int $id): DynamicResponseModel|string
+    {
 		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id/dump"));
 	}
 
@@ -343,26 +354,35 @@ class PostmarkClient extends PostmarkClientBase {
 		return new DynamicResponseModel($this->processRestRequest('PUT', '/server', $body));
 	}
 
-	/**
-	 * Search messages that have been sent using this Server.
-	 *
-	 * @param  integer $count How many messages to retrieve at once (defaults to 100)
-	 * @param  integer $offset How many messages to skip when 'paging' through the massages (defaults to 0)
-	 * @param  string $recipient Filter by recipient.
-	 * @param  string $fromEmail Filter by sender email address.
-	 * @param  string $tag Filter by tag.
-	 * @param  string $subject Filter by subject.
-	 * @param  string $status The current status for the outbound messages to return defaults to 'sent'
-	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD
-	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
-	 * @param  string $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-	 * @return DynamicResponseModel
-	 */
-	function getOutboundMessages($count = 100, $offset = 0, $recipient = NULL,
-		$fromEmail = NULL, $tag = NULL, $subject = NULL, $status = NULL,
-		$fromdate = NULL, $todate = NULL, $metadata = NULL, $messagestream = NULL) {
-
+    /**
+     * Search messages that have been sent using this Server.
+     *
+     * @param integer $count How many messages to retrieve at once (defaults to 100)
+     * @param integer $offset How many messages to skip when 'paging' through the massages (defaults to 0)
+     * @param string|null $recipient Filter by recipient.
+     * @param string|null $fromEmail Filter by sender email address.
+     * @param string|null $tag Filter by tag.
+     * @param string|null $subject Filter by subject.
+     * @param string|null $status The current status for the outbound messages to return defaults to 'sent'
+     * @param string|null $fromdate Filter to messages on or after YYYY-MM-DD
+     * @param string|null $todate Filter to messages on or before YYYY-MM-DD
+     * @param array|null $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
+     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @return DynamicResponseModel
+     */
+	function getOutboundMessages(
+        int $count = 100,
+        int $offset = 0,
+        ?string $recipient = NULL,
+        ?string $fromEmail = NULL,
+        ?string $tag = NULL,
+        ?string $subject = NULL,
+        ?string $status = NULL,
+        ?string $fromdate = NULL,
+        ?string $todate = NULL,
+        ?array $metadata = NULL,
+        ?string $messagestream = NULL)
+    {
 		$query = array();
 		$query["recipient"] = $recipient;
 		$query["fromemail"] = $fromEmail;
