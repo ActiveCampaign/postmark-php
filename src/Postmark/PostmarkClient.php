@@ -9,6 +9,7 @@ use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
+use Postmark\Models\Suppressions\PostmarkSuppressionList;
 
 /**
  * PostmarkClient provides the main functionality used to send and analyze email on a "per-Server"
@@ -1192,9 +1193,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
 	 *
 	 * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
-	 * @return DynamicResponseModel
+	 * @return PostmarkSuppressionList
 	 */
-	function createSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): DynamicResponseModel
+	function createSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionList
 	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
@@ -1203,7 +1204,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
+		return new PostmarkSuppressionList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
 	}
 
 	/**
@@ -1213,9 +1214,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
 	 *
 	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
-	 * @return DynamicResponseModel
+	 * @return PostmarkSuppressionList
 	 */
-	function deleteSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): DynamicResponseModel
+	function deleteSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionList
 	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
@@ -1224,22 +1225,29 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
+		return new PostmarkSuppressionList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
 	}
 
 	/**
 	 * List Suppressions that match the provided query parameters.
 	 *
-	 * @param string $messageStream Filter Suppressions by MessageStream. If not provided, Suppressions for the default transactional stream will be returned. (optional)
-	 * @param string $suppressionReason Filter Suppressions by reason. E.g.: HardBounce, SpamComplaint, ManualSuppression. (optional)
-	 * @param string $origin Filter Suppressions by the origin that created them. E.g.: Customer, Recipient, Admin. (optional)
-	 * @param string $fromDate Filter suppressions from the date specified - inclusive. (optional)
-	 * @param string $toDate Filter suppressions up to the date specified - inclusive. (optional)
-	 * @param string $emailAddress Filter by a specific email address. (optional)
+	 * @param string|null $messageStream Filter Suppressions by MessageStream. If not provided, Suppressions for the default transactional stream will be returned. (optional)
+	 * @param string|null $suppressionReason Filter Suppressions by reason. E.g.: HardBounce, SpamComplaint, ManualSuppression. (optional)
+	 * @param string|null $origin Filter Suppressions by the origin that created them. E.g.: Customer, Recipient, Admin. (optional)
+	 * @param string|null $fromDate Filter suppressions from the date specified - inclusive. (optional)
+	 * @param string|null $toDate Filter suppressions up to the date specified - inclusive. (optional)
+	 * @param string|null $emailAddress Filter by a specific email address. (optional)
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkSuppressionList
 	 */
-	function getSuppressions($messageStream = NULL, $suppressionReason = NULL, $origin = NULL, $fromDate = NULL, $toDate = NULL, $emailAddress = NULL) {
+	function getSuppressions(
+        string $messageStream = NULL,
+        string $suppressionReason = NULL,
+        string $origin = NULL,
+        string $fromDate = NULL,
+        string $toDate = NULL,
+        string $emailAddress = NULL)
+    {
 		$query = array();
 		$query["SuppressionReason"] = $suppressionReason;
 		$query["Origin"] = $origin;
@@ -1251,7 +1259,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
+		return new PostmarkSuppressionList($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
 	}
 
 	/**

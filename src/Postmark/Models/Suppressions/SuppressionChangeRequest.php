@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class SuppressionChangeRequest implements \JsonSerializable {
 
-    private $emailAddress;
+    private string $EmailAddress;
 
     /**
      * Create a new SuppressionChangeRequest.
@@ -16,13 +16,13 @@ class SuppressionChangeRequest implements \JsonSerializable {
      * @param string $emailAddress Address of the recipient whose suppression status should be changed.
      */
     public function __construct($emailAddress = null) {
-        $this->emailAddress = $emailAddress;
+        $this->EmailAddress = $emailAddress;
     }
 
     public function jsonSerialize(): array
     {
         $retval = array(
-            "EmailAddress" => $this->emailAddress
+            "EmailAddress" => $this->EmailAddress
         );
 
         return $retval;
@@ -30,6 +30,6 @@ class SuppressionChangeRequest implements \JsonSerializable {
 
     public function getEmailAddress(): ?string
     {
-        return $this->emailAddress;
+        return $this->EmailAddress;
     }
 }
