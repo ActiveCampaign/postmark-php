@@ -9,7 +9,7 @@ use Postmark\PostmarkClient as PostmarkClient;
 
 class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
-	private $testServerToken = "";
+//	private $testServerToken = "";
 
 	public static function tearDownAfterClass(): void {
 		$tk = parent::$testKeys;

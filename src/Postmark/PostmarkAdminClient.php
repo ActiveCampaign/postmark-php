@@ -25,7 +25,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 	 *
 	 * @param integer $timeout The timeout, in seconds, that API calls should wait before throwing an exception.
 	 */
-	function __construct($accountToken, $timeout = 60) {
+	function __construct(string $accountToken, int $timeout = 60) {
 		parent::__construct($accountToken, "X-Postmark-Account-Token", $timeout);
 	}
 
