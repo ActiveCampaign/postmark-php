@@ -15,7 +15,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		$domains = $client->listDomains();
 
 		foreach ($domains->getDomains() as $key => $value) {
-			if (preg_match('/test-php.+/', $value->name) > 0) {
+			if (preg_match('/test-php.+/', $value->Name)) {
 				$client->deleteDomain($value->ID);
 			}
 		}
@@ -50,7 +50,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 
 		$domain = $client->createDomain($domainName);
 
-		$this->assertNotEmpty($domain->ID);
+		$this->assertNotEmpty($domain->getID());
 	}
 
 	function testClientCanEditDomain() {
@@ -62,7 +62,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 
 		$domain = $client->createDomain($domainName, $returnPath);
 
-		$updated = $client->editDomain($domain->ID, 'updated-' . $returnPath);
+		$updated = $client->editDomain($domain->getID(), 'updated-' . $returnPath);
 
 		$this->assertNotSame($domain->getReturnPathDomain(), $updated->getReturnPathDomain());
 	}
@@ -76,7 +76,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		$name = 'test-php-delete-' . $domainName;
 		$domain = $client->createDomain($name);
 
-		$client->deleteDomain($domain->ID);
+		$client->deleteDomain($domain->getID());
 
 		$domains = $client->listDomains()->getDomains();
 
@@ -93,8 +93,8 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		foreach ($domains as $key => $value) {
 			$verify = $client->verifyDKIM($value->ID);
 
-			$this->assertSame($verify->getID(), $value->ID);
-			$this->assertSame($verify->getName(), $value->Name);
+			$this->assertSame($verify->getID(), $value->getID());
+			$this->assertSame($verify->getName(), $value->getName());
 		}
 	}
 
@@ -104,10 +104,10 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 
 		$domains = $client->listDomains()->getDomains();
 		foreach ($domains as $key => $value) {
-			$verify = $client->verifyReturnPath($value->ID);
+			$verify = $client->verifyReturnPath($value->getID());
 
-			$this->assertSame($verify->getID(), $value->ID);
-			$this->assertSame($verify->getName(), $value->Name);
+			$this->assertSame($verify->getID(), $value->getID());
+			$this->assertSame($verify->getName(), $value->getName());
 		}
 	}
 
