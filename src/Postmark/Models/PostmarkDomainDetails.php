@@ -24,6 +24,8 @@ class PostmarkDomainDetails extends PostmarkDomain
      */
     public function __construct(array $values)
     {
+        parent::__construct($values);
+
         $this->SPFHost = !empty($values['SPFHost']) ? $values['SPFHost'] : "";
         $this->SPFTextValue = !empty($values['SPFTextValue']) ? $values['SPFTextValue'] : "";
         $this->DKIMHost = !empty($values['DKIMHost']) ? $values['DKIMHost'] : "";
