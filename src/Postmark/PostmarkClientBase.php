@@ -50,7 +50,7 @@ abstract class PostmarkClientBase {
 	protected $timeout = 60;
 
 	/** @var  Client */
-	protected $client;
+	protected Client $client;
 
 	protected function __construct($token, $header, $timeout = 60) {
 		$this->authorization_header = $header;
@@ -66,7 +66,7 @@ abstract class PostmarkClientBase {
 	 * @return Client
 	 */
 	protected function getClient() {
-		if(!$this->client) {
+		if(empty($this->client)) {
 			$this->client = new Client([
 				RequestOptions::VERIFY  => self::$VERIFY_SSL,
 				RequestOptions::TIMEOUT => $this->timeout,
