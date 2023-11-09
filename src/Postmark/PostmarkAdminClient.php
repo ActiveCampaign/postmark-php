@@ -414,9 +414,7 @@ class PostmarkAdminClient extends PostmarkClientBase {
 		$body['RequestedFor'] = $requestedFor;
 		$body['NotifyWhenCompleted'] = $notifyWhenCompleted;
 
-        $array = $this->processRestRequest('POST', '/data-removals', $body);
-
-		return new DataRemovalRequestResponse($array["ID"], $array["Status"]);
+		return new DataRemovalRequestResponse($this->processRestRequest('POST', '/data-removals', $body));
 	}
 
     /**
@@ -427,8 +425,6 @@ class PostmarkAdminClient extends PostmarkClientBase {
      */
 	public function getDataRemoval(int $id): DataRemovalRequestResponse
 	{
-        $array = $this->processRestRequest('GET', sprintf('/data-removals/%s', $id));
-
-        return new DataRemovalRequestResponse($array["ID"], $array["Status"]);
+        return new DataRemovalRequestResponse($this->processRestRequest('GET', sprintf('/data-removals/%s', $id)));
 	}
 }

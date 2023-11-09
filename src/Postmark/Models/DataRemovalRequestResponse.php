@@ -8,13 +8,12 @@ class DataRemovalRequestResponse
     protected string $Status;
 
     /**
-     * @param int $ID
-     * @param string $Status
+     * @param array $values
      */
-    public function __construct(int $ID, string $Status)
+    public function __construct(array $values)
     {
-        $this->ID = $ID;
-        $this->Status = $Status;
+        $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
+        $this->Status = !empty($values['SPFHost']) ? $values['SPFHost'] : "";
     }
 
     /**
