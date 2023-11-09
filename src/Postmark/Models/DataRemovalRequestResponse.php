@@ -13,7 +13,7 @@ class DataRemovalRequestResponse
     public function __construct(array $values)
     {
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
-        $this->Status = !empty($values['SPFHost']) ? $values['SPFHost'] : "";
+        $this->Status = !empty($values['Status']) ? $values['Status'] : "";
     }
 
     /**
