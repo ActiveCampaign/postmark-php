@@ -21,4 +21,41 @@ class PostmarkClickList
         }
         $this->Clicks = $tempClicks;
     }
+
+    /**
+     * @return int|mixed
+     */
+    public function getTotalCount(): mixed
+    {
+        return $this->TotalCount;
+    }
+
+    /**
+     * @param int|mixed $TotalCount
+     * @return PostmarkClickList
+     */
+    public function setTotalCount(mixed $TotalCount): PostmarkClickList
+    {
+        $this->TotalCount = $TotalCount;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getClicks(): array
+    {
+        return $this->Clicks;
+    }
+
+    /**
+     * @param array $Clicks
+     * @return PostmarkClickList
+     */
+    public function setClicks(array $Clicks): PostmarkClickList
+    {
+        $this->Clicks = $Clicks;
+        return $this;
+    }
+    
 }
