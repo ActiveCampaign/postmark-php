@@ -13,7 +13,7 @@ class PostmarkTemplate
     protected int $AssociatedServerId;
     protected bool $Active;
     protected string $TemplateType;
-    protected string $LayoutTemplate;
+    protected ?string $LayoutTemplate;
 
     public function __construct(array $values)
     {
@@ -26,7 +26,7 @@ class PostmarkTemplate
         $this->AssociatedServerId = !empty($values['AssociatedServerId']) ? $values['AssociatedServerId'] : 0;
         $this->Active = !empty($values['Active']) ? $values['Active'] : false;
         $this->TemplateType = !empty($values['TemplateType']) ? $values['TemplateType'] : "Standard";
-        $this->LayoutTemplate = !empty($values['LayoutTemplate']) ? $values['LayoutTemplate'] : "";
+        $this->LayoutTemplate = !empty($values['LayoutTemplate']) ? $values['LayoutTemplate'] : null;
     }
 
     /**
@@ -192,9 +192,9 @@ class PostmarkTemplate
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getLayoutTemplate(): string
+    public function getLayoutTemplate(): ?string
     {
         return $this->LayoutTemplate;
     }
