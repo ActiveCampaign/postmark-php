@@ -24,11 +24,11 @@ class PostmarkOpen
         $this->FirstOpen = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
         $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : "";
         $this->UserAgent = !empty($values['UserAgent']) ? $values['UserAgent'] : "";
-        $this->Geo = !empty($values['Geo']) ? $values['Geo'] : null;
+        !empty($values['Geo']) ? $this->setGeo($values['Geo']) : $this->setGeo(null);
         $this->Platform = !empty($values['Platform']) ? $values['Platform'] : "";
         $this->ReadSeconds = !empty($values['ReadSeconds']) ? $values['ReadSeconds'] : "";
-        $this->Client = !empty($values['Client']) ? $values['Client'] : null;
-        $this->OS = !empty($values['OS']) ? $values['OS'] : null;
+        !empty($values['Client']) ? $this->setClient($values['Client']) : $this->setClient(null);
+        !empty($values['OS']) ? $this->setOS($values['OS']) : $this->setOS(null);
     }
 
     /**
