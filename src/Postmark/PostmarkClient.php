@@ -567,27 +567,40 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get statistics for tracked messages, optionally filtering by various click event properties.
 	 *
-	 * @param  integer $count The number of click statistics to retrieve in this request.
-	 * @param  integer $offset The number of statistics to 'skip' when paging through statistics.
-	 * @param  string $recipient Filter by recipient.
-	 * @param  string $tag Filter by tag.
-	 * @param  string $clientName Filter by Email Client name.
-	 * @param  string $clientCompany Filter by Email Client Company's name.
-	 * @param  string $clientFamily Filter by Email Client's Family name.
-	 * @param  string $osName Filter by Email Client's Operating System Name.
-	 * @param  string $osFamily Filter by Email Client's Operating System's Family.
-	 * @param  string $osCompany Filter by Email Client's Operating System's Company.
-	 * @param  string $platform Filter by Email Client's Platform Name.
-	 * @param  string $country Filter by Country.
-	 * @param  string $region Filter by Region.
-	 * @param  string $city Filter by City.
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-	 * @return DynamicResponseModel
+	 * @param integer $count The number of click statistics to retrieve in this request.
+	 * @param integer $offset The number of statistics to 'skip' when paging through statistics.
+	 * @param string|null $recipient Filter by recipient.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $clientName Filter by Email Client name.
+	 * @param string|null $clientCompany Filter by Email Client Company's name.
+	 * @param string|null $clientFamily Filter by Email Client's Family name.
+	 * @param string|null $osName Filter by Email Client's Operating System Name.
+	 * @param string|null $osFamily Filter by Email Client's Operating System's Family.
+	 * @param string|null $osCompany Filter by Email Client's Operating System's Company.
+	 * @param string|null $platform Filter by Email Client's Platform Name.
+	 * @param string|null $country Filter by Country.
+	 * @param string|null $region Filter by Region.
+	 * @param string|null $city Filter by City.
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @return PostmarkClickList
 	 */
-	function getClickStatistics($count = 100, $offset = 0, $recipient = NULL,
-		$tag = NULL, $clientName = NULL, $clientCompany = NULL, $clientFamily = NULL,
-		$osName = NULL, $osFamily = NULL, $osCompany = NULL, $platform = NULL,
-		$country = NULL, $region = NULL, $city = NULL, $messagestream = NULL) {
+	function getClickStatistics(
+        int    $count = 100,
+        int    $offset = 0,
+        string $recipient = NULL,
+        string $tag = NULL,
+        string $clientName = NULL,
+        string $clientCompany = NULL,
+        string $clientFamily = NULL,
+        string $osName = NULL,
+        string $osFamily = NULL,
+        string $osCompany = NULL,
+        string $platform = NULL,
+        string $country = NULL,
+        string $region = NULL,
+        string $city = NULL,
+        string $messagestream = NULL): PostmarkClickList
+    {
 
 		$query = array();
 		$query['count'] = $count;

@@ -23,11 +23,31 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 		$stats = $client->getOpenStatistics();
 
-		$messageId = $stats->getOpens()[0]["MessageID"];
+		$messageId = $stats->getOpens()[0]->getMessageID();
 		$result = $client->getOpenStatisticsForMessage($messageId);
 
 		$this->assertNotEmpty($result);
 	}
+
+    function testClientCanGetMessageClicks() {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+
+        $stats = $client->getClickStatistics();
+        $this->assertNotEmpty($stats);
+    }
+
+    function testClientCanGetMessageClickForSpecificMessage() {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+
+        $stats = $client->getClickStatistics();
+
+        $messageId = $stats->getClicks()[0]->getMessageID();
+        $result = $client->getClickStatisticsForMessage($messageId);
+
+        $this->assertNotEmpty($result);
+    }
 
 	function testClientCanGetOutboundOverviewStatistics() {
 		$tk = parent::$testKeys;

@@ -57,5 +57,5 @@ class PostmarkClickList
         $this->Clicks = $Clicks;
         return $this;
     }
-    
+
 }
