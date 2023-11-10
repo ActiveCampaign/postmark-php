@@ -13,7 +13,7 @@ class PostmarkClickList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempClicks = array();
-        foreach ($values['Click'] as $click) {
+        foreach ($values['Clicks'] as $click) {
             $obj = json_decode(json_encode($click));
             $postmarkClick = new PostmarkClick((array)$obj);
 
