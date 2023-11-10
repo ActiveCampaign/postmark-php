@@ -29,7 +29,6 @@ class WebhookConfiguration implements \JsonSerializable
         {
             $obj = json_decode(json_encode($arguments[0]));
 
-            //fwrite(STDERR, "aaa-------------------------!!! ". print_r($obj, TRUE));
             $httpAuth = !empty($obj->HttpAuth) ? new HttpAuth($obj->HttpAuth->Username, $obj->HttpAuth->Password) : new HttpAuth();
 
             $local_triggers = $obj->Triggers;
