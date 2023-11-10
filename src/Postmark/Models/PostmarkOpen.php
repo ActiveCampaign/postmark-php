@@ -86,19 +86,23 @@ class PostmarkOpen
     }
 
     /**
-     * @return \Postmark\Models\PostmarkGeographyInfo
+     * @return PostmarkGeographyInfo
      */
-    public function getGeo(): \Postmark\Models\PostmarkGeographyInfo
+    public function getGeo(): PostmarkGeographyInfo
     {
         return $this->Geo;
     }
 
     /**
-     * @param \Postmark\Models\PostmarkGeographyInfo $Geo
+     * @param mixed $Geo
      * @return PostmarkOpen
      */
-    public function setGeo(\Postmark\Models\PostmarkGeographyInfo $Geo): PostmarkOpen
+    public function setGeo(mixed $Geo): PostmarkOpen
     {
+        if (is_object($Geo))
+        {
+            $Geo = new PostmarkGeographyInfo((array)$Geo);
+        }
         $this->Geo = $Geo;
         return $this;
     }
@@ -140,37 +144,45 @@ class PostmarkOpen
     }
 
     /**
-     * @return \Postmark\Models\PostmarkAgentInfo
+     * @return PostmarkAgentInfo
      */
-    public function getClient(): \Postmark\Models\PostmarkAgentInfo
+    public function getClient(): PostmarkAgentInfo
     {
         return $this->Client;
     }
 
     /**
-     * @param \Postmark\Models\PostmarkAgentInfo $Client
+     * @param mixed $Client
      * @return PostmarkOpen
      */
-    public function setClient(\Postmark\Models\PostmarkAgentInfo $Client): PostmarkOpen
+    public function setClient(mixed $Client): PostmarkOpen
     {
+        if (is_object($Client))
+        {
+            $Client = new PostmarkAgentInfo((array)$Client);
+        }
         $this->Client = $Client;
         return $this;
     }
 
     /**
-     * @return \Postmark\Models\PostmarkAgentInfo
+     * @return PostmarkAgentInfo
      */
-    public function getOS(): \Postmark\Models\PostmarkAgentInfo
+    public function getOS(): PostmarkAgentInfo
     {
         return $this->OS;
     }
 
     /**
-     * @param \Postmark\Models\PostmarkAgentInfo $OS
+     * @param mixed $OS
      * @return PostmarkOpen
      */
-    public function setOS(\Postmark\Models\PostmarkAgentInfo $OS): PostmarkOpen
+    public function setOS(mixed $OS): PostmarkOpen
     {
+        if (is_object($OS))
+        {
+            $OS = new PostmarkAgentInfo((array)$OS);
+        }
         $this->OS = $OS;
         return $this;
     }

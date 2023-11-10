@@ -84,7 +84,7 @@ class PostmarkClick
     }
 
     /**
-     * @return mixed|\Postmark\Models\PostmarkGeographyInfo|null
+     * @return mixed|PostmarkGeographyInfo|null
      */
     public function getGeo(): mixed
     {
@@ -92,11 +92,15 @@ class PostmarkClick
     }
 
     /**
-     * @param mixed|\Postmark\Models\PostmarkGeographyInfo|null $Geo
+     * @param mixed $Geo
      * @return PostmarkClick
      */
     public function setGeo(mixed $Geo): PostmarkClick
     {
+        if (is_object($Geo))
+        {
+            $Geo = new PostmarkGeographyInfo((array)$Geo);
+        }
         $this->Geo = $Geo;
         return $this;
     }
@@ -120,7 +124,7 @@ class PostmarkClick
     }
 
     /**
-     * @return mixed|\Postmark\Models\PostmarkAgentInfo|null
+     * @return mixed
      */
     public function getClient(): mixed
     {
@@ -128,17 +132,21 @@ class PostmarkClick
     }
 
     /**
-     * @param mixed|\Postmark\Models\PostmarkAgentInfo|null $Client
+     * @param mixed|PostmarkAgentInfo|null $Client
      * @return PostmarkClick
      */
     public function setClient(mixed $Client): PostmarkClick
     {
+        if (is_object($Client))
+        {
+            $Client = new PostmarkAgentInfo((array)$Client);
+        }
         $this->Client = $Client;
         return $this;
     }
 
     /**
-     * @return mixed|\Postmark\Models\PostmarkAgentInfo|null
+     * @return mixed|PostmarkAgentInfo|null
      */
     public function getOS(): mixed
     {
@@ -146,11 +154,15 @@ class PostmarkClick
     }
 
     /**
-     * @param mixed|\Postmark\Models\PostmarkAgentInfo|null $OS
+     * @param mixed|PostmarkAgentInfo|null $OS
      * @return PostmarkClick
      */
     public function setOS(mixed $OS): PostmarkClick
     {
+        if (is_object($OS))
+        {
+            $OS = new PostmarkAgentInfo((array)$OS);
+        }
         $this->OS = $OS;
         return $this;
     }
