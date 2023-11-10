@@ -10,6 +10,7 @@ use Postmark\Models\PostmarkTemplateList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 use Postmark\Models\Suppressions\PostmarkSuppressionList;
+use Postmark\Models\Suppressions\PostmarkSuppressionResultList;
 
 /**
  * PostmarkClient provides the main functionality used to send and analyze email on a "per-Server"
@@ -964,10 +965,10 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function createTemplate(
         string $name,
-        string $subject,
-        string $htmlBody,
-        string $textBody,
-        string $alias = NULL,
+        ?string $subject,
+        ?string $htmlBody,
+        ?string $textBody,
+        ?string $alias = NULL,
         string $templateType = 'Standard',
         string $layoutTemplate = NULL): PostmarkTemplate
     {
@@ -1123,8 +1124,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function deleteWebhookConfiguration(int $id): PostmarkResponse
     {
-        $response = $this->processRestRequest('DELETE', "/webhooks/$id");
-		return new PostmarkResponse($response['ErrorCode'], $response['Message']);
+		return new PostmarkResponse($this->processRestRequest('DELETE', "/webhooks/$id"));
 	}
 
 	/**
@@ -1193,9 +1193,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $messageStream Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
 	 *
 	 * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
-	 * @return PostmarkSuppressionList
+	 * @return PostmarkSuppressionResultList
 	 */
-	function createSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionList
+	function createSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionResultList
 	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
@@ -1204,7 +1204,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new PostmarkSuppressionList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
+		return new PostmarkSuppressionResultList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
 	}
 
 	/**
@@ -1214,9 +1214,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
 	 *
 	 * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
-	 * @return PostmarkSuppressionList
+	 * @return PostmarkSuppressionResultList
 	 */
-	function deleteSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionList
+	function deleteSuppressions(array|string $suppressionChanges = array(), string $messageStream = NULL): PostmarkSuppressionResultList
 	{
 		$body = array();
 		$body["Suppressions"] = $suppressionChanges;
@@ -1225,7 +1225,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new PostmarkSuppressionList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
+		return new PostmarkSuppressionResultList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
 	}
 
 	/**

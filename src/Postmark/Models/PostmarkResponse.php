@@ -7,10 +7,10 @@ class PostmarkResponse
     public int $ErrorCode;
     public ?string $Message;
 
-    public function __construct(int $errorCode, ?string $message = null)
+    public function __construct(array $values)
     {
-        $this->ErrorCode = $errorCode;
-        $this->Message = $message;
+        $this->ErrorCode = !empty($values['ErrorCode']) ? $values['ErrorCode'] : 0;
+        $this->Message = !empty($values['Message']) ? $values['Message'] : "";
     }
 
     /**

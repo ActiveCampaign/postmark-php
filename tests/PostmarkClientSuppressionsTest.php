@@ -41,8 +41,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges);
 
-        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
-        $this->assertEquals("Suppressed", $result->getSuppressions()[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->getEmailAddress());
+        $this->assertEquals("Suppressed", $result->getSuppressions()[0]->getStatus());
     }
 
     //reactivate suppression
@@ -57,8 +57,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->deleteSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
-        $this->assertEquals("Deleted", $result->getSuppressions()[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->getEmailAddress());
+        $this->assertEquals("Deleted", $result->getSuppressions()[0]->getStatus());
     }
 
     //invalid request returns failed Status
@@ -73,8 +73,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
 
         $result = $client->createSuppressions($suppressionChanges, $messageStream);
 
-        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->EmailAddress);
-        $this->assertEquals("Failed", $result->getSuppressions()[0]->Status);
+        $this->assertEquals($emailAddress, $result->getSuppressions()[0]->getEmailAddress());
+        $this->assertEquals("Failed", $result->getSuppressions()[0]->getStatus());
     }
 
     //multiple requests are supported
@@ -112,8 +112,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         try {
             $result = $client->createSuppressions($suppressionChanges, $messageStream);
         } catch(PostmarkException $ex){
-            $this->assertEquals(422, $ex->httpStatusCode);
-            $this->assertEquals("The message stream for the provided 'ID' was not found.", $ex->message);
+            $this->assertEquals(422, $ex->getHttpStatusCode());
+            $this->assertEquals("The message stream for the provided 'ID' was not found.", $ex->getMessage());
         }
     }
 
@@ -126,5 +126,3 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest {
         $this->assertNotEmpty($result);
     }
 }
-
-?>
