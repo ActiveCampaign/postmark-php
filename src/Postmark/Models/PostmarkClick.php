@@ -20,7 +20,7 @@ class PostmarkClick
      */
     public function __construct(array $values)
     {
-        $this->OriginalLink = !empty($values['OriginalLink']) ? $values['OriginalLink'] : "";
+        $this->OriginalLink = !empty($values['OriginalLink']) ? $values['OriginalLink'] : false;
         $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : "";
         $this->UserAgent = !empty($values['UserAgent']) ? $values['UserAgent'] : "";
         !empty($values['Geo']) ? $this->setGeo($values['Geo']) : $this->setGeo(null);

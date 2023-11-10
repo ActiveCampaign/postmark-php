@@ -21,4 +21,41 @@ class PostmarkOpenList
         }
         $this->Opens = $tempOpens;
     }
+
+    /**
+     * @return int|mixed
+     */
+    public function getTotalCount(): mixed
+    {
+        return $this->TotalCount;
+    }
+
+    /**
+     * @param int|mixed $TotalCount
+     * @return PostmarkOpenList
+     */
+    public function setTotalCount(mixed $TotalCount): PostmarkOpenList
+    {
+        $this->TotalCount = $TotalCount;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOpens(): array
+    {
+        return $this->Opens;
+    }
+
+    /**
+     * @param array $Opens
+     * @return PostmarkOpenList
+     */
+    public function setOpens(array $Opens): PostmarkOpenList
+    {
+        $this->Opens = $Opens;
+        return $this;
+    }
+
 }
