@@ -7,6 +7,10 @@ use Postmark\PostmarkClientBase as PostmarkClientBase;
 use Postmark\Models\PostmarkResponse;
 use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
+use Postmark\Models\PostmarkClick;
+use Postmark\Models\PostmarkClickList;
+use Postmark\Models\PostmarkOpen;
+use Postmark\Models\PostmarkOpenList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 use Postmark\Models\Suppressions\PostmarkSuppressionList;
@@ -521,8 +525,8 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $region Filter by Region.
 	 * @param string|null $city Filter by City.
 	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-	 * @return DynamicResponseModel
-	 */
+	 * @return PostmarkOpenList
+     */
 	function getOpenStatistics(
         int    $count = 100,
         int    $offset = 0,
@@ -538,7 +542,7 @@ class PostmarkClient extends PostmarkClientBase {
         string $country = NULL,
         string $region = NULL,
         string $city = NULL,
-        string $messagestream = NULL): DynamicResponseModel
+        string $messagestream = NULL): PostmarkOpenList
     {
     	$query = array();
 		$query['count'] = $count;
@@ -557,7 +561,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['city'] = $city;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound/opens', $query));
+		return new PostmarkOpenList($this->processRestRequest('GET', '/messages/outbound/opens', $query));
 	}
 
 	/**
@@ -602,24 +606,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['city'] = $city;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound/clicks', $query));
+		return new PostmarkClickList($this->processRestRequest('GET', '/messages/outbound/clicks', $query));
 	}
 
 	/**
 	 * Get information about individual opens for a sent message.
 	 *
-	 * @param  string $id The ID for the message that we want statistics for.
-	 * @param  integer $count How many statistics should we retrieve?
-	 * @param  integer $offset How many should we 'skip' when 'paging' through statistics.
-	 * @return DynamicResponseModel
+	 * @param string $id The ID for the message that we want statistics for.
+	 * @param integer $count How many statistics should we retrieve?
+	 * @param integer $offset How many should we 'skip' when 'paging' through statistics.
+	 * @return PostmarkOpenList
 	 */
-	function getOpenStatisticsForMessage($id, $count = 100, $offset = 0) {
+	function getOpenStatisticsForMessage(string $id, int $count = 100, int $offset = 0): PostmarkOpenList
+    {
 		$query = array();
 
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
+		return new PostmarkOpenList($this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
 	}
 
 	/**

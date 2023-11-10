@@ -9,7 +9,18 @@ use Postmark\PostmarkClient as PostmarkClient;
 
 class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 
-//	private $testServerToken = "";
+    public static function setUpBeforeClass(): void {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $templates = $client->listTemplates();
+
+        foreach ($templates->getTemplates() as $key => $value) {
+            if (preg_match('/^test-php.+/', $value->getName())) {
+                $client->deleteTemplate($value->getTemplateid());
+            }
+        }
+    }
 
 	public static function tearDownAfterClass(): void {
 		$tk = parent::$testKeys;
@@ -18,8 +29,8 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$templates = $client->listTemplates();
 
 		foreach ($templates->getTemplates() as $key => $value) {
-			if (preg_match('/^test-php.+/', $value->name) > 0) {
-				$client->deleteTemplate($value->templateid);
+			if (preg_match('/^test-php.+/', $value->getName())) {
+				$client->deleteTemplate($value->getTemplateid());
 			}
 		}
 	}
