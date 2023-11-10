@@ -23,7 +23,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
 
 		$stats = $client->getOpenStatistics();
 
-		$messageId = $stats->Opens[0]["MessageID"];
+		$messageId = $stats->getOpens()[0]["MessageID"];
 		$result = $client->getOpenStatisticsForMessage($messageId);
 
 		$this->assertNotEmpty($result);
