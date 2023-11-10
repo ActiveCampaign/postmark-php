@@ -26,7 +26,7 @@ class PostmarkOpen
         $this->UserAgent = !empty($values['UserAgent']) ? $values['UserAgent'] : "";
         !empty($values['Geo']) ? $this->setGeo($values['Geo']) : $this->setGeo(null);
         $this->Platform = !empty($values['Platform']) ? $values['Platform'] : "";
-        $this->ReadSeconds = !empty($values['ReadSeconds']) ? $values['ReadSeconds'] : "";
+        $this->ReadSeconds = !empty($values['ReadSeconds']) ? $values['ReadSeconds'] : 0;
         !empty($values['Client']) ? $this->setClient($values['Client']) : $this->setClient(null);
         !empty($values['OS']) ? $this->setOS($values['OS']) : $this->setOS(null);
     }
