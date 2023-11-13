@@ -11,6 +11,9 @@ use Postmark\Models\PostmarkClick;
 use Postmark\Models\PostmarkClickList;
 use Postmark\Models\PostmarkOpen;
 use Postmark\Models\PostmarkOpenList;
+use Postmark\Models\PostmarkServer;
+use Postmark\Models\PostmarkInboundRuleTrigger;
+use Postmark\Models\PostmarkInboundRuleTriggerList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 use Postmark\Models\Suppressions\PostmarkSuppressionList;
@@ -321,37 +324,49 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Get the settings for the server associated with this PostmarkClient instance
 	 * (defined by the $server_token you passed when instantiating this client)
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkServer
 	 */
-	function getServer() {
-		return new DynamicResponseModel($this->processRestRequest('GET', '/server'));
+	function getServer(): PostmarkServer
+    {
+		return new PostmarkServer($this->processRestRequest('GET', '/server'));
 	}
 
 	/**
 	 * Modify the associated Server. Any parameters passed with NULL will be
 	 * ignored (their existing values will not be modified).
 	 *
-	 * @param  string $name Set the name of the server.
-	 * @param  string $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
-	 * @param  bool $rawEmailEnabled Enable raw email to be sent with inbound.
-	 * @param  bool $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
-	 * @param  string $inboundHookUrl URL to POST to everytime an inbound event occurs.
-	 * @param  string $bounceHookUrl URL to POST to everytime a bounce event occurs.
-	 * @param  string $openHookUrl URL to POST to everytime an open event occurs.
-	 * @param  bool $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
-	 * @param  bool $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
-	 * @param  string $inboundDomain Inbound domain for MX setup.
-	 * @param  integer $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
-	 * @param  string $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
-	 * @param  string $clickHookUrl URL to POST to everytime an click event occurs.
-	 * @param  string $deliveryHookUrl URL to POST to everytime an click event occurs.
-	 * @return DynamicResponseModel
+	 * @param string|null $name Set the name of the server.
+	 * @param string|null $color Set the color for the server in the Postmark WebUI (must be: 'purple', 'blue', 'turqoise', 'green', 'red', 'yellow', or 'grey')
+	 * @param bool|null $rawEmailEnabled Enable raw email to be sent with inbound.
+	 * @param bool|null $smtpApiActivated Specifies whether or not SMTP is enabled on this server.
+	 * @param string|null $inboundHookUrl URL to POST to everytime an inbound event occurs.
+	 * @param string|null $bounceHookUrl URL to POST to everytime a bounce event occurs.
+	 * @param string|null $openHookUrl URL to POST to everytime an open event occurs.
+	 * @param bool|null $postFirstOpenOnly If set to true, only the first open by a particular recipient will initiate the open webhook. Any subsequent opens of the same email by the same recipient will not initiate the webhook.
+	 * @param bool|null $trackOpens Indicates if all emails being sent through this server have open tracking enabled.
+	 * @param string|null $inboundDomain Inbound domain for MX setup.
+	 * @param integer|null $inboundSpamThreshold The maximum spam score for an inbound message before it's blocked (range from 0-30).
+	 * @param string|null $trackLinks Indicates if all emails being sent through this server have link tracking enabled.
+	 * @param string|null $clickHookUrl URL to POST to everytime an click event occurs.
+	 * @param string|null $deliveryHookUrl URL to POST to everytime an click event occurs.
+	 * @return PostmarkServer
 	 */
-	function editServer($name = NULL, $color = NULL, $rawEmailEnabled = NULL,
-		$smtpApiActivated = NULL, $inboundHookUrl = NULL, $bounceHookUrl = NULL,
-		$openHookUrl = NULL, $postFirstOpenOnly = NULL, $trackOpens = NULL,
-		$inboundDomain = NULL, $inboundSpamThreshold = NULL,
-		$trackLinks = NULL, $clickHookUrl = NULL, $deliveryHookUrl = NULL) {
+	function editServer(
+        string $name = NULL,
+        string $color = NULL,
+        bool   $rawEmailEnabled = NULL,
+        bool   $smtpApiActivated = NULL,
+        string $inboundHookUrl = NULL,
+        string $bounceHookUrl = NULL,
+        string $openHookUrl = NULL,
+        bool   $postFirstOpenOnly = NULL,
+        bool   $trackOpens = NULL,
+        string $inboundDomain = NULL,
+        int    $inboundSpamThreshold = NULL,
+        string $trackLinks = NULL,
+        string $clickHookUrl = NULL,
+        string $deliveryHookUrl = NULL): PostmarkServer
+    {
 
 		$body = array();
 		$body["Name"] = $name;
@@ -369,7 +384,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["ClickHookUrl"] = $clickHookUrl;
 		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
-		return new DynamicResponseModel($this->processRestRequest('PUT', '/server', $body));
+		return new PostmarkServer($this->processRestRequest('PUT', '/server', $body));
 	}
 
     /**
@@ -934,13 +949,14 @@ class PostmarkClient extends PostmarkClientBase {
 	 * Create an Inbound Rule to block messages from a single email address, or an entire domain.
 	 *
 	 * @param  string $rule The email address (or domain) that will be blocked.
-	 * @return DynamicResponseModel
+	 * @return PostmarkInboundRuleTrigger
 	 */
-	function createInboundRuleTrigger($rule) {
+	function createInboundRuleTrigger($rule): PostmarkInboundRuleTrigger
+    {
 		$body = array();
 		$body["Rule"] = $rule;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', '/triggers/inboundrules', $body));
+		return new PostmarkInboundRuleTrigger($this->processRestRequest('POST', '/triggers/inboundrules', $body));
 	}
 
 	/**
@@ -948,25 +964,27 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param integer $count The number of rule triggers to return with this request.
 	 * @param integer $offset The number of triggers to 'skip' when 'paging' through rule triggers.
-	 * @return DynamicResponseModel
+	 * @return PostmarkInboundRuleTriggerList
 	 */
-	function listInboundRuleTriggers($count = 100, $offset = 0) {
+	function listInboundRuleTriggers(int $count = 100, int $offset = 0): PostmarkInboundRuleTriggerList
+    {
 		$query = array();
 
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/triggers/inboundrules', $query));
+		return new PostmarkInboundRuleTriggerList($this->processRestRequest('GET', '/triggers/inboundrules', $query));
 	}
 
 	/**
 	 * Delete an Inbound Rule Trigger.
 	 *
 	 * @param integer $id The ID of the rule trigger we wish to delete.
-	 * @return DynamicResponseModel
+	 * @return PostmarkResponse
 	 */
-	function deleteInboundRuleTrigger($id) {
-		return new DynamicResponseModel($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
+	function deleteInboundRuleTrigger(int $id): PostmarkResponse
+    {
+		return new PostmarkResponse($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
 	}
 
 	/**
@@ -1268,7 +1286,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $toDate Filter suppressions up to the date specified - inclusive. (optional)
 	 * @param string|null $emailAddress Filter by a specific email address. (optional)
 	 *
-	 * @return PostmarkSuppressionList
+	 * @return PostmarkSuppressionResultList
 	 */
 	function getSuppressions(
         string $messageStream = NULL,
@@ -1276,7 +1294,7 @@ class PostmarkClient extends PostmarkClientBase {
         string $origin = NULL,
         string $fromDate = NULL,
         string $toDate = NULL,
-        string $emailAddress = NULL)
+        string $emailAddress = NULL): PostmarkSuppressionResultList
     {
 		$query = array();
 		$query["SuppressionReason"] = $suppressionReason;
