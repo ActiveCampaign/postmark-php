@@ -33,7 +33,7 @@ class PostmarkOutboundMessage
         $this->Subject = !empty($values['Subject']) ? $values['Subject'] : "";
         $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : array();
         $this->Status = !empty($values['Status']) ? $values['Status'] : "";
-        $this->Metadata = !empty($values['Metadata']) ? $values['Metadata'] : array();
+        !empty($values['Metadata']) ? $this->setMetadata($values['Metadata']) : $this->setMetadata(array());
     }
 
     /**
@@ -243,12 +243,20 @@ class PostmarkOutboundMessage
     }
 
     /**
-     * @param array $Metadata
+     * @param mixed $Metadata
      * @return PostmarkOutboundMessage
      */
-    public function setMetadata(array $Metadata): PostmarkOutboundMessage
+    public function setMetadata(mixed $Metadata): PostmarkOutboundMessage
     {
-        $this->Metadata = $Metadata;
+        if (is_object($Metadata))
+        {
+            $this->Metadata = (array)$Metadata;
+        }
+        else
+        {
+            $this->Metadata = $Metadata;
+        }
+
         return $this;
     }
 
