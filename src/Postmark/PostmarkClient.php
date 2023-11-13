@@ -17,6 +17,9 @@ use Postmark\Models\PostmarkOutboundMessage;
 use Postmark\Models\PostmarkOutboundMessageList;
 use Postmark\Models\PostmarkInboundRuleTrigger;
 use Postmark\Models\PostmarkInboundRuleTriggerList;
+use Postmark\Models\MessageStream\PostmarkMessageStream;
+use Postmark\Models\MessageStream\PostmarkMessageStreamList;
+use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 use Postmark\Models\Suppressions\PostmarkSuppressionList;
@@ -431,7 +434,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["todate"] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		if($metadata != NULL) {
+		if(!empty($metadata)) {
 			foreach($metadata as $key => $value) {
 				$query["metadata_$key"] = $value;
 			}
@@ -1319,36 +1322,38 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $id Identifier for your message stream, unique at server level.
 	 * @param string $messageStreamType Type of the message stream. Possible values: ["Transactional", "Inbound", "Broadcasts"].
 	 * @param string $name Friendly name for your message stream.
-	 * @param string $description Friendly description for your message stream. (optional)
+	 * @param string|null $description Friendly description for your message stream. (optional)
 	 *
 	 * Currently, you cannot create multiple inbound streams.
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStream
 	 */
-	function createMessageStream($id, $messageStreamType, $name, $description = NULL) {
+	function createMessageStream(string $id, string $messageStreamType, string $name, string $description = NULL): PostmarkMessageStream
+    {
 		$body = array();
 		$body["ID"] = $id;
 		$body["MessageStreamType"] = $messageStreamType;
 		$body["Name"] = $name;
 		$body["Description"] = $description;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams", $body));
+		return new PostmarkMessageStream($this->processRestRequest('POST', "/message-streams", $body));
 	}
 
 	/**
 	 * Edit the properties of a message stream.
 	 *
 	 * @param string $id The identifier for the stream you are trying to update.
-	 * @param string $name New friendly name to use. (optional)
-	 * @param string $description New description to use. (optional)
+	 * @param string|null $name New friendly name to use. (optional)
+	 * @param string|null $description New description to use. (optional)
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStream
 	 */
-	function editMessageStream($id, $name = NULL, $description = NULL) {
+	function editMessageStream(string $id, string $name = NULL, string $description = NULL): PostmarkMessageStream
+    {
 		$body = array();
 		$body["Name"] = $name;
 		$body["Description"] = $description;
 
-		return new DynamicResponseModel($this->processRestRequest('PATCH', "/message-streams/$id", $body));
+		return new PostmarkMessageStream($this->processRestRequest('PATCH', "/message-streams/$id", $body));
 	}
 
 	/**
@@ -1356,10 +1361,11 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param string $id Identifier of the stream to retrieve details for.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStream
 	 */
-	function getMessageStream($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams/$id"));
+	function getMessageStream(string $id): PostmarkMessageStream
+    {
+		return new PostmarkMessageStream($this->processRestRequest('GET', "/message-streams/$id"));
 	}
 
 	/**
@@ -1368,14 +1374,15 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $messageStreamType Filter by stream type. Possible values: ["Transactional", "Inbound", "Broadcasts", "All"]. Defaults to: All.
 	 * @param string $includeArchivedStreams Include archived streams in the result. Defaults to: false.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStreamList
 	 */
-	function listMessageStreams($messageStreamType = 'All', $includeArchivedStreams = 'false') {
+	function listMessageStreams(string $messageStreamType = 'All', string $includeArchivedStreams = 'false'): PostmarkMessageStreamList
+    {
 		$query = array();
 		$query["MessageStreamType"] = $messageStreamType;
 		$query["IncludeArchivedStreams"] = $includeArchivedStreams;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/message-streams", $query));
+		return new PostmarkMessageStreamList($this->processRestRequest('GET', "/message-streams", $query));
 	}
 
 	/**
@@ -1385,10 +1392,11 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param string $id The identifier for the stream you are trying to update.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStreamArchivalConfirmation
 	 */
-	function archiveMessageStream($id) {
-		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/archive"));
+	function archiveMessageStream(string $id): PostmarkMessageStreamArchivalConfirmation
+    {
+		return new PostmarkMessageStreamArchivalConfirmation($this->processRestRequest('POST', "/message-streams/$id/archive"));
 	}
 
 	/**
@@ -1398,9 +1406,10 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * @param string $id Identifier of the stream to unarchive.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkMessageStream
 	 */
-	function unarchiveMessageStream($id) {
-		return new DynamicResponseModel($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
+	function unarchiveMessageStream(string $id): PostmarkMessageStream
+    {
+		return new PostmarkMessageStream($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
 	}
 }
