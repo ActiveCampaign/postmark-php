@@ -24,8 +24,7 @@ class PostmarkClientServerTest extends PostmarkClientBaseTest {
 		$server = $client->editServer('testing-server-' . rand(0, 1000). '-' . date('c') );
 
 		//set it back to the original name.
-		$client->editServer($originalServer->Name);
-		$this->assertNotSame($originalServer->Name, $server->Name);
+		$client->editServer($originalServer->getName());
+		$this->assertNotSame($originalServer->getName(), $server->getName());
 	}
 }
-?>

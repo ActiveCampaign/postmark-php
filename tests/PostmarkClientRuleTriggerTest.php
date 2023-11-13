@@ -26,9 +26,7 @@ class PostmarkClientRuleTriggerTest extends PostmarkClientBaseTest {
 		$trigger = $client->createInboundRuleTrigger('test.php+' . uniqid("", true) . '@example.com');
 		$this->assertNotEmpty($trigger);
 
-		$client->deleteInboundRuleTrigger($trigger->ID);
+		$client->deleteInboundRuleTrigger($trigger->getID());
 		//Not throwing an exception here constitutes passing.
 	}
 }
-
-?>

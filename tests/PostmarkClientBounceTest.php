@@ -45,4 +45,3 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 	}
 
 }
-?>
