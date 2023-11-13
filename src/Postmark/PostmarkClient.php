@@ -12,6 +12,9 @@ use Postmark\Models\PostmarkClickList;
 use Postmark\Models\PostmarkOpen;
 use Postmark\Models\PostmarkOpenList;
 use Postmark\Models\PostmarkServer;
+use Postmark\Models\PostmarkServerList;
+use Postmark\Models\PostmarkOutboundMessage;
+use Postmark\Models\PostmarkOutboundMessageList;
 use Postmark\Models\PostmarkInboundRuleTrigger;
 use Postmark\Models\PostmarkInboundRuleTriggerList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
@@ -399,9 +402,9 @@ class PostmarkClient extends PostmarkClientBase {
      * @param string|null $status The current status for the outbound messages to return defaults to 'sent'
      * @param string|null $fromdate Filter to messages on or after YYYY-MM-DD
      * @param string|null $todate Filter to messages on or before YYYY-MM-DD
-     * @param array|null $metadata An associatative array of key-values that must all match values included in the metadata of matching sent messages.
+     * @param array|null $metadata An associative array of key-values that must all match values included in the metadata of matching sent messages.
      * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     * @return DynamicResponseModel
+     * @return PostmarkOutboundMessageList
      */
 	function getOutboundMessages(
         int $count = 100,
@@ -414,7 +417,7 @@ class PostmarkClient extends PostmarkClientBase {
         ?string $fromdate = NULL,
         ?string $todate = NULL,
         ?array $metadata = NULL,
-        ?string $messagestream = NULL)
+        ?string $messagestream = NULL): PostmarkOutboundMessageList
     {
 		$query = array();
 		$query["recipient"] = $recipient;
@@ -434,7 +437,7 @@ class PostmarkClient extends PostmarkClientBase {
 			}
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/outbound', $query));
+		return new PostmarkOutboundMessageList($this->processRestRequest('GET', '/messages/outbound', $query));
 	}
 
 	/**
