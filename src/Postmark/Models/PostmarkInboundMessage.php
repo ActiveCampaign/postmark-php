@@ -34,7 +34,7 @@ class PostmarkInboundMessage
     public function __construct(array $values)
     {
         $this->From = !empty($values['From']) ? $values['From'] : "";
-        $this->FromFull = !empty($values['FromFull']) ? $values['FromFull'] : new PostmarkAddressFull(array());
+        !empty($values['FromFull']) ? $this->setFromFull($values['FromFull']) : $this->setFromFull(array());
         $this->FromName = !empty($values['FromName']) ? $values['FromName'] : "";
         $this->To = !empty($values['To']) ? $values['To'] : "";
         $this->ToFull = !empty($values['ToFull']) ? $values['ToFull'] : array();
@@ -83,12 +83,19 @@ class PostmarkInboundMessage
     }
 
     /**
-     * @param mixed|\Postmark\Models\PostmarkAddressFull $FromFull
+     * @param mixed|PostmarkAddressFull $FromFull
      * @return PostmarkInboundMessage
      */
     public function setFromFull(mixed $FromFull): PostmarkInboundMessage
     {
-        $this->FromFull = $FromFull;
+        if (is_object($FromFull))
+        {
+            $this->FromFull = new PostmarkAddressFull((array)$FromFull);
+        }
+        else
+        {
+            $this->FromFull = new PostmarkAddressFull($FromFull);
+        }
         return $this;
     }
 
