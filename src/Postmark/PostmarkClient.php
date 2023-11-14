@@ -1227,7 +1227,6 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["Triggers"] = $triggers;
 
         $response = $this->processRestRequest('POST', "/webhooks", $body);
-        //fwrite(STDERR, "zzz-------------------------!!! ". print_r($webhook, TRUE));
 		return new WebhookConfiguration($response);
 	}
 
