@@ -23,6 +23,8 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
 		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$retrievedMessages = $client->getInboundMessages(10);
+        fwrite(STDERR, "-------------------------!!! ". print_r($retrievedMessages, TRUE));
+        fwrite(STDERR, "!!!-------------------------  ". print_r($retrievedMessages->getInboundMessages()[0], TRUE));
 		$baseMessageId = $retrievedMessages->getInboundMessages()[0]->getMessageID();
 		$message = $client->getInboundMessageDetails($baseMessageId);
 
