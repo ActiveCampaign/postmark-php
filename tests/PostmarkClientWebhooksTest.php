@@ -41,7 +41,6 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $webhooks = $configurations->getWebhooks();
 
         foreach ($webhooks as $key => $value) {
-            //fwrite(STDERR, "-------------------------!!! ". print_r($value, TRUE));
             if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
@@ -80,6 +79,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($messageStream, $result->getMessageStream());
         $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());
         $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->getPassword());
+
         $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($headers["X-Test-Header"], $result->HttpHeaders[0]->Value);
         $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());

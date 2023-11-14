@@ -16,6 +16,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 
 		foreach ($domains->getDomains() as $key => $value) {
 			if (preg_match('/test-php.+/', $value->Name)) {
+
 				$client->deleteDomain($value->ID);
 			}
 		}
@@ -35,6 +36,7 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+
 		$tempDomains = $client->listDomains()->getDomains();
 		$id = $tempDomains[0]->getID();
 		$domain = $client->getDomain($id);
@@ -112,5 +114,3 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
 	}
 
 }
-
-?>
