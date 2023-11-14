@@ -4,6 +4,11 @@ namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
+use Postmark\Models\PostmarkBounce;
+use Postmark\Models\PostmarkBounceActivation;
+use Postmark\Models\PostmarkBounceDump;
+use Postmark\Models\PostmarkBounceList;
+use Postmark\Models\PostmarkDeliveryStats;
 use Postmark\Models\PostmarkResponse;
 use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
@@ -17,6 +22,8 @@ use Postmark\Models\PostmarkOutboundMessage;
 use Postmark\Models\PostmarkOutboundMessageList;
 use Postmark\Models\PostmarkInboundRuleTrigger;
 use Postmark\Models\PostmarkInboundRuleTriggerList;
+use Postmark\Models\PostmarkInboundMessage;
+use Postmark\Models\PostmarkInboundMessageList;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\MessageStream\PostmarkMessageStreamList;
 use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
@@ -236,10 +243,11 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get an overview of the delivery statistics for all email that has been sent through this Server.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkDeliveryStats
 	 */
-	function getDeliveryStatistics() {
-		return new DynamicResponseModel($this->processRestRequest('GET', '/deliverystats'));
+	function getDeliveryStatistics(): PostmarkDeliveryStats
+    {
+		return new PostmarkDeliveryStats($this->processRestRequest('GET', '/deliverystats'));
 	}
 
     /**
@@ -255,7 +263,7 @@ class PostmarkClient extends PostmarkClientBase {
      * @param string|null $fromdate Filter for bounces after is date.
      * @param string|null $todate Filter for bounces before this date.
      * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     * @return DynamicResponseModel
+     * @return PostmarkBounceList
      */
 	function getBounces(
         int  $count = 100,
@@ -267,7 +275,7 @@ class PostmarkClient extends PostmarkClientBase {
         ?int $messageID = NULL,
         ?string $fromdate = NULL,
         ?string $todate = NULL,
-        ?string $messagestream = NULL)
+        ?string $messagestream = NULL): PostmarkBounceList
     {
 
 		$query = array();
@@ -282,7 +290,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/bounces', $query));
+		return new PostmarkBounceList($this->processRestRequest('GET', '/bounces', $query));
 	}
 
 	/**
@@ -292,11 +300,11 @@ class PostmarkClient extends PostmarkClientBase {
 	 *
 	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkBounce
 	 */
-	function getBounce(int $id): DynamicResponseModel
+	function getBounce(int $id): PostmarkBounce
     {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id"));
+		return new PostmarkBounce($this->processRestRequest('GET', "/bounces/$id"));
 	}
 
     /**
@@ -306,24 +314,25 @@ class PostmarkClient extends PostmarkClientBase {
      *
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
      *
-     * @return DynamicResponseModel|string
+     * @return PostmarkBounceDump
      */
-	function getBounceDump(int $id): DynamicResponseModel|string
+	function getBounceDump(int $id): PostmarkBounceDump
     {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/bounces/$id/dump"));
+		return new PostmarkBounceDump($this->processRestRequest('GET', "/bounces/$id/dump"));
 	}
 
 	/**
 	 * Cause the email address associated with a Bounce to be reactivated.
 	 *
-	 * @param  integer $id The bounce which has a deactivated email address.
+	 * @param integer $id The bounce which has a deactivated email address.
 	 *
 	 * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
 	 *
-	 * @return DynamicResponseModel
+	 * @return PostmarkBounceActivation
 	 */
-	function activateBounce($id) {
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/bounces/$id/activate"));
+	function activateBounce(int $id): PostmarkBounceActivation
+    {
+		return new PostmarkBounceActivation($this->processRestRequest('PUT', "/bounces/$id/activate"));
 	}
 
 	/**
@@ -466,21 +475,30 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Get messages sent to the inbound email address associated with this Server.
 	 *
-	 * @param  integer $count The number of inbounce messages to retrieve in the request (defaults to 100)
-	 * @param  integer $offset The number of messages to 'skip' when 'paging' through messages (defaults to 0)
-	 * @param  string $recipient Filter by the message recipient
-	 * @param  string $fromEmail Filter by the message sender
-	 * @param  string $tag Filter by the message tag
-	 * @param  string $subject Filter by the message subject
-	 * @param  string $mailboxHash Filter by the mailboxHash
-	 * @param  string $status Filter by status ('blocked' or 'processed')
-	 * @param  string $fromdate Filter to messages on or after YYYY-MM-DD
-	 * @param  string $todate Filter to messages on or before YYYY-MM-DD
-	 * @return DynamicResponseModel
+	 * @param integer $count The number of inbounce messages to retrieve in the request (defaults to 100)
+	 * @param integer $offset The number of messages to 'skip' when 'paging' through messages (defaults to 0)
+	 * @param string|null $recipient Filter by the message recipient
+	 * @param string|null $fromEmail Filter by the message sender
+	 * @param string|null $tag Filter by the message tag
+	 * @param string|null $subject Filter by the message subject
+	 * @param string|null $mailboxHash Filter by the mailboxHash
+	 * @param string|null $status Filter by status ('blocked' or 'processed')
+	 * @param string|null $fromdate Filter to messages on or after YYYY-MM-DD
+	 * @param string|null $todate Filter to messages on or before YYYY-MM-DD
+	 * @return PostmarkInboundMessageList
 	 */
-	function getInboundMessages($count = 100, $offset = 0, $recipient = NULL, $fromEmail = NULL,
-		$tag = NULL, $subject = NULL, $mailboxHash = NULL, $status = NULL, $fromdate = NULL,
-		$todate = NULL) {
+	function getInboundMessages(
+        int    $count = 100,
+        int    $offset = 0,
+        string $recipient = NULL,
+        string $fromEmail = NULL,
+        string $tag = NULL,
+        string $subject = NULL,
+        string $mailboxHash = NULL,
+        string $status = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL): PostmarkInboundMessageList
+    {
 
 		$query = array();
 		$query['recipient'] = $recipient;
@@ -494,17 +512,18 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/messages/inbound', $query));
+		return new PostmarkInboundMessageList($this->processRestRequest('GET', '/messages/inbound', $query));
 	}
 
 	/**
 	 * Get details for a specific inbound message.
 	 *
 	 * @param string $id The ID of the message for which we went to get details.
-	 * @return DynamicResponseModel
+	 * @return PostmarkInboundMessage
 	 */
-	function getInboundMessageDetails($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/inbound/$id/details"));
+	function getInboundMessageDetails(string $id): PostmarkInboundMessage
+    {
+		return new PostmarkInboundMessage($this->processRestRequest('GET', "/messages/inbound/$id/details"));
 	}
 
 	/**
