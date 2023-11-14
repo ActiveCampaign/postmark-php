@@ -34,26 +34,26 @@ class PostmarkInboundMessage
     public function __construct(array $values)
     {
         $this->From = !empty($values['From']) ? $values['From'] : "";
-        $this->FromFull = !empty($values['FirstOpen']) ? $values['FirstOpen'] : new PostmarkAddressFull(array());
-        $this->FromName = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->To = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->ToFull = !empty($values['FirstOpen']) ? $values['FirstOpen'] : array();
-        $this->Cc = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->CcFull = !empty($values['FirstOpen']) ? $values['FirstOpen'] : array();
-        $this->Bcc = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->BccFull = !empty($values['FirstOpen']) ? $values['FirstOpen'] : array();
-        $this->ReplyTo = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->Subject = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->MessageID = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->OriginalRecipient = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->Date = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->MailboxHash = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->TextBody = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->HtmlBody = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->Tag = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->StrippedTextReply = !empty($values['FirstOpen']) ? $values['FirstOpen'] : "";
-        $this->Headers = !empty($values['FirstOpen']) ? $values['FirstOpen'] : array();
-        $this->Attachments = !empty($values['FirstOpen']) ? $values['FirstOpen'] : array();
+        $this->FromFull = !empty($values['FromFull']) ? $values['FromFull'] : new PostmarkAddressFull(array());
+        $this->FromName = !empty($values['FromName']) ? $values['FromName'] : "";
+        $this->To = !empty($values['To']) ? $values['To'] : "";
+        $this->ToFull = !empty($values['ToFull']) ? $values['ToFull'] : array();
+        $this->Cc = !empty($values['Cc']) ? $values['Cc'] : "";
+        $this->CcFull = !empty($values['CcFull']) ? $values['CcFull'] : array();
+        $this->Bcc = !empty($values['Bcc']) ? $values['Bcc'] : "";
+        $this->BccFull = !empty($values['BccFull']) ? $values['BccFull'] : array();
+        $this->ReplyTo = !empty($values['ReplyTo']) ? $values['ReplyTo'] : "";
+        $this->Subject = !empty($values['Subject']) ? $values['Subject'] : "";
+        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : "";
+        $this->OriginalRecipient = !empty($values['OriginalRecipient']) ? $values['OriginalRecipient'] : "";
+        $this->Date = !empty($values['Date']) ? $values['Date'] : "";
+        $this->MailboxHash = !empty($values['MailboxHash']) ? $values['MailboxHash'] : "";
+        $this->TextBody = !empty($values['TextBody']) ? $values['TextBody'] : "";
+        $this->HtmlBody = !empty($values['HtmlBody']) ? $values['HtmlBody'] : "";
+        $this->Tag = !empty($values['Tag']) ? $values['Tag'] : "";
+        $this->StrippedTextReply = !empty($values['StrippedTextReply']) ? $values['StrippedTextReply'] : "";
+        $this->Headers = !empty($values['Headers']) ? $values['Headers'] : array();
+        $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : array();
     }
 
     /**
