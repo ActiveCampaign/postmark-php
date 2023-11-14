@@ -429,17 +429,16 @@ class PostmarkAdminClient extends PostmarkClientBase
 
         return new DataRemovalRequestResponse($this->processRestRequest('POST', '/data-removals', $body));
     }
-//
-//    /**
-//	 * Review the status of your data removal requests
-//	 *
-//	 * @param int $id ID of data removal request
-//	 */
-//	public function getDataRemoval(int $id): DynamicResponseModel
-//	{
-//		return new DynamicResponseModel(
-//			$this->processRestRequest('GET', sprintf('/data-removals/%s', $id))
-//        );
-//	}
+
+    /**
+     * Review the status of your data removal requests
+     *
+     * @param int $id ID of data removal request
+     * @return DataRemovalRequestResponse
+     */
+    public function getDataRemoval(int $id): DataRemovalRequestResponse
+    {
+        return new DataRemovalRequestResponse($this->processRestRequest('GET', sprintf('/data-removals/%s', $id)));
+    }
 
 }
