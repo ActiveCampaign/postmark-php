@@ -51,28 +51,42 @@ class PostmarkClient extends PostmarkClientBase {
 	/**
 	 * Send an email.
 	 *
-	 * @param  string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-	 * @param  string $to  The recipient of the email.
-	 * @param  string $subject  The subject of the email.
-	 * @param  string $htmlBody  The HTML content of the message, optional if Text Body is specified.
-	 * @param  string $textBody  The text content of the message, optional if HTML Body is specified.
-	 * @param  string $tag  A tag associated with this message, useful for classifying sent messages.
-	 * @param  boolean $trackOpens  True if you want Postmark to track opens of HTML emails.
-	 * @param  string $replyTo  Reply to email address.
-	 * @param  string $cc  Carbon Copy recipients, comma-separated
-	 * @param  string $bcc  Blind Carbon Copy recipients, comma-separated.
-	 * @param  array $headers  Headers to be included with the sent email message.
-	 * @param  array $attachments  An array of PostmarkAttachment objects.
-	 * @param  string $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
-	 * @param  array $metadata  Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
-	 * @param  array $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
-         * @throws Models\PostmarkException
+	 * @param string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param string $to  The recipient of the email.
+	 * @param string $subject  The subject of the email.
+	 * @param string|null $htmlBody  The HTML content of the message, optional if Text Body is specified.
+	 * @param string|null $textBody  The text content of the message, optional if HTML Body is specified.
+	 * @param string|null $tag  A tag associated with this message, useful for classifying sent messages.
+	 * @param boolean|null $trackOpens  True if you want Postmark to track opens of HTML emails.
+	 * @param string|null $replyTo  Reply to email address.
+	 * @param string|null $cc  Carbon Copy recipients, comma-separated
+	 * @param string|null $bcc  Blind Carbon Copy recipients, comma-separated.
+	 * @param array|null $headers  Headers to be included with the sent email message.
+	 * @param array|null $attachments  An array of PostmarkAttachment objects.
+	 * @param string|null $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param array|null $metadata  Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
+	 * @param string|null $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+         * @return DynamicResponseModel
+	 *@throws Models\PostmarkException
          *
-	 * @return DynamicResponseModel
 	 */
-	function sendEmail($from, $to, $subject, $htmlBody = NULL, $textBody = NULL,
-		$tag = NULL, $trackOpens = NULL, $replyTo = NULL, $cc = NULL, $bcc = NULL,
-		$headers = NULL, $attachments = NULL, $trackLinks = NULL, $metadata = NULL, $messageStream = NULL) {
+	function sendEmail(
+        string $from,
+        string $to,
+        string $subject,
+        string $htmlBody = NULL,
+        string $textBody = NULL,
+        string $tag = NULL,
+        bool   $trackOpens = NULL,
+        string $replyTo = NULL,
+        string $cc = NULL,
+        string $bcc = NULL,
+        array  $headers = NULL,
+        array  $attachments = NULL,
+        string $trackLinks = NULL,
+        array  $metadata = NULL,
+        string $messageStream = NULL): DynamicResponseModel
+    {
 
 		$body = array();
 		$body['From'] = $from;
@@ -97,7 +111,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$body['TrackLinks'] = $trackLinks;
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('POST', '/email', $body));
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email', $body));
 	}
 
 	/**
@@ -167,7 +181,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$body['TemplateAlias'] = $templateIdOrAlias;
 		}
 
-		return new PostmarkResponse($this->processRestRequest('POST', '/email/withTemplate', $body));
+		return new PostmarkResponse((array)$this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
 
 	/**
@@ -211,7 +225,7 @@ class PostmarkClient extends PostmarkClientBase {
 			array_push($final, $email);
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batch', $final));
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email/batch', $final));
 	}
 
 	/**
@@ -237,7 +251,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$final[] = $email;
 		}
 
-		return new DynamicResponseModel($this->processRestRequest('POST', '/email/batchWithTemplates', array('Messages' => $final)));
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email/batchWithTemplates', array('Messages' => $final)));
 	}
 
 	/**
@@ -247,7 +261,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function getDeliveryStatistics(): PostmarkDeliveryStats
     {
-		return new PostmarkDeliveryStats($this->processRestRequest('GET', '/deliverystats'));
+		return new PostmarkDeliveryStats((array)$this->processRestRequest('GET', '/deliverystats'));
 	}
 
     /**
@@ -290,7 +304,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new PostmarkBounceList($this->processRestRequest('GET', '/bounces', $query));
+		return new PostmarkBounceList((array)$this->processRestRequest('GET', '/bounces', $query));
 	}
 
 	/**
@@ -304,7 +318,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function getBounce(int $id): PostmarkBounce
     {
-		return new PostmarkBounce($this->processRestRequest('GET', "/bounces/$id"));
+		return new PostmarkBounce((array)$this->processRestRequest('GET', "/bounces/$id"));
 	}
 
     /**
@@ -318,7 +332,7 @@ class PostmarkClient extends PostmarkClientBase {
      */
 	function getBounceDump(int $id): PostmarkBounceDump
     {
-		return new PostmarkBounceDump($this->processRestRequest('GET', "/bounces/$id/dump"));
+		return new PostmarkBounceDump((array)$this->processRestRequest('GET', "/bounces/$id/dump"));
 	}
 
 	/**
@@ -332,7 +346,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function activateBounce(int $id): PostmarkBounceActivation
     {
-		return new PostmarkBounceActivation($this->processRestRequest('PUT', "/bounces/$id/activate"));
+		return new PostmarkBounceActivation((array)$this->processRestRequest('PUT', "/bounces/$id/activate"));
 	}
 
 	/**
@@ -343,7 +357,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function getServer(): PostmarkServer
     {
-		return new PostmarkServer($this->processRestRequest('GET', '/server'));
+		return new PostmarkServer((array)$this->processRestRequest('GET', '/server'));
 	}
 
 	/**
@@ -399,7 +413,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["ClickHookUrl"] = $clickHookUrl;
 		$body["DeliveryHookUrl"] = $deliveryHookUrl;
 
-		return new PostmarkServer($this->processRestRequest('PUT', '/server', $body));
+		return new PostmarkServer((array)$this->processRestRequest('PUT', '/server', $body));
 	}
 
     /**
@@ -449,7 +463,7 @@ class PostmarkClient extends PostmarkClientBase {
 			}
 		}
 
-		return new PostmarkOutboundMessageList($this->processRestRequest('GET', '/messages/outbound', $query));
+		return new PostmarkOutboundMessageList((array)$this->processRestRequest('GET', '/messages/outbound', $query));
 	}
 
 	/**
@@ -458,18 +472,20 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $id The ID of the Message for which we want details.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundMessageDetails($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/details"));
+	function getOutboundMessageDetails(string $id): DynamicResponseModel
+    {
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', "/messages/outbound/$id/details"));
 	}
 
 	/**
 	 * Get the raw content for a message that was sent.
 	 * This response
-	 * @param  string $id The ID of the message for which we want a dump.
+	 * @param string $id The ID of the message for which we want a dump.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundMessageDump($id) {
-		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/$id/dump"));
+	function getOutboundMessageDump(string $id): DynamicResponseModel
+    {
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', "/messages/outbound/$id/dump"));
 	}
 
 	/**
@@ -512,7 +528,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return new PostmarkInboundMessageList($this->processRestRequest('GET', '/messages/inbound', $query));
+		return new PostmarkInboundMessageList((array)$this->processRestRequest('GET', '/messages/inbound', $query));
 	}
 
 	/**
@@ -523,7 +539,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function getInboundMessageDetails(string $id): PostmarkInboundMessage
     {
-		return new PostmarkInboundMessage($this->processRestRequest('GET', "/messages/inbound/$id/details"));
+		return new PostmarkInboundMessage((array)$this->processRestRequest('GET', "/messages/inbound/$id/details"));
 	}
 
 	/**
@@ -533,8 +549,9 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string $id The ID for a message that we wish to unblock.
 	 * @return DynamicResponseModel
 	 */
-	function bypassInboundMessageRules($id) {
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/bypass"));
+	function bypassInboundMessageRules(string $id): DynamicResponseModel
+    {
+		return new DynamicResponseModel((array)$this->processRestRequest('PUT', "/messages/inbound/$id/bypass"));
 	}
 
 	/**
@@ -544,7 +561,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @return DynamicResponseModel
 	 */
 	function retryInboundMessageHook($id) {
-		return new DynamicResponseModel($this->processRestRequest('PUT', "/messages/inbound/$id/retry"));
+		return new DynamicResponseModel((array)$this->processRestRequest('PUT', "/messages/inbound/$id/retry"));
 	}
 
 	/**
@@ -601,7 +618,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['city'] = $city;
 		$query['messagestream'] = $messagestream;
 
-		return new PostmarkOpenList($this->processRestRequest('GET', '/messages/outbound/opens', $query));
+		return new PostmarkOpenList((array)$this->processRestRequest('GET', '/messages/outbound/opens', $query));
 	}
 
 	/**
@@ -659,7 +676,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['city'] = $city;
 		$query['messagestream'] = $messagestream;
 
-		return new PostmarkClickList($this->processRestRequest('GET', '/messages/outbound/clicks', $query));
+		return new PostmarkClickList((array)$this->processRestRequest('GET', '/messages/outbound/clicks', $query));
 	}
 
 	/**
@@ -677,7 +694,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
-		return new PostmarkOpenList($this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
+		return new PostmarkOpenList((array)$this->processRestRequest('GET', "/messages/outbound/opens/$id", $query));
 	}
 
 	/**
@@ -694,20 +711,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['count'] = $count;
 		$query['offset'] = $offset;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', "/messages/outbound/clicks/$id", $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', "/messages/outbound/clicks/$id", $query));
 	}
 
 	/**
 	 * Get an overview of the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundOverviewStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundOverviewStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -715,20 +737,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound', $query));
 	}
 
 	/**
 	 * Get send statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundSendStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundSendStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -736,20 +763,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/sends', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/sends', $query));
 	}
 
 	/**
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundBounceStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundBounceStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -757,20 +789,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/bounces', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/bounces', $query));
 	}
 
 	/**
 	 * Get SPAM complaint statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundSpamComplaintStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundSpamComplaintStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -778,20 +815,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/spam', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/spam', $query));
 	}
 
 	/**
 	 * Get bounce statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundTrackedStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundTrackedStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -799,7 +841,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/tracked', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/tracked', $query));
 	}
 
 	/**
@@ -820,20 +862,25 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/opens', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/opens', $query));
 	}
 
 	/**
 	 * Get platform statistics for the messages sent using this Server,
 	 * optionally filtering on message tag, and a to and from date.
 	 *
-	 * @param  string $tag Filter by tag.
-	 * @param  string $fromdate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $todate  must be of the format 'YYYY-MM-DD'
-	 * @param  string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+	 * @param string|null $tag Filter by tag.
+	 * @param string|null $fromdate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $todate  must be of the format 'YYYY-MM-DD'
+	 * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
 	 * @return DynamicResponseModel
 	 */
-	function getOutboundPlatformStatistics($tag = NULL, $fromdate = NULL, $todate = NULL, $messagestream = NULL) {
+	function getOutboundPlatformStatistics(
+        string $tag = NULL,
+        string $fromdate = NULL,
+        string $todate = NULL,
+        string $messagestream = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query['tag'] = $tag;
@@ -841,7 +888,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/opens/platforms', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/opens/platforms', $query));
 	}
 
 	/**
@@ -862,7 +909,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query));
 	}
 
 	/**
@@ -881,7 +928,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['fromdate'] = $fromdate;
 		$query['todate'] = $todate;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
 	}
 
 	/**
@@ -902,7 +949,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/clicks', $query));
 	}
 
 	/**
@@ -923,7 +970,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/browserfamilies', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/clicks/browserfamilies', $query));
 	}
 
 	/**
@@ -945,7 +992,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/platforms', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/clicks/platforms', $query));
 	}
 
 	/**
@@ -967,7 +1014,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query['todate'] = $todate;
 		$query['messagestream'] = $messagestream;
 
-		return new DynamicResponseModel($this->processRestRequest('GET', '/stats/outbound/clicks/location', $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('GET', '/stats/outbound/clicks/location', $query));
 	}
 
 	/**
@@ -981,7 +1028,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body = array();
 		$body["Rule"] = $rule;
 
-		return new PostmarkInboundRuleTrigger($this->processRestRequest('POST', '/triggers/inboundrules', $body));
+		return new PostmarkInboundRuleTrigger((array)$this->processRestRequest('POST', '/triggers/inboundrules', $body));
 	}
 
 	/**
@@ -998,7 +1045,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["count"] = $count;
 		$query["offset"] = $offset;
 
-		return new PostmarkInboundRuleTriggerList($this->processRestRequest('GET', '/triggers/inboundrules', $query));
+		return new PostmarkInboundRuleTriggerList((array)$this->processRestRequest('GET', '/triggers/inboundrules', $query));
 	}
 
 	/**
@@ -1009,7 +1056,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function deleteInboundRuleTrigger(int $id): PostmarkResponse
     {
-		return new PostmarkResponse($this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
+		return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/triggers/inboundrules/$id"));
 	}
 
 	/**
@@ -1020,7 +1067,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function deleteTemplate(string $id): PostmarkResponse
     {
-		return new PostmarkResponse($this->processRestRequest('DELETE', "/templates/$id"));
+		return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/templates/$id"));
 	}
 
 	/**
@@ -1054,7 +1101,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$template["templateType"] = $templateType;
 		$template["layoutTemplate"] = $layoutTemplate;
 
-		return new PostmarkTemplate($this->processRestRequest('POST', "/templates", $template));
+		return new PostmarkTemplate((array)$this->processRestRequest('POST', "/templates", $template));
 	}
 
 	/**
@@ -1087,7 +1134,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$template["alias"] = $alias;
 		$template["layoutTemplate"] = $layoutTemplate;
 
-		return new PostmarkTemplate($this->processRestRequest('PUT', "/templates/$id", $template));
+		return new PostmarkTemplate((array)$this->processRestRequest('PUT', "/templates/$id", $template));
 	}
 
     /**
@@ -1098,7 +1145,7 @@ class PostmarkClient extends PostmarkClientBase {
      */
 	function getTemplate(int $id): PostmarkTemplate
     {
-		return new PostmarkTemplate($this->processRestRequest('GET', "/templates/$id"));
+		return new PostmarkTemplate((array)$this->processRestRequest('GET', "/templates/$id"));
 	}
 
     /**
@@ -1109,7 +1156,7 @@ class PostmarkClient extends PostmarkClientBase {
      */
     function getTemplateByAlias(string $alias): PostmarkTemplate
     {
-        return new PostmarkTemplate($this->processRestRequest('GET', "/templates/$alias"));
+        return new PostmarkTemplate((array)$this->processRestRequest('GET', "/templates/$alias"));
     }
 
 	/**
@@ -1135,22 +1182,30 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["templateType"] = $templateType;
 		$query["layoutTemplate"] = $layoutTemplate;
 
-		return new PostmarkTemplateList($this->processRestRequest('GET', "/templates", $query));
+		return new PostmarkTemplateList((array)$this->processRestRequest('GET', "/templates", $query));
 	}
 
 	/**
 	 * Confirm that your template content can be parsed/rendered, get a test rendering of your template, and a suggested model to use with your templates.
 	 *
-	 * @param string $subject The Subject template you wish to test.
-	 * @param string $htmlBody The HTML template you wish to test
-	 * @param string $textBody The number of templates to "Skip" before returning results.
-	 * @param object $testRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
+	 * @param string|null $subject The Subject template you wish to test.
+	 * @param string|null $htmlBody The HTML template you wish to test
+	 * @param string|null $textBody The number of templates to "Skip" before returning results.
+	 * @param object|null $testRenderModel The model to be used when doing test renders of the templates that successfully parse in this request.
 	 * @param bool $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
 	 * @param string $templateType Validates templates based on template type (layout template or standard template). Possible options: Standard or Layout. Defaults to Standard.
-	 * @param string $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided a standard template will not use a layout template.
+	 * @param string|null $layoutTemplate An optional string to specify which layout template alias to use to validate a standard template. If not provided a standard template will not use a layout template.
 	 * @return DynamicResponseModel
 	 */
-	function validateTemplate($subject = NULL, $htmlBody = NULL, $textBody = NULL, $testRenderModel = NULL, $inlineCssForHtmlTestRender = true, $templateType = 'Standard', $layoutTemplate = NULL) {
+	function validateTemplate(
+        string $subject = NULL,
+        string $htmlBody = NULL,
+        string $textBody = NULL,
+        object $testRenderModel = NULL,
+        bool $inlineCssForHtmlTestRender = true,
+        string $templateType = 'Standard',
+        string $layoutTemplate = NULL): DynamicResponseModel
+    {
 		$query = array();
 
 		$query["subject"] = $subject;
@@ -1161,7 +1216,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["templateType"] = $templateType;
 		$query["layoutTemplate"] = $layoutTemplate;
 
-		return new DynamicResponseModel($this->processRestRequest('POST', "/templates/validate", $query));
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', "/templates/validate", $query));
 	}
 
     /**
@@ -1172,7 +1227,7 @@ class PostmarkClient extends PostmarkClientBase {
      */
 	function getWebhookConfiguration(int $id): WebhookConfiguration
     {
-		return new WebhookConfiguration($this->processRestRequest('GET', "/webhooks/$id"));
+		return new WebhookConfiguration((array)$this->processRestRequest('GET', "/webhooks/$id"));
 	}
 
 	/**
@@ -1186,7 +1241,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query = array();
 		$query["MessageStream"] = $messageStream;
 
-		return new WebhookConfigurationListingResponse($this->processRestRequest('GET', "/webhooks", $query));
+		return new WebhookConfigurationListingResponse((array)$this->processRestRequest('GET', "/webhooks", $query));
 	}
 
 	/**
@@ -1197,7 +1252,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function deleteWebhookConfiguration(int $id): PostmarkResponse
     {
-		return new PostmarkResponse($this->processRestRequest('DELETE', "/webhooks/$id"));
+		return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/webhooks/$id"));
 	}
 
 	/**
@@ -1226,8 +1281,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
 		$body["Triggers"] = $triggers;
 
-        $response = $this->processRestRequest('POST', "/webhooks", $body);
-		return new WebhookConfiguration($response);
+		return new WebhookConfiguration((array)$this->processRestRequest('POST', "/webhooks", $body));
 	}
 
 	/**
@@ -1255,7 +1309,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["HttpHeaders"] = $this->fixHeaders($httpHeaders);
 		$body["Triggers"] = $triggers;
 
-		return new WebhookConfiguration($this->processRestRequest('PUT', "/webhooks/$id", $body));
+		return new WebhookConfiguration((array)$this->processRestRequest('PUT', "/webhooks/$id", $body));
 	}
 
 	/**
@@ -1276,7 +1330,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new PostmarkSuppressionResultList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
+		return new PostmarkSuppressionResultList((array)$this->processRestRequest('POST', "/message-streams/$messageStream/suppressions", $body));
 	}
 
 	/**
@@ -1297,7 +1351,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new PostmarkSuppressionResultList($this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
+		return new PostmarkSuppressionResultList((array)$this->processRestRequest('POST', "/message-streams/$messageStream/suppressions/delete", $body));
 	}
 
 	/**
@@ -1331,7 +1385,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$messageStream = "outbound";
 		}
 
-		return new PostmarkSuppressionResultList($this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
+		return new PostmarkSuppressionResultList((array)$this->processRestRequest('GET', "/message-streams/$messageStream/suppressions/dump", $query));
 	}
 
 	/**
@@ -1353,7 +1407,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["Name"] = $name;
 		$body["Description"] = $description;
 
-		return new PostmarkMessageStream($this->processRestRequest('POST', "/message-streams", $body));
+		return new PostmarkMessageStream((array)$this->processRestRequest('POST', "/message-streams", $body));
 	}
 
 	/**
@@ -1371,7 +1425,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$body["Name"] = $name;
 		$body["Description"] = $description;
 
-		return new PostmarkMessageStream($this->processRestRequest('PATCH', "/message-streams/$id", $body));
+		return new PostmarkMessageStream((array)$this->processRestRequest('PATCH', "/message-streams/$id", $body));
 	}
 
 	/**
@@ -1383,7 +1437,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function getMessageStream(string $id): PostmarkMessageStream
     {
-		return new PostmarkMessageStream($this->processRestRequest('GET', "/message-streams/$id"));
+		return new PostmarkMessageStream((array)$this->processRestRequest('GET', "/message-streams/$id"));
 	}
 
 	/**
@@ -1400,7 +1454,7 @@ class PostmarkClient extends PostmarkClientBase {
 		$query["MessageStreamType"] = $messageStreamType;
 		$query["IncludeArchivedStreams"] = $includeArchivedStreams;
 
-		return new PostmarkMessageStreamList($this->processRestRequest('GET', "/message-streams", $query));
+		return new PostmarkMessageStreamList((array)$this->processRestRequest('GET', "/message-streams", $query));
 	}
 
 	/**
@@ -1414,7 +1468,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function archiveMessageStream(string $id): PostmarkMessageStreamArchivalConfirmation
     {
-		return new PostmarkMessageStreamArchivalConfirmation($this->processRestRequest('POST', "/message-streams/$id/archive"));
+		return new PostmarkMessageStreamArchivalConfirmation((array)$this->processRestRequest('POST', "/message-streams/$id/archive"));
 	}
 
 	/**
@@ -1428,6 +1482,6 @@ class PostmarkClient extends PostmarkClientBase {
 	 */
 	function unarchiveMessageStream(string $id): PostmarkMessageStream
     {
-		return new PostmarkMessageStream($this->processRestRequest('POST', "/message-streams/$id/unarchive"));
+		return new PostmarkMessageStream((array)$this->processRestRequest('POST', "/message-streams/$id/unarchive"));
 	}
 }

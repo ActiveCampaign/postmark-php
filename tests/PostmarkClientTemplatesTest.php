@@ -58,7 +58,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$result = $client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
 		$firstVersion = $client->getTemplate($result->getTemplateId());
 
-		$r2 = $client->editTemplate($result->getTemplateId(), 'test-php-template-edited-' . date('c'), "{{subject}}!", "Hi <b>{{name}}</b>!", "Hi {{name}}!");
+		$r2 = $client->editTemplate((string)$result->getTemplateId(), 'test-php-template-edited-' . date('c'), "{{subject}}!", "Hi <b>{{name}}</b>!", "Hi {{name}}!");
 		$secondVersion = $client->getTemplate($r2->getTemplateId());
 
 		$this->assertNotSame($firstVersion->getName(), $secondVersion->getName());
@@ -71,12 +71,12 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$layoutTemplate = $client->createTemplate('test-php-template-layout-' . date('c'), NULL, "Hello <b>{{{@content}}}</b>!", "Hello {{{@content}}}!", null, "Layout");
 		
 		// Adding a layout template to a standard template
-		$r3 = $client->editTemplate($result->getTemplateId(), NULL, NULL, NULL, NULL, NULL, $layoutTemplate->getAlias());
+		$r3 = $client->editTemplate((string)$result->getTemplateId(), NULL, NULL, NULL, NULL, NULL, $layoutTemplate->getAlias());
 		$versionWithLayoutTemplate = $client->getTemplate($r3->getTemplateId());
 		$this->assertEquals($layoutTemplate->getAlias(), $versionWithLayoutTemplate->getLayoutTemplate());
 		
 		// Removing the layout template
-		$r4 = $client->editTemplate($result->getTemplateId(), NULL, NULL, NULL, NULL, NULL, "");
+		$r4 = $client->editTemplate((string)$result->getTemplateId(), NULL, NULL, NULL, NULL, NULL, "");
 		$versionWithoutLayoutTemplate = $client->getTemplate($r4->getTemplateId());
 		$this->assertNull($versionWithoutLayoutTemplate->getLayoutTemplate());
 	}
@@ -123,7 +123,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$result = $client->createTemplate('test-php-template-' . date('c'), "{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!");
-		$deleteResult = $client->deleteTemplate($result->getTemplateId());
+		$deleteResult = $client->deleteTemplate((string)$result->getTemplateId());
 
 		$this->assertEquals(0, $deleteResult->getErrorCode());
 	}
@@ -132,7 +132,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 	function testClientCanValidateTemplate() {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		$result = $client->validateTemplate("{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", NULL, false, NULL, NULL);
+		$result = $client->validateTemplate("{{subject}}", "Hello <b>{{name}}</b>!", "Hello {{name}}!", NULL, false, "", NULL);
 
 		$this->assertNotEmpty($result);
 	}

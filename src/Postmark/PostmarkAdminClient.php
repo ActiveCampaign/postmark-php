@@ -43,7 +43,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function getServer(int $id): PostmarkServer
     {
-        return new PostmarkServer($this->processRestRequest('GET', "/servers/$id"));
+        return new PostmarkServer((array)$this->processRestRequest('GET', "/servers/$id"));
     }
 
     /**
@@ -61,7 +61,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $query['offset'] = $offset;
         $query['name'] = $name;
 
-        return new PostmarkServerList($this->processRestRequest('GET', '/servers/', $query));
+        return new PostmarkServerList((array)$this->processRestRequest('GET', '/servers/', $query));
     }
 
     /**
@@ -74,7 +74,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function deleteServer(int $id): PostmarkResponse
     {
-        return new PostmarkResponse($this->processRestRequest('DELETE', "/servers/$id"));
+        return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/servers/$id"));
     }
 
     /**
@@ -135,7 +135,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body["DeliveryHookUrl"] = $deliveryHookUrl;
         $body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
 
-        $response = new PostmarkServer($this->processRestRequest('PUT', "/servers/$id", $body));
+        $response = new PostmarkServer((array)$this->processRestRequest('PUT', "/servers/$id", $body));
         $response->setID($id);
         return $response;
     }
@@ -196,7 +196,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body["DeliveryHookUrl"] = $deliveryHookUrl;
         $body["EnableSmtpApiErrorHooks"] = $enableSmtpApiErrorHooks;
 
-        return new PostmarkServer($this->processRestRequest('POST', '/servers/', $body));
+        return new PostmarkServer((array)$this->processRestRequest('POST', '/servers/', $body));
     }
 
     /**
@@ -213,7 +213,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $query['count'] = $count;
         $query['offset'] = $offset;
 
-        return new PostmarkSenderSignatureList($this->processRestRequest('GET', '/senders/', $query));
+        return new PostmarkSenderSignatureList((array)$this->processRestRequest('GET', '/senders/', $query));
     }
 
     /**
@@ -224,7 +224,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function getSenderSignature(int $id): PostmarkSenderSignature
     {
-        return new PostmarkSenderSignature($this->processRestRequest('GET', "/senders/$id"));
+        return new PostmarkSenderSignature((array)$this->processRestRequest('GET', "/senders/$id"));
     }
 
     /**
@@ -246,7 +246,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['replyToEmail'] = $replyToEmail;
         $body['returnPathDomain'] = $returnPathDomain;
 
-        return new PostmarkSenderSignature($this->processRestRequest('POST', '/senders/', $body));
+        return new PostmarkSenderSignature((array)$this->processRestRequest('POST', '/senders/', $body));
     }
 
     /**
@@ -265,7 +265,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['replyToEmail'] = $replyToEmail;
         $body['returnPathDomain'] = $returnPathDomain;
 
-        return new PostmarkSenderSignature($this->processRestRequest('PUT', "/senders/$id", $body));
+        return new PostmarkSenderSignature((array)$this->processRestRequest('PUT', "/senders/$id", $body));
     }
 
     /**
@@ -276,7 +276,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function deleteSenderSignature(int $id): PostmarkResponse
     {
-        return new PostmarkResponse($this->processRestRequest('DELETE', "/senders/$id"));
+        return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/senders/$id"));
     }
 
     /**
@@ -288,7 +288,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function resendSenderSignatureConfirmation(int $id): PostmarkResponse
     {
-        return new PostmarkResponse($this->processRestRequest('POST', "/senders/$id/resend"));
+        return new PostmarkResponse((array)$this->processRestRequest('POST', "/senders/$id/resend"));
     }
 
     /**
@@ -299,16 +299,13 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param int $offset
      * @return PostmarkDomainList
      */
-    function listDomains($count = 100, $offset = 0): PostmarkDomainList
+    function listDomains(int $count = 100, int $offset = 0): PostmarkDomainList
     {
-
         $query = array();
         $query['count'] = $count;
         $query['offset'] = $offset;
 
-        $response = $this->processRestRequest('GET', '/domains/', $query);
-
-        return new PostmarkDomainList($response);
+        return new PostmarkDomainList((array)$this->processRestRequest('GET', '/domains/', $query));
     }
 
     /**
@@ -319,8 +316,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function getDomain(int $id): PostmarkDomainDetails
     {
-        $tempDomain = $this->processRestRequest('GET', "/domains/$id");
-        return new PostmarkDomainDetails($tempDomain);
+        return new PostmarkDomainDetails((array)$this->processRestRequest('GET', "/domains/$id"));
     }
 
     /**
@@ -336,8 +332,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['name'] = $name;
         $body['returnPathDomain'] = $returnPathDomain;
 
-        $tempDomain = $this->processRestRequest('POST', '/domains/', $body);
-        return new PostmarkDomainDetails($tempDomain);
+        return new PostmarkDomainDetails((array)$this->processRestRequest('POST', '/domains/', $body));
     }
 
     /**
@@ -352,8 +347,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body = array();
         $body['returnPathDomain'] = $returnPathDomain;
 
-        $tempDomain = $this->processRestRequest('PUT', "/domains/$id", $body);
-        return new PostmarkDomainDetails($tempDomain);
+        return new PostmarkDomainDetails((array)$this->processRestRequest('PUT', "/domains/$id", $body));
     }
 
     /**
@@ -364,7 +358,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function deleteDomain(int $id): PostmarkResponse
     {
-        return new PostmarkResponse($this->processRestRequest('DELETE', "/domains/$id"));
+        return new PostmarkResponse((array)$this->processRestRequest('DELETE', "/domains/$id"));
     }
 
     /**
@@ -376,8 +370,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function verifyDKIM(int $id): PostmarkDomainDetails
     {
-        $tempDomain = $this->processRestRequest('PUT', "/domains/$id/verifyDkim");
-        return new PostmarkDomainDetails($tempDomain);
+        return new PostmarkDomainDetails((array)$this->processRestRequest('PUT', "/domains/$id/verifyDkim"));
     }
 
     /**
@@ -389,8 +382,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function verifyReturnPath(int $id): PostmarkDomainDetails
     {
-        $tempDomain = $this->processRestRequest('PUT', "/domains/$id/verifyReturnPath");
-        return new PostmarkDomainDetails($tempDomain);
+        return new PostmarkDomainDetails((array)$this->processRestRequest('PUT', "/domains/$id/verifyReturnPath"));
     }
 
     /**
@@ -403,7 +395,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     function rotateDKIMForDomain(int $id): PostmarkDomain
     {
-        return new PostmarkDomain($this->processRestRequest('POST', "/domains/$id/rotatedkim"));
+        return new PostmarkDomain((array)$this->processRestRequest('POST', "/domains/$id/rotatedkim"));
     }
 
     /**
@@ -427,7 +419,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['RequestedFor'] = $requestedFor;
         $body['NotifyWhenCompleted'] = $notifyWhenCompleted;
 
-        return new DataRemovalRequestResponse($this->processRestRequest('POST', '/data-removals', $body));
+        return new DataRemovalRequestResponse((array)$this->processRestRequest('POST', '/data-removals', $body));
     }
 
     /**
@@ -438,7 +430,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     public function getDataRemoval(int $id): DataRemovalRequestResponse
     {
-        return new DataRemovalRequestResponse($this->processRestRequest('GET', sprintf('/data-removals/%s', $id)));
+        return new DataRemovalRequestResponse((array)$this->processRestRequest('GET', sprintf('/data-removals/%s', $id)));
     }
 
 }
