@@ -31,7 +31,7 @@ class PostmarkServer
     /**
      * @param array $values
      */
-    public function __construct(array $values)
+    public function __construct(mixed $values)
     {
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
         $this->Name = !empty($values['Name']) ? $values['Name'] : "";
