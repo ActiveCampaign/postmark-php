@@ -2,8 +2,6 @@
 
 namespace Postmark\Models;
 
-use Postmark\Models\PostmarkAddressFull;
-
 class PostmarkInboundMessage
 {
     public string $From;
@@ -28,32 +26,29 @@ class PostmarkInboundMessage
     public array $Headers;
     public array $Attachments;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
-        $this->From = !empty($values['From']) ? $values['From'] : "";
-        !empty($values['FromFull']) ? $this->setFromFull($values['FromFull']) : $this->setFromFull(array());
-        $this->FromName = !empty($values['FromName']) ? $values['FromName'] : "";
-        $this->To = !empty($values['To']) ? $values['To'] : "";
-        $this->ToFull = !empty($values['ToFull']) ? $values['ToFull'] : array();
-        $this->Cc = !empty($values['Cc']) ? $values['Cc'] : "";
-        $this->CcFull = !empty($values['CcFull']) ? $values['CcFull'] : array();
-        $this->Bcc = !empty($values['Bcc']) ? $values['Bcc'] : "";
-        $this->BccFull = !empty($values['BccFull']) ? $values['BccFull'] : array();
-        $this->ReplyTo = !empty($values['ReplyTo']) ? $values['ReplyTo'] : "";
-        $this->Subject = !empty($values['Subject']) ? $values['Subject'] : "";
-        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : "";
-        $this->OriginalRecipient = !empty($values['OriginalRecipient']) ? $values['OriginalRecipient'] : "";
-        $this->Date = !empty($values['Date']) ? $values['Date'] : "";
-        $this->MailboxHash = !empty($values['MailboxHash']) ? $values['MailboxHash'] : "";
-        $this->TextBody = !empty($values['TextBody']) ? $values['TextBody'] : "";
-        $this->HtmlBody = !empty($values['HtmlBody']) ? $values['HtmlBody'] : "";
-        $this->Tag = !empty($values['Tag']) ? $values['Tag'] : "";
-        $this->StrippedTextReply = !empty($values['StrippedTextReply']) ? $values['StrippedTextReply'] : "";
-        $this->Headers = !empty($values['Headers']) ? $values['Headers'] : array();
-        $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : array();
+        $this->From = !empty($values['From']) ? $values['From'] : '';
+        !empty($values['FromFull']) ? $this->setFromFull($values['FromFull']) : $this->setFromFull([]);
+        $this->FromName = !empty($values['FromName']) ? $values['FromName'] : '';
+        $this->To = !empty($values['To']) ? $values['To'] : '';
+        $this->ToFull = !empty($values['ToFull']) ? $values['ToFull'] : [];
+        $this->Cc = !empty($values['Cc']) ? $values['Cc'] : '';
+        $this->CcFull = !empty($values['CcFull']) ? $values['CcFull'] : [];
+        $this->Bcc = !empty($values['Bcc']) ? $values['Bcc'] : '';
+        $this->BccFull = !empty($values['BccFull']) ? $values['BccFull'] : [];
+        $this->ReplyTo = !empty($values['ReplyTo']) ? $values['ReplyTo'] : '';
+        $this->Subject = !empty($values['Subject']) ? $values['Subject'] : '';
+        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : '';
+        $this->OriginalRecipient = !empty($values['OriginalRecipient']) ? $values['OriginalRecipient'] : '';
+        $this->Date = !empty($values['Date']) ? $values['Date'] : '';
+        $this->MailboxHash = !empty($values['MailboxHash']) ? $values['MailboxHash'] : '';
+        $this->TextBody = !empty($values['TextBody']) ? $values['TextBody'] : '';
+        $this->HtmlBody = !empty($values['HtmlBody']) ? $values['HtmlBody'] : '';
+        $this->Tag = !empty($values['Tag']) ? $values['Tag'] : '';
+        $this->StrippedTextReply = !empty($values['StrippedTextReply']) ? $values['StrippedTextReply'] : '';
+        $this->Headers = !empty($values['Headers']) ? $values['Headers'] : [];
+        $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : [];
     }
 
     /**
@@ -66,11 +61,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $From
-     * @return PostmarkInboundMessage
      */
     public function setFrom(mixed $From): PostmarkInboundMessage
     {
         $this->From = $From;
+
         return $this;
     }
 
@@ -84,18 +79,15 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|PostmarkAddressFull $FromFull
-     * @return PostmarkInboundMessage
      */
     public function setFromFull(mixed $FromFull): PostmarkInboundMessage
     {
-        if (is_object($FromFull))
-        {
-            $this->FromFull = new PostmarkAddressFull((array)$FromFull);
-        }
-        else
-        {
+        if (is_object($FromFull)) {
+            $this->FromFull = new PostmarkAddressFull((array) $FromFull);
+        } else {
             $this->FromFull = new PostmarkAddressFull($FromFull);
         }
+
         return $this;
     }
 
@@ -109,11 +101,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $FromName
-     * @return PostmarkInboundMessage
      */
     public function setFromName(mixed $FromName): PostmarkInboundMessage
     {
         $this->FromName = $FromName;
+
         return $this;
     }
 
@@ -127,11 +119,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $To
-     * @return PostmarkInboundMessage
      */
     public function setTo(mixed $To): PostmarkInboundMessage
     {
         $this->To = $To;
+
         return $this;
     }
 
@@ -145,11 +137,11 @@ class PostmarkInboundMessage
 
     /**
      * @param array|mixed $ToFull
-     * @return PostmarkInboundMessage
      */
     public function setToFull(mixed $ToFull): PostmarkInboundMessage
     {
         $this->ToFull = $ToFull;
+
         return $this;
     }
 
@@ -163,11 +155,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $Cc
-     * @return PostmarkInboundMessage
      */
     public function setCc(mixed $Cc): PostmarkInboundMessage
     {
         $this->Cc = $Cc;
+
         return $this;
     }
 
@@ -181,11 +173,11 @@ class PostmarkInboundMessage
 
     /**
      * @param array|mixed $CcFull
-     * @return PostmarkInboundMessage
      */
     public function setCcFull(mixed $CcFull): PostmarkInboundMessage
     {
         $this->CcFull = $CcFull;
+
         return $this;
     }
 
@@ -199,11 +191,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $Bcc
-     * @return PostmarkInboundMessage
      */
     public function setBcc(mixed $Bcc): PostmarkInboundMessage
     {
         $this->Bcc = $Bcc;
+
         return $this;
     }
 
@@ -217,11 +209,11 @@ class PostmarkInboundMessage
 
     /**
      * @param array|mixed $BccFull
-     * @return PostmarkInboundMessage
      */
     public function setBccFull(mixed $BccFull): PostmarkInboundMessage
     {
         $this->BccFull = $BccFull;
+
         return $this;
     }
 
@@ -235,11 +227,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $ReplyTo
-     * @return PostmarkInboundMessage
      */
     public function setReplyTo(mixed $ReplyTo): PostmarkInboundMessage
     {
         $this->ReplyTo = $ReplyTo;
+
         return $this;
     }
 
@@ -253,11 +245,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $Subject
-     * @return PostmarkInboundMessage
      */
     public function setSubject(mixed $Subject): PostmarkInboundMessage
     {
         $this->Subject = $Subject;
+
         return $this;
     }
 
@@ -271,11 +263,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $MessageID
-     * @return PostmarkInboundMessage
      */
     public function setMessageID(mixed $MessageID): PostmarkInboundMessage
     {
         $this->MessageID = $MessageID;
+
         return $this;
     }
 
@@ -289,11 +281,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $OriginalRecipient
-     * @return PostmarkInboundMessage
      */
     public function setOriginalRecipient(mixed $OriginalRecipient): PostmarkInboundMessage
     {
         $this->OriginalRecipient = $OriginalRecipient;
+
         return $this;
     }
 
@@ -307,11 +299,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $Date
-     * @return PostmarkInboundMessage
      */
     public function setDate(mixed $Date): PostmarkInboundMessage
     {
         $this->Date = $Date;
+
         return $this;
     }
 
@@ -325,11 +317,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $MailboxHash
-     * @return PostmarkInboundMessage
      */
     public function setMailboxHash(mixed $MailboxHash): PostmarkInboundMessage
     {
         $this->MailboxHash = $MailboxHash;
+
         return $this;
     }
 
@@ -343,11 +335,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $TextBody
-     * @return PostmarkInboundMessage
      */
     public function setTextBody(mixed $TextBody): PostmarkInboundMessage
     {
         $this->TextBody = $TextBody;
+
         return $this;
     }
 
@@ -361,11 +353,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $HtmlBody
-     * @return PostmarkInboundMessage
      */
     public function setHtmlBody(mixed $HtmlBody): PostmarkInboundMessage
     {
         $this->HtmlBody = $HtmlBody;
+
         return $this;
     }
 
@@ -379,11 +371,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $Tag
-     * @return PostmarkInboundMessage
      */
     public function setTag(mixed $Tag): PostmarkInboundMessage
     {
         $this->Tag = $Tag;
+
         return $this;
     }
 
@@ -397,11 +389,11 @@ class PostmarkInboundMessage
 
     /**
      * @param mixed|string $StrippedTextReply
-     * @return PostmarkInboundMessage
      */
     public function setStrippedTextReply(mixed $StrippedTextReply): PostmarkInboundMessage
     {
         $this->StrippedTextReply = $StrippedTextReply;
+
         return $this;
     }
 
@@ -415,11 +407,11 @@ class PostmarkInboundMessage
 
     /**
      * @param array|mixed $Headers
-     * @return PostmarkInboundMessage
      */
     public function setHeaders(mixed $Headers): PostmarkInboundMessage
     {
         $this->Headers = $Headers;
+
         return $this;
     }
 
@@ -433,11 +425,11 @@ class PostmarkInboundMessage
 
     /**
      * @param array|mixed $Attachments
-     * @return PostmarkInboundMessage
      */
     public function setAttachments(mixed $Attachments): PostmarkInboundMessage
     {
         $this->Attachments = $Attachments;
+
         return $this;
     }
 }

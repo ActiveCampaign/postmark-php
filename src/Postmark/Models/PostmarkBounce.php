@@ -20,26 +20,23 @@ class PostmarkBounce
     public int $ServerID;
     public string $Name;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
-        $this->Type = !empty($values['Type']) ? $values['Type'] : "";
-        $this->Details = !empty($values['Details']) ? $values['Details'] : "";
-        $this->Email = !empty($values['Email']) ? $values['Email'] : "";
-        $this->BouncedAt = !empty($values['BouncedAt']) ? $values['BouncedAt'] : "";
+        $this->Type = !empty($values['Type']) ? $values['Type'] : '';
+        $this->Details = !empty($values['Details']) ? $values['Details'] : '';
+        $this->Email = !empty($values['Email']) ? $values['Email'] : '';
+        $this->BouncedAt = !empty($values['BouncedAt']) ? $values['BouncedAt'] : '';
         $this->DumpAvailable = !empty($values['DumpAvailable']) ? $values['DumpAvailable'] : false;
         $this->Inactive = !empty($values['Inactive']) ? $values['Inactive'] : false;
         $this->CanActivate = !empty($values['CanActivate']) ? $values['CanActivate'] : false;
-        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : "";
-        $this->Description = !empty($values['Description']) ? $values['Description'] : "";
-        $this->Tag = !empty($values['Tag']) ? $values['Tag'] : "";
-        $this->Subject = !empty($values['Subject']) ? $values['Subject'] : "";
-        $this->From = !empty($values['From']) ? $values['From'] : "";
+        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : '';
+        $this->Description = !empty($values['Description']) ? $values['Description'] : '';
+        $this->Tag = !empty($values['Tag']) ? $values['Tag'] : '';
+        $this->Subject = !empty($values['Subject']) ? $values['Subject'] : '';
+        $this->From = !empty($values['From']) ? $values['From'] : '';
         $this->ServerID = !empty($values['ServerID']) ? $values['ServerID'] : 0;
-        $this->Name = !empty($values['Name']) ? $values['Name'] : "";
+        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
     }
 
     /**
@@ -52,11 +49,11 @@ class PostmarkBounce
 
     /**
      * @param int|mixed $ID
-     * @return PostmarkBounce
      */
     public function setID(mixed $ID): PostmarkBounce
     {
         $this->ID = $ID;
+
         return $this;
     }
 
@@ -70,11 +67,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Type
-     * @return PostmarkBounce
      */
     public function setType(mixed $Type): PostmarkBounce
     {
         $this->Type = $Type;
+
         return $this;
     }
 
@@ -88,11 +85,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Details
-     * @return PostmarkBounce
      */
     public function setDetails(mixed $Details): PostmarkBounce
     {
         $this->Details = $Details;
+
         return $this;
     }
 
@@ -106,11 +103,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Email
-     * @return PostmarkBounce
      */
     public function setEmail(mixed $Email): PostmarkBounce
     {
         $this->Email = $Email;
+
         return $this;
     }
 
@@ -124,11 +121,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $BouncedAt
-     * @return PostmarkBounce
      */
     public function setBouncedAt(mixed $BouncedAt): PostmarkBounce
     {
         $this->BouncedAt = $BouncedAt;
+
         return $this;
     }
 
@@ -142,11 +139,11 @@ class PostmarkBounce
 
     /**
      * @param bool|mixed $DumpAvailable
-     * @return PostmarkBounce
      */
     public function setDumpAvailable(mixed $DumpAvailable): PostmarkBounce
     {
         $this->DumpAvailable = $DumpAvailable;
+
         return $this;
     }
 
@@ -160,11 +157,11 @@ class PostmarkBounce
 
     /**
      * @param bool|mixed $Inactive
-     * @return PostmarkBounce
      */
     public function setInactive(mixed $Inactive): PostmarkBounce
     {
         $this->Inactive = $Inactive;
+
         return $this;
     }
 
@@ -178,11 +175,11 @@ class PostmarkBounce
 
     /**
      * @param bool|mixed $CanActivate
-     * @return PostmarkBounce
      */
     public function setCanActivate(mixed $CanActivate): PostmarkBounce
     {
         $this->CanActivate = $CanActivate;
+
         return $this;
     }
 
@@ -196,11 +193,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $MessageID
-     * @return PostmarkBounce
      */
     public function setMessageID(mixed $MessageID): PostmarkBounce
     {
         $this->MessageID = $MessageID;
+
         return $this;
     }
 
@@ -214,11 +211,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Description
-     * @return PostmarkBounce
      */
     public function setDescription(mixed $Description): PostmarkBounce
     {
         $this->Description = $Description;
+
         return $this;
     }
 
@@ -232,11 +229,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Tag
-     * @return PostmarkBounce
      */
     public function setTag(mixed $Tag): PostmarkBounce
     {
         $this->Tag = $Tag;
+
         return $this;
     }
 
@@ -250,11 +247,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Subject
-     * @return PostmarkBounce
      */
     public function setSubject(mixed $Subject): PostmarkBounce
     {
         $this->Subject = $Subject;
+
         return $this;
     }
 
@@ -268,11 +265,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $From
-     * @return PostmarkBounce
      */
     public function setFrom(mixed $From): PostmarkBounce
     {
         $this->From = $From;
+
         return $this;
     }
 
@@ -286,11 +283,11 @@ class PostmarkBounce
 
     /**
      * @param int|mixed $ServerID
-     * @return PostmarkBounce
      */
     public function setServerID(mixed $ServerID): PostmarkBounce
     {
         $this->ServerID = $ServerID;
+
         return $this;
     }
 
@@ -304,12 +301,11 @@ class PostmarkBounce
 
     /**
      * @param mixed|string $Name
-     * @return PostmarkBounce
      */
     public function setName(mixed $Name): PostmarkBounce
     {
         $this->Name = $Name;
+
         return $this;
     }
-
 }
