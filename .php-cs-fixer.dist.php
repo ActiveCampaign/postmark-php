@@ -11,12 +11,12 @@
  * @see https://activecampaign.atlassian.net/wiki/spaces/DEV/pages/24051783/ActiveCampaign+PHP+Coding+Style+Standards
  * @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/master/doc/ruleSets/index.rst
  */
-$finder = PhpCsFixer\Finder::create()->in(__DIR__);
+$finder = PhpCsFixer\Finder::create()->in(["src", "tests"]);
 $config = new PhpCsFixer\Config();
 
 return $config->setRules([
     '@PhpCsFixer' => true,
-    //'@PHP82Migration' => true,
+    '@PHP82Migration' => true,
     'concat_space' => ['spacing' => 'one'], // This is required by [PER coding style rule 6.2 binary operators](https://www.php-fig.org/per/coding-style/#62-binary-operators)
     'global_namespace_import' => [
         'import_classes' => true,
