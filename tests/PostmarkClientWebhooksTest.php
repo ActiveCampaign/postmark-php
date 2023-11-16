@@ -2,10 +2,9 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\Models\Webhooks\HttpAuth;
-use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationBounceTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationDeliveryTrigger;
@@ -13,14 +12,32 @@ use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChangeTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
-use Postmark\PostmarkClient as PostmarkClient;
+use Postmark\PostmarkClient;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
+{
+    public static function setUpBeforeClass(): void
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
+        $configurations = $client->getWebhookConfigurations();
+        $hooks = $configurations->getWebhooks();
 
-    private $testServerToken = "";
-    
-    public static function tearDownAfterClass(): void {
+        foreach ($hooks as $key => $value) {
+            if (preg_match('/test-php-url/', $value->Url)) {
+                $client->deleteWebhookConfiguration($value->ID);
+            }
+        }
+    }
+
+    public static function tearDownAfterClass(): void
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -34,8 +51,9 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         }
     }
 
-    //create
-    public function testClientCanCreateWebhookConfiguration() {
+    // create
+    public function testClientCanCreateWebhookConfiguration()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -48,20 +66,27 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $triggers = new WebhookConfigurationTriggers($openTrigger, $clickTrigger, $deliveryTrigger, $bounceTrigger, $spamComplaintTrigger, $subscriptionChangeTrigger);
 
-        $httpAuth = new HttpAuth("testUser", "testPass");
-        $headers = array("X-Test-Header" => "Header");
-        $url = "http://www.postmark.com/test-php-url";
-        $messageStream = "outbound";
+        $httpAuth = new HttpAuth('testUser', 'testPass');
+        $headers = ['X-Test-Header' => 'Header'];
+        $url = 'http://www.postmark.com/test-php-url';
+        $messageStream = 'outbound';
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $this->assertNotEmpty($result->ID);
-        $this->assertEquals($url, $result->Url);
-        $this->assertEquals($messageStream, $result->MessageStream);
-        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->Username);
-        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->Password);
-        $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
-        $this->assertEquals($headers["X-Test-Header"], $result->HttpHeaders[0]->Value);
+        $local_triggers = $result->getTriggers();
+        //        fwrite(STDERR, "000-------------------------!!! ". print_r($local_triggers, TRUE));
+        //        fwrite(STDERR, "111-------------------------!!! ". print_r($local_triggers->getOpenSettings(), TRUE));
+        //        fwrite(STDERR, "222-------------------------!!! ". print_r($triggers, TRUE));
+        //        fwrite(STDERR, "333-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
+
+        $this->assertNotEmpty($result->getID());
+        $this->assertEquals($url, $result->getUrl());
+        $this->assertEquals($messageStream, $result->getMessageStream());
+        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());
+        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->getPassword());
+
+        $this->assertEquals('X-Test-Header', $result->HttpHeaders[0]->Name);
+        $this->assertEquals($headers['X-Test-Header'], $result->HttpHeaders[0]->Value);
         $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
         $this->assertEquals($triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
         $this->assertEquals($triggers->getClickSettings()->getEnabled(), $result->Triggers->getClickSettings()->getEnabled());
@@ -73,18 +98,19 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($triggers->getSubscriptionChangeSettings()->getEnabled(), $result->Triggers->getSubscriptionChangeSettings()->getEnabled());
     }
 
-    //edit with null parameters
-    public function testClientEditingWebhookConfigurationsPassingNullsChangesNothing() {
+    // edit with null parameters
+    public function testClientEditingWebhookConfigurationsPassingNullsChangesNothing()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $openTrigger = new WebhookConfigurationOpenTrigger(true, true);
         $triggers = new WebhookConfigurationTriggers($openTrigger);
 
-        $httpAuth = new HttpAuth("testUser", "testPass");
-        $headers = array("X-Test-Header" => "Header");
-        $url = "http://www.postmark.com/test-php-url";
-        $messageStream = "outbound";
+        $httpAuth = new HttpAuth('testUser', 'testPass');
+        $headers = ['X-Test-Header' => 'Header'];
+        $url = 'http://www.postmark.com/test-php-url';
+        $messageStream = 'outbound';
 
         $configuration = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
@@ -101,24 +127,25 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($configuration->Triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
     }
 
-    //edit
-    public function testClientCanEditWebhookConfigurations() {
+    // edit
+    public function testClientCanEditWebhookConfigurations()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $openTrigger = new WebhookConfigurationOpenTrigger(true, true);
         $triggers = new WebhookConfigurationTriggers($openTrigger);
 
-        $httpAuth = new HttpAuth("testUser", "testPass");
-        $headers = array("X-Test-Header" => "Header");
-        $url = "http://www.postmark.com/test-php-url";
-        $messageStream = "outbound";
+        $httpAuth = new HttpAuth('testUser', 'testPass');
+        $headers = ['X-Test-Header' => 'Header'];
+        $url = 'http://www.postmark.com/test-php-url';
+        $messageStream = 'outbound';
 
         $configuration = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $newUrl = "http://www.postmark.com/new-test-php-url";
-        $newHttpAuth = new HttpAuth("newTestUser", "newTestPass");
-        $newHeaders = array("X-Test-New-Header" => "New-Header");
+        $newUrl = 'http://www.postmark.com/new-test-php-url';
+        $newHttpAuth = new HttpAuth('newTestUser', 'newTestPass');
+        $newHeaders = ['X-Test-New-Header' => 'New-Header'];
 
         $newOpenTrigger = new WebhookConfigurationOpenTrigger(false, false);
         $newTriggers = new WebhookConfigurationTriggers($newOpenTrigger);
@@ -128,18 +155,19 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($newUrl, $result->getUrl());
         $this->assertEquals($newHttpAuth->getUsername(), $result->HttpAuth->getUsername());
         $this->assertEquals($newHttpAuth->getPassword(), $result->HttpAuth->getPassword());
-        $this->assertEquals("X-Test-New-Header", $result->HttpHeaders[0]->Name);
-        $this->assertEquals($newHeaders["X-Test-New-Header"], $result->HttpHeaders[0]->Value);
+        $this->assertEquals('X-Test-New-Header', $result->HttpHeaders[0]->Name);
+        $this->assertEquals($newHeaders['X-Test-New-Header'], $result->HttpHeaders[0]->Value);
         $this->assertEquals($newTriggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
         $this->assertEquals($newTriggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
     }
 
-    //get
-    public function testClientCanGetWebhookConfiguration() {
+    // get
+    public function testClientCanGetWebhookConfiguration()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        $url = "http://www.postmark.com/test-php-url";
+        $url = 'http://www.postmark.com/test-php-url';
 
         $configuration = $client->createWebhookConfiguration($url);
 
@@ -149,12 +177,13 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertEquals($configuration->getUrl(), $result->getUrl());
     }
 
-    //list
-    public function testClientCanGetWebhookConfigurations() {
+    // list
+    public function testClientCanGetWebhookConfigurations()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        $url = "http://www.postmark.com/test-php-url";
+        $url = 'http://www.postmark.com/test-php-url';
         $client->createWebhookConfiguration($url);
 
         $result = $client->getWebhookConfigurations();
@@ -162,12 +191,13 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $this->assertNotEmpty($result->Webhooks);
     }
 
-    //delete
-    public function testClientCanDeleteWebhookConfiguration() {
+    // delete
+    public function testClientCanDeleteWebhookConfiguration()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        $url = "http://www.postmark.com/test-php-url";
+        $url = 'http://www.postmark.com/test-php-url';
 
         $configuration = $client->createWebhookConfiguration($url);
 

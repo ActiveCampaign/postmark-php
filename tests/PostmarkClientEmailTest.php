@@ -13,140 +13,188 @@ use Postmark\PostmarkClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-class PostmarkClientEmailTest extends PostmarkClientBaseTest {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClientEmailTest extends PostmarkClientBaseTest
+{
+    public function testClientCanSendBasicMessage()
+    {
+        $tk = parent::$testKeys;
 
-	function testClientCanSendBasicMessage() {
-		$tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $currentTime = date('c');
 
-		$currentTime = date("c");
+        $response = $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+            '<b>Hi there!</b>',
+            'This is a text body for a test email.'
+        );
+        $this->assertNotEmpty($response, 'The client could not send a basic message.');
+    }
 
-		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-			"Hello from the PHP Postmark Client Tests! ($currentTime)",
-			'<b>Hi there!</b>',
-			'This is a text body for a test email.');
-		$this->assertNotEmpty($response, 'The client could not send a basic message.');
-	}
+    public function testClientCanSetMessageStream()
+    {
+        $tk = parent::$testKeys;
 
-	function testClientCanSetMessageStream() {
-		$tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $currentTime = date('c');
 
-		$currentTime = date("c");
+        // Sending with a valid stream
+        $response = $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+            '<b>Hi there!</b>',
+            'This is a text body for a test email via the default stream.',
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'outbound'
+        );
+        $this->assertNotEmpty($response, 'The client could not send message to the default stream.');
 
-		//Sending with a valid stream
-		$response = $client->sendEmail(
-			$tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-			"Hello from the PHP Postmark Client Tests! ($currentTime)",
-			'<b>Hi there!</b>',
-			'This is a text body for a test email via the default stream.',
-			NULL,
-			true,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			'outbound');
-		$this->assertNotEmpty($response, 'The client could not send message to the default stream.');
-
-		// Sending with an invalid stream
-		try {
-			$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-				$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-				"Hello from the PHP Postmark Client Tests! ($currentTime)",
-				'<b>Hi there!</b>',
-				'This is a text body for a test email.', NULL, true, NULL, NULL, NULL,
-				NULL, NULL, NULL, NULL, 'unknown-stream');
-		} catch(PostmarkException $ex){
-			$this->assertEquals(422, $ex->getHttpStatusCode());
-			$this->assertEquals("The stream provided: 'unknown-stream' does not exist on this server.", $ex->getMessage());
-		}
-	}
-
-	function testClientCanSendMessageWithRawAttachment() {
-		$tk = parent::$testKeys;
-
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-		$currentTime = date("c");
-
-		$attachment = PostmarkAttachment::fromRawData("attachment content",
-			"hello.txt", "text/plain");
-
-		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-			"Hello from the PHP Postmark Client Tests! ($currentTime)",
-			'<b>Hi there!</b>',
-			'This is a text body for a test email.',
-			NULL, true, NULL, NULL, NULL,
-			array("X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'), array($attachment));
-
-		$this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
-	}
-
-	function testClientCanSendMessageWithFileSystemAttachment() {
-		$tk = parent::$testKeys;
-
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-		$currentTime = date("c");
-
-		$attachment = PostmarkAttachment::fromFile(dirname(__FILE__) . '/postmark-logo.png',
-			"hello.png", "image/png");
-
-		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-			"Hello from the PHP Postmark Client Tests! ($currentTime)",
-			'<b>Hi there! From <img src="cid:hello.png"/></b>',
-			'This is a text body for a test email.',
-			NULL, true, NULL, NULL, NULL,
-			array("X-Test-Header" => "Header.", 'X-Test-Header-2' => 'Test Header 2'), array($attachment));
-
-		$this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
-	}
-
-	function testClientCanSendBatchMessages() {
-		$tk = parent::$testKeys;
-
-		$currentTime = date("c");
-
-		$batch = array();
-
-		$attachment = PostmarkAttachment::fromRawData("attachment content",
-			"hello.txt", "text/plain");
-
-		for ($i = 0; $i < 5; $i++) {
-			$payload = array(
-				'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-				'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
-				'Subject' => "Hello from the PHP Postmark Client Tests! ($currentTime)",
-				'HtmlBody' => '<b>Hi there! (batch test)</b>',
-				'TextBody' => 'This is a text body for a test email.',
-				'TrackOpens' => true,
-				'Headers' => array("X-Test-Header" => "Test Header Content", 'X-Test-Date-Sent' => date('c')),
-				'Attachments' => array($attachment),
+        // Sending with an invalid stream
+        try {
+            $response = $client->sendEmail(
+                $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+                $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+                "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+                '<b>Hi there!</b>',
+                'This is a text body for a test email.',
+                null,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                'unknown-stream'
             );
+        } catch (PostmarkException $ex) {
+            $this->assertEquals(422, $ex->getHttpStatusCode());
+            $this->assertEquals("The stream provided: 'unknown-stream' does not exist on this server.", $ex->getMessage());
+        }
+    }
 
-			$batch[] = $payload;
-		}
+    public function testClientCanSendMessageWithRawAttachment()
+    {
+        $tk = parent::$testKeys;
 
-		$client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-		$response = $client->sendEmailBatch($batch);
-		$this->assertNotEmpty($response, 'The client could not send a batch of messages.');
-	}
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	public function testRequestSentWithCustomGuzzleClientHasCorrectUri() {
-	    $successResponse = new Response(
-	        200,
+        $currentTime = date('c');
+
+        $attachment = PostmarkAttachment::fromRawData(
+            'attachment content',
+            'hello.txt',
+            'text/plain'
+        );
+
+        $response = $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+            '<b>Hi there!</b>',
+            'This is a text body for a test email.',
+            null,
+            true,
+            null,
+            null,
+            null,
+            ['X-Test-Header' => 'Header.', 'X-Test-Header-2' => 'Test Header 2'],
+            [$attachment]
+        );
+
+        $this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
+    }
+
+    public function testClientCanSendMessageWithFileSystemAttachment()
+    {
+        $tk = parent::$testKeys;
+
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $currentTime = date('c');
+
+        $attachment = PostmarkAttachment::fromFile(
+            dirname(__FILE__) . '/postmark-logo.png',
+            'hello.png',
+            'image/png'
+        );
+
+        $response = $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+            '<b>Hi there! From <img src="cid:hello.png"/></b>',
+            'This is a text body for a test email.',
+            null,
+            true,
+            null,
+            null,
+            null,
+            ['X-Test-Header' => 'Header.', 'X-Test-Header-2' => 'Test Header 2'],
+            [$attachment]
+        );
+
+        $this->assertNotEmpty($response, 'The client could not send a message with an attachment.');
+    }
+
+    public function testClientCanSendBatchMessages()
+    {
+        $tk = parent::$testKeys;
+
+        $currentTime = date('c');
+
+        $batch = [];
+
+        $attachment = PostmarkAttachment::fromRawData(
+            'attachment content',
+            'hello.txt',
+            'text/plain'
+        );
+
+        for ($i = 0; $i < 5; ++$i) {
+            $payload = [
+                'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+                'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+                'Subject' => "Hello from the PHP Postmark Client Tests! ({$currentTime})",
+                'HtmlBody' => '<b>Hi there! (batch test)</b>',
+                'TextBody' => 'This is a text body for a test email.',
+                'TrackOpens' => true,
+                'Headers' => ['X-Test-Header' => 'Test Header Content', 'X-Test-Date-Sent' => date('c')],
+                'Attachments' => [$attachment],
+            ];
+
+            $batch[] = $payload;
+        }
+
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $response = $client->sendEmailBatch($batch);
+        $this->assertNotEmpty($response, 'The client could not send a batch of messages.');
+    }
+
+    public function testRequestSentWithCustomGuzzleClientHasCorrectUri()
+    {
+        $successResponse = new Response(
+            200,
             ['content-type' => 'application/json'],
             json_encode([
                 'To' => 'user@example.com',
@@ -157,13 +205,13 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
             ])
         );
 
-	    $guzzleMockHandler = new MockHandler();
-	    $guzzleMockHandler->append($successResponse);
+        $guzzleMockHandler = new MockHandler();
+        $guzzleMockHandler->append($successResponse);
 
-	    $httpHistoryContainer = [];
+        $httpHistoryContainer = [];
 
         $handlerStack = HandlerStack::create($guzzleMockHandler);
-	    $handlerStack->push(Middleware::history($httpHistoryContainer), 'history');
+        $handlerStack->push(Middleware::history($httpHistoryContainer), 'history');
 
         $guzzleClient = new Client([
             'handler' => $handlerStack,
@@ -180,10 +228,10 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
             'Text body'
         );
 
-        /* @var RequestInterface $lastRequest */
+        // @var RequestInterface $lastRequest
         $lastRequest = $httpHistoryContainer[0]['request'];
 
-        /* @var UriInterface $lastRequestUri */
+        // @var UriInterface $lastRequestUri
         $lastRequestUri = $lastRequest->getUri();
 
         $this->assertEquals(
@@ -192,5 +240,3 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
         );
     }
 }
-
-?>
