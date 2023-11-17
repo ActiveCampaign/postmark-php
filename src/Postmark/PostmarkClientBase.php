@@ -1,9 +1,11 @@
 <?php
 
-/*
- * Author:   Wildbit (http://wildbit.com)
- * License:  http://creativecommons.org/licenses/MIT/ MIT
- * Link:     https://github.com/wildbit/postmark-php/
+/**
+ * @Author:   Wildbit (http://wildbit.com)
+ *
+ * @License:  http://creativecommons.org/licenses/MIT/ MIT
+ *
+ * @Link:     https://github.com/wildbit/postmark-php/
  */
 
 namespace Postmark;
@@ -43,8 +45,8 @@ abstract class PostmarkClientBase
      */
     public static $VERIFY_SSL = true;
 
-    protected $authorization_token;
-    protected $authorization_header;
+    protected string $authorization_token;
+    protected string $authorization_header;
     protected $version;
     protected $os;
     protected $timeout = 60;

@@ -11,7 +11,7 @@
  * @see https://activecampaign.atlassian.net/wiki/spaces/DEV/pages/24051783/ActiveCampaign+PHP+Coding+Style+Standards
  * @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/master/doc/ruleSets/index.rst
  */
-$finder = PhpCsFixer\Finder::create()->in(["src", "tests"]);
+$finder = PhpCsFixer\Finder::create()->in(__DIR__);
 $config = new PhpCsFixer\Config();
 
 return $config->setRules([
