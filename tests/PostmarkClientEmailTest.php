@@ -40,12 +40,22 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 		$currentTime = date("c");
 
 		//Sending with a valid stream
-		$response = $client->sendEmail($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+		$response = $client->sendEmail(
+			$tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
 			"Hello from the PHP Postmark Client Tests! ($currentTime)",
 			'<b>Hi there!</b>',
-			'This is a text body for a test email via the default stream.', NULL, true, NULL, NULL, NULL,
-			NULL, NULL, NULL, NULL, 'outbound');
+			'This is a text body for a test email via the default stream.',
+			NULL,
+			true,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			'outbound');
 		$this->assertNotEmpty($response, 'The client could not send message to the default stream.');
 
 		// Sending with an invalid stream
@@ -57,8 +67,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest {
 				'This is a text body for a test email.', NULL, true, NULL, NULL, NULL,
 				NULL, NULL, NULL, NULL, 'unknown-stream');
 		} catch(PostmarkException $ex){
-			$this->assertEquals(422, $ex->httpStatusCode);
-			$this->assertEquals("The stream provided: 'unknown-stream' does not exist on this server.", $ex->message);
+			$this->assertEquals(422, $ex->getHttpStatusCode());
+			$this->assertEquals("The stream provided: 'unknown-stream' does not exist on this server.", $ex->getMessage());
 		}
 	}
 

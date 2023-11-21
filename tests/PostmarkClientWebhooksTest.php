@@ -5,26 +5,42 @@ namespace Postmark\Tests;
 require_once __DIR__ . "/PostmarkClientBaseTest.php";
 
 use Postmark\Models\Webhooks\HttpAuth;
+use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationBounceTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationDeliveryTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
+use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChangeTrigger;
 use Postmark\Models\Webhooks\WebhookConfigurationTriggers;
 use Postmark\PostmarkClient as PostmarkClient;
 
+
 class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
-    private $testServerToken = "";
-    
+    public static function setUpBeforeClass(): void {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $configurations = $client->getWebhookConfigurations();
+        $hooks = $configurations->getWebhooks();
+
+        foreach ($hooks as $key => $value) {
+
+            if (preg_match('/test-php-url/', $value->Url)) {
+                $client->deleteWebhookConfiguration($value->ID);
+            }
+        }
+    }
+
     public static function tearDownAfterClass(): void {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $configurations = $client->getWebhookConfigurations();
+        $webhooks = $configurations->getWebhooks();
 
-        foreach ($configurations->webhooks as $key => $value) {
+        foreach ($webhooks as $key => $value) {
             if (preg_match('/test-php-url/', $value->Url)) {
                 $client->deleteWebhookConfiguration($value->ID);
             }
@@ -41,7 +57,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $deliveryTrigger = new WebhookConfigurationDeliveryTrigger(true);
         $bounceTrigger = new WebhookConfigurationBounceTrigger(true, true);
         $spamComplaintTrigger = new WebhookConfigurationSpamComplaintTrigger(true, true);
-        $subscriptionChangeTrigger = new WebhookConfigurationSubscriptionChange(true);
+        $subscriptionChangeTrigger = new WebhookConfigurationSubscriptionChangeTrigger(true);
 
         $triggers = new WebhookConfigurationTriggers($openTrigger, $clickTrigger, $deliveryTrigger, $bounceTrigger, $spamComplaintTrigger, $subscriptionChangeTrigger);
 
@@ -52,22 +68,29 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $this->assertNotEmpty($result->ID);
-        $this->assertEquals($url, $result->Url);
-        $this->assertEquals($messageStream, $result->MessageStream);
-        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->Username);
-        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->Password);
+        $local_triggers = $result->getTriggers();
+//        fwrite(STDERR, "000-------------------------!!! ". print_r($local_triggers, TRUE));
+//        fwrite(STDERR, "111-------------------------!!! ". print_r($local_triggers->getOpenSettings(), TRUE));
+//        fwrite(STDERR, "222-------------------------!!! ". print_r($triggers, TRUE));
+//        fwrite(STDERR, "333-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
+
+        $this->assertNotEmpty($result->getID());
+        $this->assertEquals($url, $result->getUrl(),);
+        $this->assertEquals($messageStream, $result->getMessageStream());
+        $this->assertEquals($httpAuth->getUsername(), $result->HttpAuth->getUsername());
+        $this->assertEquals($httpAuth->getPassword(), $result->HttpAuth->getPassword());
+
         $this->assertEquals("X-Test-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($headers["X-Test-Header"], $result->HttpHeaders[0]->Value);
-        $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->Open->Enabled);
-        $this->assertEquals($triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
-        $this->assertEquals($triggers->getClickSettings()->getEnabled(), $result->Triggers->Click->Enabled);
-        $this->assertEquals($triggers->getDeliverySettings()->getEnabled(), $result->Triggers->Delivery->Enabled);
-        $this->assertEquals($triggers->getBounceSettings()->getEnabled(), $result->Triggers->Bounce->Enabled);
-        $this->assertEquals($triggers->getBounceSettings()->getIncludeContent(), $result->Triggers->Bounce->IncludeContent);
-        $this->assertEquals($triggers->getSpamComplaintSettings()->getEnabled(), $result->Triggers->SpamComplaint->Enabled);
-        $this->assertEquals($triggers->getSpamComplaintSettings()->getIncludeContent(), $result->Triggers->SpamComplaint->IncludeContent);
-        $this->assertEquals($triggers->getSubscriptionChangeSettings()->getEnabled(), $result->Triggers->SubscriptionChange->Enabled);
+        $this->assertEquals($triggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
+        $this->assertEquals($triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
+        $this->assertEquals($triggers->getClickSettings()->getEnabled(), $result->Triggers->getClickSettings()->getEnabled());
+        $this->assertEquals($triggers->getDeliverySettings()->getEnabled(), $result->Triggers->getDeliverySettings()->getEnabled());
+        $this->assertEquals($triggers->getBounceSettings()->getEnabled(), $result->Triggers->getBounceSettings()->getEnabled());
+        $this->assertEquals($triggers->getBounceSettings()->getIncludeContent(), $result->Triggers->getBounceSettings()->getIncludeContent());
+        $this->assertEquals($triggers->getSpamComplaintSettings()->getEnabled(), $result->Triggers->getSpamComplaintSettings()->getEnabled());
+        $this->assertEquals($triggers->getSpamComplaintSettings()->getIncludeContent(), $result->Triggers->getSpamComplaintSettings()->getIncludeContent());
+        $this->assertEquals($triggers->getSubscriptionChangeSettings()->getEnabled(), $result->Triggers->getSubscriptionChangeSettings()->getEnabled());
     }
 
     //edit with null parameters
@@ -85,17 +108,17 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
-        $result = $client->editWebhookConfiguration($configuration->ID, $url);
+        $result = $client->editWebhookConfiguration($configuration->getID(), $url);
 
-        $this->assertEquals($configuration->ID, $result->ID);
-        $this->assertEquals($configuration->Url, $result->Url);
-        $this->assertEquals($configuration->MessageStream, $result->MessageStream);
-        $this->assertEquals($configuration->HttpAuth->Username, $result->HttpAuth->Username);
-        $this->assertEquals($configuration->HttpAuth->Password, $result->HttpAuth->Password);
+        $this->assertEquals($configuration->getID(), $result->getID());
+        $this->assertEquals($configuration->getUrl(), $result->getUrl());
+        $this->assertEquals($configuration->getMessageStream(), $result->getMessageStream());
+        $this->assertEquals($configuration->HttpAuth->getUsername(), $result->HttpAuth->getUsername());
+        $this->assertEquals($configuration->HttpAuth->getPassword(), $result->HttpAuth->getPassword());
         $this->assertEquals($configuration->HttpHeaders[0]->Name, $result->HttpHeaders[0]->Name);
         $this->assertEquals($configuration->HttpHeaders[0]->Value, $result->HttpHeaders[0]->Value);
-        $this->assertEquals($configuration->Triggers->Open->Enabled, $result->Triggers->Open->Enabled);
-        $this->assertEquals($configuration->Triggers->Open->PostFirstOpenOnly, $result->Triggers->Open->PostFirstOpenOnly);
+        $this->assertEquals($configuration->Triggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
+        $this->assertEquals($configuration->Triggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
     }
 
     //edit
@@ -120,15 +143,15 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
         $newOpenTrigger = new WebhookConfigurationOpenTrigger(false, false);
         $newTriggers = new WebhookConfigurationTriggers($newOpenTrigger);
 
-        $result = $client->editWebhookConfiguration($configuration->ID, $newUrl, $newHttpAuth, $newHeaders, $newTriggers);
+        $result = $client->editWebhookConfiguration($configuration->getID(), $newUrl, $newHttpAuth, $newHeaders, $newTriggers);
 
-        $this->assertEquals($newUrl, $result->Url);
-        $this->assertEquals($newHttpAuth->getUsername(), $result->HttpAuth->Username);
-        $this->assertEquals($newHttpAuth->getPassword(), $result->HttpAuth->Password);
+        $this->assertEquals($newUrl, $result->getUrl());
+        $this->assertEquals($newHttpAuth->getUsername(), $result->HttpAuth->getUsername());
+        $this->assertEquals($newHttpAuth->getPassword(), $result->HttpAuth->getPassword());
         $this->assertEquals("X-Test-New-Header", $result->HttpHeaders[0]->Name);
         $this->assertEquals($newHeaders["X-Test-New-Header"], $result->HttpHeaders[0]->Value);
-        $this->assertEquals($newTriggers->getOpenSettings()->getEnabled(), $result->Triggers->Open->Enabled);
-        $this->assertEquals($newTriggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->Open->PostFirstOpenOnly);
+        $this->assertEquals($newTriggers->getOpenSettings()->getEnabled(), $result->Triggers->getOpenSettings()->getEnabled());
+        $this->assertEquals($newTriggers->getOpenSettings()->getPostFirstOpenOnly(), $result->Triggers->getOpenSettings()->getPostFirstOpenOnly());
     }
 
     //get
@@ -140,10 +163,10 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url);
 
-        $result = $client->getWebhookConfiguration($configuration->ID);
+        $result = $client->getWebhookConfiguration($configuration->getID());
 
-        $this->assertEquals($configuration->ID, $result->ID);
-        $this->assertEquals($configuration->Url, $result->Url);
+        $this->assertEquals($configuration->getID(), $result->getID());
+        $this->assertEquals($configuration->getUrl(), $result->getUrl());
     }
 
     //list
@@ -168,10 +191,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest {
 
         $configuration = $client->createWebhookConfiguration($url);
 
-        $deleteResult = $client->deleteWebhookConfiguration($configuration->ID);
+        $deleteResult = $client->deleteWebhookConfiguration($configuration->getID());
 
-        $this->assertEquals(0, $deleteResult->ErrorCode);
+        $this->assertEquals(0, $deleteResult->getErrorCode());
     }
 }
-
-?>

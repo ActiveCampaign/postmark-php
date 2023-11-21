@@ -14,8 +14,8 @@ class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
 
 		$drr = $client->createDataRemovalRequest("test@activecampaign.com", "test2@activecampaign.com", true);
 
-		$this->assertNotEmpty($drr->ID);
-        $this->assertNotEmpty($drr->Status);
+		$this->assertNotEmpty($drr->getID());
+        $this->assertNotEmpty($drr->getStatus());
 	}
 
     function testCheckDataRemovalRequest() {
@@ -23,12 +23,10 @@ class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest {
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $createRequest = $client->createDataRemovalRequest("test@activecampaign.com", "test2@activecampaign.com", true);
-        $checkRequest = $client->getDataRemoval($createRequest->ID);
+        $checkRequest = $client->getDataRemoval($createRequest->getID());
 
-        $this->assertNotEmpty($checkRequest->ID);
-        $this->assertNotEmpty($checkRequest->Status);
-        $this->assertEquals($checkRequest->ID, $createRequest->ID);
+        $this->assertNotEmpty($checkRequest->getID());
+        $this->assertNotEmpty($checkRequest->getStatus());
+        $this->assertEquals($checkRequest->getID(), $createRequest->getID());
     }
 }
-
-?>

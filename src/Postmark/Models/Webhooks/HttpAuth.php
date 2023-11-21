@@ -20,7 +20,8 @@ class HttpAuth implements \JsonSerializable {
         $this->password = $password;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array(
             "Username" => $this->username,
             "Password" => $this->password
@@ -29,13 +30,13 @@ class HttpAuth implements \JsonSerializable {
         return $retval;
     }
 
-    public function getUsername() {
+    public function getUsername(): ?string
+    {
         return $this->username;
     }
 
-    public function getPassword() {
+    public function getPassword(): ?string
+    {
         return $this->password;
     }
 }
-
-?>

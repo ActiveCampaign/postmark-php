@@ -50,7 +50,7 @@ abstract class PostmarkClientBase {
 	protected $timeout = 60;
 
 	/** @var  Client */
-	protected $client;
+	protected Client $client;
 
 	protected function __construct($token, $header, $timeout = 60) {
 		$this->authorization_header = $header;
@@ -66,7 +66,7 @@ abstract class PostmarkClientBase {
 	 * @return Client
 	 */
 	protected function getClient() {
-		if(!$this->client) {
+		if(empty($this->client)) {
 			$this->client = new Client([
 				RequestOptions::VERIFY  => self::$VERIFY_SSL,
 				RequestOptions::TIMEOUT => $this->timeout,
@@ -92,16 +92,17 @@ abstract class PostmarkClientBase {
 		$this->client = $client;
 	}
 
-	/**
-	 * The base request method for all API access.
-	 *
-	 * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
-	 * @param string $path The API path.
-	 * @param array $body The content to be used (either as the query, or the json post/put body)
-	 * @return object
-	 *
-	 * @throws PostmarkException
-	 */
+    /**
+     * The base request method for all API access.
+     *
+     * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
+     * @param string $path The API path.
+     * @param array $body The content to be used (either as the query, or the json post/put body)
+     * @return object
+     *
+     * @throws PostmarkException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	protected function processRestRequest($method = NULL, $path = NULL, array $body = []) {
 		$client = $this->getClient();
 
@@ -146,26 +147,26 @@ abstract class PostmarkClientBase {
 				$ex = new PostmarkException();
 				$ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
 				'Please verify that you used the correct token when you constructed your client.';
-				$ex->httpStatusCode = 401;
+				$ex->setHttpStatusCode(401);
 				throw $ex;
 			case 500:
 				$ex = new PostmarkException();
-				$ex->httpStatusCode = 500;
+				$ex->setHttpStatusCode(500);
 				$ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
 				'In most cases the message is lost during the process, ' .
 				'and Postmark is notified so that we can investigate the issue.';
 				throw $ex;
 			case 503:
 				$ex = new PostmarkException();
-				$ex->httpStatusCode = 503;
+				$ex->setHttpStatusCode(503);
 				$ex->message = 'The Postmark API is currently unavailable, please try your request later.';
 				throw $ex;
 			// This should cover case 422, and any others that are possible:
 			default:
 				$ex = new PostmarkException();
 				$body = json_decode($response->getBody(), true);
-				$ex->httpStatusCode = $response->getStatusCode();
-				$ex->postmarkApiErrorCode = $body['ErrorCode'];
+				$ex->setHttpStatusCode($response->getStatusCode());
+				$ex->setPostmarkApiErrorCode($body['ErrorCode']);
 				$ex->message = $body['Message'];
 				throw $ex;
 		}

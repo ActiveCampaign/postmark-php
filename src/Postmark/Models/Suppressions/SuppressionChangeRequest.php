@@ -1,12 +1,14 @@
 <?php
 namespace Postmark\Models\Suppressions;
 
+use JetBrains\PhpStorm\ArrayShape;
+
 /**
  * Model describing a request to suppress or reactivate one recipient.
  */
 class SuppressionChangeRequest implements \JsonSerializable {
 
-    private $emailAddress;
+    private string $EmailAddress;
 
     /**
      * Create a new SuppressionChangeRequest.
@@ -14,20 +16,20 @@ class SuppressionChangeRequest implements \JsonSerializable {
      * @param string $emailAddress Address of the recipient whose suppression status should be changed.
      */
     public function __construct($emailAddress = null) {
-        $this->emailAddress = $emailAddress;
+        $this->EmailAddress = $emailAddress;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array(
-            "EmailAddress" => $this->emailAddress
+            "EmailAddress" => $this->EmailAddress
         );
 
         return $retval;
     }
 
-    public function getEmailAddress() {
-        return $this->emailAddress;
+    public function getEmailAddress(): ?string
+    {
+        return $this->EmailAddress;
     }
 }
-
-?>

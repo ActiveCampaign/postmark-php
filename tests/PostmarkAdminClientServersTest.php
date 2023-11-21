@@ -14,9 +14,9 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 		$servers = $client->listServers();
 
-		foreach ($servers->servers as $key => $value) {
-			if (preg_match('/^test-php.+/', $value->name) > 0 && !empty($value->ID)) {
-				$client->deleteServer($value->ID);
+		foreach ($servers->getServers() as $key => $value) {
+			if (preg_match('/^test-php.+/', $value->getName()) > 0 && !empty($value->getID())) {
+				$client->deleteServer($value->getID());
 			}
 		}
 	}
@@ -27,8 +27,8 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 		$servers = $client->listServers();
 
-		$this->assertGreaterThan(0, $servers['totalcount']);
-		$this->assertNotEmpty($servers->servers[0]);
+		$this->assertGreaterThan(0, $servers->getTotalcount());
+		$this->assertNotEmpty($servers->getServers()[0]);
 	}
 
 	function testClientCanGetSingleServer() {
@@ -36,11 +36,11 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
 		$servers = $client->listServers();
-		$targetId = $servers->servers[0]->id;
+		$targetId = $servers->getServers()[0]->getID();
 
 		$server = $client->getServer($targetId);
 
-		$this->assertNotEmpty($server->name);
+		$this->assertNotEmpty($server->getName());
 	}
 
 	function testClientCanCreateServer() {
@@ -58,11 +58,11 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 		$server = $client->createServer('test-php-edit-' . date('c'), 'purple');
 
 		$updateName = 'test-php-edit-' . date('c') . '-updated';
-		$serverUpdated = $client->editServer($server->id, $updateName, 'green');
+		$serverUpdated = $client->editServer($server->getID(), $updateName, 'green');
 
 		$this->assertNotEmpty($serverUpdated);
-		$this->assertNotSame($serverUpdated->name, $server->name);
-		$this->assertNotSame($serverUpdated->color, $server->color);
+		$this->assertNotSame($serverUpdated->getName(), $server->getName());
+		$this->assertNotSame($serverUpdated->getColor(), $server->getColor());
 	}
 
 	function testClientCanDeleteServer() {
@@ -71,13 +71,11 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest {
 
 		$server = $client->createServer('test-php-delete-' . date('c'));
 
-		$client->deleteServer($server->id);
+		$client->deleteServer($server->getID());
 
 		$serverList = $client->listServers();
-		foreach ($serverList->servers as $key => $value) {
-			$this->assertNotSame($value->id, $server->id);
+		foreach ($serverList->getServers() as $key => $value) {
+			$this->assertNotSame($value->getID(), $server->getID());
 		}
 	}
 }
-
-?>

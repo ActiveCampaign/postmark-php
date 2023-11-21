@@ -62,5 +62,3 @@ class DynamicResponseModel extends CaseInsensitiveArray {
 		return $result;
 	}
 }
-
-?>

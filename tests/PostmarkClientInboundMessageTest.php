@@ -15,7 +15,7 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
 		$messages = $client->getInboundMessages(10);
 
 		$this->assertNotEmpty($messages);
-		$this->assertCount(10, $messages->InboundMessages);
+		$this->assertCount(10, $messages->getInboundMessages());
 	}
 
 	function testClientCanGetInboundMessageDetails() {
@@ -23,10 +23,11 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
 		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
 		$retrievedMessages = $client->getInboundMessages(10);
-		$baseMessageId = $retrievedMessages->InboundMessages[0]["MessageID"];
+        fwrite(STDERR, "-------------------------!!! ". print_r($retrievedMessages, TRUE));
+        fwrite(STDERR, "!!!-------------------------  ". print_r($retrievedMessages->getInboundMessages()[0], TRUE));
+		$baseMessageId = $retrievedMessages->getInboundMessages()[0]->getMessageID();
 		$message = $client->getInboundMessageDetails($baseMessageId);
 
 		$this->assertNotEmpty($message);
 	}
 }
-?>

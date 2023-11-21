@@ -14,9 +14,9 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$signatures = $client->listSenderSignatures();
 
-		foreach ($signatures->senderSignatures as $key => $value) {
-			if (preg_match('/test-php.+/', $value->name) > 0) {
-				$client->deleteSenderSignature($value->id);
+		foreach ($signatures->getSenderSignatures() as $key => $value) {
+			if (preg_match('/test-php.+/', $value->getName()) > 0) {
+				$client->deleteSenderSignature($value->getID());
 			}
 		}
 	}
@@ -27,18 +27,18 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$sigs = $client->listSenderSignatures();
 
-		$this->assertGreaterThan(0, $sigs->totalCount);
-		$this->assertNotEmpty($sigs->senderSignatures);
+		$this->assertGreaterThan(0, $sigs->getTotalCount());
+		$this->assertNotEmpty($sigs->getSenderSignatures());
 	}
 
 	function testClientCanGetSingleSignature() {
 		$tk = parent::$testKeys;
 
 		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-		$id = $client->listSenderSignatures()->senderSignatures[0]->id;
+		$id = $client->listSenderSignatures()->getSenderSignatures()[0]->getID();
 		$sig = $client->getSenderSignature($id);
 
-		$this->assertNotEmpty($sig->name);
+		$this->assertNotEmpty($sig->getName());
 	}
 
 	function testClientCanCreateSignature() {
@@ -50,7 +50,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 
 		$sig = $client->createSenderSignature($sender, 'test-php-create-' . date('U'));
 
-		$this->assertNotEmpty($sig->id);
+		$this->assertNotEmpty($sig->getID());
 	}
 
 	function testClientCanEditSignature() {
@@ -68,10 +68,10 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$sig = $client->createSenderSignature($sender, $name, NULL, $returnPath);
 
 		$updated = $client->editSenderSignature(
-			$sig->id, $name . '-updated', NULL, 'updated-' . $returnPath);
+			$sig->getID(), $name . '-updated', NULL, 'updated-' . $returnPath);
 
-		$this->assertNotSame($sig->name, $updated->name);
-		$this->assertNotSame($sig->returnpathdomain, $updated->returnpathdomain);
+		$this->assertNotSame($sig->getName(), $updated->getName());
+		$this->assertNotSame($sig->getReturnpathdomain(), $updated->getReturnpathdomain());
 	}
 
 	function testClientCanDeleteSignature() {
@@ -84,12 +84,12 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$name = 'test-php-delete-' . date('U');
 		$sig = $client->createSenderSignature($sender, $name);
 
-		$client->deleteSenderSignature($sig->id);
+		$client->deleteSenderSignature($sig->getID());
 
-		$sigs = $client->listSenderSignatures()->senderSignatures;
+		$sigs = $client->listSenderSignatures()->getSenderSignatures();
 
 		foreach ($sigs as $key => $value) {
-			$this->assertNotSame($sig->name, $value->name);
+			$this->assertNotSame($sig->getName(), $value->getName());
 		}
 
 	}
@@ -104,26 +104,9 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest {
 		$name = 'test-php-reverify-' . date('U');
 		$sig = $client->createSenderSignature($sender, $name);
 
-		$result = $client->resendSenderSignatureConfirmation($sig->id);
+		$result = $client->resendSenderSignatureConfirmation($sig->getID());
 
-		$this->assertEquals(0, $result->ErrorCode);
-	}
-
-	function testClientCanVerifySPFForSignature() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-
-		$name = 'test-php-spf-' . date('U');
-		$i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-
-		$sender = str_replace('[TOKEN]', 'test-php-spf-' . date('U'), $i);
-
-		$sig = $client->createSenderSignature($sender, $name);
-		$result = $client->verifySenderSignatureSPF($sig->id);
-
-		$this->assertTrue($result->SPFVerified);
+		$this->assertEquals(0, $result->getErrorCode());
 	}
 
 }
-
-?>

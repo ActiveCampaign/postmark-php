@@ -11,13 +11,14 @@ class WebhookConfigurationClickTrigger implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationClickTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by Click events.
+     * @param boolean $enabled Specifies whether the webhooks will be triggered by Click events.
      */
     public function __construct($enabled = false) {
         $this->enabled = $enabled;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array
+    {
         $retval = array(
             "Enabled" => $this->enabled
         );
@@ -25,9 +26,8 @@ class WebhookConfigurationClickTrigger implements \JsonSerializable {
         return $retval;
     }
 
-    public function getEnabled() {
+    public function getEnabled(): bool
+    {
         return $this->enabled;
     }
 }
-
-?>

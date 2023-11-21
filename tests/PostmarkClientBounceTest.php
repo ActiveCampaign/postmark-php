@@ -15,7 +15,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 		$stats = $client->getDeliveryStatistics();
 
 		$this->assertNotEmpty($stats, 'Stats from getDeliveryStatistics() should never be null or empty.');
-		$this->assertGreaterThan(0, $stats->InactiveMails, "The inactive mail count should be greater than zero.");
+		$this->assertGreaterThan(0, $stats->getInactiveMails(), "The inactive mail count should be greater than zero.");
 	}
 
 	function testClientCanGetBounces() {
@@ -30,7 +30,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$bounces = $client->getBounces(10, 0);
-		$id = $bounces->Bounces[0]['ID'];
+		$id = $bounces->getBounces()[0]->getID();
 		$bounce = $client->getBounce($id);
 		$this->assertNotEmpty($bounce);
 	}
@@ -39,10 +39,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest {
 		$tk = parent::$testKeys;
 		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 		$bounces = $client->getBounces(10, 0);
-		$id = $bounces->Bounces[0]['ID'];
+		$id = $bounces->Bounces[0]->getID();
 		$dump = $client->getBounceDump($id);
 		$this->assertNotEmpty($dump);
 	}
 
 }
-?>
