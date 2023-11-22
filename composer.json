@@ -32,8 +32,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": false
         }
-    }
-  ],
+    },
   "name": "wildbit/postmark-php",
   "license": "MIT",
   "description": "The officially supported client for Postmark (http://postmarkapp.com)",
