@@ -12,7 +12,7 @@ namespace Postmark\Models;
 class PostmarkServerList
 {
     /**
-     * @var int|mixed
+     * @var int
      */
     public int $TotalCount;
     /**
