@@ -216,6 +216,178 @@ class PostmarkClient extends PostmarkClientBase
      * @throws Models\PostmarkException
      */
     public function sendEmailBatchWithTemplate($emailBatch = [])
+		$body = array();
+		$body['From'] = $from;
+		$body['To'] = $to;
+		$body['Cc'] = $cc;
+		$body['Bcc'] = $bcc;
+		$body['Subject'] = $subject;
+		$body['HtmlBody'] = $htmlBody;
+		$body['TextBody'] = $textBody;
+		$body['Tag'] = $tag;
+		$body['ReplyTo'] = $replyTo;
+		$body['Headers'] = $this->fixHeaders($headers);
+		$body['TrackOpens'] = $trackOpens;
+		$body['Attachments'] = $attachments;
+		$body['Metadata'] = $metadata;
+		$body['MessageStream'] = $messageStream;
+
+		// Since this parameter can override a per-server setting
+		// we have to check whether it was actually set.
+		// And only include it in the API call if that is the case.
+		if ($trackLinks !== NULL) {
+			$body['TrackLinks'] = $trackLinks;
+		}
+
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email', $body));
+	}
+
+	/**
+	 * Send an email using a template.
+	 *
+	 * @param string $from The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+	 * @param string $to The recipient of the email.
+	 * @param integer|string $templateIdOrAlias  The ID or alias of the template to use to generate the content of this message.
+	 * @param array $templateModel  The values to combine with the Templated content.
+	 * @param boolean $inlineCss  If the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter.
+	 * @param string|null $tag  A tag associated with this message, useful for classifying sent messages.
+	 * @param boolean|null $trackOpens  True if you want Postmark to track opens of HTML emails.
+	 * @param string|null $replyTo  Reply to email address.
+	 * @param string|null $cc  Carbon Copy recipients, comma-separated
+	 * @param string|null $bcc  Blind Carbon Copy recipients, comma-separated.
+	 * @param array|null $headers  Headers to be included with the sent email message.
+	 * @param array|null $attachments  An array of PostmarkAttachment objects.
+	 * @param string|null $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
+	 * @param array|null $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
+	 * @param array|null $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+	 * @return SendEmailWithTemplateResponse
+	 */
+	function sendEmailWithTemplate(
+        string     $from,
+        string     $to,
+        int|string $templateIdOrAlias,
+        array  $templateModel,
+        bool   $inlineCss = true,
+        string $tag = NULL,
+        bool   $trackOpens = NULL,
+        string $replyTo = NULL,
+        string $cc = NULL,
+        string $bcc = NULL,
+        array  $headers = NULL,
+        array  $attachments = NULL,
+        string $trackLinks = NULL,
+        array  $metadata = NULL,
+        array  $messageStream = NULL): SendEmailWithTemplateResponse
+    {
+		$body = array();
+		$body['From'] = $from;
+		$body['To'] = $to;
+		$body['Cc'] = $cc;
+		$body['Bcc'] = $bcc;
+		$body['Tag'] = $tag;
+		$body['ReplyTo'] = $replyTo;
+		$body['Headers'] = $this->fixHeaders($headers);
+		$body['TrackOpens'] = $trackOpens;
+		$body['Attachments'] = $attachments;
+		$body['TemplateModel'] = $templateModel;
+		$body['InlineCss'] = $inlineCss;
+		$body['Metadata'] = $metadata;
+		$body['MessageStream'] = $messageStream;
+
+		// Since this parameter can override a per-server setting
+		// we have to check whether it was actually set.
+		// And only include it in the API call if that is the case.
+		if ($trackLinks !== NULL) {
+			$body['TrackLinks'] = $trackLinks;
+		}
+
+		if ( is_int( $templateIdOrAlias ) ) {
+			$body['TemplateId'] = $templateIdOrAlias;
+
+			// Uses the Template Alias if specified instead of Template ID.
+		} else {
+			$body['TemplateAlias'] = $templateIdOrAlias;
+		}
+
+		return new SendEmailWithTemplateResponse((array)$this->processRestRequest('POST', '/email/withTemplate', $body));
+	}
+
+	/**
+	 * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
+	 * therefore, we need to wrap the elements in an array.
+	 */
+	private function fixHeaders($headers) {
+		$retval = NULL;
+		if ($headers != NULL) {
+			$retval = array();
+			$index = 0;
+			foreach ($headers as $key => $value) {
+				$retval[$index] = array('Name' => $key, 'Value' => $value);
+				$index++;
+			}
+		}
+		return $retval;
+	}
+
+	/**
+	 * Send multiple emails as a batch
+	 *
+	 * Each email is an associative array of values, but note that the 'Attachments'
+	 * key must be an array of 'PostmarkAttachment' objects if you intend to send
+	 * attachments with an email.
+	 *
+	 * @param array $emailBatch  An array of emails to be sent in one batch.
+	 *
+	 * @return DynamicResponseModel
+	 */
+	function sendEmailBatch($emailBatch = array()) {
+
+		$final = array();
+
+		foreach ($emailBatch as $email) {
+			foreach ($email as $emailIdx => $emailValue) {
+				if (strtolower($emailIdx) == 'headers') {
+					$email[$emailIdx] = $this->fixHeaders($emailValue);
+				}
+			}
+			array_push($final, $email);
+		}
+
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email/batch', $final));
+	}
+
+	/**
+	 * Send multiple emails with a template as a batch
+	 *
+	 * Each email is an associative array of values. See sendEmailWithTemplate()
+	 * for details on required values.
+	 *
+	 * @param array $emailBatch An array of emails to be sent in one batch.
+	 *
+	 * @return DynamicResponseModel
+	 * @throws Models\PostmarkException
+	 */
+	function sendEmailBatchWithTemplate($emailBatch = array()) {
+		$final = array();
+
+		foreach ($emailBatch as $email) {
+			foreach ($email as $emailIdx => $emailValue) {
+				if (strtolower($emailIdx) === 'headers') {
+					$email[$emailIdx] = $this->fixHeaders($emailValue);
+				}
+			}
+			$final[] = $email;
+		}
+
+		return new DynamicResponseModel((array)$this->processRestRequest('POST', '/email/batchWithTemplates', array('Messages' => $final)));
+	}
+
+	/**
+	 * Get an overview of the delivery statistics for all email that has been sent through this Server.
+	 *
+	 * @return PostmarkDeliveryStats
+	 */
+	function getDeliveryStatistics(): PostmarkDeliveryStats
     {
         $final = [];
 
