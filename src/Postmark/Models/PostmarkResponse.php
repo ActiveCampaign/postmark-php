@@ -4,35 +4,103 @@ namespace Postmark\Models;
 
 class PostmarkResponse
 {
-    public int $ErrorCode;
+    public string $MessageID;
+    public string $PostmarkStatus;
     public ?string $Message;
+    public string $SubmittedAt;
+    public string $To;
+    public int $ErrorCode;
 
     public function __construct(array $values)
     {
-        $this->ErrorCode = !empty($values['ErrorCode']) ? $values['ErrorCode'] : 0;
+        $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : '';
+        $this->PostmarkStatus = !empty($values['PostmarkStatus']) ? $values['PostmarkStatus'] : '';
         $this->Message = !empty($values['Message']) ? $values['Message'] : '';
+        $this->SubmittedAt = !empty($values['SubmittedAt']) ? $values['SubmittedAt'] : '';
+        $this->To = !empty($values['To']) ? $values['To'] : '';
+        $this->ErrorCode = !empty($values['ErrorCode']) ? $values['ErrorCode'] : 0;
     }
 
-    public function getErrorCode(): int
+    public function getMessageID(): string
     {
-        return $this->ErrorCode;
+        return $this->MessageID;
     }
 
-    public function setErrorCode(int $ErrorCode): PostmarkResponse
+    public function setMessageID(string $MessageID): PostmarkResponse
     {
-        $this->ErrorCode = $ErrorCode;
+        $this->MessageID = $MessageID;
 
         return $this;
     }
 
-    public function getMessage(): ?string
+    public function getPostmarkStatus(): string
+    {
+        return $this->PostmarkStatus;
+    }
+
+    public function setPostmarkStatus(string $PostmarkStatus): PostmarkResponse
+    {
+        $this->PostmarkStatus = $PostmarkStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return null|mixed|string
+     */
+    public function getMessage(): mixed
     {
         return $this->Message;
     }
 
-    public function setMessage(?string $Message): PostmarkResponse
+    /**
+     * @param null|mixed|string $Message
+     */
+    public function setMessage(mixed $Message): PostmarkResponse
     {
         $this->Message = $Message;
+
+        return $this;
+    }
+
+    public function getSubmittedAt(): string
+    {
+        return $this->SubmittedAt;
+    }
+
+    public function setSubmittedAt(string $SubmittedAt): PostmarkResponse
+    {
+        $this->SubmittedAt = $SubmittedAt;
+
+        return $this;
+    }
+
+    public function getTo(): string
+    {
+        return $this->To;
+    }
+
+    public function setTo(string $To): PostmarkResponse
+    {
+        $this->To = $To;
+
+        return $this;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getErrorCode(): mixed
+    {
+        return $this->ErrorCode;
+    }
+
+    /**
+     * @param int|mixed $ErrorCode
+     */
+    public function setErrorCode(mixed $ErrorCode): PostmarkResponse
+    {
+        $this->ErrorCode = $ErrorCode;
 
         return $this;
     }

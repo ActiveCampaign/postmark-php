@@ -165,7 +165,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         $this->assertEquals(0, $emailResult->getErrorCode());
         $this->assertSame('OK', $emailResult->getMessage());
-        $this->assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getRecipient());
+        $this->assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getTo());
         $this->assertNotEmpty($emailResult->getSubmittedAt());
         $this->assertNotEmpty($emailResult->getMessageID());
     }

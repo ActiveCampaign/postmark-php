@@ -16,6 +16,7 @@ use Postmark\Models\PostmarkInboundMessage;
 use Postmark\Models\PostmarkInboundMessageList;
 use Postmark\Models\PostmarkInboundRuleTrigger;
 use Postmark\Models\PostmarkInboundRuleTriggerList;
+use Postmark\Models\PostmarkMessage;
 use Postmark\Models\PostmarkOpenList;
 use Postmark\Models\PostmarkOutboundMessageList;
 use Postmark\Models\PostmarkResponse;
@@ -23,7 +24,6 @@ use Postmark\Models\PostmarkServer;
 use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
 use Postmark\Models\Suppressions\PostmarkSuppressionResultList;
-use Postmark\Models\Templates\SendEmailWithTemplateResponse;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 
@@ -81,7 +81,7 @@ class PostmarkClient extends PostmarkClientBase
         string $trackLinks = null,
         array $metadata = null,
         string $messageStream = null
-    ): DynamicResponseModel {
+    ): PostmarkResponse {
         $body = [];
         $body['From'] = $from;
         $body['To'] = $to;
@@ -105,7 +105,12 @@ class PostmarkClient extends PostmarkClientBase
             $body['TrackLinks'] = $trackLinks;
         }
 
-        return new DynamicResponseModel((array) $this->processRestRequest('POST', '/email', $body));
+        return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', $body));
+    }
+
+    public function sendEmailModel(PostmarkMessage $postmarkMessage): PostmarkResponse
+    {
+        return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', (array) $postmarkMessage));
     }
 
     /**
@@ -116,10 +121,8 @@ class PostmarkClient extends PostmarkClientBase
      * attachments with an email.
      *
      * @param array $emailBatch an array of emails to be sent in one batch
-     *
-     * @return DynamicResponseModel
      */
-    public function sendEmailBatch($emailBatch = [])
+    public function sendEmailBatch(array $emailBatch = []): array
     {
         $final = [];
 
@@ -131,8 +134,16 @@ class PostmarkClient extends PostmarkClientBase
             }
             array_push($final, $email);
         }
+        $response = (array) $this->processRestRequest('POST', '/email/batch', $final);
+        $temp = [];
+        foreach ($response as $rep) {
+            $obj = json_decode(json_encode($rep));
+            $postmarkResponse = new PostmarkResponse((array) $obj);
 
-        return new DynamicResponseModel((array) $this->processRestRequest('POST', '/email/batch', $final));
+            $temp[] = $postmarkResponse;
+        }
+
+        return $temp;
     }
 
     /**
@@ -198,7 +209,7 @@ class PostmarkClient extends PostmarkClientBase
         string $trackLinks = null,
         array $metadata = null,
         array $messageStream = null
-    ): SendEmailWithTemplateResponse {
+    ): PostmarkResponse {
         $body = [];
         $body['From'] = $from;
         $body['To'] = $to;
@@ -229,7 +240,12 @@ class PostmarkClient extends PostmarkClientBase
             $body['TemplateAlias'] = $templateIdOrAlias;
         }
 
-        return new SendEmailWithTemplateResponse((array) $this->processRestRequest('POST', '/email/withTemplate', $body));
+        return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', $body));
+    }
+
+    public function sendEmailWithTemplateModel(PostmarkTemplate $postmarkMessageTemplate): PostmarkResponse
+    {
+        return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', (array) $postmarkMessageTemplate));
     }
 
     /**
