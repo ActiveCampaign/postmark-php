@@ -145,7 +145,11 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest {
 		$emailResult = $client->sendEmailWithTemplate($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
 			$tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $result->getTemplateId(), array("subjectValue" => "Hello!"));
 
-		$this->assertEquals(0, $emailResult->getErrorCode());
+		self::assertSame(0, $emailResult->getErrorCode());
+        self::assertSame('OK', $emailResult->getMessage());
+        self::assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getRecipient());
+        self::assertNotEmpty($emailResult->getSubmittedAt());
+        self::assertNotEmpty($emailResult->getMessageID());
 	}
 	
 	//send batch

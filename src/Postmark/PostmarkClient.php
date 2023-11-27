@@ -3,6 +3,7 @@
 namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel as DynamicResponseModel;
+use Postmark\Models\Templates\SendEmailWithTemplateResponse;
 use Postmark\PostmarkClientBase as PostmarkClientBase;
 use Postmark\Models\PostmarkBounce;
 use Postmark\Models\PostmarkBounceActivation;
@@ -132,7 +133,7 @@ class PostmarkClient extends PostmarkClientBase {
 	 * @param string|null $trackLinks  Can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking.
 	 * @param array|null $metadata  Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
 	 * @param array|null $messageStream  The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
-	 * @return PostmarkResponse
+	 * @return SendEmailWithTemplateResponse
 	 */
 	function sendEmailWithTemplate(
         string     $from,
@@ -149,7 +150,7 @@ class PostmarkClient extends PostmarkClientBase {
         array  $attachments = NULL,
         string $trackLinks = NULL,
         array  $metadata = NULL,
-        array  $messageStream = NULL): PostmarkResponse
+        array  $messageStream = NULL): SendEmailWithTemplateResponse
     {
 		$body = array();
 		$body['From'] = $from;
@@ -181,7 +182,7 @@ class PostmarkClient extends PostmarkClientBase {
 			$body['TemplateAlias'] = $templateIdOrAlias;
 		}
 
-		return new PostmarkResponse((array)$this->processRestRequest('POST', '/email/withTemplate', $body));
+		return new SendEmailWithTemplateResponse((array)$this->processRestRequest('POST', '/email/withTemplate', $body));
 	}
 
 	/**
