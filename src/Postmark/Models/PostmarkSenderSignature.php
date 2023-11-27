@@ -33,39 +33,35 @@ class PostmarkSenderSignature
 
     public string $ConfirmationPersonalNote;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
-        $this->Domain = !empty($values['Domain']) ? $values['Domain'] : "";
-        $this->EmailAddress = !empty($values['EmailAddress']) ? $values['EmailAddress'] : "";
-        $this->ReplyToEmailAddress = !empty($values['ReplyToEmailAddress']) ? $values['ReplyToEmailAddress'] : "";
-        $this->Name = !empty($values['Name']) ? $values['Name'] : "";
+        $this->Domain = !empty($values['Domain']) ? $values['Domain'] : '';
+        $this->EmailAddress = !empty($values['EmailAddress']) ? $values['EmailAddress'] : '';
+        $this->ReplyToEmailAddress = !empty($values['ReplyToEmailAddress']) ? $values['ReplyToEmailAddress'] : '';
+        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
         $this->Confirmed = !empty($values['Confirmed']) ? $values['Confirmed'] : false;
 
         $this->SPFVerified = !empty($values['SPFVerified']) ? $values['SPFVerified'] : false;
-        $this->SPFHost = !empty($values['SPFHost']) ? $values['SPFHost'] : "";
-        $this->SPFTextValue = !empty($values['SPFTextValue']) ? $values['SPFTextValue'] : "";
+        $this->SPFHost = !empty($values['SPFHost']) ? $values['SPFHost'] : '';
+        $this->SPFTextValue = !empty($values['SPFTextValue']) ? $values['SPFTextValue'] : '';
 
         $this->DKIMVerified = !empty($values['DKIMVerified']) ? $values['DKIMVerified'] : false;
         $this->WeakDKIM = !empty($values['WeakDKIM']) ? $values['WeakDKIM'] : false;
-        $this->DKIMHost = !empty($values['DKIMHost']) ? $values['DKIMHost'] : "";
-        $this->DKIMTextValue = !empty($values['DKIMTextValue']) ? $values['DKIMTextValue'] : "";
-        $this->DKIMPendingHost = !empty($values['DKIMPendingHost']) ? $values['DKIMPendingHost'] : "";
-        $this->DKIMPendingTextValue = !empty($values['DKIMPendingTextValue']) ? $values['DKIMPendingTextValue'] : "";
-        $this->DKIMRevokedHost = !empty($values['DKIMRevokedHost']) ? $values['DKIMRevokedHost'] : "";
-        $this->DKIMRevokedTextValue = !empty($values['DKIMRevokedTextValue']) ? $values['DKIMRevokedTextValue'] : "";
-        $this->DKIMUpdateStatus = !empty($values['DKIMUpdateStatus']) ? $values['DKIMUpdateStatus'] : "";
+        $this->DKIMHost = !empty($values['DKIMHost']) ? $values['DKIMHost'] : '';
+        $this->DKIMTextValue = !empty($values['DKIMTextValue']) ? $values['DKIMTextValue'] : '';
+        $this->DKIMPendingHost = !empty($values['DKIMPendingHost']) ? $values['DKIMPendingHost'] : '';
+        $this->DKIMPendingTextValue = !empty($values['DKIMPendingTextValue']) ? $values['DKIMPendingTextValue'] : '';
+        $this->DKIMRevokedHost = !empty($values['DKIMRevokedHost']) ? $values['DKIMRevokedHost'] : '';
+        $this->DKIMRevokedTextValue = !empty($values['DKIMRevokedTextValue']) ? $values['DKIMRevokedTextValue'] : '';
+        $this->DKIMUpdateStatus = !empty($values['DKIMUpdateStatus']) ? $values['DKIMUpdateStatus'] : '';
 
-        $this->ReturnPathDomain = !empty($values['ReturnPathDomain']) ? $values['ReturnPathDomain'] : "";
+        $this->ReturnPathDomain = !empty($values['ReturnPathDomain']) ? $values['ReturnPathDomain'] : '';
         $this->ReturnPathDomainVerified = !empty($values['ReturnPathDomainVerified']) ? $values['ReturnPathDomainVerified'] : false;
-        $this->ReturnPathDomainCNAMEValue = !empty($values['ReturnPathDomainCNAMEValue']) ? $values['ReturnPathDomainCNAMEValue'] : "";
+        $this->ReturnPathDomainCNAMEValue = !empty($values['ReturnPathDomainCNAMEValue']) ? $values['ReturnPathDomainCNAMEValue'] : '';
 
         $this->SafeToRemoveRevokedKeyFromDNS = !empty($values['SafeToRemoveRevokedKeyFromDNS']) ? $values['SafeToRemoveRevokedKeyFromDNS'] : false;
-        $this->ConfirmationPersonalNote = !empty($values['ConfirmationPersonalNote']) ? $values['ConfirmationPersonalNote'] : "";
-
+        $this->ConfirmationPersonalNote = !empty($values['ConfirmationPersonalNote']) ? $values['ConfirmationPersonalNote'] : '';
     }
 
     /**
@@ -78,11 +74,11 @@ class PostmarkSenderSignature
 
     /**
      * @param int|mixed $ID
-     * @return PostmarkSenderSignature
      */
     public function setID(mixed $ID): PostmarkSenderSignature
     {
         $this->ID = $ID;
+
         return $this;
     }
 
@@ -96,11 +92,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $Domain
-     * @return PostmarkSenderSignature
      */
     public function setDomain(mixed $Domain): PostmarkSenderSignature
     {
         $this->Domain = $Domain;
+
         return $this;
     }
 
@@ -114,11 +110,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $EmailAddress
-     * @return PostmarkSenderSignature
      */
     public function setEmailAddress(mixed $EmailAddress): PostmarkSenderSignature
     {
         $this->EmailAddress = $EmailAddress;
+
         return $this;
     }
 
@@ -132,11 +128,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $ReplyToEmailAddress
-     * @return PostmarkSenderSignature
      */
     public function setReplyToEmailAddress(mixed $ReplyToEmailAddress): PostmarkSenderSignature
     {
         $this->ReplyToEmailAddress = $ReplyToEmailAddress;
+
         return $this;
     }
 
@@ -150,11 +146,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $Name
-     * @return PostmarkSenderSignature
      */
     public function setName(mixed $Name): PostmarkSenderSignature
     {
         $this->Name = $Name;
+
         return $this;
     }
 
@@ -168,11 +164,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $Confirmed
-     * @return PostmarkSenderSignature
      */
     public function setConfirmed(mixed $Confirmed): PostmarkSenderSignature
     {
         $this->Confirmed = $Confirmed;
+
         return $this;
     }
 
@@ -186,11 +182,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $SPFVerified
-     * @return PostmarkSenderSignature
      */
     public function setSPFVerified(mixed $SPFVerified): PostmarkSenderSignature
     {
         $this->SPFVerified = $SPFVerified;
+
         return $this;
     }
 
@@ -204,11 +200,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $SPFHost
-     * @return PostmarkSenderSignature
      */
     public function setSPFHost(mixed $SPFHost): PostmarkSenderSignature
     {
         $this->SPFHost = $SPFHost;
+
         return $this;
     }
 
@@ -222,11 +218,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $SPFTextValue
-     * @return PostmarkSenderSignature
      */
     public function setSPFTextValue(mixed $SPFTextValue): PostmarkSenderSignature
     {
         $this->SPFTextValue = $SPFTextValue;
+
         return $this;
     }
 
@@ -240,11 +236,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $DKIMVerified
-     * @return PostmarkSenderSignature
      */
     public function setDKIMVerified(mixed $DKIMVerified): PostmarkSenderSignature
     {
         $this->DKIMVerified = $DKIMVerified;
+
         return $this;
     }
 
@@ -258,11 +254,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $WeakDKIM
-     * @return PostmarkSenderSignature
      */
     public function setWeakDKIM(mixed $WeakDKIM): PostmarkSenderSignature
     {
         $this->WeakDKIM = $WeakDKIM;
+
         return $this;
     }
 
@@ -276,11 +272,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMHost
-     * @return PostmarkSenderSignature
      */
     public function setDKIMHost(mixed $DKIMHost): PostmarkSenderSignature
     {
         $this->DKIMHost = $DKIMHost;
+
         return $this;
     }
 
@@ -294,11 +290,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMTextValue
-     * @return PostmarkSenderSignature
      */
     public function setDKIMTextValue(mixed $DKIMTextValue): PostmarkSenderSignature
     {
         $this->DKIMTextValue = $DKIMTextValue;
+
         return $this;
     }
 
@@ -312,11 +308,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMPendingHost
-     * @return PostmarkSenderSignature
      */
     public function setDKIMPendingHost(mixed $DKIMPendingHost): PostmarkSenderSignature
     {
         $this->DKIMPendingHost = $DKIMPendingHost;
+
         return $this;
     }
 
@@ -330,11 +326,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMPendingTextValue
-     * @return PostmarkSenderSignature
      */
     public function setDKIMPendingTextValue(mixed $DKIMPendingTextValue): PostmarkSenderSignature
     {
         $this->DKIMPendingTextValue = $DKIMPendingTextValue;
+
         return $this;
     }
 
@@ -348,11 +344,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMRevokedHost
-     * @return PostmarkSenderSignature
      */
     public function setDKIMRevokedHost(mixed $DKIMRevokedHost): PostmarkSenderSignature
     {
         $this->DKIMRevokedHost = $DKIMRevokedHost;
+
         return $this;
     }
 
@@ -366,11 +362,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMRevokedTextValue
-     * @return PostmarkSenderSignature
      */
     public function setDKIMRevokedTextValue(mixed $DKIMRevokedTextValue): PostmarkSenderSignature
     {
         $this->DKIMRevokedTextValue = $DKIMRevokedTextValue;
+
         return $this;
     }
 
@@ -384,11 +380,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $DKIMUpdateStatus
-     * @return PostmarkSenderSignature
      */
     public function setDKIMUpdateStatus(mixed $DKIMUpdateStatus): PostmarkSenderSignature
     {
         $this->DKIMUpdateStatus = $DKIMUpdateStatus;
+
         return $this;
     }
 
@@ -402,11 +398,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $ReturnPathDomain
-     * @return PostmarkSenderSignature
      */
     public function setReturnPathDomain(mixed $ReturnPathDomain): PostmarkSenderSignature
     {
         $this->ReturnPathDomain = $ReturnPathDomain;
+
         return $this;
     }
 
@@ -420,11 +416,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $ReturnPathDomainVerified
-     * @return PostmarkSenderSignature
      */
     public function setReturnPathDomainVerified(mixed $ReturnPathDomainVerified): PostmarkSenderSignature
     {
         $this->ReturnPathDomainVerified = $ReturnPathDomainVerified;
+
         return $this;
     }
 
@@ -438,11 +434,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $ReturnPathDomainCNAMEValue
-     * @return PostmarkSenderSignature
      */
     public function setReturnPathDomainCNAMEValue(mixed $ReturnPathDomainCNAMEValue): PostmarkSenderSignature
     {
         $this->ReturnPathDomainCNAMEValue = $ReturnPathDomainCNAMEValue;
+
         return $this;
     }
 
@@ -456,11 +452,11 @@ class PostmarkSenderSignature
 
     /**
      * @param bool|mixed $SafeToRemoveRevokedKeyFromDNS
-     * @return PostmarkSenderSignature
      */
     public function setSafeToRemoveRevokedKeyFromDNS(mixed $SafeToRemoveRevokedKeyFromDNS): PostmarkSenderSignature
     {
         $this->SafeToRemoveRevokedKeyFromDNS = $SafeToRemoveRevokedKeyFromDNS;
+
         return $this;
     }
 
@@ -474,12 +470,11 @@ class PostmarkSenderSignature
 
     /**
      * @param mixed|string $ConfirmationPersonalNote
-     * @return PostmarkSenderSignature
      */
     public function setConfirmationPersonalNote(mixed $ConfirmationPersonalNote): PostmarkSenderSignature
     {
         $this->ConfirmationPersonalNote = $ConfirmationPersonalNote;
+
         return $this;
     }
-
 }

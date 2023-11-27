@@ -4,17 +4,13 @@ namespace Postmark\Models;
 
 class PostmarkBounceActivation
 {
-
     public string $Message;
     public PostmarkBounce $Bounce;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
-        $this->Message = !empty($values['Message']) ? $values['Message'] : "";
-        $this->Bounce = !empty($values['Bounce']) ? $values['Bounce'] : new PostmarkBounce(array());
+        $this->Message = !empty($values['Message']) ? $values['Message'] : '';
+        $this->Bounce = !empty($values['Bounce']) ? $values['Bounce'] : new PostmarkBounce([]);
     }
 
     /**
@@ -27,11 +23,11 @@ class PostmarkBounceActivation
 
     /**
      * @param mixed|string $Message
-     * @return PostmarkBounceActivation
      */
     public function setMessage(mixed $Message): PostmarkBounceActivation
     {
         $this->Message = $Message;
+
         return $this;
     }
 
@@ -45,11 +41,11 @@ class PostmarkBounceActivation
 
     /**
      * @param mixed|PostmarkBounce $Bounce
-     * @return PostmarkBounceActivation
      */
     public function setBounce(mixed $Bounce): PostmarkBounceActivation
     {
         $this->Bounce = $Bounce;
+
         return $this;
     }
 }

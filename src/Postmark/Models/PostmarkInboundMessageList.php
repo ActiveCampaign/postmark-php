@@ -2,8 +2,6 @@
 
 namespace Postmark\Models;
 
-use Postmark\Models\PostmarkInboundMessage;
-
 class PostmarkInboundMessageList
 {
     public int $TotalCount;
@@ -12,10 +10,10 @@ class PostmarkInboundMessageList
     public function __construct(array $values)
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
-        $tempInboundMessages = array();
+        $tempInboundMessages = [];
         foreach ($values['InboundMessages'] as $message) {
             $obj = json_decode(json_encode($message));
-            $postmarkMessage = new PostmarkInboundMessage((array)$obj);
+            $postmarkMessage = new PostmarkInboundMessage((array) $obj);
 
             $tempInboundMessages[] = $postmarkMessage;
         }
@@ -32,30 +30,23 @@ class PostmarkInboundMessageList
 
     /**
      * @param int|mixed $TotalCount
-     * @return PostmarkInboundMessageList
      */
     public function setTotalCount(mixed $TotalCount): PostmarkInboundMessageList
     {
         $this->TotalCount = $TotalCount;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getInboundMessages(): array
     {
         return $this->InboundMessages;
     }
 
-    /**
-     * @param array $InboundMessages
-     * @return PostmarkInboundMessageList
-     */
     public function setInboundMessages(array $InboundMessages): PostmarkInboundMessageList
     {
         $this->InboundMessages = $InboundMessages;
+
         return $this;
     }
-
 }

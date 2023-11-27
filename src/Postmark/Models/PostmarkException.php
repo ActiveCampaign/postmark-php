@@ -1,14 +1,19 @@
-<?php /** @noinspection PhpMissingFieldTypeInspection */
+<?php
+
+/** @noinspection PhpMissingFieldTypeInspection */
 
 namespace Postmark\Models;
+
+use Exception;
 
 /**
  * The exception thrown when the Postmark Client recieves an error from the API.
  */
-class PostmarkException extends \Exception {
-	public $message;
-	public $HttpStatusCode;
-	public $PostmarkApiErrorCode;
+class PostmarkException extends Exception
+{
+    public $message;
+    public $HttpStatusCode;
+    public $PostmarkApiErrorCode;
 
     /**
      * @return mixed
@@ -20,11 +25,13 @@ class PostmarkException extends \Exception {
 
     /**
      * @param mixed $postmarkApiErrorCode
+     *
      * @return PostmarkException
      */
     public function setPostmarkApiErrorCode($postmarkApiErrorCode)
     {
         $this->PostmarkApiErrorCode = $postmarkApiErrorCode;
+
         return $this;
     }
 
@@ -38,12 +45,13 @@ class PostmarkException extends \Exception {
 
     /**
      * @param mixed $httpStatusCode
+     *
      * @return PostmarkException
      */
     public function setHttpStatusCode($httpStatusCode)
     {
         $this->HttpStatusCode = $httpStatusCode;
+
         return $this;
     }
-
 }

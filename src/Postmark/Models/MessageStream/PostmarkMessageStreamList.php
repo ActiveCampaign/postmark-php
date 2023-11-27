@@ -2,8 +2,6 @@
 
 namespace Postmark\Models\MessageStream;
 
-use Postmark\Models\MessageStream\PostmarkMessageStream;
-
 class PostmarkMessageStreamList
 {
     public int $TotalCount;
@@ -12,10 +10,10 @@ class PostmarkMessageStreamList
     public function __construct(array $values)
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
-        $tempMessageStreams = array();
+        $tempMessageStreams = [];
         foreach ($values['MessageStreams'] as $open) {
             $obj = json_decode(json_encode($open));
-            $postmarkMessageStreams = new PostmarkMessageStream((array)$obj);
+            $postmarkMessageStreams = new PostmarkMessageStream((array) $obj);
 
             $tempMessageStreams[] = $postmarkMessageStreams;
         }
@@ -30,32 +28,22 @@ class PostmarkMessageStreamList
         return $this->TotalCount;
     }
 
-    /**
-     * @param int $TotalCount
-     * @return PostmarkMessageStreamList
-     */
     public function setTotalCount(int $TotalCount): PostmarkMessageStreamList
     {
         $this->TotalCount = $TotalCount;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMessageStreams(): array
     {
         return $this->MessageStreams;
     }
 
-    /**
-     * @param array $MessageStreams
-     * @return PostmarkMessageStreamList
-     */
     public function setMessageStreams(array $MessageStreams): PostmarkMessageStreamList
     {
         $this->MessageStreams = $MessageStreams;
+
         return $this;
     }
-
 }
