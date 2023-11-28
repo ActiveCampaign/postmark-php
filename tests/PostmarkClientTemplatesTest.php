@@ -5,6 +5,7 @@ namespace Postmark\Tests;
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\Models\PostmarkAttachment;
+use Postmark\Models\TemplatedPostmarkMessage;
 use Postmark\PostmarkClient;
 
 /**
@@ -162,6 +163,28 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
             $result->getTemplateId(),
             ['subjectValue' => 'Hello!']
         );
+
+        $this->assertEquals(0, $emailResult->getErrorCode());
+        $this->assertSame('OK', $emailResult->getMessage());
+        $this->assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getTo());
+        $this->assertNotEmpty($emailResult->getSubmittedAt());
+        $this->assertNotEmpty($emailResult->getMessageID());
+    }
+
+    // send model
+    public function testClientCanSendMailWithTemplateModel()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
+
+        $templatedModel = new TemplatedPostmarkMessage();
+        $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
+        $templatedModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
+        $templatedModel->setTo($result->getTemplateId());
+        $templatedModel->setTemplateModel(['subjectValue' => 'Hello!']);
+
+        $emailResult = $client->sendEmailWithTemplateModel($templatedModel);
 
         $this->assertEquals(0, $emailResult->getErrorCode());
         $this->assertSame('OK', $emailResult->getMessage());

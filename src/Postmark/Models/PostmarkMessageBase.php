@@ -17,7 +17,7 @@ class PostmarkMessageBase
     public array $Metadata;
     public string $MessageStream;
 
-    public function __construct(array $values)
+    public function __construct(array $values = [])
     {
         $this->From = !empty($values['From']) ? $values['From'] : '';
         $this->To = !empty($values['To']) ? $values['To'] : '';
@@ -34,17 +34,18 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getFrom(): mixed
+    public function getFrom(): string
     {
         return $this->From;
     }
 
     /**
-     * @param mixed|string $From
+     * @param string $From
+     * @return PostmarkMessageBase
      */
-    public function setFrom(mixed $From): PostmarkMessageBase
+    public function setFrom(string $From): PostmarkMessageBase
     {
         $this->From = $From;
 
@@ -52,17 +53,18 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getTo(): mixed
+    public function getTo(): string
     {
         return $this->To;
     }
 
     /**
-     * @param mixed|string $To
+     * @param string $To
+     * @return PostmarkMessageBase
      */
-    public function setTo(mixed $To): PostmarkMessageBase
+    public function setTo(string $To): PostmarkMessageBase
     {
         $this->To = $To;
 
@@ -70,17 +72,18 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getTag(): mixed
+    public function getTag(): string
     {
         return $this->Tag;
     }
 
     /**
-     * @param mixed|string $Tag
+     * @param string $Tag
+     * @return PostmarkMessageBase
      */
-    public function setTag(mixed $Tag): PostmarkMessageBase
+    public function setTag(string $Tag): PostmarkMessageBase
     {
         $this->Tag = $Tag;
 
@@ -88,17 +91,18 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return bool|mixed
+     * @return bool
      */
-    public function getTrackOpens(): mixed
+    public function getTrackOpens(): bool
     {
         return $this->TrackOpens;
     }
 
     /**
-     * @param bool|mixed $TrackOpens
+     * @param bool $TrackOpens
+     * @return PostmarkMessageBase
      */
-    public function setTrackOpens(mixed $TrackOpens): PostmarkMessageBase
+    public function setTrackOpens(bool $TrackOpens): PostmarkMessageBase
     {
         $this->TrackOpens = $TrackOpens;
 
@@ -106,7 +110,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getReplyTo(): mixed
     {
@@ -114,9 +118,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param mixed|string $ReplyTo
+     * @param string $ReplyTo
+     * @return PostmarkMessageBase
      */
-    public function setReplyTo(mixed $ReplyTo): PostmarkMessageBase
+    public function setReplyTo(string $ReplyTo): PostmarkMessageBase
     {
         $this->ReplyTo = $ReplyTo;
 
@@ -124,7 +129,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getCc(): mixed
     {
@@ -132,9 +137,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param mixed|string $Cc
+     * @param string $Cc
+     * @return PostmarkMessageBase
      */
-    public function setCc(mixed $Cc): PostmarkMessageBase
+    public function setCc(string $Cc): PostmarkMessageBase
     {
         $this->Cc = $Cc;
 
@@ -142,7 +148,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getBcc(): mixed
     {
@@ -150,9 +156,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param mixed|string $Bcc
+     * @param string $Bcc
+     * @return PostmarkMessageBase
      */
-    public function setBcc(mixed $Bcc): PostmarkMessageBase
+    public function setBcc(string $Bcc): PostmarkMessageBase
     {
         $this->Bcc = $Bcc;
 
@@ -160,7 +167,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function getHeaders(): mixed
     {
@@ -168,9 +175,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param array|mixed $Headers
+     * @param array $Headers
+     * @return PostmarkMessageBase
      */
-    public function setHeaders(mixed $Headers): PostmarkMessageBase
+    public function setHeaders(array $Headers): PostmarkMessageBase
     {
         $this->Headers = $Headers;
 
@@ -178,7 +186,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function getAttachments(): mixed
     {
@@ -186,9 +194,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param array|mixed $Attachments
+     * @param array $Attachments
+     * @return PostmarkMessageBase
      */
-    public function setAttachments(mixed $Attachments): PostmarkMessageBase
+    public function setAttachments(array $Attachments): PostmarkMessageBase
     {
         $this->Attachments = $Attachments;
 
@@ -196,7 +205,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getTrackLinks(): mixed
     {
@@ -204,9 +213,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param mixed|string $TrackLinks
+     * @param string $TrackLinks
+     * @return PostmarkMessageBase
      */
-    public function setTrackLinks(mixed $TrackLinks): PostmarkMessageBase
+    public function setTrackLinks(string $TrackLinks): PostmarkMessageBase
     {
         $this->TrackLinks = $TrackLinks;
 
@@ -214,7 +224,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function getMetadata(): mixed
     {
@@ -222,9 +232,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param array|mixed $Metadata
+     * @param array $Metadata
+     * @return PostmarkMessageBase
      */
-    public function setMetadata(mixed $Metadata): PostmarkMessageBase
+    public function setMetadata(array $Metadata): PostmarkMessageBase
     {
         $this->Metadata = $Metadata;
 
@@ -232,7 +243,7 @@ class PostmarkMessageBase
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getMessageStream(): mixed
     {
@@ -240,9 +251,10 @@ class PostmarkMessageBase
     }
 
     /**
-     * @param mixed|string $MessageStream
+     * @param string $MessageStream
+     * @return PostmarkMessageBase
      */
-    public function setMessageStream(mixed $MessageStream): PostmarkMessageBase
+    public function setMessageStream(string $MessageStream): PostmarkMessageBase
     {
         $this->MessageStream = $MessageStream;
 

@@ -23,6 +23,7 @@ use Postmark\Models\PostmarkResponse;
 use Postmark\Models\PostmarkServer;
 use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
+use Postmark\Models\TemplatedPostmarkMessage;
 use Postmark\Models\Suppressions\PostmarkSuppressionResultList;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
@@ -243,7 +244,7 @@ class PostmarkClient extends PostmarkClientBase
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', $body));
     }
 
-    public function sendEmailWithTemplateModel(PostmarkTemplate $postmarkMessageTemplate): PostmarkResponse
+    public function sendEmailWithTemplateModel(TemplatedPostmarkMessage $postmarkMessageTemplate): PostmarkResponse
     {
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', (array) $postmarkMessageTemplate));
     }
@@ -1051,13 +1052,14 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Create a template.
      *
-     * @param string      $name           the friendly name for this template
-     * @param string      $subject        the template to be used for the 'subject' of emails sent using this template
-     * @param string      $htmlBody       the template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL
-     * @param string      $textBody       the template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL
-     * @param null|string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-     * @param string      $templateType   Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
+     * @param string $name the friendly name for this template
+     * @param string|null $subject the template to be used for the 'subject' of emails sent using this template
+     * @param string|null $htmlBody the template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL
+     * @param string|null $textBody the template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL
+     * @param null|string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+     * @param string $templateType Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
      * @param null|string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
+     * @return PostmarkTemplate
      */
     public function createTemplate(
         string $name,
