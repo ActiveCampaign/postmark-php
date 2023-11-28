@@ -15,7 +15,7 @@ class PostmarkMessageBase
     public ?array $Attachments;
     public string $TrackLinks;
     public ?array $Metadata;
-    public string $MessageStream;
+    public ?string $MessageStream;
 
     public function __construct(array $values = [])
     {
@@ -30,7 +30,7 @@ class PostmarkMessageBase
         $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : null;
         $this->TrackLinks = !empty($values['TrackLinks']) ? $values['TrackLinks'] : '';
         $this->Metadata = !empty($values['Metadata']) ? $values['Metadata'] : null;
-        $this->MessageStream = !empty($values['MessageStream']) ? $values['MessageStream'] : '';
+        $this->MessageStream = !empty($values['MessageStream']) ? $values['MessageStream'] : null;
     }
 
     /**
