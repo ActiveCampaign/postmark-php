@@ -11,10 +11,10 @@ class PostmarkMessageBase
     public string $ReplyTo;
     public string $Cc;
     public string $Bcc;
-    public array $Headers;
-    public array $Attachments;
+    public ?array $Headers;
+    public ?array $Attachments;
     public string $TrackLinks;
-    public array $Metadata;
+    public ?array $Metadata;
     public string $MessageStream;
 
     public function __construct(array $values = [])
@@ -26,10 +26,10 @@ class PostmarkMessageBase
         $this->ReplyTo = !empty($values['ReplyTo']) ? $values['ReplyTo'] : '';
         $this->Cc = !empty($values['Cc']) ? $values['Cc'] : '';
         $this->Bcc = !empty($values['Bcc']) ? $values['Bcc'] : '';
-        $this->Headers = !empty($values['Headers']) ? $values['Headers'] : [];
-        $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : [];
+        $this->Headers = !empty($values['Headers']) ? $values['Headers'] : null;
+        $this->Attachments = !empty($values['Attachments']) ? $values['Attachments'] : null;
         $this->TrackLinks = !empty($values['TrackLinks']) ? $values['TrackLinks'] : '';
-        $this->Metadata = !empty($values['Metadata']) ? $values['Metadata'] : [];
+        $this->Metadata = !empty($values['Metadata']) ? $values['Metadata'] : null;
         $this->MessageStream = !empty($values['MessageStream']) ? $values['MessageStream'] : '';
     }
 
@@ -226,16 +226,16 @@ class PostmarkMessageBase
     /**
      * @return array
      */
-    public function getMetadata(): mixed
+    public function getMetadata(): array
     {
         return $this->Metadata;
     }
 
     /**
-     * @param array $Metadata
+     * @param ?array $Metadata
      * @return PostmarkMessageBase
      */
-    public function setMetadata(array $Metadata): PostmarkMessageBase
+    public function setMetadata(array $Metadata = null): PostmarkMessageBase
     {
         $this->Metadata = $Metadata;
 
@@ -245,7 +245,7 @@ class PostmarkMessageBase
     /**
      * @return string
      */
-    public function getMessageStream(): mixed
+    public function getMessageStream(): string
     {
         return $this->MessageStream;
     }
