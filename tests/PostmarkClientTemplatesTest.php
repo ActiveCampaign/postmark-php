@@ -181,7 +181,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $templatedModel = new TemplatedPostmarkMessage();
         $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
         $templatedModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
-        $templatedModel->setTo($result->getTemplateId());
+        $templatedModel->setTemplateId($result->getTemplateId());
         $templatedModel->setTemplateModel(['subjectValue' => 'Hello!']);
 
         $emailResult = $client->sendEmailWithTemplateModel($templatedModel);
