@@ -21,7 +21,7 @@ class PostmarkOutboundMessageList
     }
 
     /**
-     * @return int|mixed
+     * @return int
      */
     public function getTotalCount(): mixed
     {

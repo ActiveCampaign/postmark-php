@@ -17,7 +17,7 @@ class PostmarkOutboundMessage
     public string $Status;
     public array $Metadata;
 
-    public function __construct(array $values)
+    public function __construct(array $values = [])
     {
         $this->Tag = !empty($values['Tag']) ? $values['Tag'] : '';
         $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : '';
