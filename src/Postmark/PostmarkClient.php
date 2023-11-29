@@ -2,7 +2,7 @@
 
 namespace Postmark;
 
-//use Postmark\Models\DynamicResponseModel;
+// use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
 use Postmark\Models\MessageStream\PostmarkMessageStreamList;
@@ -21,14 +21,14 @@ use Postmark\Models\PostmarkMessageDump;
 use Postmark\Models\PostmarkOpenList;
 use Postmark\Models\PostmarkOutboundMessageDetail;
 use Postmark\Models\PostmarkOutboundMessageList;
-use Postmark\Models\PostmarkOutboundSentStats;
 use Postmark\Models\PostmarkOutboundOverviewStats;
+use Postmark\Models\PostmarkOutboundSentStats;
 use Postmark\Models\PostmarkResponse;
 use Postmark\Models\PostmarkServer;
 use Postmark\Models\PostmarkTemplate;
 use Postmark\Models\PostmarkTemplateList;
-use Postmark\Models\TemplatedPostmarkMessage;
 use Postmark\Models\Suppressions\PostmarkSuppressionResultList;
+use Postmark\Models\TemplatedPostmarkMessage;
 use Postmark\Models\Webhooks\WebhookConfiguration;
 use Postmark\Models\Webhooks\WebhookConfigurationListingResponse;
 
@@ -42,7 +42,7 @@ class PostmarkClient extends PostmarkClientBase
      * Create a new PostmarkClient.
      *
      * @param string $serverToken the token associated with "Server" you'd like to use to send/receive email from
-     * @param int $timeout     the timeout, in seconds to wait for an API call to complete before throwing an Exception
+     * @param int    $timeout     the timeout, in seconds to wait for an API call to complete before throwing an Exception
      */
     public function __construct(string $serverToken, int $timeout = 60)
     {
@@ -176,7 +176,7 @@ class PostmarkClient extends PostmarkClientBase
             $final[] = $email;
         }
 
-        $response = (array)$this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final]);
+        $response = (array) $this->processRestRequest('POST', '/email/batchWithTemplates', ['Messages' => $final]);
         $temp = [];
         foreach ($response as $rep) {
             $obj = json_decode(json_encode($rep));
@@ -205,7 +205,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|array  $attachments       an array of PostmarkAttachment objects
      * @param null|string $trackLinks        can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
      * @param null|array  $metadata          Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
-     * @param null|string  $messageStream     The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+     * @param null|string $messageStream     The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
      */
     public function sendEmailWithTemplate(
         string $from,
@@ -546,8 +546,6 @@ class PostmarkClient extends PostmarkClientBase
      * Request that Postmark retry POSTing the specified message to the Server's Inbound Hook.
      *
      * @param string $id the ID for a message that we wish retry the inbound hook for
-     *
-     * @return PostmarkResponse
      */
     public function retryInboundMessageHook($id): PostmarkResponse
     {
@@ -687,16 +685,14 @@ class PostmarkClient extends PostmarkClientBase
      * Get information about individual clicks for a sent message.
      *
      * @param string $id     the ID for the message that we want statistics for
-     * @param int $count  How many statistics should we retrieve?
-     * @param int $offset how many should we 'skip' when 'paging' through statistics
-     *
-     * @return PostmarkClickList
+     * @param int    $count  How many statistics should we retrieve?
+     * @param int    $offset how many should we 'skip' when 'paging' through statistics
      */
     public function getClickStatisticsForMessage(
         string $id,
-        int    $count = 100,
-        int    $offset = 0): PostmarkClickList
-    {
+        int $count = 100,
+        int $offset = 0
+    ): PostmarkClickList {
         $query = [];
 
         $query['count'] = $count;
@@ -718,8 +714,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null): PostmarkOutboundOverviewStats
-    {
+        ?string $messagestream = null
+    ): PostmarkOutboundOverviewStats {
         $query = [];
 
         $query['tag'] = $tag;
@@ -743,8 +739,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null): PostmarkOutboundSentStats
-    {
+        ?string $messagestream = null
+    ): PostmarkOutboundSentStats {
         $query = [];
 
         $query['tag'] = $tag;
@@ -834,10 +830,10 @@ class PostmarkClient extends PostmarkClientBase
      * Get open statistics for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag           filter by tag
-     * @param string|null $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate        must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      *
      * @return DynamicResponseModel
      */
@@ -845,8 +841,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null)
-    {
+        ?string $messagestream = null
+    ) {
         $query = [];
 
         $query['tag'] = $tag;
@@ -886,10 +882,10 @@ class PostmarkClient extends PostmarkClientBase
      * Get email client statistics for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag           filter by tag
-     * @param string|null $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate        must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      *
      * @return DynamicResponseModel
      */
@@ -897,8 +893,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null)
-    {
+        ?string $messagestream = null
+    ) {
         $query = [];
 
         $query['tag'] = $tag;
@@ -913,11 +909,9 @@ class PostmarkClient extends PostmarkClientBase
      * Get reading times for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag      filter by tag
-     * @param string|null $fromdate must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate   must be of the format 'YYYY-MM-DD'
-     *
-     * @return DynamicResponseModel
+     * @param null|string $tag      filter by tag
+     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate   must be of the format 'YYYY-MM-DD'
      */
     public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): DynamicResponseModel
     {
@@ -934,10 +928,10 @@ class PostmarkClient extends PostmarkClientBase
      * Get click statistics for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag filter by tag
-     * @param string|null $fromdate must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      *
      * @return DynamicResponseModel
      */
@@ -945,8 +939,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null)
-    {
+        ?string $messagestream = null
+    ) {
         $query = [];
 
         $query['tag'] = $tag;
@@ -961,19 +955,17 @@ class PostmarkClient extends PostmarkClientBase
      * Get information about which browsers were used to open tracked links for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag           filter by tag
-     * @param string|null $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate        must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     *
-     * @return DynamicResponseModel
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
     public function getOutboundClickBrowserFamilyStatistics(
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null): DynamicResponseModel
-    {
+        ?string $messagestream = null
+    ): DynamicResponseModel {
         $query = [];
 
         $query['tag'] = $tag;
@@ -989,19 +981,17 @@ class PostmarkClient extends PostmarkClientBase
      * tracked links for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag           filter by tag
-     * @param string|null $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string $todate        must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     *
-     * @return DynamicResponseModel
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param string      $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
     public function getOutboundClickBrowserPlatformStatistics(
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string  $messagestream = null): DynamicResponseModel
-    {
+        ?string $messagestream = null
+    ): DynamicResponseModel {
         $query = [];
 
         $query['tag'] = $tag;
@@ -1017,19 +1007,17 @@ class PostmarkClient extends PostmarkClientBase
      * tracked links were clicked from in messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param string|null $tag           filter by tag
-     * @param string|null $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate        must be of the format 'YYYY-MM-DD'
-     * @param string|null $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     *
-     * @return DynamicResponseModel
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
      */
     public function getOutboundClickLocationStatistics(
         ?string $tag = null,
         ?string $fromdate = null,
         ?string $todate = null,
-        ?string $messagestream = null): DynamicResponseModel
-    {
+        ?string $messagestream = null
+    ): DynamicResponseModel {
         $query = [];
 
         $query['tag'] = $tag;
@@ -1092,14 +1080,13 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Create a template.
      *
-     * @param string $name the friendly name for this template
-     * @param string|null $subject the template to be used for the 'subject' of emails sent using this template
-     * @param string|null $htmlBody the template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL
-     * @param string|null $textBody the template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL
-     * @param null|string $alias An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
-     * @param string $templateType Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
+     * @param string      $name           the friendly name for this template
+     * @param null|string $subject        the template to be used for the 'subject' of emails sent using this template
+     * @param null|string $htmlBody       the template to be used for the 'htmlBody' of emails sent using this template, optional if 'textBody' is not NULL
+     * @param null|string $textBody       the template to be used for the 'textBody' of emails sent using this template, optional if 'htmlBody' is not NULL
+     * @param null|string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
+     * @param string      $templateType   Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
      * @param null|string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
-     * @return PostmarkTemplate
      */
     public function createTemplate(
         string $name,
@@ -1318,8 +1305,8 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Create Suppressions for the specified recipients.
      *
-     * @param array $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to suppress
-     * @param null|string  $messageStream      Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
+     * @param array       $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to suppress
+     * @param null|string $messageStream      Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
      *
      * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
      */
@@ -1338,11 +1325,10 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Reactivate Suppressions for the specified recipients.
      *
-     * @param array $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to reactivate
-     * @param null|string $messageStream Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
+     * @param array       $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to reactivate
+     * @param null|string $messageStream      Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
      *
      * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
-     * @return PostmarkSuppressionResultList
      */
     public function deleteSuppressions(array $suppressionChanges = [], ?string $messageStream = null): PostmarkSuppressionResultList
     {
@@ -1477,8 +1463,6 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
      * therefore, we need to wrap the elements in an array.
-     *
-     * @param array $headers
      */
     private function fixHeaders(array $headers)
     {

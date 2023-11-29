@@ -33,18 +33,11 @@ class PostmarkMessageBase
         $this->MessageStream = !empty($values['MessageStream']) ? $values['MessageStream'] : null;
     }
 
-    /**
-     * @return string
-     */
     public function getFrom(): string
     {
         return $this->From;
     }
 
-    /**
-     * @param string $From
-     * @return PostmarkMessageBase
-     */
     public function setFrom(string $From): PostmarkMessageBase
     {
         $this->From = $From;
@@ -52,18 +45,11 @@ class PostmarkMessageBase
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTo(): string
     {
         return $this->To;
     }
 
-    /**
-     * @param string $To
-     * @return PostmarkMessageBase
-     */
     public function setTo(string $To): PostmarkMessageBase
     {
         $this->To = $To;
@@ -71,18 +57,11 @@ class PostmarkMessageBase
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTag(): string
     {
         return $this->Tag;
     }
 
-    /**
-     * @param string $Tag
-     * @return PostmarkMessageBase
-     */
     public function setTag(string $Tag): PostmarkMessageBase
     {
         $this->Tag = $Tag;
@@ -90,18 +69,11 @@ class PostmarkMessageBase
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getTrackOpens(): bool
     {
         return $this->TrackOpens;
     }
 
-    /**
-     * @param bool $TrackOpens
-     * @return PostmarkMessageBase
-     */
     public function setTrackOpens(bool $TrackOpens): PostmarkMessageBase
     {
         $this->TrackOpens = $TrackOpens;
@@ -117,10 +89,6 @@ class PostmarkMessageBase
         return $this->ReplyTo;
     }
 
-    /**
-     * @param string $ReplyTo
-     * @return PostmarkMessageBase
-     */
     public function setReplyTo(string $ReplyTo): PostmarkMessageBase
     {
         $this->ReplyTo = $ReplyTo;
@@ -136,10 +104,6 @@ class PostmarkMessageBase
         return $this->Cc;
     }
 
-    /**
-     * @param string $Cc
-     * @return PostmarkMessageBase
-     */
     public function setCc(string $Cc): PostmarkMessageBase
     {
         $this->Cc = $Cc;
@@ -155,10 +119,6 @@ class PostmarkMessageBase
         return $this->Bcc;
     }
 
-    /**
-     * @param string $Bcc
-     * @return PostmarkMessageBase
-     */
     public function setBcc(string $Bcc): PostmarkMessageBase
     {
         $this->Bcc = $Bcc;
@@ -174,10 +134,6 @@ class PostmarkMessageBase
         return $this->Headers;
     }
 
-    /**
-     * @param array $Headers
-     * @return PostmarkMessageBase
-     */
     public function setHeaders(array $Headers): PostmarkMessageBase
     {
         $this->Headers = $Headers;
@@ -193,10 +149,6 @@ class PostmarkMessageBase
         return $this->Attachments;
     }
 
-    /**
-     * @param array $Attachments
-     * @return PostmarkMessageBase
-     */
     public function setAttachments(array $Attachments): PostmarkMessageBase
     {
         $this->Attachments = $Attachments;
@@ -212,10 +164,6 @@ class PostmarkMessageBase
         return $this->TrackLinks;
     }
 
-    /**
-     * @param string $TrackLinks
-     * @return PostmarkMessageBase
-     */
     public function setTrackLinks(string $TrackLinks): PostmarkMessageBase
     {
         $this->TrackLinks = $TrackLinks;
@@ -223,9 +171,6 @@ class PostmarkMessageBase
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMetadata(): array
     {
         return $this->Metadata;
@@ -233,7 +178,6 @@ class PostmarkMessageBase
 
     /**
      * @param ?array $Metadata
-     * @return PostmarkMessageBase
      */
     public function setMetadata(array $Metadata = null): PostmarkMessageBase
     {
@@ -242,18 +186,11 @@ class PostmarkMessageBase
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMessageStream(): string
     {
         return $this->MessageStream;
     }
 
-    /**
-     * @param string $MessageStream
-     * @return PostmarkMessageBase
-     */
     public function setMessageStream(string $MessageStream): PostmarkMessageBase
     {
         $this->MessageStream = $MessageStream;

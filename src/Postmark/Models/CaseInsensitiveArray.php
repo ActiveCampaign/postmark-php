@@ -6,7 +6,7 @@ use ArrayAccess;
 use Iterator;
 use ReturnTypeWillChange;
 
- // phpcs:ignore
+// phpcs:ignore
 
 /**
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.

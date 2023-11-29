@@ -10,7 +10,6 @@ use GuzzleHttp\Psr7\Response;
 use Postmark\Models\PostmarkAttachment;
 use Postmark\Models\PostmarkException;
 use Postmark\Models\PostmarkMessage;
-use Postmark\Models\PostmarkMessageBase;
 use Postmark\PostmarkClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
