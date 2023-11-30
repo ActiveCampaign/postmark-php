@@ -1,15 +1,15 @@
 <?php
 
-namespace Postmark\Models;
+namespace Postmark\Models\Stats;
 
 class PostmarkOutboundSentStats
 {
-    public array $Days;
+    public array $Days; // DatedSendCount object
     public int $Sent;
 
     public function __construct(array $values)
     {
-        $this->Days = !empty($values['Days']) ? $values['Days'] : [];
+        !empty($values['Days']) ? $this->setDays($values['Days']) : $this->setDays([]);
         $this->Sent = !empty($values['Sent']) ? $values['Sent'] : 0;
     }
 
@@ -18,9 +18,14 @@ class PostmarkOutboundSentStats
         return $this->Days;
     }
 
-    public function setDays(array $Days): PostmarkOutboundSentStats
+    public function setDays(array $datedSendCount): PostmarkOutboundSentStats
     {
-        $this->Days = $Days;
+        $tempArray = [];
+        foreach ($datedSendCount as $value) {
+            $temp = new DatedSendCount($value);
+            $tempArray[] = $temp;
+        }
+        $this->Days = $tempArray;
 
         return $this;
     }

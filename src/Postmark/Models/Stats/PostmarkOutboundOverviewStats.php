@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark\Models;
+namespace Postmark\Models\Stats;
 
 class PostmarkOutboundOverviewStats
 {
