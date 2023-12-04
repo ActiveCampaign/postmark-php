@@ -102,14 +102,14 @@ class PostmarkMessageEvent
     public string $Recipient;
     public string $Type;
     public string $ReceivedAt;
-    public array $Details;
+    public PostmarkMessageEventDetails $Details;
 
     public function __construct(array $values = [])
     {
         $this->Recipient = !empty($values['Recipient']) ? $values['Recipient'] : '';
         $this->Type = !empty($values['Type']) ? $values['Type'] : '';
         $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
-        $this->Details = !empty($values['Details']) ? $values['Details'] : [];
+        $this->Details = !empty($values['Details']) ? new PostmarkMessageEventDetails($values['Details']) : new PostmarkMessageEventDetails();
     }
 
     public function getRecipient(): string
@@ -148,15 +148,83 @@ class PostmarkMessageEvent
         return $this;
     }
 
-    public function getDetails(): array
+    public function getDetails(): PostmarkMessageEventDetails
     {
         return $this->Details;
     }
 
-    public function setDetails(array $Details): PostmarkMessageEvent
+    public function setDetails(PostmarkMessageEventDetails $Details): PostmarkMessageEvent
     {
         $this->Details = $Details;
 
+        return $this;
+    }
+}
+
+class PostmarkMessageEventDetails
+{
+    public string $DeliveryMessage;
+    public string $DestinationServer;
+    public string $DestinationIP;
+
+    public function __construct(array $values = [])
+    {
+        $this->DeliveryMessage = !empty($values['DeliveryMessage']) ? $values['DeliveryMessage'] : '';
+        $this->DestinationServer = !empty($values['DestinationServer']) ? $values['DestinationServer'] : '';
+        $this->DestinationIP = !empty($values['DestinationIP']) ? $values['DestinationIP'] : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeliveryMessage(): string
+    {
+        return $this->DeliveryMessage;
+    }
+
+    /**
+     * @param string $DeliveryMessage
+     * @return PostmarkMessageEventDetails
+     */
+    public function setDeliveryMessage(string $DeliveryMessage): PostmarkMessageEventDetails
+    {
+        $this->DeliveryMessage = $DeliveryMessage;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationServer(): string
+    {
+        return $this->DestinationServer;
+    }
+
+    /**
+     * @param string $DestinationServer
+     * @return PostmarkMessageEventDetails
+     */
+    public function setDestinationServer(string $DestinationServer): PostmarkMessageEventDetails
+    {
+        $this->DestinationServer = $DestinationServer;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationIP(): string
+    {
+        return $this->DestinationIP;
+    }
+
+    /**
+     * @param string $DestinationIP
+     * @return PostmarkMessageEventDetails
+     */
+    public function setDestinationIP(string $DestinationIP): PostmarkMessageEventDetails
+    {
+        $this->DestinationIP = $DestinationIP;
         return $this;
     }
 }

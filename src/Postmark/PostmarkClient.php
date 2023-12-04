@@ -5,6 +5,7 @@ namespace Postmark;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
 use Postmark\Models\MessageStream\PostmarkMessageStreamList;
+use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\PostmarkBounce;
 use Postmark\Models\PostmarkBounceActivation;
 use Postmark\Models\PostmarkBounceDump;
@@ -916,24 +917,24 @@ class PostmarkClient extends PostmarkClientBase
         return new PostmarkOutboundEmailClientStats((array) $this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query));
     }
 
-//    /**
-//     * Get reading times for the messages sent using this Server,
-//     * optionally filtering on message tag, and a to and from date.
-//     *
-//     * @param null|string $tag      filter by tag
-//     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
-//     * @param null|string $todate   must be of the format 'YYYY-MM-DD'
-//     */
-//    public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): PostmarkOutboundReadStats
-//    {
-//        $query = [];
-//
-//        $query['tag'] = $tag;
-//        $query['fromdate'] = $fromdate;
-//        $query['todate'] = $todate;
-//
-//        return new PostmarkOutboundReadStats((array) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
-//    }
+    /**
+     * Get reading times for the messages sent using this Server,
+     * optionally filtering on message tag, and a to and from date.
+     *
+     * @param null|string $tag      filter by tag
+     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate   must be of the format 'YYYY-MM-DD'
+     */
+    public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): DynamicResponseModel
+    {
+        $query = [];
+
+        $query['tag'] = $tag;
+        $query['fromdate'] = $fromdate;
+        $query['todate'] = $todate;
+
+        return new DynamicResponseModel((array) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
+    }
 
     /**
      * Get click statistics for the messages sent using this Server,
