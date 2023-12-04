@@ -106,10 +106,12 @@ class PostmarkMessageEvent
 
     public function __construct(array $values = [])
     {
+        $arrayType = !empty($values['Type']) ? (array) $values['Details'] : [];
+        fwrite(STDERR, '-------------------------!!! ' . print_r($arrayType, true));
         $this->Recipient = !empty($values['Recipient']) ? $values['Recipient'] : '';
         $this->Type = !empty($values['Type']) ? $values['Type'] : '';
         $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
-        $this->Details = !empty($values['Details']) ? new PostmarkMessageEventDetails($values['Details']) : new PostmarkMessageEventDetails();
+        $this->Details = !empty($values['Details']) ? new PostmarkMessageEventDetails($arrayType) : new PostmarkMessageEventDetails();
     }
 
     public function getRecipient(): string
