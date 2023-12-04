@@ -17,9 +17,9 @@ class TemplateValidationResponse
     {
         $this->AllContentIsValid = !empty($values['AllContentIsValid']) ? $values['AllContentIsValid'] : false;
         $this->HtmlBody = !empty($values['HtmlBody']) ? new HtmlBody($values['HtmlBody']) : new HtmlBody();
-        $this->TextBody = !empty($values['TextBody']) ? new HtmlBody($values['TextBody']) : new TextBody();
-        $this->Subject = !empty($values['Subject']) ? new HtmlBody($values['Subject']) : new Subject();
-        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? new HtmlBody($values['SuggestedTemplateModel']) : new SuggestedTemplateModel();
+        $this->TextBody = !empty($values['TextBody']) ? new TextBody($values['TextBody']) : new TextBody();
+        $this->Subject = !empty($values['Subject']) ? new Subject($values['Subject']) : new Subject();
+        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? new SuggestedTemplateModel($values['SuggestedTemplateModel']) : new SuggestedTemplateModel();
     }
 
     /**

@@ -28,7 +28,7 @@ use Postmark\Models\Stats\PostmarkOutboundEmailClientStats;
 use Postmark\Models\Stats\PostmarkOutboundLocationStats;
 use Postmark\Models\Stats\PostmarkOutboundOpenStats;
 use Postmark\Models\Stats\PostmarkOutboundPlatformStats;
-use Postmark\Models\Stats\PostmarkOutboundReadStats;
+//use Postmark\Models\Stats\PostmarkOutboundReadStats;
 use Postmark\Models\Stats\PostmarkOutboundSpamComplaintStats;
 use Postmark\Models\Stats\PostmarkOutboundTrackedStats;
 use Postmark\Models\PostmarkResponse;
@@ -916,24 +916,24 @@ class PostmarkClient extends PostmarkClientBase
         return new PostmarkOutboundEmailClientStats((array) $this->processRestRequest('GET', '/stats/outbound/opens/emailclients', $query));
     }
 
-    /**
-     * Get reading times for the messages sent using this Server,
-     * optionally filtering on message tag, and a to and from date.
-     *
-     * @param null|string $tag      filter by tag
-     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
-     * @param null|string $todate   must be of the format 'YYYY-MM-DD'
-     */
-    public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): PostmarkOutboundReadStats
-    {
-        $query = [];
-
-        $query['tag'] = $tag;
-        $query['fromdate'] = $fromdate;
-        $query['todate'] = $todate;
-
-        return new PostmarkOutboundReadStats((array) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
-    }
+//    /**
+//     * Get reading times for the messages sent using this Server,
+//     * optionally filtering on message tag, and a to and from date.
+//     *
+//     * @param null|string $tag      filter by tag
+//     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
+//     * @param null|string $todate   must be of the format 'YYYY-MM-DD'
+//     */
+//    public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): PostmarkOutboundReadStats
+//    {
+//        $query = [];
+//
+//        $query['tag'] = $tag;
+//        $query['fromdate'] = $fromdate;
+//        $query['todate'] = $todate;
+//
+//        return new PostmarkOutboundReadStats((array) $this->processRestRequest('GET', '/stats/outbound/opens/readtimes', $query));
+//    }
 
     /**
      * Get click statistics for the messages sent using this Server,
@@ -1476,18 +1476,19 @@ class PostmarkClient extends PostmarkClientBase
      * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
      * therefore, we need to wrap the elements in an array.
      */
-    private function fixHeaders(array $headers)
+    private function fixHeaders(?array $headers): ?array
     {
-        $retval = null;
-        if (null != $headers) {
-            $retval = [];
-            $index = 0;
-            foreach ($headers as $key => $value) {
-                $retval[$index] = ['Name' => $key, 'Value' => $value];
-                ++$index;
-            }
+        if ($headers == null)
+        {
+            return null;
         }
 
-        return $retval;
+        $values = [];
+        $index = 0;
+        foreach ($headers as $key => $value) {
+            $values[$index] = ['Name' => $key, 'Value' => $value];
+            ++$index;
+        }
+        return $values;
     }
 }

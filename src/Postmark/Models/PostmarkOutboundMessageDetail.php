@@ -14,7 +14,7 @@ class PostmarkOutboundMessageDetail extends PostmarkOutboundMessage
         $this->TextBody = !empty($values['TextBody']) ? $values['TextBody'] : '';
         $this->HtmlBody = !empty($values['HtmlBody']) ? $values['HtmlBody'] : '';
         $this->Body = !empty($values['Body']) ? $values['Body'] : '';
-        $this->MessageEvents = !empty($values['MessageEvents']) ? new PostmarkMessageEvents($values['MessageEvents']) : new PostmarkMessageEvents();
+        $this->MessageEvents = !empty($values['MessageEvents']) ? new PostmarkMessageEvents($values) : new PostmarkMessageEvents();
 
         parent::__construct($values);
     }
@@ -109,7 +109,7 @@ class PostmarkMessageEvent
         $this->Recipient = !empty($values['Recipient']) ? $values['Recipient'] : '';
         $this->Type = !empty($values['Type']) ? $values['Type'] : '';
         $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
-        $this->Details = !empty($values['Details']) ? $values['Details'] : '';
+        $this->Details = !empty($values['Details']) ? $values['Details'] : [];
     }
 
     public function getRecipient(): string
@@ -165,9 +165,9 @@ class PostmarkMessageDump
 {
     public string $Body;
 
-    public function __construct(string $Body)
+    public function __construct(array $values = [])
     {
-        $this->Body = $Body;
+        $this->Body = !empty($values['Body']) ? $values['Body'] : '';
     }
 
     public function getBody(): string
