@@ -8,7 +8,7 @@ class TemplateValidationResponse
     public HtmlBody $HtmlBody; //HtmlBody
     public TextBody $TextBody; //TextBody
     public Subject $Subject; //Subject
-    public ?string $SuggestedTemplateModel;
+    public ?array $SuggestedTemplateModel;
 
     /**
      * @param array $values
@@ -19,7 +19,7 @@ class TemplateValidationResponse
         $this->HtmlBody = !empty($values['HtmlBody']) ? new HtmlBody($values['HtmlBody']) : new HtmlBody();
         $this->TextBody = !empty($values['TextBody']) ? new TextBody($values['TextBody']) : new TextBody();
         $this->Subject = !empty($values['Subject']) ? new Subject($values['Subject']) : new Subject();
-        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? $values['SuggestedTemplateModel'] : null;
+        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? $values['SuggestedTemplateModel'] : [];
     }
 
     /**
@@ -95,18 +95,18 @@ class TemplateValidationResponse
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getSuggestedTemplateModel(): string
+    public function getSuggestedTemplateModel(): array
     {
         return $this->SuggestedTemplateModel;
     }
 
     /**
-     * @param string $SuggestedTemplateModel
+     * @param array $SuggestedTemplateModel
      * @return TemplateValidationResponse
      */
-    public function setSuggestedTemplateModel(string $SuggestedTemplateModel): TemplateValidationResponse
+    public function setSuggestedTemplateModel(array $SuggestedTemplateModel): TemplateValidationResponse
     {
         $this->SuggestedTemplateModel = $SuggestedTemplateModel;
         return $this;

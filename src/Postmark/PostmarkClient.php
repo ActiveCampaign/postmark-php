@@ -529,7 +529,7 @@ class PostmarkClient extends PostmarkClientBase
         $query['fromdate'] = $fromdate;
         $query['todate'] = $todate;
 
-        return new PostmarkInboundMessageList((string) $this->processRestRequest('GET', '/messages/inbound', $query));
+        return new PostmarkInboundMessageList((array) $this->processRestRequest('GET', '/messages/inbound', $query));
     }
 
     /**
