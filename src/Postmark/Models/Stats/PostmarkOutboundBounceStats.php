@@ -10,9 +10,6 @@ class PostmarkOutboundBounceStats
     public int $SoftBounce;
     public int $Transient;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         !empty($values['Days']) ? $this->setDays($values['Days']) : $this->setDays([]);
@@ -39,75 +36,51 @@ class PostmarkOutboundBounceStats
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getHardBounce(): int
     {
         return $this->HardBounce;
     }
 
-    /**
-     * @param int $HardBounce
-     * @return PostmarkOutboundBounceStats
-     */
     public function setHardBounce(int $HardBounce): PostmarkOutboundBounceStats
     {
         $this->HardBounce = $HardBounce;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getSMTPApiError(): int
     {
         return $this->SMTPApiError;
     }
 
-    /**
-     * @param int $SMTPApiError
-     * @return PostmarkOutboundBounceStats
-     */
     public function setSMTPApiError(int $SMTPApiError): PostmarkOutboundBounceStats
     {
         $this->SMTPApiError = $SMTPApiError;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getSoftBounce(): int
     {
         return $this->SoftBounce;
     }
 
-    /**
-     * @param int $SoftBounce
-     * @return PostmarkOutboundBounceStats
-     */
     public function setSoftBounce(int $SoftBounce): PostmarkOutboundBounceStats
     {
         $this->SoftBounce = $SoftBounce;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTransient(): int
     {
         return $this->Transient;
     }
 
-    /**
-     * @param int $Transient
-     * @return PostmarkOutboundBounceStats
-     */
     public function setTransient(int $Transient): PostmarkOutboundBounceStats
     {
         $this->Transient = $Transient;
+
         return $this;
     }
 }
@@ -118,9 +91,6 @@ class DatedBounceCount
     public int $HardBounce;
     public int $SoftBounce;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
         $this->Date = !empty($values['Date']) ? $values['Date'] : '';
@@ -136,50 +106,34 @@ class DatedBounceCount
         return $this->Date;
     }
 
-    /**
-     * @param string $Date
-     * @return DatedBounceCount
-     */
     public function setDate(string $Date): DatedBounceCount
     {
         $this->Date = $Date;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getHardBounce(): int
     {
         return $this->HardBounce;
     }
 
-    /**
-     * @param int $HardBounce
-     * @return DatedBounceCount
-     */
     public function setHardBounce(int $HardBounce): DatedBounceCount
     {
         $this->HardBounce = $HardBounce;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getSoftBounce(): int
     {
         return $this->SoftBounce;
     }
 
-    /**
-     * @param int $SoftBounce
-     * @return DatedBounceCount
-     */
     public function setSoftBounce(int $SoftBounce): DatedBounceCount
     {
         $this->SoftBounce = $SoftBounce;
+
         return $this;
     }
-
 }

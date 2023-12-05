@@ -2,8 +2,6 @@
 
 namespace Postmark\Models\Stats;
 
-use Postmark\Models\Stats\DatedPlatformCount;
-
 class PostmarkOutboundPlatformStats
 {
     public array $Days; // DatedPlatformCount object
@@ -21,18 +19,11 @@ class PostmarkOutboundPlatformStats
         $this->Unknown = !empty($values['Unknown']) ? $values['Unknown'] : 0;
     }
 
-    /**
-     * @return array
-     */
     public function getDays(): array
     {
         return $this->Days;
     }
 
-    /**
-     * @param array $Days
-     * @return PostmarkOutboundPlatformStats
-     */
     public function setDays(array $Days): PostmarkOutboundPlatformStats
     {
         $tempArray = [];
@@ -45,75 +36,51 @@ class PostmarkOutboundPlatformStats
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDesktop(): int
     {
         return $this->Desktop;
     }
 
-    /**
-     * @param int $Desktop
-     * @return PostmarkOutboundPlatformStats
-     */
     public function setDesktop(int $Desktop): PostmarkOutboundPlatformStats
     {
         $this->Desktop = $Desktop;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMobile(): int
     {
         return $this->Mobile;
     }
 
-    /**
-     * @param int $Mobile
-     * @return PostmarkOutboundPlatformStats
-     */
     public function setMobile(int $Mobile): PostmarkOutboundPlatformStats
     {
         $this->Mobile = $Mobile;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getWebmail(): int
     {
         return $this->Webmail;
     }
 
-    /**
-     * @param int $Webmail
-     * @return PostmarkOutboundPlatformStats
-     */
     public function setWebmail(int $Webmail): PostmarkOutboundPlatformStats
     {
         $this->Webmail = $Webmail;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getUnknown(): int
     {
         return $this->Unknown;
     }
 
-    /**
-     * @param int $Unknown
-     * @return PostmarkOutboundPlatformStats
-     */
     public function setUnknown(int $Unknown): PostmarkOutboundPlatformStats
     {
         $this->Unknown = $Unknown;
+
         return $this;
     }
 }

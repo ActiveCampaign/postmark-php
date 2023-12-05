@@ -2,7 +2,4 @@
 
 namespace Postmark\Models\Stats;
 
-class PostmarkOutboundEmailClientStats
-{
-
-}
+class PostmarkOutboundEmailClientStats {}

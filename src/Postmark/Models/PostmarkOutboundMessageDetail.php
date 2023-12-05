@@ -176,57 +176,39 @@ class PostmarkMessageEventDetails
         $this->DestinationIP = !empty($values['DestinationIP']) ? $values['DestinationIP'] : '';
     }
 
-    /**
-     * @return string
-     */
     public function getDeliveryMessage(): string
     {
         return $this->DeliveryMessage;
     }
 
-    /**
-     * @param string $DeliveryMessage
-     * @return PostmarkMessageEventDetails
-     */
     public function setDeliveryMessage(string $DeliveryMessage): PostmarkMessageEventDetails
     {
         $this->DeliveryMessage = $DeliveryMessage;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDestinationServer(): string
     {
         return $this->DestinationServer;
     }
 
-    /**
-     * @param string $DestinationServer
-     * @return PostmarkMessageEventDetails
-     */
     public function setDestinationServer(string $DestinationServer): PostmarkMessageEventDetails
     {
         $this->DestinationServer = $DestinationServer;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDestinationIP(): string
     {
         return $this->DestinationIP;
     }
 
-    /**
-     * @param string $DestinationIP
-     * @return PostmarkMessageEventDetails
-     */
     public function setDestinationIP(string $DestinationIP): PostmarkMessageEventDetails
     {
         $this->DestinationIP = $DestinationIP;
+
         return $this;
     }
 }

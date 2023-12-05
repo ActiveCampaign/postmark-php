@@ -8,8 +8,8 @@ class PostmarkOutboundReadStats
     public array $ReadCounts; // readcounts
 }
 
-//class DatedReadCount
-//{
+// class DatedReadCount
+// {
 //    public string $Date;
 //    public array $ReadCounts;
 //
@@ -18,9 +18,9 @@ class PostmarkOutboundReadStats
 //        $this->Date = !empty($values['Date']) ? $values['Date'] : '';
 //        $this->Read = !empty($values['Read']) ? $values['Read'] : 0;
 //    }
-//}
+// }
 //
-//class ReadCount
-//{
+// class ReadCount
+// {
 //
-//}
+// }

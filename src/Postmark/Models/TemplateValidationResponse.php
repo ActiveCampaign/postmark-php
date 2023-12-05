@@ -5,14 +5,11 @@ namespace Postmark\Models;
 class TemplateValidationResponse
 {
     public bool $AllContentIsValid;
-    public HtmlBody $HtmlBody; //HtmlBody
-    public TextBody $TextBody; //TextBody
-    public Subject $Subject; //Subject
+    public HtmlBody $HtmlBody; // HtmlBody
+    public TextBody $TextBody; // TextBody
+    public Subject $Subject; // Subject
     public ?array $SuggestedTemplateModel;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->AllContentIsValid = !empty($values['AllContentIsValid']) ? $values['AllContentIsValid'] : false;
@@ -22,105 +19,73 @@ class TemplateValidationResponse
         $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? $values['SuggestedTemplateModel'] : [];
     }
 
-    /**
-     * @return bool
-     */
     public function isAllContentIsValid(): bool
     {
         return $this->AllContentIsValid;
     }
 
-    /**
-     * @param bool $AllContentIsValid
-     * @return TemplateValidationResponse
-     */
     public function setAllContentIsValid(bool $AllContentIsValid): TemplateValidationResponse
     {
         $this->AllContentIsValid = $AllContentIsValid;
+
         return $this;
     }
 
-    /**
-     * @return HtmlBody
-     */
     public function getHtmlBody(): HtmlBody
     {
         return $this->HtmlBody;
     }
 
-    /**
-     * @param HtmlBody $HtmlBody
-     * @return TemplateValidationResponse
-     */
     public function setHtmlBody(HtmlBody $HtmlBody): TemplateValidationResponse
     {
         $this->HtmlBody = $HtmlBody;
+
         return $this;
     }
 
-    /**
-     * @return TextBody
-     */
     public function getTextBody(): TextBody
     {
         return $this->TextBody;
     }
 
-    /**
-     * @param TextBody $TextBody
-     * @return TemplateValidationResponse
-     */
     public function setTextBody(TextBody $TextBody): TemplateValidationResponse
     {
         $this->TextBody = $TextBody;
+
         return $this;
     }
 
-    /**
-     * @return Subject
-     */
     public function getSubject(): Subject
     {
         return $this->Subject;
     }
 
-    /**
-     * @param Subject $Subject
-     * @return TemplateValidationResponse
-     */
     public function setSubject(Subject $Subject): TemplateValidationResponse
     {
         $this->Subject = $Subject;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getSuggestedTemplateModel(): array
     {
         return $this->SuggestedTemplateModel;
     }
 
-    /**
-     * @param array $SuggestedTemplateModel
-     * @return TemplateValidationResponse
-     */
     public function setSuggestedTemplateModel(array $SuggestedTemplateModel): TemplateValidationResponse
     {
         $this->SuggestedTemplateModel = $SuggestedTemplateModel;
+
         return $this;
     }
 }
 
-class HtmlBody {
+class HtmlBody
+{
     public bool $ContentIsValid;
-    public array $ValidationErrors; //array( ValidationError )
+    public array $ValidationErrors; // array( ValidationError )
     public string $RenderedContent;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->ContentIsValid = !empty($values['ContentIsValid']) ? $values['ContentIsValid'] : false;
@@ -128,36 +93,23 @@ class HtmlBody {
         !empty($values['ValidationErrors']) ? $this->setValidationErrors($values['ValidationErrors']) : [new ValidationError()];
     }
 
-    /**
-     * @return bool
-     */
     public function isContentIsValid(): bool
     {
         return $this->ContentIsValid;
     }
 
-    /**
-     * @param bool $ContentIsValid
-     * @return HtmlBody
-     */
     public function setContentIsValid(bool $ContentIsValid): HtmlBody
     {
         $this->ContentIsValid = $ContentIsValid;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getValidationErrors(): array
     {
         return $this->ValidationErrors;
     }
 
-    /**
-     * @param array $ValidationErrors
-     * @return HtmlBody
-     */
     public function setValidationErrors(array $ValidationErrors): HtmlBody
     {
         $tempArray = [];
@@ -170,33 +122,25 @@ class HtmlBody {
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getRenderedContent(): string
     {
         return $this->RenderedContent;
     }
 
-    /**
-     * @param string $RenderedContent
-     * @return HtmlBody
-     */
     public function setRenderedContent(string $RenderedContent): HtmlBody
     {
         $this->RenderedContent = $RenderedContent;
+
         return $this;
     }
 }
 
-class ValidationError {
+class ValidationError
+{
     public string $Message;
     public int $Line;
     public int $CharacterPosition;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->Message = !empty($values['Message']) ? $values['Message'] : '';
@@ -204,70 +148,49 @@ class ValidationError {
         $this->CharacterPosition = !empty($values['CharacterPosition']) ? $values['CharacterPosition'] : 0;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->Message;
     }
 
-    /**
-     * @param string $Message
-     * @return ValidationError
-     */
     public function setMessage(string $Message): ValidationError
     {
         $this->Message = $Message;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getLine(): int
     {
         return $this->Line;
     }
 
-    /**
-     * @param int $Line
-     * @return ValidationError
-     */
     public function setLine(int $Line): ValidationError
     {
         $this->Line = $Line;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getCharacterPosition(): int
     {
         return $this->CharacterPosition;
     }
 
-    /**
-     * @param int $CharacterPosition
-     * @return ValidationError
-     */
     public function setCharacterPosition(int $CharacterPosition): ValidationError
     {
         $this->CharacterPosition = $CharacterPosition;
+
         return $this;
     }
-
 }
 
-class TextBody {
+class TextBody
+{
     public bool $ContentIsValid;
-    public array $ValidationErrors; //array( ValidationError )
+    public array $ValidationErrors; // array( ValidationError )
     public string $RenderedContent;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->ContentIsValid = !empty($values['ContentIsValid']) ? $values['ContentIsValid'] : false;
@@ -275,36 +198,23 @@ class TextBody {
         !empty($values['ValidationErrors']) ? $this->setValidationErrors($values['ValidationErrors']) : [new ValidationError()];
     }
 
-    /**
-     * @return bool
-     */
     public function isContentIsValid(): bool
     {
         return $this->ContentIsValid;
     }
 
-    /**
-     * @param bool $ContentIsValid
-     * @return TextBody
-     */
     public function setContentIsValid(bool $ContentIsValid): TextBody
     {
         $this->ContentIsValid = $ContentIsValid;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getValidationErrors(): array
     {
         return $this->ValidationErrors;
     }
 
-    /**
-     * @param array $ValidationErrors
-     * @return TextBody
-     */
     public function setValidationErrors(array $ValidationErrors): TextBody
     {
         $tempArray = [];
@@ -317,21 +227,15 @@ class TextBody {
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getRenderedContent(): string
     {
         return $this->RenderedContent;
     }
 
-    /**
-     * @param string $RenderedContent
-     * @return TextBody
-     */
     public function setRenderedContent(string $RenderedContent): TextBody
     {
         $this->RenderedContent = $RenderedContent;
+
         return $this;
     }
 }
@@ -339,12 +243,9 @@ class TextBody {
 class Subject
 {
     public bool $ContentIsValid;
-    public array $ValidationErrors;  //array( ValidationError )
+    public array $ValidationErrors;  // array( ValidationError )
     public string $RenderedContent;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->ContentIsValid = !empty($values['ContentIsValid']) ? $values['ContentIsValid'] : false;
@@ -352,36 +253,23 @@ class Subject
         !empty($values['ValidationErrors']) ? $this->setValidationErrors($values['ValidationErrors']) : [new ValidationError()];
     }
 
-    /**
-     * @return bool
-     */
     public function isContentIsValid(): bool
     {
         return $this->ContentIsValid;
     }
 
-    /**
-     * @param bool $ContentIsValid
-     * @return Subject
-     */
     public function setContentIsValid(bool $ContentIsValid): Subject
     {
         $this->ContentIsValid = $ContentIsValid;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getValidationErrors(): array
     {
         return $this->ValidationErrors;
     }
 
-    /**
-     * @param array $ValidationErrors
-     * @return Subject
-     */
     public function setValidationErrors(array $ValidationErrors): Subject
     {
         $tempArray = [];
@@ -394,29 +282,20 @@ class Subject
         return $this;
     }
 
-
-    /**
-     * @return string
-     */
     public function getRenderedContent(): string
     {
         return $this->RenderedContent;
     }
 
-    /**
-     * @param string $RenderedContent
-     * @return Subject
-     */
     public function setRenderedContent(string $RenderedContent): Subject
     {
         $this->RenderedContent = $RenderedContent;
+
         return $this;
     }
-
-
 }
 
-//class Company {
+// class Company {
 //    public string $Address;
 //    public string $Phone;
 //    public string $Name;
@@ -484,9 +363,9 @@ class Subject
 //        $this->Name = $Name;
 //        return $this;
 //    }
-//}
+// }
 
-//class Person {
+// class Person {
 //    public string $Name;
 //
 //    /**
@@ -515,9 +394,9 @@ class Subject
 //        return $this;
 //    }
 //
-//}
+// }
 //
-//class SuggestedTemplateModel {
+// class SuggestedTemplateModel {
 //    public string $UserName;
 //    public Company $Company; //Company
 //    public People $Person; //array( Person )
@@ -605,4 +484,4 @@ class Subject
 //        $this->SubjectHeadline = $SubjectHeadline;
 //        return $this;
 //    }
-//}
+// }

@@ -36,75 +36,51 @@ class PostmarkOutboundSpamComplaintStats
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDesktop(): int
     {
         return $this->Desktop;
     }
 
-    /**
-     * @param int $Desktop
-     * @return PostmarkOutboundSpamComplaintStats
-     */
     public function setDesktop(int $Desktop): PostmarkOutboundSpamComplaintStats
     {
         $this->Desktop = $Desktop;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMobile(): int
     {
         return $this->Mobile;
     }
 
-    /**
-     * @param int $Mobile
-     * @return PostmarkOutboundSpamComplaintStats
-     */
     public function setMobile(int $Mobile): PostmarkOutboundSpamComplaintStats
     {
         $this->Mobile = $Mobile;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getUnknown(): int
     {
         return $this->Unknown;
     }
 
-    /**
-     * @param int $Unknown
-     * @return PostmarkOutboundSpamComplaintStats
-     */
     public function setUnknown(int $Unknown): PostmarkOutboundSpamComplaintStats
     {
         $this->Unknown = $Unknown;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getWebMail(): int
     {
         return $this->WebMail;
     }
 
-    /**
-     * @param int $WebMail
-     * @return PostmarkOutboundSpamComplaintStats
-     */
     public function setWebMail(int $WebMail): PostmarkOutboundSpamComplaintStats
     {
         $this->WebMail = $WebMail;
+
         return $this;
     }
 }
@@ -126,94 +102,63 @@ class DatedPlatformCount
         $this->WebMail = !empty($values['WebMail']) ? $values['WebMail'] : 0;
     }
 
-    /**
-     * @return string
-     */
     public function getDate(): string
     {
         return $this->Date;
     }
 
-    /**
-     * @param string $Date
-     * @return DatedPlatformCount
-     */
     public function setDate(string $Date): DatedPlatformCount
     {
         $this->Date = $Date;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDesktop(): int
     {
         return $this->Desktop;
     }
 
-    /**
-     * @param int $Desktop
-     * @return DatedPlatformCount
-     */
     public function setDesktop(int $Desktop): DatedPlatformCount
     {
         $this->Desktop = $Desktop;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMobile(): int
     {
         return $this->Mobile;
     }
 
-    /**
-     * @param int $Mobile
-     * @return DatedPlatformCount
-     */
     public function setMobile(int $Mobile): DatedPlatformCount
     {
         $this->Mobile = $Mobile;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getUnknown(): int
     {
         return $this->Unknown;
     }
 
-    /**
-     * @param int $Unknown
-     * @return DatedPlatformCount
-     */
     public function setUnknown(int $Unknown): DatedPlatformCount
     {
         $this->Unknown = $Unknown;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getWebMail(): int
     {
         return $this->WebMail;
     }
 
-    /**
-     * @param int $WebMail
-     * @return DatedPlatformCount
-     */
     public function setWebMail(int $WebMail): DatedPlatformCount
     {
         $this->WebMail = $WebMail;
+
         return $this;
     }
-
 }
