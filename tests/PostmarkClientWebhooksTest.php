@@ -74,10 +74,6 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $result = $client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
 
         $local_triggers = $result->getTriggers();
-        //        fwrite(STDERR, "000-------------------------!!! ". print_r($local_triggers, TRUE));
-        //        fwrite(STDERR, "111-------------------------!!! ". print_r($local_triggers->getOpenSettings(), TRUE));
-        //        fwrite(STDERR, "222-------------------------!!! ". print_r($triggers, TRUE));
-        //        fwrite(STDERR, "333-------------------------!!! ". print_r($triggers->getOpenSettings(), TRUE));
 
         $this->assertNotEmpty($result->getID());
         $this->assertEquals($url, $result->getUrl());

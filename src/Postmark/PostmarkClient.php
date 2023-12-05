@@ -487,7 +487,8 @@ class PostmarkClient extends PostmarkClientBase
      */
     public function getOutboundMessageDump(string $id): PostmarkMessageDump
     {
-        return new PostmarkMessageDump((string) $this->processRestRequest('GET', "/messages/outbound/{$id}/dump"));
+        $temp = $this->processRestRequest('GET', "/messages/outbound/{$id}/dump");
+        return new PostmarkMessageDump($temp["Body"]);
     }
 
     /**
@@ -528,7 +529,7 @@ class PostmarkClient extends PostmarkClientBase
         $query['fromdate'] = $fromdate;
         $query['todate'] = $todate;
 
-        return new PostmarkInboundMessageList((array) $this->processRestRequest('GET', '/messages/inbound', $query));
+        return new PostmarkInboundMessageList((string) $this->processRestRequest('GET', '/messages/inbound', $query));
     }
 
     /**
