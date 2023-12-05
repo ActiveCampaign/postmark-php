@@ -235,9 +235,9 @@ class PostmarkMessageDump
 {
     public string $Body;
 
-    public function __construct(array $values = [])
+    public function __construct(string $body = '')
     {
-        $this->Body = !empty($values['Body']) ? $values['Body'] : '';
+        $this->Body = $body;
     }
 
     public function getBody(): string

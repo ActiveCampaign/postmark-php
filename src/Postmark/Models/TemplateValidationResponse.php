@@ -8,7 +8,7 @@ class TemplateValidationResponse
     public HtmlBody $HtmlBody; //HtmlBody
     public TextBody $TextBody; //TextBody
     public Subject $Subject; //Subject
-    public SuggestedTemplateModel $SuggestedTemplateModel; //SuggestedTemplateModel
+    public ?string $SuggestedTemplateModel;
 
     /**
      * @param array $values
@@ -19,7 +19,7 @@ class TemplateValidationResponse
         $this->HtmlBody = !empty($values['HtmlBody']) ? new HtmlBody($values['HtmlBody']) : new HtmlBody();
         $this->TextBody = !empty($values['TextBody']) ? new TextBody($values['TextBody']) : new TextBody();
         $this->Subject = !empty($values['Subject']) ? new Subject($values['Subject']) : new Subject();
-        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? new SuggestedTemplateModel($values['SuggestedTemplateModel']) : new SuggestedTemplateModel();
+        $this->SuggestedTemplateModel = !empty($values['SuggestedTemplateModel']) ? $values['SuggestedTemplateModel'] : null;
     }
 
     /**
@@ -95,23 +95,22 @@ class TemplateValidationResponse
     }
 
     /**
-     * @return SuggestedTemplateModel
+     * @return string
      */
-    public function getSuggestedTemplateModel(): SuggestedTemplateModel
+    public function getSuggestedTemplateModel(): string
     {
         return $this->SuggestedTemplateModel;
     }
 
     /**
-     * @param SuggestedTemplateModel $SuggestedTemplateModel
+     * @param string $SuggestedTemplateModel
      * @return TemplateValidationResponse
      */
-    public function setSuggestedTemplateModel(SuggestedTemplateModel $SuggestedTemplateModel): TemplateValidationResponse
+    public function setSuggestedTemplateModel(string $SuggestedTemplateModel): TemplateValidationResponse
     {
         $this->SuggestedTemplateModel = $SuggestedTemplateModel;
         return $this;
     }
-
 }
 
 class HtmlBody {
@@ -416,193 +415,194 @@ class Subject
 
 
 }
-class Company {
-    public string $Address;
-    public string $Phone;
-    public string $Name;
 
-    /**
-     * @param array $values
-     */
-    public function __construct(array $values = [])
-    {
-        $this->Address = !empty($values['Address']) ? $values['Address'] : '';
-        $this->Phone = !empty($values['Phone']) ? $values['Phone'] : '';
-        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
-    }
+//class Company {
+//    public string $Address;
+//    public string $Phone;
+//    public string $Name;
+//
+//    /**
+//     * @param array $values
+//     */
+//    public function __construct(array $values = [])
+//    {
+//        $this->Address = !empty($values['Address']) ? $values['Address'] : '';
+//        $this->Phone = !empty($values['Phone']) ? $values['Phone'] : '';
+//        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getAddress(): string
+//    {
+//        return $this->Address;
+//    }
+//
+//    /**
+//     * @param string $Address
+//     * @return Company
+//     */
+//    public function setAddress(string $Address): Company
+//    {
+//        $this->Address = $Address;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getPhone(): string
+//    {
+//        return $this->Phone;
+//    }
+//
+//    /**
+//     * @param string $Phone
+//     * @return Company
+//     */
+//    public function setPhone(string $Phone): Company
+//    {
+//        $this->Phone = $Phone;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getName(): string
+//    {
+//        return $this->Name;
+//    }
+//
+//    /**
+//     * @param string $Name
+//     * @return Company
+//     */
+//    public function setName(string $Name): Company
+//    {
+//        $this->Name = $Name;
+//        return $this;
+//    }
+//}
 
-    /**
-     * @return string
-     */
-    public function getAddress(): string
-    {
-        return $this->Address;
-    }
-
-    /**
-     * @param string $Address
-     * @return Company
-     */
-    public function setAddress(string $Address): Company
-    {
-        $this->Address = $Address;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhone(): string
-    {
-        return $this->Phone;
-    }
-
-    /**
-     * @param string $Phone
-     * @return Company
-     */
-    public function setPhone(string $Phone): Company
-    {
-        $this->Phone = $Phone;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->Name;
-    }
-
-    /**
-     * @param string $Name
-     * @return Company
-     */
-    public function setName(string $Name): Company
-    {
-        $this->Name = $Name;
-        return $this;
-    }
-}
-
-class Person {
-    public string $Name;
-
-    /**
-     * @param array $values
-     */
-    public function __construct(array $values = [])
-    {
-        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->Name;
-    }
-
-    /**
-     * @param string $name
-     * @return Person
-     */
-    public function setName(string $name): Person
-    {
-        $this->Name = $name;
-        return $this;
-    }
-
-}
-
-class SuggestedTemplateModel {
-    public string $UserName;
-    public Company $Company; //Company
-    public Person $Person; //array( Person )
-    public string $SubjectHeadline;
-
-    /**
-     * @param array $values
-     */
-    public function __construct(array $values = [])
-    {
-        $this->UserName = !empty($values['UserName']) ? $values['UserName'] : 0;
-        $this->Company = !empty($values['Company']) ? $values['Company'] : 0;
-        $this->Person = !empty($values['Person']) ? $values['Person'] : 0;;
-        $this->SubjectHeadline = !empty($values['SubjectHeadline']) ? $values['SubjectHeadline'] : 0;
-    }
-
-    /**
-     * @return int|mixed|string
-     */
-    public function getUserName(): mixed
-    {
-        return $this->UserName;
-    }
-
-    /**
-     * @param int|mixed|string $UserName
-     * @return SuggestedTemplateModel
-     */
-    public function setUserName(mixed $UserName): SuggestedTemplateModel
-    {
-        $this->UserName = $UserName;
-        return $this;
-    }
-
-    /**
-     * @return int|mixed|Company
-     */
-    public function getCompany(): mixed
-    {
-        return $this->Company;
-    }
-
-    /**
-     * @param int|mixed|Company $Company
-     * @return SuggestedTemplateModel
-     */
-    public function setCompany(mixed $Company): SuggestedTemplateModel
-    {
-        $this->Company = $Company;
-        return $this;
-    }
-
-    /**
-     * @return int|mixed|Person
-     */
-    public function getPerson(): mixed
-    {
-        return $this->Person;
-    }
-
-    /**
-     * @param int|mixed|Person $Person
-     * @return SuggestedTemplateModel
-     */
-    public function setPerson(mixed $Person): SuggestedTemplateModel
-    {
-        $this->Person = $Person;
-        return $this;
-    }
-
-    /**
-     * @return int|mixed|string
-     */
-    public function getSubjectHeadline(): mixed
-    {
-        return $this->SubjectHeadline;
-    }
-
-    /**
-     * @param int|mixed|string $SubjectHeadline
-     * @return SuggestedTemplateModel
-     */
-    public function setSubjectHeadline(mixed $SubjectHeadline): SuggestedTemplateModel
-    {
-        $this->SubjectHeadline = $SubjectHeadline;
-        return $this;
-    }
-}
+//class Person {
+//    public string $Name;
+//
+//    /**
+//     * @param array $values
+//     */
+//    public function __construct(array $values = [])
+//    {
+//        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getName(): string
+//    {
+//        return $this->Name;
+//    }
+//
+//    /**
+//     * @param string $name
+//     * @return Person
+//     */
+//    public function setName(string $name): Person
+//    {
+//        $this->Name = $name;
+//        return $this;
+//    }
+//
+//}
+//
+//class SuggestedTemplateModel {
+//    public string $UserName;
+//    public Company $Company; //Company
+//    public People $Person; //array( Person )
+//    public string $SubjectHeadline;
+//
+//    /**
+//     * @param array $values
+//     */
+//    public function __construct(array $values = [])
+//    {
+//        $this->UserName = !empty($values['UserName']) ? $values['UserName'] : 0;
+//        $this->Company = !empty($values['Company']) ? new Company($values) : new Company();
+//        $this->Person = !empty($values['Person']) ? new Person($values) : new Person();
+//        $this->SubjectHeadline = !empty($values['SubjectHeadline']) ? $values['SubjectHeadline'] : 0;
+//    }
+//
+//    /**
+//     * @return int|mixed|string
+//     */
+//    public function getUserName(): mixed
+//    {
+//        return $this->UserName;
+//    }
+//
+//    /**
+//     * @param int|mixed|string $UserName
+//     * @return SuggestedTemplateModel
+//     */
+//    public function setUserName(mixed $UserName): SuggestedTemplateModel
+//    {
+//        $this->UserName = $UserName;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return int|mixed|Company
+//     */
+//    public function getCompany(): mixed
+//    {
+//        return $this->Company;
+//    }
+//
+//    /**
+//     * @param int|mixed|Company $Company
+//     * @return SuggestedTemplateModel
+//     */
+//    public function setCompany(mixed $Company): SuggestedTemplateModel
+//    {
+//        $this->Company = $Company;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return int|mixed|Person
+//     */
+//    public function getPerson(): mixed
+//    {
+//        return $this->Person;
+//    }
+//
+//    /**
+//     * @param int|mixed|Person $Person
+//     * @return SuggestedTemplateModel
+//     */
+//    public function setPerson(mixed $Person): SuggestedTemplateModel
+//    {
+//        $this->Person = $Person;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return int|mixed|string
+//     */
+//    public function getSubjectHeadline(): mixed
+//    {
+//        return $this->SubjectHeadline;
+//    }
+//
+//    /**
+//     * @param int|mixed|string $SubjectHeadline
+//     * @return SuggestedTemplateModel
+//     */
+//    public function setSubjectHeadline(mixed $SubjectHeadline): SuggestedTemplateModel
+//    {
+//        $this->SubjectHeadline = $SubjectHeadline;
+//        return $this;
+//    }
+//}
