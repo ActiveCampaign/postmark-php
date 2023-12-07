@@ -2,8 +2,6 @@
 
 namespace Postmark\Models;
 
-use Postmark\Models\PostmarkClick;
-
 class PostmarkClickList
 {
     public int $TotalCount;
@@ -12,10 +10,10 @@ class PostmarkClickList
     public function __construct(array $values)
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
-        $tempClicks = array();
+        $tempClicks = [];
         foreach ($values['Clicks'] as $click) {
             $obj = json_decode(json_encode($click));
-            $postmarkClick = new PostmarkClick((array)$obj);
+            $postmarkClick = new PostmarkClick((array) $obj);
 
             $tempClicks[] = $postmarkClick;
         }
@@ -32,30 +30,23 @@ class PostmarkClickList
 
     /**
      * @param int|mixed $TotalCount
-     * @return PostmarkClickList
      */
     public function setTotalCount(mixed $TotalCount): PostmarkClickList
     {
         $this->TotalCount = $TotalCount;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getClicks(): array
     {
         return $this->Clicks;
     }
 
-    /**
-     * @param array $Clicks
-     * @return PostmarkClickList
-     */
     public function setClicks(array $Clicks): PostmarkClickList
     {
         $this->Clicks = $Clicks;
+
         return $this;
     }
-
 }

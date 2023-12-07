@@ -1,18 +1,14 @@
 <?php
+
 namespace Postmark\Models\Webhooks;
 
-use Postmark\Models\Webhooks\WebhookConfigurationOpenTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationClickTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationDeliveryTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationBounceTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationSpamComplaintTrigger;
-use Postmark\Models\Webhooks\WebhookConfigurationSubscriptionChange;
+use JsonSerializable;
 
 /**
  * All triggers available for a WebhookConfiguration.
  */
-class WebhookConfigurationTriggers implements \JsonSerializable {
-
+class WebhookConfigurationTriggers implements JsonSerializable
+{
     private ?WebhookConfigurationOpenTrigger $Open;
     private ?WebhookConfigurationClickTrigger $Click;
     private ?WebhookConfigurationDeliveryTrigger $Delivery;
@@ -23,12 +19,12 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
     /**
      * Create a new WebhookConfigurationTriggers object.
      *
-     * @param WebhookConfigurationOpenTrigger|null $open Optional settings for Open webhooks.
-     * @param WebhookConfigurationClickTrigger|null $click Optional settings for Click webhooks.
-     * @param WebhookConfigurationDeliveryTrigger|null $delivery Optional settings for Delivery webhooks.
-     * @param WebhookConfigurationBounceTrigger|null $bounce Optional settings for Bounce webhooks.
-     * @param WebhookConfigurationSpamComplaintTrigger|null $spamComplaint Optional settings for SpamComplaint webhooks.
-     * @param WebhookConfigurationSubscriptionChangeTrigger|null $subscriptionChange Optional settings for SubscriptionChange webhooks.
+     * @param null|WebhookConfigurationOpenTrigger               $open               optional settings for Open webhooks
+     * @param null|WebhookConfigurationClickTrigger              $click              optional settings for Click webhooks
+     * @param null|WebhookConfigurationDeliveryTrigger           $delivery           optional settings for Delivery webhooks
+     * @param null|WebhookConfigurationBounceTrigger             $bounce             optional settings for Bounce webhooks
+     * @param null|WebhookConfigurationSpamComplaintTrigger      $spamComplaint      optional settings for SpamComplaint webhooks
+     * @param null|WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange optional settings for SubscriptionChange webhooks
      */
     public function __construct(
         WebhookConfigurationOpenTrigger $open = null,
@@ -36,8 +32,8 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
         WebhookConfigurationDeliveryTrigger $delivery = null,
         WebhookConfigurationBounceTrigger $bounce = null,
         WebhookConfigurationSpamComplaintTrigger $spamComplaint = null,
-        WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange = null)
-    {
+        WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange = null
+    ) {
         $this->Open = $open;
         $this->Click = $click;
         $this->Delivery = $delivery;
@@ -48,29 +44,29 @@ class WebhookConfigurationTriggers implements \JsonSerializable {
 
     public function jsonSerialize(): array
     {
-        $returnValue = array();
+        $returnValue = [];
 
-        if ($this->Open !== null) {
+        if (null !== $this->Open) {
             $returnValue['Open'] = $this->Open->jsonSerialize();
         }
 
-        if ($this->Click !== null) {
+        if (null !== $this->Click) {
             $returnValue['Click'] = $this->Click->jsonSerialize();
         }
 
-        if ($this->Delivery !== null) {
+        if (null !== $this->Delivery) {
             $returnValue['Delivery'] = $this->Delivery->jsonSerialize();
         }
 
-        if ($this->Bounce !== null) {
+        if (null !== $this->Bounce) {
             $returnValue['Bounce'] = $this->Bounce->jsonSerialize();
         }
 
-        if ($this->SpamComplaint !== null) {
+        if (null !== $this->SpamComplaint) {
             $returnValue['SpamComplaint'] = $this->SpamComplaint->jsonSerialize();
         }
 
-        if ($this->SubscriptionChange !== null) {
+        if (null !== $this->SubscriptionChange) {
             $returnValue['SubscriptionChange'] = $this->SubscriptionChange->jsonSerialize();
         }
 

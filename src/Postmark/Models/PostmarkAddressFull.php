@@ -8,14 +8,11 @@ class PostmarkAddressFull
     public string $Name;
     public string $MailboxHash;
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values)
     {
-        $this->Email = !empty($values['Email']) ? $values['Email'] : "";
-        $this->Name = !empty($values['Name']) ? $values['Name'] : "";
-        $this->MailboxHash = !empty($values['MailboxHash']) ? $values['MailboxHash'] : "";
+        $this->Email = !empty($values['Email']) ? $values['Email'] : '';
+        $this->Name = !empty($values['Name']) ? $values['Name'] : '';
+        $this->MailboxHash = !empty($values['MailboxHash']) ? $values['MailboxHash'] : '';
     }
 
     /**
@@ -28,11 +25,11 @@ class PostmarkAddressFull
 
     /**
      * @param mixed|string $Email
-     * @return PostmarkAddressFull
      */
     public function setEmail(mixed $Email): PostmarkAddressFull
     {
         $this->Email = $Email;
+
         return $this;
     }
 
@@ -46,11 +43,11 @@ class PostmarkAddressFull
 
     /**
      * @param mixed|string $Name
-     * @return PostmarkAddressFull
      */
     public function setName(mixed $Name): PostmarkAddressFull
     {
         $this->Name = $Name;
+
         return $this;
     }
 
@@ -64,12 +61,11 @@ class PostmarkAddressFull
 
     /**
      * @param mixed|string $MailboxHash
-     * @return PostmarkAddressFull
      */
     public function setMailboxHash(mixed $MailboxHash): PostmarkAddressFull
     {
         $this->MailboxHash = $MailboxHash;
+
         return $this;
     }
-
 }

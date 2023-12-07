@@ -2,32 +2,37 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use \Postmark\PostmarkClient;
+use Postmark\PostmarkClient;
 
-class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest
+{
+    public function testClientCanSearchInboundMessages()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanSearchInboundMessages() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $messages = $client->getInboundMessages(10);
 
-		$messages = $client->getInboundMessages(10);
+        $this->assertNotEmpty($messages);
+        $this->assertCount(10, $messages->getInboundMessages());
+    }
 
-		$this->assertNotEmpty($messages);
-		$this->assertCount(10, $messages->getInboundMessages());
-	}
+    public function testClientCanGetInboundMessageDetails()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetInboundMessageDetails() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $retrievedMessages = $client->getInboundMessages(10);
+        $baseMessageId = $retrievedMessages->getInboundMessages()[0]->getMessageID();
+        $message = $client->getInboundMessageDetails($baseMessageId);
 
-		$retrievedMessages = $client->getInboundMessages(10);
-        fwrite(STDERR, "-------------------------!!! ". print_r($retrievedMessages, TRUE));
-        fwrite(STDERR, "!!!-------------------------  ". print_r($retrievedMessages->getInboundMessages()[0], TRUE));
-		$baseMessageId = $retrievedMessages->getInboundMessages()[0]->getMessageID();
-		$message = $client->getInboundMessageDetails($baseMessageId);
-
-		$this->assertNotEmpty($message);
-	}
+        $this->assertNotEmpty($message);
+    }
 }
