@@ -6,6 +6,7 @@ use Postmark\Models\DataRemovalRequestResponse;
 use Postmark\Models\PostmarkDomain;
 use Postmark\Models\PostmarkDomainDetails;
 use Postmark\Models\PostmarkDomainList;
+use Postmark\Models\PostmarkException;
 use Postmark\Models\PostmarkResponse;
 use Postmark\Models\PostmarkSenderSignature;
 use Postmark\Models\PostmarkSenderSignatureList;
@@ -36,6 +37,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Request a given server by ID.
      *
      * @param int $id the Id for the server you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getServer(int $id): PostmarkServer
     {
@@ -48,6 +51,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param int         $count  the number of servers to retrieve in the request, defaults to 100
      * @param int         $offset the number of servers to "skip" when paging through lists of servers
      * @param null|string $name   filter by server name
+     *
+     * @throws PostmarkException
      */
     public function listServers(int $count = 100, int $offset = 0, string $name = null): PostmarkServerList
     {
@@ -65,6 +70,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * client to delete Servers.
      *
      * @param int $id the ID of the Server to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteServer(int $id): PostmarkResponse
     {
@@ -91,6 +98,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param null|string $clickHookUrl            URL to POST to everytime an click event occurs
      * @param null|string $deliveryHookUrl         URL to POST to everytime an click event occurs
      * @param null|string $enableSmtpApiErrorHooks specifies whether or not SMTP API Errors will be included with bounce webhooks
+     *
+     * @throws PostmarkException
      */
     public function editServer(
         int $id,
@@ -152,6 +161,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param null|string $clickHookUrl            URL to POST to everytime an click event occurs
      * @param null|string $deliveryHookUrl         URL to POST to everytime an click event occurs
      * @param null|string $enableSmtpApiErrorHooks specifies whether or not SMTP API Errors will be included with bounce webhooks
+     *
+     * @throws PostmarkException
      */
     public function createServer(
         string $name,
@@ -193,8 +204,10 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Get a "page" of Sender Signatures.
      *
-     * @param int $count The number of Sender Signatures to retrieve with this request.
-     *                   param  integer $offset The number of Sender Signatures to 'skip' when 'paging' through them.
+     * @param int $count  the number of Sender Signatures to retrieve with this request
+     * @param int $offset the number of Sender Signatures to 'skip' when 'paging' through them
+     *
+     * @throws PostmarkException
      */
     public function listSenderSignatures(int $count = 100, int $offset = 0): PostmarkSenderSignatureList
     {
@@ -209,6 +222,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Get information for a specific Sender Signature.
      *
      * @param int $id the ID for the Sender Signature you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getSenderSignature(int $id): PostmarkSenderSignature
     {
@@ -224,6 +239,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param string      $name             the name of the Sender Signature
      * @param null|string $replyToEmail     the reply-to email address for the Sender Signature
      * @param null|string $returnPathDomain the custom Return-Path domain for the Sender Signature
+     *
+     * @throws PostmarkException
      */
     public function createSenderSignature(string $fromEmail, string $name, string $replyToEmail = null, string $returnPathDomain = null): PostmarkSenderSignature
     {
@@ -243,6 +260,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param null|string $name             the name of the Sender Signature
      * @param null|string $replyToEmail     the reply-to email address for the Sender Signature
      * @param null|string $returnPathDomain the custom Return-Path domain for the Sender Signature
+     *
+     * @throws PostmarkException
      */
     public function editSenderSignature(int $id, string $name = null, string $replyToEmail = null, string $returnPathDomain = null): PostmarkSenderSignature
     {
@@ -258,6 +277,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Delete a Sender Signature with the given ID.
      *
      * @param int $id the ID for the Sender Signature we wish to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteSenderSignature(int $id): PostmarkResponse
     {
@@ -269,6 +290,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Sender Signatures require verification before they may be used to send email through the Postmark API.
      *
      * @param int $id the ID for the Sender Signature to which we wish to resend a verification email
+     *
+     * @throws PostmarkException
      */
     public function resendSenderSignatureConfirmation(int $id): PostmarkResponse
     {
@@ -278,8 +301,10 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Get a "page" of Domains.
      *
-     * @param int $count The number of Domains to retrieve with this request.
-     *                   param  integer $offset The number of Domains to 'skip' when 'paging' through them.
+     * @param int $count  the number of Domains to retrieve with this request
+     * @param int $offset the number of Domains to 'skip' when 'paging' through them
+     *
+     * @throws PostmarkException
      */
     public function listDomains(int $count = 100, int $offset = 0): PostmarkDomainList
     {
@@ -294,6 +319,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Get information for a specific Domain.
      *
      * @param int $id the ID for the Domains you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getDomain(int $id): PostmarkDomainDetails
     {
@@ -305,6 +332,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @param string      $name             the name of the Domain
      * @param null|string $returnPathDomain the custom Return-Path domain for the Sender Signature
+     *
+     * @throws PostmarkException
      */
     public function createDomain(string $name, string $returnPathDomain = null): PostmarkDomainDetails
     {
@@ -320,6 +349,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @param int         $id               the ID for the Domain we wish to modify
      * @param null|string $returnPathDomain the custom Return-Path domain for the Domain
+     *
+     * @throws PostmarkException
      */
     public function editDomain(int $id, string $returnPathDomain = null): PostmarkDomainDetails
     {
@@ -333,6 +364,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Delete a Domain with the given ID.
      *
      * @param int $id the ID for the Domain we wish to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteDomain(int $id): PostmarkResponse
     {
@@ -344,6 +377,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * with the Domain.
      *
      * @param int $id the ID of the Domain we wish to verify DKIM keys on
+     *
+     * @throws PostmarkException
      */
     public function verifyDKIM(int $id): PostmarkDomainDetails
     {
@@ -355,6 +390,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * with the Domain.
      *
      * @param int $id the ID of the Domain we wish to verify Return-Path DNS record on
+     *
+     * @throws PostmarkException
      */
     public function verifyReturnPath(int $id): PostmarkDomainDetails
     {
@@ -367,6 +404,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * on DKIM and its purpose, see http://www.dkim.org/.
      *
      * @param int $id the ID for the Domain for which we wish to get an updated DKIM configuration
+     *
+     * @throws PostmarkException
      */
     public function rotateDKIMForDomain(int $id): PostmarkDomain
     {
@@ -381,6 +420,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param string $requestedFor        the email address of the recipient who's asking for their data to be removed
      * @param bool   $notifyWhenCompleted Specifies whether the RequestedBy email address is notified when the data
      *                                    removal request is complete
+     *
+     * @throws PostmarkException
      */
     public function createDataRemovalRequest(
         string $requestedBy,
@@ -399,6 +440,8 @@ class PostmarkAdminClient extends PostmarkClientBase
      * Review the status of your data removal requests.
      *
      * @param int $id ID of data removal request
+     *
+     * @throws PostmarkException
      */
     public function getDataRemoval(int $id): DataRemovalRequestResponse
     {

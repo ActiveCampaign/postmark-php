@@ -3,6 +3,7 @@
 namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel;
+use Postmark\Models\PostmarkException;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
 use Postmark\Models\MessageStream\PostmarkMessageStreamList;
@@ -76,7 +77,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|array  $metadata      Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
      * @param null|string $messageStream The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
      *
-     * @throws Models\PostmarkException
+     * @throws PostmarkException
      */
     public function sendEmail(
         string $from,
@@ -121,6 +122,14 @@ class PostmarkClient extends PostmarkClientBase
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', $body));
     }
 
+    /**
+     * Send an email using the email model
+     *
+     * @param PostmarkMessage $postmarkMessage
+     * @return PostmarkResponse
+     *
+     * @throws PostmarkException
+     */
     public function sendEmailModel(PostmarkMessage $postmarkMessage): PostmarkResponse
     {
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', (array) $postmarkMessage));
@@ -134,6 +143,8 @@ class PostmarkClient extends PostmarkClientBase
      * attachments with an email.
      *
      * @param array $emailBatch an array of emails to be sent in one batch
+     *
+     * @throws PostmarkException
      */
     public function sendEmailBatch(array $emailBatch = []): array
     {
@@ -169,7 +180,7 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @return array of PostmarkResponses
      *
-     * @throws Models\PostmarkException
+     * @throws PostmarkException
      */
     public function sendEmailBatchWithTemplate(array $emailBatch = []): array
     {
@@ -214,6 +225,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $trackLinks        can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
      * @param null|array  $metadata          Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
      * @param null|string $messageStream     The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+     *
+     * @throws PostmarkException
      */
     public function sendEmailWithTemplate(
         string $from,
@@ -242,7 +255,7 @@ class PostmarkClient extends PostmarkClientBase
         $body['Headers'] = $this->fixHeaders($headers);
         $body['TrackOpens'] = $trackOpens;
         $body['Attachments'] = $attachments;
-        $body['TemplateModel'] = $templateModel;
+        $body['TemplateModel'] = empty($templateModel) ? (object) ([]) : $templateModel;
         $body['InlineCss'] = $inlineCss;
         $body['Metadata'] = $metadata;
         $body['MessageStream'] = $messageStream;
@@ -272,6 +285,8 @@ class PostmarkClient extends PostmarkClientBase
 
     /**
      * Get an overview of the delivery statistics for all email that has been sent through this Server.
+     *
+     * @throws PostmarkException
      */
     public function getDeliveryStatistics(): PostmarkDeliveryStats
     {
@@ -291,6 +306,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      filter for bounces after is date
      * @param null|string $todate        filter for bounces before this date
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getBounces(
         int $count = 100,
@@ -325,6 +342,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param int $id The ID of the bounce to get.
      *
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+     *
+     * @throws PostmarkException
      */
     public function getBounce(int $id): PostmarkBounce
     {
@@ -337,6 +356,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param int $id The ID of the bounce for which we want a dump.
      *
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+     *
+     * @throws PostmarkException
      */
     public function getBounceDump(int $id): PostmarkBounceDump
     {
@@ -349,6 +370,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param int $id The bounce which has a deactivated email address.
      *
      * If the $id value is greater than PHP_INT_MAX, the ID can be passed as a string.
+     *
+     * @throws PostmarkException
      */
     public function activateBounce(int $id): PostmarkBounceActivation
     {
@@ -358,6 +381,8 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Get the settings for the server associated with this PostmarkClient instance
      * (defined by the $server_token you passed when instantiating this client).
+     *
+     * @throws PostmarkException
      */
     public function getServer(): PostmarkServer
     {
@@ -382,6 +407,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $trackLinks           indicates if all emails being sent through this server have link tracking enabled
      * @param null|string $clickHookUrl         URL to POST to everytime an click event occurs
      * @param null|string $deliveryHookUrl      URL to POST to everytime an click event occurs
+     *
+     * @throws PostmarkException
      */
     public function editServer(
         ?string $name = null,
@@ -432,6 +459,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $todate        Filter to messages on or before YYYY-MM-DD
      * @param null|array  $metadata      an associative array of key-values that must all match values included in the metadata of matching sent messages
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundMessages(
         int $count = 100,
@@ -471,6 +500,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get information related to a specific sent message.
      *
      * @param string $id the ID of the Message for which we want details
+     *
+     * @throws PostmarkException
      */
     public function getOutboundMessageDetails(string $id): PostmarkOutboundMessageDetail
     {
@@ -482,6 +513,8 @@ class PostmarkClient extends PostmarkClientBase
      * This response.
      *
      * @param string $id the ID of the message for which we want a dump
+     *
+     * @throws PostmarkException
      */
     public function getOutboundMessageDump(string $id): PostmarkMessageDump
     {
@@ -503,6 +536,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $status      Filter by status ('blocked' or 'processed')
      * @param null|string $fromdate    Filter to messages on or after YYYY-MM-DD
      * @param null|string $todate      Filter to messages on or before YYYY-MM-DD
+     *
+     * @throws PostmarkException
      */
     public function getInboundMessages(
         int $count = 100,
@@ -535,6 +570,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get details for a specific inbound message.
      *
      * @param string $id the ID of the message for which we went to get details
+     *
+     * @throws PostmarkException
      */
     public function getInboundMessageDetails(string $id): PostmarkInboundMessage
     {
@@ -546,6 +583,8 @@ class PostmarkClient extends PostmarkClientBase
      * prevent it from being processed.
      *
      * @param string $id the ID for a message that we wish to unblock
+     *
+     * @throws PostmarkException
      */
     public function bypassInboundMessageRules(string $id): PostmarkResponse
     {
@@ -556,6 +595,8 @@ class PostmarkClient extends PostmarkClientBase
      * Request that Postmark retry POSTing the specified message to the Server's Inbound Hook.
      *
      * @param string $id the ID for a message that we wish retry the inbound hook for
+     *
+     * @throws PostmarkException
      */
     public function retryInboundMessageHook($id): PostmarkResponse
     {
@@ -580,6 +621,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $region        filter by Region
      * @param null|string $city          filter by City
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOpenStatistics(
         int $count = 100,
@@ -636,6 +679,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $region        filter by Region
      * @param null|string $city          filter by City
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getClickStatistics(
         int $count = 100,
@@ -680,6 +725,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param string $id     the ID for the message that we want statistics for
      * @param int    $count  How many statistics should we retrieve?
      * @param int    $offset how many should we 'skip' when 'paging' through statistics
+     *
+     * @throws PostmarkException
      */
     public function getOpenStatisticsForMessage(string $id, int $count = 100, int $offset = 0): PostmarkOpenList
     {
@@ -697,6 +744,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param string $id     the ID for the message that we want statistics for
      * @param int    $count  How many statistics should we retrieve?
      * @param int    $offset how many should we 'skip' when 'paging' through statistics
+     *
+     * @throws PostmarkException
      */
     public function getClickStatisticsForMessage(
         string $id,
@@ -719,6 +768,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundOverviewStatistics(
         ?string $tag = null,
@@ -744,6 +795,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundSendStatistics(
         ?string $tag = null,
@@ -769,6 +822,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundBounceStatistics(
         ?string $tag = null,
@@ -794,6 +849,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundSpamComplaintStatistics(
         ?string $tag = null,
@@ -819,6 +876,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundTrackedStatistics(
         ?string $tag = null,
@@ -844,6 +903,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundOpenStatistics(
         ?string $tag = null,
@@ -869,6 +930,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundPlatformStatistics(
         ?string $tag = null,
@@ -894,6 +957,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundEmailClientStatistics(
         ?string $tag = null,
@@ -918,6 +983,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $tag      filter by tag
      * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
      * @param null|string $todate   must be of the format 'YYYY-MM-DD'
+     *
+     * @throws PostmarkException
      */
     public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): DynamicResponseModel
     {
@@ -938,6 +1005,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundClickStatistics(
         ?string $tag = null,
@@ -963,6 +1032,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundClickBrowserFamilyStatistics(
         ?string $tag = null,
@@ -985,10 +1056,13 @@ class PostmarkClient extends PostmarkClientBase
      * tracked links for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param null|string $tag           filter by tag
-     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
-     * @param string      $todate        must be of the format 'YYYY-MM-DD'
+     * @param null|string $tag filter by tag
+     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
+     * @param string|null $todate must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     * @return PostmarkOutboundPlatformStats
+     *
+     * @throws PostmarkException
      */
     public function getOutboundClickBrowserPlatformStatistics(
         ?string $tag = null,
@@ -1015,6 +1089,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
      * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
+     *
+     * @throws PostmarkException
      */
     public function getOutboundClickLocationStatistics(
         ?string $tag = null,
@@ -1036,6 +1112,8 @@ class PostmarkClient extends PostmarkClientBase
      * Create an Inbound Rule to block messages from a single email address, or an entire domain.
      *
      * @param string $rule the email address (or domain) that will be blocked
+     *
+     * @throws PostmarkException
      */
     public function createInboundRuleTrigger(string $rule): PostmarkInboundRuleTrigger
     {
@@ -1050,6 +1128,8 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @param int $count  the number of rule triggers to return with this request
      * @param int $offset the number of triggers to 'skip' when 'paging' through rule triggers
+     *
+     * @throws PostmarkException
      */
     public function listInboundRuleTriggers(int $count = 100, int $offset = 0): PostmarkInboundRuleTriggerList
     {
@@ -1065,6 +1145,8 @@ class PostmarkClient extends PostmarkClientBase
      * Delete an Inbound Rule Trigger.
      *
      * @param int $id the ID of the rule trigger we wish to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteInboundRuleTrigger(int $id): PostmarkResponse
     {
@@ -1075,6 +1157,8 @@ class PostmarkClient extends PostmarkClientBase
      * Delete a template.
      *
      * @param string $id the ID or alias of the template to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteTemplate(string $id): PostmarkResponse
     {
@@ -1091,6 +1175,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
      * @param string      $templateType   Creates the template based on the template type provided. Possible options: Standard or Layout. Defaults to Standard.
      * @param null|string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
+     *
+     * @throws PostmarkException
      */
     public function createTemplate(
         string $name,
@@ -1123,6 +1209,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $textBody       the template to be used for the 'textBody' of emails sent using this template
      * @param null|string $alias          An optional string you can provide to identify this Template. Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters, and the string has to start with a letter.
      * @param null|string $layoutTemplate The alias of the Layout template that you want to use as layout for this Standard template. If not provided, a standard template will not use a layout template.
+     *
+     * @throws PostmarkException
      */
     public function editTemplate(
         string $id,
@@ -1148,6 +1236,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get the current information for a specific template.
      *
      * @param int $id the Id for the template info you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getTemplate(int $id): PostmarkTemplate
     {
@@ -1158,6 +1248,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get the current information for a specific template.
      *
      * @param string $alias the alias for the template info you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getTemplateByAlias(string $alias): PostmarkTemplate
     {
@@ -1171,6 +1263,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param int         $offset         the number of templates to "Skip" before returning results
      * @param string      $templateType   Filters the results based on the template type provided. Possible options: Standard, Layout, All. Defaults to All.
      * @param null|string $layoutTemplate Filters the results based on the layout template alias. Defaults to NULL.
+     *
+     * @throws PostmarkException
      */
     public function listTemplates(
         int $count = 100,
@@ -1198,6 +1292,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param bool        $inlineCssForHtmlTestRender If htmlBody is specified, the test render will automatically do CSS Inlining for the HTML content. You may opt-out of this behavior by passing 'false' for this parameter.
      * @param string      $templateType               Validates templates based on template type (layout template or standard template). Possible options: Standard or Layout. Defaults to Standard.
      * @param null|string $layoutTemplate             An optional string to specify which layout template alias to use to validate a standard template. If not provided a standard template will not use a layout template.
+     *
+     * @throws PostmarkException
      */
     public function validateTemplate(
         ?string $subject = null,
@@ -1225,6 +1321,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get information about a specific webhook configuration.
      *
      * @param int $id the Id of the webhook configuration you wish to retrieve
+     *
+     * @throws PostmarkException
      */
     public function getWebhookConfiguration(int $id): WebhookConfiguration
     {
@@ -1235,6 +1333,8 @@ class PostmarkClient extends PostmarkClientBase
      * Get all webhook configurations associated with the Server.
      *
      * @param null|string $messageStream Optional message stream to filter results by. If not provided, all configurations for the server will be returned.
+     *
+     * @throws PostmarkException
      */
     public function getWebhookConfigurations(string $messageStream = null): WebhookConfigurationListingResponse
     {
@@ -1248,6 +1348,8 @@ class PostmarkClient extends PostmarkClientBase
      * Delete a webhook configuration.
      *
      * @param int $id the Id of the webhook configuration you wish to delete
+     *
+     * @throws PostmarkException
      */
     public function deleteWebhookConfiguration(int $id): PostmarkResponse
     {
@@ -1262,6 +1364,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|object $httpAuth      optional Basic HTTP Authentication
      * @param null|array  $httpHeaders   optional list of custom HTTP headers
      * @param null|object $triggers      optional triggers for this webhook configuration
+     *
+     * @throws PostmarkException
      */
     public function createWebhookConfiguration(
         string $url,
@@ -1289,6 +1393,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|object $httpAuth    optional Basic HTTP Authentication
      * @param null|array  $httpHeaders optional list of custom HTTP headers
      * @param null|object $triggers    optional triggers for this webhook configuration
+     *
+     * @throws PostmarkException
      */
     public function editWebhookConfiguration(
         int $id,
@@ -1308,11 +1414,12 @@ class PostmarkClient extends PostmarkClientBase
 
     /**
      * Create Suppressions for the specified recipients.
+     * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
      *
      * @param array       $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to suppress
      * @param null|string $messageStream      Message stream where the recipients should be suppressed. If not provided, they will be suppressed on the default transactional stream.
      *
-     * Suppressions will be generated with a Customer Origin and will have a ManualSuppression reason.
+     * @throws PostmarkException
      */
     public function createSuppressions(array $suppressionChanges = [], string $messageStream = null): PostmarkSuppressionResultList
     {
@@ -1328,11 +1435,12 @@ class PostmarkClient extends PostmarkClientBase
 
     /**
      * Reactivate Suppressions for the specified recipients.
+     * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
      *
      * @param array       $suppressionChanges array of SuppressionChangeRequest objects that specify what recipients to reactivate
      * @param null|string $messageStream      Message stream where the recipients should be reactivated. If not provided, they will be reactivated on the default transactional stream.
      *
-     * Only 'Customer' origin 'ManualSuppression' suppressions and 'Recipient' origin 'HardBounce' suppressions can be reactivated.
+     * @throws PostmarkException
      */
     public function deleteSuppressions(array $suppressionChanges = [], ?string $messageStream = null): PostmarkSuppressionResultList
     {
@@ -1355,6 +1463,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string $fromDate          Filter suppressions from the date specified - inclusive. (optional)
      * @param null|string $toDate            Filter suppressions up to the date specified - inclusive. (optional)
      * @param null|string $emailAddress      Filter by a specific email address. (optional)
+     *
+     * @throws PostmarkException
      */
     public function getSuppressions(
         ?string $messageStream = null,
@@ -1380,13 +1490,14 @@ class PostmarkClient extends PostmarkClientBase
 
     /**
      * Create a new message stream on your server.
+     * Currently, you cannot create multiple inbound streams.
      *
      * @param string      $id                identifier for your message stream, unique at server level
      * @param string      $messageStreamType Type of the message stream. Possible values: ["Transactional", "Inbound", "Broadcasts"].
      * @param string      $name              friendly name for your message stream
      * @param null|string $description       Friendly description for your message stream. (optional)
      *
-     * Currently, you cannot create multiple inbound streams.
+     * @throws PostmarkException
      */
     public function createMessageStream(string $id, string $messageStreamType, string $name, ?string $description = null): PostmarkMessageStream
     {
@@ -1405,6 +1516,8 @@ class PostmarkClient extends PostmarkClientBase
      * @param string      $id          the identifier for the stream you are trying to update
      * @param null|string $name        New friendly name to use. (optional)
      * @param null|string $description New description to use. (optional)
+     *
+     * @throws PostmarkException
      */
     public function editMessageStream(string $id, string $name = null, ?string $description = null): PostmarkMessageStream
     {
@@ -1418,7 +1531,9 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Retrieve details about a message stream.
      *
-     * @param string $id identifier of the stream to retrieve details for
+     * @param string $id identifier of the stream to retrieve details for a message stream
+     *
+     * @throws PostmarkException
      */
     public function getMessageStream(string $id): PostmarkMessageStream
     {
@@ -1430,6 +1545,8 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @param string $messageStreamType      Filter by stream type. Possible values: ["Transactional", "Inbound", "Broadcasts", "All"]. Defaults to: All.
      * @param string $includeArchivedStreams Include archived streams in the result. Defaults to: false.
+     *
+     * @throws PostmarkException
      */
     public function listMessageStreams(string $messageStreamType = 'All', string $includeArchivedStreams = 'false'): PostmarkMessageStreamList
     {
@@ -1446,6 +1563,8 @@ class PostmarkClient extends PostmarkClientBase
      * Once a stream has been archived, it will be deleted (alongside associated data) at the ExpectedPurgeDate in the response.
      *
      * @param string $id the identifier for the stream you are trying to update
+     *
+     * @throws PostmarkException
      */
     public function archiveMessageStream(string $id): PostmarkMessageStreamArchivalConfirmation
     {
@@ -1458,6 +1577,8 @@ class PostmarkClient extends PostmarkClientBase
      * A stream can be unarchived only before the stream ExpectedPurgeDate.
      *
      * @param string $id identifier of the stream to unarchive
+     *
+     * @throws PostmarkException
      */
     public function unarchiveMessageStream(string $id): PostmarkMessageStream
     {
@@ -1467,6 +1588,7 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
      * therefore, we need to wrap the elements in an array.
+     *
      */
     private function fixHeaders(?array $headers): ?array
     {
