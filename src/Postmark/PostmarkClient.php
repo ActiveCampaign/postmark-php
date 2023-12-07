@@ -3,7 +3,6 @@
 namespace Postmark;
 
 use Postmark\Models\DynamicResponseModel;
-use Postmark\Models\PostmarkException;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation;
 use Postmark\Models\MessageStream\PostmarkMessageStreamList;
@@ -13,6 +12,7 @@ use Postmark\Models\PostmarkBounceDump;
 use Postmark\Models\PostmarkBounceList;
 use Postmark\Models\PostmarkClickList;
 use Postmark\Models\PostmarkDeliveryStats;
+use Postmark\Models\PostmarkException;
 use Postmark\Models\PostmarkInboundMessage;
 use Postmark\Models\PostmarkInboundMessageList;
 use Postmark\Models\PostmarkInboundRuleTrigger;
@@ -123,10 +123,7 @@ class PostmarkClient extends PostmarkClientBase
     }
 
     /**
-     * Send an email using the email model
-     *
-     * @param PostmarkMessage $postmarkMessage
-     * @return PostmarkResponse
+     * Send an email using the email model.
      *
      * @throws PostmarkException
      */
@@ -1056,11 +1053,10 @@ class PostmarkClient extends PostmarkClientBase
      * tracked links for the messages sent using this Server,
      * optionally filtering on message tag, and a to and from date.
      *
-     * @param null|string $tag filter by tag
-     * @param null|string $fromdate must be of the format 'YYYY-MM-DD'
-     * @param string|null $todate must be of the format 'YYYY-MM-DD'
+     * @param null|string $tag           filter by tag
+     * @param null|string $fromdate      must be of the format 'YYYY-MM-DD'
+     * @param null|string $todate        must be of the format 'YYYY-MM-DD'
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
-     * @return PostmarkOutboundPlatformStats
      *
      * @throws PostmarkException
      */
@@ -1588,7 +1584,6 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * The Postmark API wants an Array of Key-Value pairs, not a dictionary object,
      * therefore, we need to wrap the elements in an array.
-     *
      */
     private function fixHeaders(?array $headers): ?array
     {
