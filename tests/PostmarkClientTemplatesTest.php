@@ -176,13 +176,14 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-        $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
+        $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b> from Template Model!', 'Hello {{name}} from Template Model!');
 
         $templatedModel = new TemplatedPostmarkMessage();
         $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
         $templatedModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         $templatedModel->setTemplateId($result->getTemplateId());
         $templatedModel->setTemplateModel(['subjectValue' => 'Hello!']);
+        $templatedModel->setHeaders(['X-Test-Header' => 'Header.', 'X-Test-Header-2' => 'Test Header 2']);
 
         $emailResult = $client->sendEmailWithTemplateModel($templatedModel);
 
