@@ -106,7 +106,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $emailModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
         $emailModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         $emailModel->setSubject("Hello from the PHP Postmark Client Tests! ({$currentTime})");
-        $emailModel->setHtmlBody('<b>Hi there!</b>');
+        $emailModel->setHtmlBody('<b>Hi there! sent via a model.</b>');
         $emailModel->setTextBody('This is a text body for a test email sent via a model.');
         $emailModel->setMessageStream('outbound');
         $emailModel->setHeaders(['X-Test-Header' => 'Header.', 'X-Test-Header-2' => 'Test Header 2']);
