@@ -1,41 +1,44 @@
 <?php
+
 namespace Postmark\Models\Webhooks;
+
+use JsonSerializable;
 
 /**
  * Settings for SpamComplaint webhooks.
  */
-class WebhookConfigurationSpamComplaintTrigger implements \JsonSerializable {
-
-    private $enabled;
-    private $includeContent;
+class WebhookConfigurationSpamComplaintTrigger implements JsonSerializable
+{
+    private $Enabled;
+    private $IncludeContent;
 
     /**
      * Create a new WebhookConfigurationSpamComplaintTrigger.
      *
-     * @param boolean $enabled Specifies whether or not webhooks will be triggered by SpamComplaint events.
-     * @param boolean $includeContent Specifies whether or not the full content of the spam complaint is included in webhook POST.
+     * @param bool $enabled        specifies whether or not webhooks will be triggered by SpamComplaint events
+     * @param bool $includeContent specifies whether or not the full content of the spam complaint is included in webhook POST
      */
-    public function __construct($enabled = false, $includeContent = false) {
-        $this->enabled = $enabled;
-        $this->includeContent = $includeContent;
+    public function __construct(bool $enabled, bool $includeContent)
+    {
+        $this->Enabled = $enabled;
+        $this->IncludeContent = $includeContent;
     }
 
-    public function jsonSerialize() {
-        $retval = array(
-            "Enabled" => $this->enabled,
-            "IncludeContent" => $this->includeContent
-        );
-
-        return $retval;
+    public function jsonSerialize(): array
+    {
+        return [
+            'Enabled' => $this->Enabled,
+            'IncludeContent' => $this->IncludeContent,
+        ];
     }
 
-    public function getEnabled() {
-        return $this->enabled;
+    public function getEnabled(): bool
+    {
+        return $this->Enabled;
     }
 
-    public function getIncludeContent() {
-        return $this->includeContent;
+    public function getIncludeContent(): bool
+    {
+        return $this->IncludeContent;
     }
 }
-
-?>

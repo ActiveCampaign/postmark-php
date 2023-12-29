@@ -2,101 +2,126 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use Postmark\PostmarkAdminClient as PostmarkAdminClient;
+use Postmark\PostmarkAdminClient;
 
-class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest
+{
+    public static function tearDownAfterClass(): void
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-	static function tearDownAfterClass() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+        $domains = $client->listDomains();
 
-		$domains = $client->listDomains();
+        foreach ($domains->getDomains() as $key => $value) {
+            if (preg_match('/test-php.+/', $value->Name)) {
+                $client->deleteDomain($value->ID);
+            }
+        }
+    }
 
-		foreach ($domains->domains as $key => $value) {
-			if (preg_match('/test-php.+/', $value->name) > 0) {
-				$client->deleteDomain($value->id);
-			}
-		}
-	}
+    public function testClientCanGetDomainList()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetDomainList() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+        $domains = $client->listDomains();
 
-		$domains = $client->listDomains();
+        $this->assertGreaterThan(0, $domains->getTotalCount());
+        $this->assertNotEmpty($domains->getDomains());
+    }
 
-		$this->assertGreaterThan(0, $domains->totalCount);
-		$this->assertNotEmpty($domains->domains);
-	}
+    public function testClientCanGetSingleDomain()
+    {
+        $tk = parent::$testKeys;
 
-	function testClientCanGetSingleDomain() {
-		$tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-		$id = $client->listDomains()->domains[0]->id;
-		$domain = $client->getDomain($id);
+        $tempDomains = $client->listDomains()->getDomains();
+        $id = $tempDomains[0]->getID();
+        $domain = $client->getDomain($id);
 
-		$this->assertNotEmpty($domain->name);
-	}
+        $this->assertNotEmpty($domain->getName());
+    }
 
-	function testClientCanCreateDomain() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanCreateDomain()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$domainName = 'test-php-create-' . $tk->WRITE_TEST_DOMAIN_NAME;
+        $domainName = 'test-php-create-' . $tk->WRITE_TEST_DOMAIN_NAME;
 
-		$domain = $client->createDomain($domainName);
+        $domain = $client->createDomain($domainName);
 
-		$this->assertNotEmpty($domain->id);
-	}
+        $this->assertNotEmpty($domain->getID());
+    }
 
-	function testClientCanEditDomain() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-    
-		$domainName = 'test-php-edit-' . $tk->WRITE_TEST_DOMAIN_NAME;
-		$returnPath = 'return.' . $domainName;
+    public function testClientCanEditDomain()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$domain = $client->createDomain($domainName, $returnPath);
+        $domainName = 'test-php-edit-' . $tk->WRITE_TEST_DOMAIN_NAME;
+        $returnPath = 'return.' . $domainName;
 
-		$updated = $client->editDomain($domain->id, 'updated-' . $returnPath);
+        $domain = $client->createDomain($domainName, $returnPath);
 
-		$this->assertNotSame($domain->returnpathdomain, $updated->returnpathdomain);
-	}
+        $updated = $client->editDomain($domain->getID(), 'updated-' . $returnPath);
 
-	function testClientCanDeleteDomain() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-    
-		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
+        $this->assertNotSame($domain->getReturnPathDomain(), $updated->getReturnPathDomain());
+    }
 
-		$name = 'test-php-delete-' . $domainName;
-		$domain = $client->createDomain($name);
+    public function testClientCanDeleteDomain()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$client->deleteDomain($domain->id);
+        $domainName = $tk->WRITE_TEST_DOMAIN_NAME;
 
-		$domains = $client->listDomains()->domains;
+        $name = 'test-php-delete-' . $domainName;
+        $domain = $client->createDomain($name);
 
-		foreach ($domains as $key => $value) {
-			$this->assertNotSame($domain->name, $value->name);
-		}
-	}
+        $client->deleteDomain($domain->getID());
 
-	function testClientCanVerifySPFForDomain() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+        $domains = $client->listDomains()->getDomains();
 
-		$domainName = $tk->WRITE_TEST_DOMAIN_NAME;
+        foreach ($domains as $key => $value) {
+            $this->assertNotSame($domain->getName(), $value->getName());
+        }
+    }
 
-		$name = 'test-php-spf-' . $domainName;
+    public function testClientCanVerifyDKIM()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
-		$domain = $client->createDomain($name);
-		$result = $client->verifyDomainSPF($domain->id);
+        $domains = $client->listDomains()->getDomains();
+        foreach ($domains as $key => $value) {
+            $verify = $client->verifyDKIM($value->ID);
 
-		$this->assertTrue($result->SPFVerified);
-	}
+            $this->assertSame($verify->getID(), $value->getID());
+            $this->assertSame($verify->getName(), $value->getName());
+        }
+    }
+
+    public function testClientCanVerifyReturnPath()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+
+        $domains = $client->listDomains()->getDomains();
+        foreach ($domains as $key => $value) {
+            $verify = $client->verifyReturnPath($value->getID());
+
+            $this->assertSame($verify->getID(), $value->getID());
+            $this->assertSame($verify->getName(), $value->getName());
+        }
+    }
 }
-
-?>

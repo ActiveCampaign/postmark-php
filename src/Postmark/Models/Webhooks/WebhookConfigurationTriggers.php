@@ -1,79 +1,105 @@
 <?php
+
 namespace Postmark\Models\Webhooks;
+
+use JsonSerializable;
 
 /**
  * All triggers available for a WebhookConfiguration.
  */
-class WebhookConfigurationTriggers implements \JsonSerializable {
-
-    private $open;
-    private $click;
-    private $delivery;
-    private $bounce;
-    private $spamComplaint;
+class WebhookConfigurationTriggers implements JsonSerializable
+{
+    private ?WebhookConfigurationOpenTrigger $Open;
+    private ?WebhookConfigurationClickTrigger $Click;
+    private ?WebhookConfigurationDeliveryTrigger $Delivery;
+    private ?WebhookConfigurationBounceTrigger $Bounce;
+    private ?WebhookConfigurationSpamComplaintTrigger $SpamComplaint;
+    private ?WebhookConfigurationSubscriptionChangeTrigger $SubscriptionChange;
 
     /**
      * Create a new WebhookConfigurationTriggers object.
      *
-     * @param WebhookConfigurationOpenTrigger $open Optional settings for Open webhooks.
-     * @param WebhookConfigurationClickTrigger $click Optional settings for Click webhooks.
-     * @param WebhookConfigurationDeliveryTrigger $delivery Optional settings for Delivery webhooks.
-     * @param WebhookConfigurationBounceTrigger $bounce Optional settings for Bounce webhooks.
-     * @param WebhookConfigurationSpamComplaintTrigger $spamComplaint Optional settings for SpamComplaint webhooks.
+     * @param null|WebhookConfigurationOpenTrigger               $open               optional settings for Open webhooks
+     * @param null|WebhookConfigurationClickTrigger              $click              optional settings for Click webhooks
+     * @param null|WebhookConfigurationDeliveryTrigger           $delivery           optional settings for Delivery webhooks
+     * @param null|WebhookConfigurationBounceTrigger             $bounce             optional settings for Bounce webhooks
+     * @param null|WebhookConfigurationSpamComplaintTrigger      $spamComplaint      optional settings for SpamComplaint webhooks
+     * @param null|WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange optional settings for SubscriptionChange webhooks
      */
-    public function __construct($open = null, $click = null, $delivery = null, $bounce = null, $spamComplaint = null) {
-        $this->open = $open;
-        $this->click = $click;
-        $this->delivery = $delivery;
-        $this->bounce = $bounce;
-        $this->spamComplaint = $spamComplaint;
+    public function __construct(
+        WebhookConfigurationOpenTrigger $open = null,
+        WebhookConfigurationClickTrigger $click = null,
+        WebhookConfigurationDeliveryTrigger $delivery = null,
+        WebhookConfigurationBounceTrigger $bounce = null,
+        WebhookConfigurationSpamComplaintTrigger $spamComplaint = null,
+        WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange = null
+    ) {
+        $this->Open = $open;
+        $this->Click = $click;
+        $this->Delivery = $delivery;
+        $this->Bounce = $bounce;
+        $this->SpamComplaint = $spamComplaint;
+        $this->SubscriptionChange = $subscriptionChange;
     }
 
-    public function jsonSerialize() {
-        $retval = array();
+    public function jsonSerialize(): array
+    {
+        $returnValue = [];
 
-        if ($this->open !== null) {
-            $retval['Open'] = $this->open->jsonSerialize();
+        if (null !== $this->Open) {
+            $returnValue['Open'] = $this->Open->jsonSerialize();
         }
 
-        if ($this->click !== null) {
-            $retval['Click'] = $this->click->jsonSerialize();
+        if (null !== $this->Click) {
+            $returnValue['Click'] = $this->Click->jsonSerialize();
         }
 
-        if ($this->delivery !== null) {
-            $retval['Delivery'] = $this->delivery->jsonSerialize();
+        if (null !== $this->Delivery) {
+            $returnValue['Delivery'] = $this->Delivery->jsonSerialize();
         }
 
-        if ($this->bounce !== null) {
-            $retval['Bounce'] = $this->bounce->jsonSerialize();
+        if (null !== $this->Bounce) {
+            $returnValue['Bounce'] = $this->Bounce->jsonSerialize();
         }
 
-        if ($this->spamComplaint !== null) {
-            $retval['SpamComplaint'] = $this->spamComplaint->jsonSerialize();
+        if (null !== $this->SpamComplaint) {
+            $returnValue['SpamComplaint'] = $this->SpamComplaint->jsonSerialize();
         }
 
-        return $retval;
+        if (null !== $this->SubscriptionChange) {
+            $returnValue['SubscriptionChange'] = $this->SubscriptionChange->jsonSerialize();
+        }
+
+        return $returnValue;
     }
 
-    public function getOpenSettings() {
-        return $this->open;
+    public function getOpenSettings(): ?WebhookConfigurationOpenTrigger
+    {
+        return $this->Open;
     }
 
-    public function getClickSettings() {
-        return $this->click;
+    public function getClickSettings(): ?WebhookConfigurationClickTrigger
+    {
+        return $this->Click;
     }
 
-    public function getDeliverySettings() {
-        return $this->delivery;
+    public function getDeliverySettings(): ?WebhookConfigurationDeliveryTrigger
+    {
+        return $this->Delivery;
     }
 
-    public function getBounceSettings() {
-        return $this->bounce;
+    public function getBounceSettings(): ?WebhookConfigurationBounceTrigger
+    {
+        return $this->Bounce;
     }
 
-    public function getSpamComplaintSettings() {
-        return $this->spamComplaint;
+    public function getSpamComplaintSettings(): ?WebhookConfigurationSpamComplaintTrigger
+    {
+        return $this->SpamComplaint;
+    }
+
+    public function getSubscriptionChangeSettings(): ?WebhookConfigurationSubscriptionChangeTrigger
+    {
+        return $this->SubscriptionChange;
     }
 }
-
-?>

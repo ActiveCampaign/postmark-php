@@ -2,48 +2,54 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use Postmark\Tests\PostmarkClientBaseTest as PostmarkClientBaseTest;
-use \Postmark\PostmarkClient;
+use Postmark\PostmarkClient;
 
-class PostmarkClickClientStatisticsTest extends PostmarkClientBaseTest {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClickClientStatisticsTest extends PostmarkClientBaseTest
+{
+    public function testClientCanGetClickOverviewStatistics(): void
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetClickOverviewStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOutboundClickStatistics();
 
-		$stats = $client->getOutboundClickStatistics();
+        $this->assertNotNull($stats);
+    }
 
-		$this->assertNotNull($stats);
-	}
+    public function testClientCanGetClickBrowserFamilies()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetClickBrowserFamilies() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOutboundClickBrowserFamilyStatistics();
 
-		$stats = $client->getOutboundClickBrowserFamilyStatistics();
+        $this->assertNotNull($stats);
+    }
 
-		$this->assertNotNull($stats);
-	}
+    public function testClientCanGetClickBrowserPlatformStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetClickBrowserPlatformStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOutboundClickBrowserPlatformStatistics();
 
-		$stats = $client->getOutboundClickBrowserPlatformStatistics();
+        $this->assertNotEmpty($stats);
+    }
 
-		$this->assertNotEmpty($stats);
-	}
+    public function testClientCanGetClickLocationStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetClickLocationStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_LINK_TRACKING_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOutboundClickLocationStatistics();
 
-		$stats = $client->getOutboundClickLocationStatistics();
-
-		$this->assertNotNull($stats);
-	}
+        $this->assertNotNull($stats);
+    }
 }
-
-?>

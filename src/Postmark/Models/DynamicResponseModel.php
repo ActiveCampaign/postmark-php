@@ -1,5 +1,8 @@
 <?php
+
 namespace Postmark\Models;
+
+use ReturnTypeWillChange;
 
 /**
  * The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.
@@ -21,45 +24,47 @@ namespace Postmark\Models;
  * $server["ID"];
  * ```
  */
-class DynamicResponseModel extends CaseInsensitiveArray {
+class DynamicResponseModel extends CaseInsensitiveArray
+{
+    /**
+     * Create a new DynamicResponseModel from an associative array.
+     *
+     * @param array $data the source associative array
+     */
+    public function __construct(array $data)
+    {
+        parent::__construct($data);
+    }
 
-	/**
-	 * Create a new DynamicResponseModel from an associative array.
-	 *
-	 * @param array $data The source associative array.
-	 */
-	function __construct(array $data) {
-		parent::__construct($data);
-	}
+    /**
+     * Infrastructure. Get an element by name.
+     *
+     * @param mixed $name name of element to get from the dynamic response model
+     */
+    public function __get($name)
+    {
+        $value = $this[$name];
 
-	/**
-	 * Infrastructure. Get an element by name.
-	 *
-	 * @param mixed $name Name of element to get from the dynamic response model.
-	 */
-	public function __get($name) {
+        // If there's a value and it's an array,
+        // convert it to a dynamic response object, too.
+        if (null != $value && is_array($value)) {
+            $value = new DynamicResponseModel($value);
+        }
 
-		$value = $this[$name];
+        return $value;
+    }
 
-		// If there's a value and it's an array,
-		// convert it to a dynamic response object, too.
-		if ($value != NULL && is_array($value)) {
-			$value = new DynamicResponseModel($value);
-		}
+    /**
+     * Infrastructure. Allows indexer to return a DynamicResponseModel.
+     */
+    #[ReturnTypeWillChange]
+    public function offsetGet($offset)
+    {
+        $result = parent::offsetGet($offset);
+        if (null != $result && is_array($result)) {
+            $result = new DynamicResponseModel($result);
+        }
 
-		return $value;
-	}
-
-	/**
-	 * Infrastructure. Allows indexer to return a DynamicResponseModel.
-	 */
-	public function offsetGet($offset) {
-		$result = parent::offsetGet($offset);
-		if ($result != NULL && is_array($result)) {
-			$result = new DynamicResponseModel($result);
-		}
-		return $result;
-	}
+        return $result;
+    }
 }
-
-?>

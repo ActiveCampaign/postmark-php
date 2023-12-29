@@ -2,113 +2,146 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use Postmark\Tests\PostmarkClientBaseTest as PostmarkClientBaseTest;
-use \Postmark\PostmarkClient;
+use Postmark\PostmarkClient;
 
-class PostmarkClientStatisticsTest extends PostmarkClientBaseTest {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClientStatisticsTest extends PostmarkClientBaseTest
+{
+    public function testClientCanGetMessageOpens()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetMessageOpens() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOpenStatistics();
+        $this->assertNotEmpty($stats);
+    }
 
-		$stats = $client->getOpenStatistics();
-		$this->assertNotEmpty($stats);
-	}
+    public function testClientCanGetMessageOpensForSpecificMessage()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
-	function testClientCanGetMessageOpensForSpecificMessage() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+        $stats = $client->getOpenStatistics();
 
-		$stats = $client->getOpenStatistics();
+        $messageId = $stats->getOpens()[0]->getMessageID();
+        $result = $client->getOpenStatisticsForMessage($messageId);
 
-		$messageId = $stats->Opens[0]["MessageID"];
-		$result = $client->getOpenStatisticsForMessage($messageId);
+        $this->assertNotEmpty($result);
+    }
 
-		$this->assertNotEmpty($result);
-	}
+    //    function testClientCanGetMessageClicks() {
+    //        $tk = parent::$testKeys;
+    //        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+    //
+    //        $stats = $client->getClickStatistics();
+    //        $this->assertNotEmpty($stats);
+    //    }
+    //
+    //    function testClientCanGetMessageClickForSpecificMessage() {
+    //        $tk = parent::$testKeys;
+    //        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+    //
+    //        $stats = $client->getClickStatistics();
+    //
+    //        $messageId = $stats->getClicks()[0]->getMessageID();
+    //        $result = $client->getClickStatisticsForMessage($messageId);
+    //
+    //        $this->assertNotEmpty($result);
+    //    }
 
-	function testClientCanGetOutboundOverviewStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundOverviewStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundOverviewStatistics();
+        $stats = $client->getOutboundOverviewStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundSendStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundSendStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundSendStatistics();
+        $stats = $client->getOutboundSendStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundBounceStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundBounceStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundBounceStatistics();
+        $stats = $client->getOutboundBounceStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundSpamComplaintStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundSpamComplaintStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundSpamComplaintStatistics();
+        $stats = $client->getOutboundSpamComplaintStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundTrackedStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundTrackedStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundTrackedStatistics();
+        $stats = $client->getOutboundTrackedStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundOpenStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundOpenStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundOpenStatistics();
+        $stats = $client->getOutboundOpenStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundPlatformStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundPlatformStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundPlatformStatistics();
+        $stats = $client->getOutboundPlatformStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundEmailClientStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundEmailClientStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundEmailClientStatistics();
+        $stats = $client->getOutboundEmailClientStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 
-	function testClientCanGetOutboundReadTimeStatistics() {
-		$tk = parent::$testKeys;
-		$client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+    public function testClientCanGetOutboundReadTimeStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-		$stats = $client->getOutboundReadTimeStatistics();
+        $stats = $client->getOutboundReadTimeStatistics();
 
-		$this->assertNotEmpty($stats);
-	}
+        $this->assertNotEmpty($stats);
+    }
 }
-
-?>

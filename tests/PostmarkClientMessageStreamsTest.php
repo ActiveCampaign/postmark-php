@@ -2,162 +2,178 @@
 
 namespace Postmark\Tests;
 
-require_once __DIR__ . "/PostmarkClientBaseTest.php";
+require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use Postmark\PostmarkClient as PostmarkClient;
-use Postmark\PostmarkAdminClient as PostmarkAdminClient;
+use Postmark\PostmarkAdminClient;
+use Postmark\PostmarkClient;
 
-class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest {
-
-    public static function tearDownAfterClass() {
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest
+{
+    public static function tearDownAfterClass(): void
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $servers = $client->listServers();
 
-        foreach ($servers->servers as $key => $value) {
-            if (preg_match('/^test-php-streams.+/', $value->name) > 0) {
-                $client->deleteServer($value->id);
+        foreach ($servers->getServers() as $key => $value) {
+            if (preg_match('/^test-php-streams.+/', $value->getName()) > 0 && !empty($value->getID())) {
+                $client->deleteServer($value->getID());
             }
         }
     }
 
-    //create message stream
-    public function testClientCanCreateMessageStream() {
+    // create message stream
+    public function testClientCanCreateMessageStream()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $id = "test-stream";
-        $messageStreamType = "Broadcasts";
-        $name = "Test Stream Name";
-        $description = "Test Stream Description";
+        $id = 'test-stream';
+        $messageStreamType = 'Broadcasts';
+        $name = 'Test Stream Name';
+        $description = 'Test Stream Description';
 
         $createdStream = $client->createMessageStream($id, $messageStreamType, $name, $description);
 
-        $this->assertEquals($id, $createdStream->Id);
-        $this->assertEquals($server->id, $createdStream->ServerId);
-        $this->assertEquals($messageStreamType, $createdStream->MessageStreamType);
-        $this->assertEquals($name, $createdStream->Name);
-        $this->assertEquals($description, $createdStream->Description);
-        $this->assertNotNull($createdStream->CreatedAt);
-        $this->assertNull($createdStream->UpdatedAt);
-        $this->assertNull($createdStream->ArchivedAt);
+        $this->assertEquals($id, $createdStream->getID());
+        $this->assertEquals($server->getID(), $createdStream->getServerId());
+        $this->assertEquals($messageStreamType, $createdStream->getMessageStreamType());
+        $this->assertEquals($name, $createdStream->getName());
+        $this->assertEquals($description, $createdStream->getDescription());
+        $this->assertNotNull($createdStream->getCreatedAt());
+        $this->assertNull($createdStream->getUpdatedAt());
+        $this->assertNull($createdStream->getArchivedAt());
     }
 
-    //edit message stream
-    public function testClientCanEditMessageStream() {
+    // edit message stream
+    public function testClientCanEditMessageStream()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $id = "test-stream";
-        $messageStreamType = "Broadcasts";
-        $name = "Test Stream Name";
-        $description = "Test Stream Description";
+        $id = 'test-stream';
+        $messageStreamType = 'Broadcasts';
+        $name = 'Test Stream Name';
+        $description = 'Test Stream Description';
 
         $client->createMessageStream($id, $messageStreamType, $name, $description);
 
-        $updatedName = "New Name";
-        $updatedDescription = "New Description";
+        $updatedName = 'New Name';
+        $updatedDescription = 'New Description';
 
         $updatedStream = $client->editMessageStream($id, $updatedName, $updatedDescription);
 
-        $this->assertEquals($id, $updatedStream->Id);
-        $this->assertEquals($updatedName, $updatedStream->Name);
-        $this->assertEquals($updatedDescription, $updatedStream->Description);
-        $this->assertNotNull($updatedStream->UpdatedAt);
+        $this->assertEquals($id, $updatedStream->getID());
+        $this->assertEquals($updatedName, $updatedStream->getName());
+        $this->assertEquals($updatedDescription, $updatedStream->getDescription());
+        $this->assertNotNull($updatedStream->getUpdatedAt());
     }
 
-    //get message stream
-    public function testClientCanGetMessageStream() {
+    // get message stream
+    public function testClientCanGetMessageStream()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $id = "test-stream";
-        $messageStreamType = "Broadcasts";
-        $name = "Test Stream Name";
-        $description = "Test Stream Description";
+        $id = 'test-stream';
+        $messageStreamType = 'Broadcasts';
+        $name = 'Test Stream Name';
+        $description = 'Test Stream Description';
 
         $client->createMessageStream($id, $messageStreamType, $name, $description);
 
         $fetchedStream = $client->getMessageStream($id);
 
-        $this->assertEquals($id, $fetchedStream->Id);
-        $this->assertEquals($messageStreamType, $fetchedStream->MessageStreamType);
-        $this->assertEquals($name, $fetchedStream->Name);
-        $this->assertEquals($description, $fetchedStream->Description);
+        $this->assertEquals($id, $fetchedStream->getID());
+        $this->assertEquals($messageStreamType, $fetchedStream->getMessageStreamType());
+        $this->assertEquals($name, $fetchedStream->getName());
+        $this->assertEquals($description, $fetchedStream->getDescription());
     }
 
-    //list message streams
-    public function testClientCanListMessageStreams() {
+    // list message streams
+    public function testClientCanListMessageStreams()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $broadcastsStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
+        $broadcastsStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
 
-        $this->assertEquals(3, $client->listMessageStreams()->TotalCount); // Includes default streams
+        $this->assertEquals(4, $client->listMessageStreams()->getTotalCount()); // Includes 3 default streams
 
-        $filteredStreams = $client->listMessageStreams("Broadcasts");
+        $filteredStreams = $client->listMessageStreams('Broadcasts');
 
-        $this->assertEquals(1, $filteredStreams->TotalCount); // Filter only our Broadcasts stream
+        $this->assertEquals(2, $filteredStreams->getTotalCount()); // Filter only our Broadcasts streams
     }
 
-    //list archived message streams
-    public function testClientCanListArchivedStreams() {
+    // list archived message streams
+    public function testClientCanListArchivedStreams()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $newStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
-        $client->archiveMessageStream($newStream->Id);
+        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
+
+        // 2 broadcast streams, including the default one
+        $this->assertEquals(2, $client->listMessageStreams('Broadcasts')->getTotalCount());
+
+        $client->archiveMessageStream($newStream->getID());
 
         // Filtering out archived streams by default
-        $this->assertEquals(0, $client->listMessageStreams("Broadcasts")->TotalCount);
+        $this->assertEquals(1, $client->listMessageStreams('Broadcasts')->getTotalCount());
 
         // Allowing archived streams in the result
-        $this->assertEquals(1, $client->listMessageStreams("Broadcasts", "true")->TotalCount);
+        $this->assertEquals(2, $client->listMessageStreams('Broadcasts', 'true')->getTotalCount());
     }
 
-    //archive message streams
-    public function testClientCanArchiveStreams() {
+    // archive message streams
+    public function testClientCanArchiveStreams()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $newStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
-        $archivedStream = $client->archiveMessageStream($newStream->Id);
+        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
+        $archivedStream = $client->archiveMessageStream($newStream->getID());
 
-        $this->assertEquals($newStream->Id, $archivedStream->Id);
-        $this->assertEquals($newStream->ServerId, $archivedStream->ServerId);
-        $this->assertNotNull($archivedStream->ExpectedPurgeDate);
+        $this->assertEquals($newStream->getID(), $archivedStream->getID());
+        $this->assertEquals($newStream->getServerId(), $archivedStream->getServerId());
+        $this->assertNotNull($archivedStream->getExpectedPurgeDate());
 
-        $fetchedStream = $client->getMessageStream($archivedStream->Id);
-        $this->assertNotNull($fetchedStream->ArchivedAt);
+        $fetchedStream = $client->getMessageStream($archivedStream->getID());
+        $this->assertNotNull($fetchedStream->getArchivedAt());
     }
 
-    //unarchive message streams
-    public function testClientCanUnarchiveStreams() {
+    // unarchive message streams
+    public function testClientCanUnarchiveStreams()
+    {
         $tk = parent::$testKeys;
         $server = self::getNewServer();
         $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
 
-        $newStream = $client->createMessageStream("test-stream", "Broadcasts", "Test Stream Name");
-        $client->archiveMessageStream($newStream->Id);
+        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
+        $client->archiveMessageStream($newStream->getID());
 
-        $unarchivedStream = $client->unArchiveMessageStream($newStream->Id);
+        $unarchivedStream = $client->unArchiveMessageStream($newStream->getID());
 
-        $this->assertNull($unarchivedStream->ArchivedAt);
+        $this->assertNull($unarchivedStream->getArchivedAt());
     }
 
-    private static function getNewServer(){
+    private static function getNewServer()
+    {
         $tk = parent::$testKeys;
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         return $client->createServer('test-php-streams-' . uniqid());
     }
 }
-
-?>
