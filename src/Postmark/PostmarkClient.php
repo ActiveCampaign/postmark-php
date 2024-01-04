@@ -35,6 +35,7 @@ use Postmark\Models\Stats\PostmarkOutboundPlatformStats;
 use Postmark\Models\Stats\PostmarkOutboundSentStats;
 use Postmark\Models\Stats\PostmarkOutboundSpamComplaintStats;
 use Postmark\Models\Stats\PostmarkOutboundTrackedStats;
+use Postmark\Models\Suppressions\PostmarkSuppressionList;
 use Postmark\Models\Suppressions\PostmarkSuppressionResultList;
 use Postmark\Models\TemplatedPostmarkMessage;
 use Postmark\Models\TemplateValidationResponse;
@@ -131,6 +132,7 @@ class PostmarkClient extends PostmarkClientBase
     {
         $headers = $this->fixHeaders($postmarkMessage->getHeaders());
         $postmarkMessage->setHeaders($headers);
+
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', (array) $postmarkMessage));
     }
 
@@ -281,6 +283,7 @@ class PostmarkClient extends PostmarkClientBase
     {
         $headers = $this->fixHeaders($postmarkMessageTemplate->getHeaders());
         $postmarkMessageTemplate->setHeaders($headers);
+
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', (array) $postmarkMessageTemplate));
     }
 
@@ -1473,7 +1476,7 @@ class PostmarkClient extends PostmarkClientBase
         ?string $fromDate = null,
         ?string $toDate = null,
         ?string $emailAddress = null
-    ): PostmarkSuppressionResultList {
+    ): PostmarkSuppressionList {
         $query = [];
         $query['SuppressionReason'] = $suppressionReason;
         $query['Origin'] = $origin;
@@ -1485,7 +1488,7 @@ class PostmarkClient extends PostmarkClientBase
             $messageStream = 'outbound';
         }
 
-        return new PostmarkSuppressionResultList((array) $this->processRestRequest('GET', "/message-streams/{$messageStream}/suppressions/dump", $query));
+        return new PostmarkSuppressionList((array) $this->processRestRequest('GET', "/message-streams/{$messageStream}/suppressions/dump", $query));
     }
 
     /**

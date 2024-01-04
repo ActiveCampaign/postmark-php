@@ -11,7 +11,7 @@ class PostmarkMessageEvents
         $tempMessageEvents = [];
         foreach ($values['MessageEvents'] as $messageEvent) {
             $obj = json_decode(json_encode($messageEvent));
-            $postmarkMessage = new PostmarkMessageEvent((array)$obj);
+            $postmarkMessage = new PostmarkMessageEvent((array) $obj);
 
             $tempMessageEvents[] = $postmarkMessage;
         }

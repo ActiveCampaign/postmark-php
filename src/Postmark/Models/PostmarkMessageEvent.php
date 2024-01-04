@@ -15,7 +15,7 @@ class PostmarkMessageEvent
         $this->Type = !empty($values['Type']) ? $values['Type'] : '';
         $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
 
-        $arrayType = !empty($values['Details']) ? (array)$values['Details'] : [];
+        $arrayType = !empty($values['Details']) ? (array) $values['Details'] : [];
         $this->Details = !empty($values['Details']) ? new PostmarkMessageEventDetails(
             $arrayType
         ) : new PostmarkMessageEventDetails();
