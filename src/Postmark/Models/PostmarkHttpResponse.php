@@ -2,7 +2,6 @@
 
 namespace Postmark\Models;
 
-use Postmark\Models\PostmarkException;
 use GuzzleHttp\Psr7\Response;
 
 class PostmarkHttpResponse
@@ -15,19 +14,19 @@ class PostmarkHttpResponse
     }
 
     /**
-     * @return mixed
      * @throws PostmarkException
      */
     public function toArray(): mixed
     {
-        if ($this->response->getStatusCode() !== 200) $this->throwException();
+        if (200 !== $this->response->getStatusCode()) {
+            $this->throwException();
+        }
 
         // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
-        return json_decode((string)$this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+        return json_decode((string) $this->response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
     }
 
     /**
-     * @return mixed
      * @throws PostmarkException
      */
     protected function throwException(): mixed
@@ -35,11 +34,14 @@ class PostmarkHttpResponse
         switch ($this->response->getStatusCode()) {
             case 401:
                 throw PostmarkException::unauthorized();
+
             case 500:
                 throw PostmarkException::internalServerError();
+
             case 503:
                 throw PostmarkException::unavailable();
-            // This should cover case 422, and any others that are possible:
+
+                // This should cover case 422, and any others that are possible:
             default:
                 throw PostmarkException::from($this->response);
         }

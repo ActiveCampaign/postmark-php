@@ -9,10 +9,11 @@ use Exception;
 /**
  * The exception thrown when the Postmark Client receives an error from the API.
  */
-class PostmarkException extends Exception {
-    var $message;
-    var $httpStatusCode;
-    var $postmarkApiErrorCode;
+class PostmarkException extends Exception
+{
+    public $message;
+    public $httpStatusCode;
+    public $postmarkApiErrorCode;
 
     /**
      * @return mixed
@@ -24,11 +25,13 @@ class PostmarkException extends Exception {
 
     /**
      * @param mixed $httpStatusCode
+     *
      * @return PostmarkException
      */
     public function setHttpStatusCode($httpStatusCode)
     {
         $this->httpStatusCode = $httpStatusCode;
+
         return $this;
     }
 
@@ -48,6 +51,7 @@ class PostmarkException extends Exception {
         $ex = new self();
         $ex->httpStatusCode = 503;
         $ex->message = 'The Postmark API is currently unavailable, please try your request later.';
+
         return $ex;
     }
 
@@ -57,6 +61,7 @@ class PostmarkException extends Exception {
         $ex->httpStatusCode = 401;
         $ex->message = 'Unauthorized: Missing or incorrect API token in header. ' .
             'Please verify that you used the correct token when you constructed your client.';
+
         return $ex;
     }
 
@@ -67,6 +72,7 @@ class PostmarkException extends Exception {
         $ex->message = 'Internal Server Error: This is an issue with Postmark’s servers processing your request. ' .
             'In most cases the message is lost during the process, ' .
             'and Postmark is notified so that we can investigate the issue.';
+
         return $ex;
     }
 }

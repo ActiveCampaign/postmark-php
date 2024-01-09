@@ -72,6 +72,7 @@ class PostmarkMessageEventDetails
     public function setSummary(?string $Summary): PostmarkMessageEventDetails
     {
         $this->Summary = $Summary;
+
         return $this;
     }
 
@@ -83,6 +84,7 @@ class PostmarkMessageEventDetails
     public function setBounceID(?string $BounceID): PostmarkMessageEventDetails
     {
         $this->BounceID = $BounceID;
+
         return $this;
     }
 
@@ -94,6 +96,7 @@ class PostmarkMessageEventDetails
     public function setOrigin(?string $Origin): PostmarkMessageEventDetails
     {
         $this->Origin = $Origin;
+
         return $this;
     }
 
@@ -105,6 +108,7 @@ class PostmarkMessageEventDetails
     public function setSuppressSending(?string $SuppressSending): PostmarkMessageEventDetails
     {
         $this->SuppressSending = $SuppressSending;
+
         return $this;
     }
 
@@ -116,6 +120,7 @@ class PostmarkMessageEventDetails
     public function setLink(?string $Link): PostmarkMessageEventDetails
     {
         $this->Link = $Link;
+
         return $this;
     }
 
@@ -127,6 +132,7 @@ class PostmarkMessageEventDetails
     public function setClickLocation(?string $ClickLocation): PostmarkMessageEventDetails
     {
         $this->ClickLocation = $ClickLocation;
+
         return $this;
     }
 }

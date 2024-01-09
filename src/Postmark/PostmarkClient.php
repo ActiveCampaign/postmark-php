@@ -132,6 +132,7 @@ class PostmarkClient extends PostmarkClientBase
     {
         $headers = $this->fixHeaders($postmarkMessage->getHeaders());
         $postmarkMessage->setHeaders($headers);
+
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email', (array) $postmarkMessage));
     }
 
@@ -282,6 +283,7 @@ class PostmarkClient extends PostmarkClientBase
     {
         $headers = $this->fixHeaders($postmarkMessageTemplate->getHeaders());
         $postmarkMessageTemplate->setHeaders($headers);
+
         return new PostmarkResponse((array) $this->processRestRequest('POST', '/email/withTemplate', (array) $postmarkMessageTemplate));
     }
 
