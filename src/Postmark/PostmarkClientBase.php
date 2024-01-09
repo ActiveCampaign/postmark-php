@@ -179,7 +179,7 @@ abstract class PostmarkClientBase
                 $body = json_decode((string) $response->getBody(), true);
                 $ex->setHttpStatusCode($response->getStatusCode());
                 $ex->setPostmarkApiErrorCode($body['ErrorCode'] ?? 422);
-                $ex->message = $body['Message'];
+                $ex->message = $body['Message'] ?? 'There was an unknown error.';
 
                 throw $ex;
         }
