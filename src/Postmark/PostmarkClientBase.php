@@ -147,7 +147,7 @@ abstract class PostmarkClientBase
         switch ($response->getStatusCode()) {
             case 200:
                 // Casting BIGINT as STRING instead of the default FLOAT, to avoid loss of precision.
-                return json_decode($response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
+                return json_decode((string) $response->getBody(), true, 512, JSON_BIGINT_AS_STRING);
 
             case 401:
                 $ex = new PostmarkException();
@@ -176,10 +176,10 @@ abstract class PostmarkClientBase
                 // This should cover case 422, and any others that are possible:
             default:
                 $ex = new PostmarkException();
-                $body = json_decode($response->getBody(), true);
+                $body = json_decode((string) $response->getBody(), true);
                 $ex->setHttpStatusCode($response->getStatusCode());
-                $ex->setPostmarkApiErrorCode($body['ErrorCode']);
-                $ex->message = $body['Message'];
+                $ex->setPostmarkApiErrorCode($body['ErrorCode'] ?? 422);
+                $ex->message = $body['Message'] ?? 'There was an unknown error.';
 
                 throw $ex;
         }

@@ -45,328 +45,219 @@ class PostmarkBounce
         $this->Content = !empty($values['Content']) ? $values['Content'] : '';
     }
 
-    /**
-     * @return int
-     */
     public function getID(): int
     {
         return $this->ID;
     }
 
-    /**
-     * @param int $ID
-     * @return PostmarkBounce
-     */
     public function setID(int $ID): PostmarkBounce
     {
         $this->ID = $ID;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->Type;
     }
 
-    /**
-     * @param string $Type
-     * @return PostmarkBounce
-     */
     public function setType(string $Type): PostmarkBounce
     {
         $this->Type = $Type;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTypeCode(): int
     {
         return $this->TypeCode;
     }
 
-    /**
-     * @param int $TypeCode
-     * @return PostmarkBounce
-     */
     public function setTypeCode(int $TypeCode): PostmarkBounce
     {
         $this->TypeCode = $TypeCode;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->Name;
     }
 
-    /**
-     * @param string $Name
-     * @return PostmarkBounce
-     */
     public function setName(string $Name): PostmarkBounce
     {
         $this->Name = $Name;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTag(): string
     {
         return $this->Tag;
     }
 
-    /**
-     * @param string $Tag
-     * @return PostmarkBounce
-     */
     public function setTag(string $Tag): PostmarkBounce
     {
         $this->Tag = $Tag;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMessageID(): string
     {
         return $this->MessageID;
     }
 
-    /**
-     * @param string $MessageID
-     * @return PostmarkBounce
-     */
     public function setMessageID(string $MessageID): PostmarkBounce
     {
         $this->MessageID = $MessageID;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getServerID(): int
     {
         return $this->ServerID;
     }
 
-    /**
-     * @param int $ServerID
-     * @return PostmarkBounce
-     */
     public function setServerID(int $ServerID): PostmarkBounce
     {
         $this->ServerID = $ServerID;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMessageStream(): string
     {
         return $this->MessageStream;
     }
 
-    /**
-     * @param string $MessageStream
-     * @return PostmarkBounce
-     */
     public function setMessageStream(string $MessageStream): PostmarkBounce
     {
         $this->MessageStream = $MessageStream;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->Description;
     }
 
-    /**
-     * @param string $Description
-     * @return PostmarkBounce
-     */
     public function setDescription(string $Description): PostmarkBounce
     {
         $this->Description = $Description;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDetails(): string
     {
         return $this->Details;
     }
 
-    /**
-     * @param string $Details
-     * @return PostmarkBounce
-     */
     public function setDetails(string $Details): PostmarkBounce
     {
         $this->Details = $Details;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->Email;
     }
 
-    /**
-     * @param string $Email
-     * @return PostmarkBounce
-     */
     public function setEmail(string $Email): PostmarkBounce
     {
         $this->Email = $Email;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFrom(): string
     {
         return $this->From;
     }
 
-    /**
-     * @param string $From
-     * @return PostmarkBounce
-     */
     public function setFrom(string $From): PostmarkBounce
     {
         $this->From = $From;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getBouncedAt(): string
     {
         return $this->BouncedAt;
     }
 
-    /**
-     * @param string $BouncedAt
-     * @return PostmarkBounce
-     */
     public function setBouncedAt(string $BouncedAt): PostmarkBounce
     {
         $this->BouncedAt = $BouncedAt;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getDumpAvailable(): bool
     {
         return $this->DumpAvailable;
     }
 
-    /**
-     * @param bool $DumpAvailable
-     * @return PostmarkBounce
-     */
     public function setDumpAvailable(bool $DumpAvailable): PostmarkBounce
     {
         $this->DumpAvailable = $DumpAvailable;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getInactive(): bool
     {
         return $this->Inactive;
     }
 
-    /**
-     * @param bool $Inactive
-     * @return PostmarkBounce
-     */
     public function setInactive(bool $Inactive): PostmarkBounce
     {
         $this->Inactive = $Inactive;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getCanActivate(): bool
     {
         return $this->CanActivate;
     }
 
-    /**
-     * @param bool $CanActivate
-     * @return PostmarkBounce
-     */
     public function setCanActivate(bool $CanActivate): PostmarkBounce
     {
         $this->CanActivate = $CanActivate;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSubject(): string
     {
         return $this->Subject;
     }
 
-    /**
-     * @param string $Subject
-     * @return PostmarkBounce
-     */
     public function setSubject(string $Subject): PostmarkBounce
     {
         $this->Subject = $Subject;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->Content;
     }
 
-    /**
-     * @param string $Content
-     * @return PostmarkBounce
-     */
     public function setContent(string $Content): PostmarkBounce
     {
         $this->Content = $Content;
+
         return $this;
     }
-
 }
