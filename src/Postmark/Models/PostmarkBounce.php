@@ -4,6 +4,7 @@ namespace Postmark\Models;
 
 class PostmarkBounce
 {
+    public string $RecordType;
     public int $ID;
     public string $Type;
     public int $TypeCode;
@@ -25,6 +26,7 @@ class PostmarkBounce
 
     public function __construct(array $values)
     {
+        $this->RecordType = !empty($values['RecordType']) ? $values['RecordType'] : '';
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
         $this->Type = !empty($values['Type']) ? $values['Type'] : 0;
         $this->TypeCode = !empty($values['TypeCode']) ? $values['TypeCode'] : '';
@@ -43,6 +45,17 @@ class PostmarkBounce
         $this->CanActivate = !empty($values['CanActivate']) ? $values['CanActivate'] : false;
         $this->Subject = !empty($values['Subject']) ? $values['Subject'] : '';
         $this->Content = !empty($values['Content']) ? $values['Content'] : '';
+    }
+
+    public function getRecordType(): mixed
+    {
+        return $this->RecordType;
+    }
+
+    public function setRecordType(mixed $RecordType): PostmarkBounce
+    {
+        $this->RecordType = $RecordType;
+        return $this;
     }
 
     public function getID(): int

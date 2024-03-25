@@ -4,6 +4,7 @@ namespace Postmark\Tests;
 
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
+use Postmark\Models;
 use Postmark\PostmarkClient;
 
 /**
@@ -41,6 +42,19 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $id = $bounces->getBounces()[0]->getID();
         $bounce = $client->getBounce($id);
         $this->assertNotEmpty($bounce);
+    }
+
+    public function testClientCanActivateBounce()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $bounces = $client->getBounces(10, 0);
+        $id = $bounces->getBounces()[0]->getID();
+        $bounceActivation = $client->activateBounce($id);
+        $bounce = $bounceActivation->getBounce();
+
+        $this->assertNotEmpty($bounce);
+        $this->assertEquals($id, $bounce->getID());
     }
 
     public function testClientCanGetBounceDump()

@@ -161,7 +161,18 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             $result->getTemplateId(),
-            ['subjectValue' => 'Hello!']
+            ['subjectValue' => 'Hello!'],
+            false,
+            "TestTag",
+            true,
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            null, //cc
+            null, //bcc
+            null, // headers
+            null, // attachments
+            null, // tracklinks
+            null, // metadata
+            "php-test" // stream name
         );
 
         $this->assertEquals(0, $emailResult->getErrorCode());
