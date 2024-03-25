@@ -156,6 +156,16 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        // make sure the message stream exists
+        $id = 'php-test';
+        $messageStreamType = 'Transactional';
+        $name = 'PHP Test';
+        $description = 'Test Stream Description';
+
+        $createdStream = $client->createMessageStream($id, $messageStreamType, $name, $description);
+        $this->assertEquals($id, $createdStream->getID());
+
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
         $emailResult = $client->sendEmailWithTemplate(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
