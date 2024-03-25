@@ -42,18 +42,6 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $id = $bounces->getBounces()[0]->getID();
         $bounce = $client->getBounce($id);
         $this->assertNotEmpty($bounce);
-    }
-
-    public function testClientCanActivateBounce()
-    {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-        $bounces = $client->getBounces(10, 0);
-        $id = $bounces->getBounces()[0]->getID();
-        $bounceActivation = $client->activateBounce($id);
-        $bounce = $bounceActivation->getBounce();
-
-        $this->assertNotEmpty($bounce);
         $this->assertEquals($id, $bounce->getID());
     }
 
@@ -65,5 +53,60 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $id = $bounces->Bounces[0]->getID();
         $dump = $client->getBounceDump($id);
         $this->assertNotEmpty($dump);
+        $this->assertNotEmpty($dump->getBody());
+    }
+
+    public function testClientCanActivateBounce()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        // generate a bounces
+        $fromEmail = "andrew+client-testing@wildbit.com";
+        $toEmail = "hardbounce@bounce-testing.postmarkapp.com"; // special email to generate bounce
+        $subject = "Hello from Postmark!";
+        $htmlBody = "<strong>Hello</strong> dear Postmark user.";
+        $textBody = "Hello dear Postmark user.";
+        $tag = "example-email-tag";
+        $trackOpens = true;
+        $trackLinks = "None";
+        $templateId = "php-testing";
+        $templateModel = ['subjectValue' => 'Hello!'];
+        $messageStream = "php-test";
+
+        $sendResult = $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE,
+            $toEmail,
+            $subject,
+            $htmlBody,
+            $textBody,
+            $tag,
+            $trackOpens,
+            NULL, // Reply To
+            NULL, // CC
+            NULL, // BCC
+            NULL, // Header array
+            NULL, // Attachment array
+            $trackLinks,
+            NULL, // Metadata array
+            $messageStream
+        );
+
+        $bounces = $client->getBounces(10, 0);
+        $id = 0;
+        foreach ($bounces->getBounces() as $bounce)
+        {
+            if ($sendResult->getMessageID() == $bounce->getMessageID())
+            {
+                $id = $bounce->getID();
+                break;
+            }
+        }
+
+        $bounceActivation = $client->activateBounce($id);
+        $bounce = $bounceActivation->getBounce();
+
+        $this->assertNotEmpty($bounce);
+        $this->assertEquals($id, $bounce->getID());
     }
 }
