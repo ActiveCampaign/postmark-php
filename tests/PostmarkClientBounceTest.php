@@ -59,10 +59,10 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
     public function testClientCanActivateBounce()
     {
         $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         // generate a bounces
-        $fromEmail = "andrew+client-testing@wildbit.com";
+        $fromEmail = $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS;
         $toEmail = "hardbounce@bounce-testing.postmarkapp.com"; // special email to generate bounce
         $subject = "Hello from Postmark!";
         $htmlBody = "<strong>Hello</strong> dear Postmark user.";
