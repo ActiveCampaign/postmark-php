@@ -88,6 +88,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
             NULL // Metadata array
         );
 
+        // make sure there is enough time for the bounce to take place.
+        sleep(5);
+
         $bounces = $client->getBounces(10, 0);
         $id = 0;
         foreach ($bounces->getBounces() as $bounce)
