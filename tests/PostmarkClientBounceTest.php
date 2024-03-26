@@ -70,12 +70,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $tag = "example-email-tag";
         $trackOpens = true;
         $trackLinks = "None";
-        $templateId = "php-testing";
-        $templateModel = ['subjectValue' => 'Hello!'];
-        //$messageStream = "php-test";
 
         $sendResult = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE,
+            $fromEmail,
             $toEmail,
             $subject,
             $htmlBody,
@@ -89,7 +86,6 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
             NULL, // Attachment array
             $trackLinks,
             NULL // Metadata array
-            //$messageStream
         );
 
         $bounces = $client->getBounces(10, 0);
