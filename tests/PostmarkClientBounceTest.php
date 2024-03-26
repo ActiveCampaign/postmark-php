@@ -103,14 +103,16 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $sentId = $sendResult->getMessageID();
 
         $this->assertNotEmpty($bounces->getBounces());
-        $this->assertGreaterThan(0, $sentId);
+        $this->assertNotEmpty($sentId);
 
         foreach ($bounces->getBounces() as $bounce)
         {
             $bmid = $bounce->getMessageID();
+            echo("ITERATING");
             if ($sentId == $bmid)
             {
                 $id = $bounce->getID();
+                echo("Made it!!  " . print_r($id));
                 break;
             }
         }
