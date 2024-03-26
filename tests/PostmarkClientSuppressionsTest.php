@@ -17,6 +17,8 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
 {
     public static function tearDownAfterClass(): void
     {
+        //self::removeSuppressions();
+
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -145,5 +147,20 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
 
         $result = $client->getSuppressions();
         $this->assertNotEmpty($result);
+    }
+
+    public static function removeSuppressions()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        // remove all suppressions on the default stream
+        $sups = $client->getSuppressions();
+        foreach ($sups->getSuppressions() as $sup)
+        {
+            $suppressionChanges = [new SuppressionChangeRequest($sup->getEmailAddress())];
+            $messageStream = 'outbound';
+            $client->deleteSuppressions($suppressionChanges, $messageStream);
+        }
     }
 }

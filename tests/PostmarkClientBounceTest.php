@@ -6,6 +6,7 @@ require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\Models;
 use Postmark\PostmarkClient;
+use Postmark\tests;
 
 /**
  * @internal
@@ -14,6 +15,11 @@ use Postmark\PostmarkClient;
  */
 class PostmarkClientBounceTest extends PostmarkClientBaseTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        PostmarkClientSuppressionsTest::tearDownAfterClass();
+    }
+
     public function testClientCanGetDeliveryStatistics()
     {
         $tk = parent::$testKeys;
@@ -90,10 +96,13 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         );
 
         // make sure there is enough time for the bounce to take place.
-        sleep(5);
+        sleep(10);
 
         $bounces = $client->getBounces(10, 0);
         $id = 0;
+
+        $this->assertNotEmpty($bounces->getBounces());
+
         foreach ($bounces->getBounces() as $bounce)
         {
             if ($sendResult->getMessageID() == $bounce->getMessageID())
