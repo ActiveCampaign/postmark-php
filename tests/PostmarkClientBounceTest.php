@@ -96,7 +96,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         );
 
         // make sure there is enough time for the bounce to take place.
-        sleep(60);
+        sleep(180);
 
         $bounceList = $client->getBounces(20, 0);
         $id = 0;
