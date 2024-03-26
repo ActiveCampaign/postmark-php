@@ -98,21 +98,22 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         // make sure there is enough time for the bounce to take place.
         sleep(10);
 
-        $bounces = $client->getBounces(10, 0);
+        $bounceList = $client->getBounces(20, 0);
         $id = 0;
         $sentId = $sendResult->getMessageID();
+        $bounces = $bounceList->getBounces();
 
-        $this->assertNotEmpty($bounces->getBounces());
+        $this->assertNotEmpty($bounces);
         $this->assertNotEmpty($sentId);
 
-        foreach ($bounces->getBounces() as $bounce)
+        foreach ($bounces as $bounce)
         {
             $bmid = $bounce->getMessageID();
-            echo("Bounce ID: " . print_r($bmid) . "Sent id: " . print_r($sentId));
-            if ($sentId == $bmid)
+            echo "\n Bounce ID: $bmid  Sent id: $sentId";
+            if ($sentId === $bmid)
             {
                 $id = $bounce->getID();
-                echo("Made it!!  " . print_r($id));
+                echo "Made it!!  $id";
                 break;
             }
         }
@@ -120,9 +121,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertGreaterThan(0, $id);
 
         $bounceActivation = $client->activateBounce($id);
-        $bounce = $bounceActivation->getBounce();
+        $actBounce = $bounceActivation->getBounce();
 
-        $this->assertNotEmpty($bounce);
-        $this->assertEquals($id, $bounce->getID());
+        $this->assertNotEmpty($actBounce);
+        $this->assertEquals($id, $actBounce->getID());
     }
 }
