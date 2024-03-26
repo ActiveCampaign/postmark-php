@@ -107,7 +107,8 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
 
         foreach ($bounces->getBounces() as $bounce)
         {
-            if ($sentId == $bounce->getMessageID())
+            $bmid = $bounce->getMessageID();
+            if ($sentId == $bmid)
             {
                 $id = $bounce->getID();
                 break;
@@ -115,7 +116,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         }
 
         $this->assertGreaterThan(0, $id);
-        
+
         $bounceActivation = $client->activateBounce($id);
         $bounce = $bounceActivation->getBounce();
 
