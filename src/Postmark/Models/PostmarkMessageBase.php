@@ -134,7 +134,7 @@ class PostmarkMessageBase
         return $this->Headers;
     }
 
-    public function setHeaders(array $Headers): PostmarkMessageBase
+    public function setHeaders(?array $Headers): PostmarkMessageBase
     {
         $this->Headers = $Headers;
 
