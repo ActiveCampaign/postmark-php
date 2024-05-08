@@ -242,13 +242,14 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function createSenderSignature(string $fromEmail, string $name, string $replyToEmail = null, string $returnPathDomain = null): PostmarkSenderSignature
+    public function createSenderSignature(string $fromEmail, string $name, string $replyToEmail = null, string $returnPathDomain = null, string $confirmationPersonalNote = null): PostmarkSenderSignature
     {
         $body = [];
         $body['fromEmail'] = $fromEmail;
         $body['name'] = $name;
         $body['replyToEmail'] = $replyToEmail;
         $body['returnPathDomain'] = $returnPathDomain;
+        $body['confirmationPersonalNote'] = $confirmationPersonalNote;
 
         return new PostmarkSenderSignature((array) $this->processRestRequest('POST', '/senders/', $body));
     }
