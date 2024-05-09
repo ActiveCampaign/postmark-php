@@ -19,6 +19,15 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
     {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        // remove all suppressions on the default stream
+        $sups = $client->getSuppressions();
+        foreach ($sups->getSuppressions() as $sup)
+        {
+            $suppressionChanges = [new SuppressionChangeRequest($sup->getEmailAddress())];
+            $messageStream = 'outbound';
+            $client->deleteSuppressions($suppressionChanges, $messageStream);
+        }
     }
 
     // create suppression
