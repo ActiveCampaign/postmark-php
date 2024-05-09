@@ -264,12 +264,13 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function editSenderSignature(int $id, string $name = null, string $replyToEmail = null, string $returnPathDomain = null): PostmarkSenderSignature
+    public function editSenderSignature(int $id, string $name = null, string $replyToEmail = null, string $returnPathDomain = null, string $confirmationPersonalNote = null): PostmarkSenderSignature
     {
         $body = [];
         $body['name'] = $name;
         $body['replyToEmail'] = $replyToEmail;
         $body['returnPathDomain'] = $returnPathDomain;
+        $body['confirmationPersonalNote'] = $confirmationPersonalNote;
 
         return new PostmarkSenderSignature((array) $this->processRestRequest('PUT', "/senders/{$id}", $body));
     }

@@ -4,9 +4,7 @@ namespace Postmark\Tests;
 
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
-use Postmark\Models;
 use Postmark\PostmarkClient;
-use Postmark\tests;
 
 /**
  * @internal
@@ -70,13 +68,13 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         // make sure that this email is not suppressed
         // generate a bounces
         $fromEmail = $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS;
-        $toEmail = "hardbounce@bounce-testing.postmarkapp.com"; // special email to generate bounce
-        $subject = "Hello from Postmark!";
-        $htmlBody = "<strong>Hello</strong> dear Postmark user.";
-        $textBody = "Hello dear Postmark user.";
-        $tag = "example-email-tag";
+        $toEmail = 'hardbounce@bounce-testing.postmarkapp.com'; // special email to generate bounce
+        $subject = 'Hello from Postmark!';
+        $htmlBody = '<strong>Hello</strong> dear Postmark user.';
+        $textBody = 'Hello dear Postmark user.';
+        $tag = 'example-email-tag';
         $trackOpens = true;
-        $trackLinks = "None";
+        $trackLinks = 'None';
 
         $sendResult = $client->sendEmail(
             $fromEmail,
@@ -86,13 +84,13 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
             $textBody,
             $tag,
             $trackOpens,
-            NULL, // Reply To
-            NULL, // CC
-            NULL, // BCC
-            NULL, // Header array
-            NULL, // Attachment array
+            null, // Reply To
+            null, // CC
+            null, // BCC
+            null, // Header array
+            null, // Attachment array
             $trackLinks,
-            NULL // Metadata array
+            null // Metadata array
         );
 
         // make sure there is enough time for the bounce to take place.
@@ -106,14 +104,13 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertNotEmpty($bounces);
         $this->assertNotEmpty($sentId);
 
-        foreach ($bounces as $bounce)
-        {
+        foreach ($bounces as $bounce) {
             $bmid = $bounce->getMessageID();
-            echo "\n Bounce ID: $bmid  Sent id: $sentId";
-            if ($sentId === $bmid)
-            {
+            echo "\n Bounce ID: {$bmid}  Sent id: {$sentId}";
+            if ($sentId === $bmid) {
                 $id = $bounce->getID();
-                echo "Made it!!  $id";
+                echo "Made it!!  {$id}";
+
                 break;
             }
         }

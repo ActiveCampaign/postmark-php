@@ -22,8 +22,7 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
 
         // remove all suppressions on the default stream
         $sups = $client->getSuppressions();
-        foreach ($sups->getSuppressions() as $sup)
-        {
+        foreach ($sups->getSuppressions() as $sup) {
             $suppressionChanges = [new SuppressionChangeRequest($sup->getEmailAddress())];
             $messageStream = 'outbound';
             $client->deleteSuppressions($suppressionChanges, $messageStream);
