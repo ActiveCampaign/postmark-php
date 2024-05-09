@@ -6,18 +6,18 @@ workflows:
   php-tests:
     jobs:
       - unit-tests:
-          name: php80
-          version: "8.0"
-      - unit-tests:
           name: php81
           version: "8.1"
-          requires:
-            - php80
       - unit-tests:
           name: php82
           version: "8.2"
           requires:
             - php81
+      - unit-tests:
+          name: php83
+          version: "8.3"
+          requires:
+            - php82
 
 jobs:
   unit-tests:
