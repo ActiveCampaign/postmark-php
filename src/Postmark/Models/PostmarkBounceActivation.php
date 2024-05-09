@@ -10,7 +10,7 @@ class PostmarkBounceActivation
     public function __construct(array $values)
     {
         $this->Message = !empty($values['Message']) ? $values['Message'] : '';
-        $this->setBounce(!empty($values['Bounce']) ? $values['Bounce'] : array());
+        $this->setBounce(!empty($values['Bounce']) ? $values['Bounce'] : []);
     }
 
     /**
@@ -39,10 +39,6 @@ class PostmarkBounceActivation
         return $this->Bounce;
     }
 
-    /**
-     * @param array $Bounce
-     * @return PostmarkBounceActivation
-     */
     public function setBounce(array $Bounce): PostmarkBounceActivation
     {
         $this->Bounce = new PostmarkBounce($Bounce);

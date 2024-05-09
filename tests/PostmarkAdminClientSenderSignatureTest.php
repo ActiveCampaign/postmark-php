@@ -56,10 +56,15 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
         $sender = str_replace('[TOKEN]', 'test-php-create' . date('U'), $i);
+        $name = 'test-php-create-' . date('U');
+        $note = 'This is a test note';
 
-        $sig = $client->createSenderSignature($sender, 'test-php-create-' . date('U'));
+        $sig = $client->createSenderSignature($sender, $name, null, null, $note);
 
         $this->assertNotEmpty($sig->getID());
+        $this->assertEquals($sender, $sig->getEmailAddress());
+        $this->assertEquals($name, $sig->getName());
+        $this->assertEquals($note, $sig->getConfirmationPersonalNote());
     }
 
     public function testClientCanEditSignature()

@@ -4,6 +4,7 @@ namespace Postmark\Tests;
 
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
+use Exception;
 use Postmark\Models\MessageStream\PostmarkMessageStream;
 use Postmark\Models\PostmarkAttachment;
 use Postmark\Models\TemplatedPostmarkMessage;
@@ -163,13 +164,11 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $messageStreamType = 'Transactional';
         $name = 'PHP Test';
         $description = 'Test Stream Description';
-        $createdStream = new PostmarkMessageStream(array());
-        try
-        {
+        $createdStream = new PostmarkMessageStream([]);
+
+        try {
             $createdStream = $client->getMessageStream($id);
-        }
-        catch (\Exception $ex)
-        {
+        } catch (Exception $ex) {
             $createdStream = $client->createMessageStream($id, $messageStreamType, $name, $description);
         }
 
@@ -182,16 +181,16 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
             $result->getTemplateId(),
             ['subjectValue' => 'Hello!'],
             false,
-            "TestTag",
+            'TestTag',
             true,
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            null, //cc
-            null, //bcc
+            null, // cc
+            null, // bcc
             null, // headers
             null, // attachments
             null, // tracklinks
             null, // metadata
-            "php-test" // stream name
+            'php-test' // stream name
         );
 
         $this->assertEquals(0, $emailResult->getErrorCode());

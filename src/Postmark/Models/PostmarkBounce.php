@@ -55,6 +55,7 @@ class PostmarkBounce
     public function setRecordType(mixed $RecordType): PostmarkBounce
     {
         $this->RecordType = $RecordType;
+
         return $this;
     }
 
