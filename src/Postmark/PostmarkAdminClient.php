@@ -349,8 +349,9 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Alter the properties of a Domain.
      *
-     * @param int         $id               the ID for the Domain we wish to modify
-     * @param null|string $returnPathDomain the custom Return-Path domain for the Domain
+     * @param int         $id                   the ID for the Domain we wish to modify
+     * @param null|string $returnPathDomain     the custom Return-Path domain for the Domain
+     * @param null|mixed  $CustomTrackingDomain
      *
      * @throws PostmarkException
      */
@@ -366,7 +367,7 @@ class PostmarkAdminClient extends PostmarkClientBase
     /**
      * Verify Custom Tracking.
      *
-     * @param int         $id               the ID for the Domain we wish to verify
+     * @param int $id the ID for the Domain we wish to verify
      *
      * @throws PostmarkException
      */

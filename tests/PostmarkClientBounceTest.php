@@ -108,6 +108,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
             $bmid = $bounce->getMessageID();
             if ($sentId === $bmid) {
                 $id = $bounce->getID();
+
                 break;
             }
         }

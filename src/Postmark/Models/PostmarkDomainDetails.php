@@ -193,6 +193,7 @@ class PostmarkDomainDetails extends PostmarkDomain
     public function setCustomTrackingDomainCNAMEValue(?string $CustomTrackingDomainCNAMEValue): PostmarkDomainDetails
     {
         $this->CustomTrackingDomainCNAMEValue = $CustomTrackingDomainCNAMEValue;
+
         return $this;
     }
 
@@ -204,6 +205,7 @@ class PostmarkDomainDetails extends PostmarkDomain
     public function setCustomTrackingDomain(?string $CustomTrackingDomain): PostmarkDomainDetails
     {
         $this->CustomTrackingDomain = $CustomTrackingDomain;
+
         return $this;
     }
 }

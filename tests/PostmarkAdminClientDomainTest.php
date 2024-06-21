@@ -64,8 +64,8 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest
 
         $this->assertNotEmpty($domain->getID());
         $this->assertSame($domain->getCustomTrackingVerified(), false);
-        $this->assertSame($domain->getCustomTrackingDomainCNAMEValue(), "");
-        $this->assertSame($domain->getCustomTrackingDomain(), "");
+        $this->assertSame($domain->getCustomTrackingDomainCNAMEValue(), '');
+        $this->assertSame($domain->getCustomTrackingDomain(), '');
     }
 
     public function testClientCanEditDomain()

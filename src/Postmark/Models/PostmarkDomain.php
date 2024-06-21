@@ -103,6 +103,7 @@ class PostmarkDomain
     public function setCustomTrackingVerified(bool $CustomTrackingVerified): PostmarkDomain
     {
         $this->CustomTrackingVerified = $CustomTrackingVerified;
+
         return $this;
     }
 }

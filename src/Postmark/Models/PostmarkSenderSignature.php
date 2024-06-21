@@ -494,6 +494,7 @@ class PostmarkSenderSignature
     public function setCustomTrackingDomainCNAMEValue(?string $CustomTrackingDomainCNAMEValue): PostmarkSenderSignature
     {
         $this->CustomTrackingDomainCNAMEValue = $CustomTrackingDomainCNAMEValue;
+
         return $this;
     }
 
@@ -505,6 +506,7 @@ class PostmarkSenderSignature
     public function setCustomTrackingDomain(?string $CustomTrackingDomain): PostmarkSenderSignature
     {
         $this->CustomTrackingDomain = $CustomTrackingDomain;
+
         return $this;
     }
 
@@ -516,6 +518,7 @@ class PostmarkSenderSignature
     public function setCustomTrackingVerified(bool $CustomTrackingVerified): PostmarkSenderSignature
     {
         $this->CustomTrackingVerified = $CustomTrackingVerified;
+
         return $this;
     }
 }
