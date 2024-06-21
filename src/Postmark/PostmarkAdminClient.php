@@ -354,12 +354,27 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function editDomain(int $id, string $returnPathDomain = null): PostmarkDomainDetails
+    public function editDomain(int $id, string $returnPathDomain = null, $CustomTrackingDomain = null): PostmarkDomainDetails
     {
         $body = [];
         $body['returnPathDomain'] = $returnPathDomain;
+        $body['CustomTrackingDomain'] = $CustomTrackingDomain;
 
         return new PostmarkDomainDetails((array) $this->processRestRequest('PUT', "/domains/{$id}", $body));
+    }
+
+    /**
+     * Verify Custom Tracking.
+     *
+     * @param int         $id               the ID for the Domain we wish to verify
+     *
+     * @throws PostmarkException
+     */
+    public function verifyCustomTracking(int $id): PostmarkDomainDetails
+    {
+        $body = [];
+
+        return new PostmarkDomainDetails((array) $this->processRestRequest('PUT', "/domains/{$id}/verifyCustomTracking", $body));
     }
 
     /**

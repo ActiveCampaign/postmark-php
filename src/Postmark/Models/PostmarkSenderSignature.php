@@ -33,6 +33,10 @@ class PostmarkSenderSignature
 
     public string $ConfirmationPersonalNote;
 
+    public ?string $CustomTrackingDomainCNAMEValue;
+    public ?string $CustomTrackingDomain;
+    public bool $CustomTrackingVerified;
+
     public function __construct(array $values)
     {
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
@@ -62,6 +66,10 @@ class PostmarkSenderSignature
 
         $this->SafeToRemoveRevokedKeyFromDNS = !empty($values['SafeToRemoveRevokedKeyFromDNS']) ? $values['SafeToRemoveRevokedKeyFromDNS'] : false;
         $this->ConfirmationPersonalNote = !empty($values['ConfirmationPersonalNote']) ? $values['ConfirmationPersonalNote'] : '';
+
+        $this->CustomTrackingDomainCNAMEValue = !empty($values['CustomTrackingDomainCNAMEValue']) ? $values['CustomTrackingDomainCNAMEValue'] : '';
+        $this->CustomTrackingDomain = !empty($values['CustomTrackingDomain']) ? $values['CustomTrackingDomain'] : '';
+        $this->CustomTrackingVerified = !empty($values['CustomTrackingVerified']) ? $values['CustomTrackingVerified'] : false;
     }
 
     /**
@@ -475,6 +483,39 @@ class PostmarkSenderSignature
     {
         $this->ConfirmationPersonalNote = $ConfirmationPersonalNote;
 
+        return $this;
+    }
+
+    public function getCustomTrackingDomainCNAMEValue(): ?string
+    {
+        return $this->CustomTrackingDomainCNAMEValue;
+    }
+
+    public function setCustomTrackingDomainCNAMEValue(?string $CustomTrackingDomainCNAMEValue): PostmarkSenderSignature
+    {
+        $this->CustomTrackingDomainCNAMEValue = $CustomTrackingDomainCNAMEValue;
+        return $this;
+    }
+
+    public function getCustomTrackingDomain(): ?string
+    {
+        return $this->CustomTrackingDomain;
+    }
+
+    public function setCustomTrackingDomain(?string $CustomTrackingDomain): PostmarkSenderSignature
+    {
+        $this->CustomTrackingDomain = $CustomTrackingDomain;
+        return $this;
+    }
+
+    public function getCustomTrackingVerified(): bool
+    {
+        return $this->CustomTrackingVerified;
+    }
+
+    public function setCustomTrackingVerified(bool $CustomTrackingVerified): PostmarkSenderSignature
+    {
+        $this->CustomTrackingVerified = $CustomTrackingVerified;
         return $this;
     }
 }

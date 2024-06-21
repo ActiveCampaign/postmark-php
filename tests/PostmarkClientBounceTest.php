@@ -106,11 +106,8 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
 
         foreach ($bounces as $bounce) {
             $bmid = $bounce->getMessageID();
-            echo "\n Bounce ID: {$bmid}  Sent id: {$sentId}";
             if ($sentId === $bmid) {
                 $id = $bounce->getID();
-                echo "Made it!!  {$id}";
-
                 break;
             }
         }

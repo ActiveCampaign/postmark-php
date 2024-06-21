@@ -17,6 +17,9 @@ class PostmarkDomainDetails extends PostmarkDomain
     public ?string $ReturnPathDomain;
     public ?string $ReturnPathDomainCNAMEValue;
 
+    public ?string $CustomTrackingDomainCNAMEValue;
+    public ?string $CustomTrackingDomain;
+
     public function __construct(array $values)
     {
         parent::__construct($values);
@@ -33,6 +36,9 @@ class PostmarkDomainDetails extends PostmarkDomain
         $this->DKIMUpdateStatus = !empty($values['DKIMUpdateStatus']) ? $values['DKIMUpdateStatus'] : '';
         $this->ReturnPathDomain = !empty($values['ReturnPathDomain']) ? $values['ReturnPathDomain'] : '';
         $this->ReturnPathDomainCNAMEValue = !empty($values['ReturnPathDomainCNAMEValue']) ? $values['ReturnPathDomainCNAMEValue'] : '';
+
+        $this->CustomTrackingDomainCNAMEValue = !empty($values['CustomTrackingDomainCNAMEValue']) ? $values['CustomTrackingDomainCNAMEValue'] : '';
+        $this->CustomTrackingDomain = !empty($values['CustomTrackingDomain']) ? $values['CustomTrackingDomain'] : '';
     }
 
     public function getSPFHost(): ?string
@@ -176,6 +182,28 @@ class PostmarkDomainDetails extends PostmarkDomain
     {
         $this->ReturnPathDomainCNAMEValue = $ReturnPathDomainCNAMEValue;
 
+        return $this;
+    }
+
+    public function getCustomTrackingDomainCNAMEValue(): ?string
+    {
+        return $this->CustomTrackingDomainCNAMEValue;
+    }
+
+    public function setCustomTrackingDomainCNAMEValue(?string $CustomTrackingDomainCNAMEValue): PostmarkDomainDetails
+    {
+        $this->CustomTrackingDomainCNAMEValue = $CustomTrackingDomainCNAMEValue;
+        return $this;
+    }
+
+    public function getCustomTrackingDomain(): ?string
+    {
+        return $this->CustomTrackingDomain;
+    }
+
+    public function setCustomTrackingDomain(?string $CustomTrackingDomain): PostmarkDomainDetails
+    {
+        $this->CustomTrackingDomain = $CustomTrackingDomain;
         return $this;
     }
 }
