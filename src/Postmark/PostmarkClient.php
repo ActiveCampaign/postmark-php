@@ -63,7 +63,7 @@ class PostmarkClient extends PostmarkClientBase
      * Send an email.
      *
      * @param string      $from          The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-     * @param string      $to            the recipient of the email
+     * @param string      $to            the recipient of the email. Multiple recipients can be comma-separated (maximum 50 for to, cc, and bcc combined)
      * @param string      $subject       the subject of the email
      * @param null|string $htmlBody      the HTML content of the message, optional if Text Body is specified
      * @param null|string $textBody      the text content of the message, optional if HTML Body is specified
@@ -212,7 +212,7 @@ class PostmarkClient extends PostmarkClientBase
      * Send an email using a template.
      *
      * @param string      $from              The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-     * @param string      $to                the recipient of the email
+     * @param string      $to                the recipient of the email. Multiple recipients can be comma-separated (maximum 50 for to, cc, and bcc combined)
      * @param int|string  $templateIdOrAlias the ID or alias of the template to use to generate the content of this message
      * @param array       $templateModel     the values to combine with the Templated content
      * @param bool        $inlineCss         if the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter
