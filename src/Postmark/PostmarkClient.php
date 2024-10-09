@@ -62,35 +62,35 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Send an email.
      *
-     * @param string      $from          The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-     * @param string      $to            the recipient of the email. Multiple recipients can be comma-separated (maximum 50 for to, cc, and bcc combined)
-     * @param string      $subject       the subject of the email
-     * @param null|string $htmlBody      the HTML content of the message, optional if Text Body is specified
-     * @param null|string $textBody      the text content of the message, optional if HTML Body is specified
-     * @param null|string $tag           a tag associated with this message, useful for classifying sent messages
-     * @param null|bool   $trackOpens    true if you want Postmark to track opens of HTML emails
-     * @param null|string $replyTo       reply to email address
-     * @param null|string $cc            Carbon Copy recipients, comma-separated
-     * @param null|string $bcc           blind Carbon Copy recipients, comma-separated
-     * @param null|array  $headers       headers to be included with the sent email message
-     * @param null|array  $attachments   an array of PostmarkAttachment objects
-     * @param null|string $trackLinks    can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
-     * @param null|array  $metadata      Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
-     * @param null|string $messageStream The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+     * @param string            $from          The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+     * @param array|string      $to            the recipient of the email. Multiple recipients can be comma-separated or array (maximum 50 for to, cc, and bcc combined)
+     * @param string            $subject       the subject of the email
+     * @param null|string       $htmlBody      the HTML content of the message, optional if Text Body is specified
+     * @param null|string       $textBody      the text content of the message, optional if HTML Body is specified
+     * @param null|string       $tag           a tag associated with this message, useful for classifying sent messages
+     * @param null|bool         $trackOpens    true if you want Postmark to track opens of HTML emails
+     * @param null|string       $replyTo       reply to email address
+     * @param null|array|string $cc            Carbon Copy recipients, comma-separated
+     * @param null|array|string $bcc           blind Carbon Copy recipients, comma-separated
+     * @param null|array        $headers       headers to be included with the sent email message
+     * @param null|array        $attachments   an array of PostmarkAttachment objects
+     * @param null|string       $trackLinks    can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
+     * @param null|array        $metadata      Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
+     * @param null|string       $messageStream The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
      *
-     * @throws PostmarkException
+     * @throws PostmarkException|PostmarkValidationException
      */
     public function sendEmail(
         string $from,
-        string $to,
+        array|string $to,
         string $subject,
         ?string $htmlBody = null,
         ?string $textBody = null,
         ?string $tag = null,
         ?bool $trackOpens = null,
         ?string $replyTo = null,
-        ?string $cc = null,
-        ?string $bcc = null,
+        null|array|string $cc = null,
+        null|array|string $bcc = null,
         ?array $headers = null,
         ?array $attachments = null,
         ?string $trackLinks = null,
@@ -99,9 +99,9 @@ class PostmarkClient extends PostmarkClientBase
     ): PostmarkResponse {
         $body = [];
         $body['From'] = $from;
-        $body['To'] = $to;
-        $body['Cc'] = $cc;
-        $body['Bcc'] = $bcc;
+        $body['To'] = $this->stringifyEmailAddress($to);
+        $body['Cc'] = $this->stringifyEmailAddress($cc);
+        $body['Bcc'] = $this->stringifyEmailAddress($bcc);
         $body['Subject'] = $subject;
         $body['HtmlBody'] = $htmlBody;
         $body['TextBody'] = $textBody;
@@ -990,7 +990,7 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function getOutboundReadTimeStatistics(string $tag = null, string $fromdate = null, string $todate = null): DynamicResponseModel
+    public function getOutboundReadTimeStatistics(?string $tag = null, ?string $fromdate = null, ?string $todate = null): DynamicResponseModel
     {
         $query = [];
 
@@ -1586,6 +1586,23 @@ class PostmarkClient extends PostmarkClientBase
     public function unarchiveMessageStream(string $id): PostmarkMessageStream
     {
         return new PostmarkMessageStream((array) $this->processRestRequest('POST', "/message-streams/{$id}/unarchive"));
+    }
+
+    /**
+     * The Postmark API requires a string for email addresses and limits the emails to a maximum of 50 across to, cc,
+     * and bcc addresses. This will throw an exception from the API if the limit is reached.
+     */
+    protected function stringifyEmailAddress(null|array|string $emailAddress): ?string
+    {
+        if (null === $emailAddress || is_string($emailAddress)) {
+            return $emailAddress;
+        }
+
+        if (is_array($emailAddress)) {
+            $emailAddress = implode(',', $emailAddress);
+        }
+
+        return $emailAddress;
     }
 
     /**
