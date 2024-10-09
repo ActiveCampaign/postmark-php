@@ -78,7 +78,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|array        $metadata      Add metadata to the message. The metadata is an associative array, and values will be evaluated as strings by Postmark.
      * @param null|string       $messageStream The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
      *
-     * @throws PostmarkException|PostmarkValidationException
+     * @throws PostmarkException
      */
     public function sendEmail(
         string $from,
@@ -211,35 +211,35 @@ class PostmarkClient extends PostmarkClientBase
     /**
      * Send an email using a template.
      *
-     * @param string      $from              The sender of the email. (Your account must have an associated Sender Signature for the address used.)
-     * @param string      $to                the recipient of the email. Multiple recipients can be comma-separated (maximum 50 for to, cc, and bcc combined)
-     * @param int|string  $templateIdOrAlias the ID or alias of the template to use to generate the content of this message
-     * @param array       $templateModel     the values to combine with the Templated content
-     * @param bool        $inlineCss         if the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter
-     * @param null|string $tag               a tag associated with this message, useful for classifying sent messages
-     * @param null|bool   $trackOpens        true if you want Postmark to track opens of HTML emails
-     * @param null|string $replyTo           reply to email address
-     * @param null|string $cc                Carbon Copy recipients, comma-separated
-     * @param null|string $bcc               blind Carbon Copy recipients, comma-separated
-     * @param null|array  $headers           headers to be included with the sent email message
-     * @param null|array  $attachments       an array of PostmarkAttachment objects
-     * @param null|string $trackLinks        can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
-     * @param null|array  $metadata          Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
-     * @param null|string $messageStream     The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
+     * @param string            $from              The sender of the email. (Your account must have an associated Sender Signature for the address used.)
+     * @param array|string      $to                the recipient of the email. Multiple recipients can be comma-separated or array (maximum 50 for to, cc, and bcc combined)
+     * @param int|string        $templateIdOrAlias the ID or alias of the template to use to generate the content of this message
+     * @param array             $templateModel     the values to combine with the Templated content
+     * @param bool              $inlineCss         if the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter
+     * @param null|string       $tag               a tag associated with this message, useful for classifying sent messages
+     * @param null|bool         $trackOpens        true if you want Postmark to track opens of HTML emails
+     * @param null|string       $replyTo           reply to email address
+     * @param null|array|string $cc                Carbon Copy recipients, comma-separated
+     * @param null|array|string $bcc               blind Carbon Copy recipients, comma-separated
+     * @param null|array        $headers           headers to be included with the sent email message
+     * @param null|array        $attachments       an array of PostmarkAttachment objects
+     * @param null|string       $trackLinks        can be any of "None", "HtmlAndText", "HtmlOnly", "TextOnly" to enable link tracking
+     * @param null|array        $metadata          Add metadata to the message. The metadata is an associative array , and values will be evaluated as strings by Postmark.
+     * @param null|string       $messageStream     The message stream used to send this message. If not provided, the default transactional stream "outbound" will be used.
      *
      * @throws PostmarkException
      */
     public function sendEmailWithTemplate(
         string $from,
-        string $to,
+        array|string $to,
         int|string $templateIdOrAlias,
         array $templateModel,
         bool $inlineCss = true,
         ?string $tag = null,
         ?bool $trackOpens = null,
         ?string $replyTo = null,
-        ?string $cc = null,
-        ?string $bcc = null,
+        null|array|string $cc = null,
+        null|array|string $bcc = null,
         ?array $headers = null,
         ?array $attachments = null,
         ?string $trackLinks = null,
@@ -248,9 +248,9 @@ class PostmarkClient extends PostmarkClientBase
     ): PostmarkResponse {
         $body = [];
         $body['From'] = $from;
-        $body['To'] = $to;
-        $body['Cc'] = $cc;
-        $body['Bcc'] = $bcc;
+        $body['To'] = $this->stringifyEmailAddress($to);
+        $body['Cc'] = $this->stringifyEmailAddress($cc);
+        $body['Bcc'] = $this->stringifyEmailAddress($bcc);
         $body['Tag'] = $tag;
         $body['ReplyTo'] = $replyTo;
         $body['Headers'] = $this->fixHeaders($headers);
