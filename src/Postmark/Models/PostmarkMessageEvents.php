@@ -9,11 +9,13 @@ class PostmarkMessageEvents
     public function __construct(array $values = [])
     {
         $tempMessageEvents = [];
-        foreach ($values['MessageEvents'] as $messageEvent) {
-            $obj = json_decode(json_encode($messageEvent));
-            $postmarkMessage = new PostmarkMessageEvent((array) $obj);
+        if (isset($values['MessageEvents'])) {
+            foreach ($values['MessageEvents'] as $messageEvent) {
+                $obj = json_decode(json_encode($messageEvent));
+                $postmarkMessage = new PostmarkMessageEvent((array) $obj);
 
-            $tempMessageEvents[] = $postmarkMessage;
+                $tempMessageEvents[] = $postmarkMessage;
+            }
         }
         $this->MessageEvents = $tempMessageEvents;
     }
