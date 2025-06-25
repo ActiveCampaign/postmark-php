@@ -16,24 +16,11 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
     public static function setUpBeforeClass(): void
     {
         PostmarkClientSuppressionsTest::tearDownAfterClass();
-
-        $tk = self::$testKeys;
-        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-        $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            'hardbounce@bounce-testing.postmarkapp.com',
-            'Bounce Test',
-            '<strong>Test</strong>',
-            'Test',
-            'test-bounce',
-            true
-        );
-
-        // Wait for bounce to be processed
-        sleep(120);
     }
 
+    /**
+     * @depends testClientCanActivateBounce
+     */
     public function testClientCanGetDeliveryStatistics()
     {
         $tk = parent::$testKeys;
@@ -45,6 +32,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertGreaterThan(0, $stats->getInactiveMails(), 'The inactive mail count should be greater than zero.');
     }
 
+    /**
+     * @depends testClientCanActivateBounce
+     */
     public function testClientCanGetBounces()
     {
         $tk = parent::$testKeys;
@@ -54,6 +44,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertNotEmpty($bounces);
     }
 
+    /**
+     * @depends testClientCanActivateBounce
+     */
     public function testClientCanGetBounce()
     {
         $tk = parent::$testKeys;
@@ -65,6 +58,9 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertEquals($id, $bounce->getID());
     }
 
+    /**
+     * @depends testClientCanActivateBounce
+     */
     public function testClientCanGetBounceDump()
     {
         $tk = parent::$testKeys;
