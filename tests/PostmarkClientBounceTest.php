@@ -16,6 +16,22 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
     public static function setUpBeforeClass(): void
     {
         PostmarkClientSuppressionsTest::tearDownAfterClass();
+
+        $tk = self::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $client->sendEmail(
+            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            'hardbounce@bounce-testing.postmarkapp.com',
+            'Bounce Test',
+            '<strong>Test</strong>',
+            'Test',
+            'test-bounce',
+            true
+        );
+
+        // Wait for bounce to be processed
+        sleep(120);
     }
 
     public function testClientCanGetDeliveryStatistics()

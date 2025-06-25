@@ -55,9 +55,16 @@ class PostmarkOutboundMessageDetail extends PostmarkOutboundMessage
         return $this;
     }
 
+    // Keeping this method for backward compatibility
     public function getMessageEvents(): PostmarkMessageEvents
     {
         return $this->MessageEvents;
+    }
+
+    // New method to return the list of message events as suggested a simpler way to access the events
+    public function getMessageEventList(): array
+    {
+        return $this->MessageEvents->getMessageEvents();
     }
 
     public function setMessageEvents(PostmarkMessageEvents $MessageEvents): PostmarkOutboundMessageDetail

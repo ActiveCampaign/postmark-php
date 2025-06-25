@@ -69,7 +69,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|string       $textBody      the text content of the message, optional if HTML Body is specified
      * @param null|string       $tag           a tag associated with this message, useful for classifying sent messages
      * @param null|bool         $trackOpens    true if you want Postmark to track opens of HTML emails
-     * @param null|string       $replyTo       reply to email address
+     * @param null|array|string $replyTo       reply to email address
      * @param null|array|string $cc            Carbon Copy recipients, comma-separated
      * @param null|array|string $bcc           blind Carbon Copy recipients, comma-separated
      * @param null|array        $headers       headers to be included with the sent email message
@@ -88,7 +88,7 @@ class PostmarkClient extends PostmarkClientBase
         ?string $textBody = null,
         ?string $tag = null,
         ?bool $trackOpens = null,
-        ?string $replyTo = null,
+        null|array|string $replyTo = null,
         null|array|string $cc = null,
         null|array|string $bcc = null,
         ?array $headers = null,
@@ -106,7 +106,7 @@ class PostmarkClient extends PostmarkClientBase
         $body['HtmlBody'] = $htmlBody;
         $body['TextBody'] = $textBody;
         $body['Tag'] = $tag;
-        $body['ReplyTo'] = $replyTo;
+        $body['ReplyTo'] = $this->stringifyEmailAddress($replyTo);
         $body['Headers'] = $this->fixHeaders($headers);
         $body['TrackOpens'] = $trackOpens;
         $body['Attachments'] = $attachments;
@@ -218,7 +218,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param bool              $inlineCss         if the template contains an HTMLBody, CSS is automatically inlined, you may opt-out of this by passing 'false' for this parameter
      * @param null|string       $tag               a tag associated with this message, useful for classifying sent messages
      * @param null|bool         $trackOpens        true if you want Postmark to track opens of HTML emails
-     * @param null|string       $replyTo           reply to email address
+     * @param null|array|string $replyTo           reply to email address
      * @param null|array|string $cc                Carbon Copy recipients, comma-separated
      * @param null|array|string $bcc               blind Carbon Copy recipients, comma-separated
      * @param null|array        $headers           headers to be included with the sent email message
@@ -237,7 +237,7 @@ class PostmarkClient extends PostmarkClientBase
         bool $inlineCss = true,
         ?string $tag = null,
         ?bool $trackOpens = null,
-        ?string $replyTo = null,
+        null|array|string $replyTo = null,
         null|array|string $cc = null,
         null|array|string $bcc = null,
         ?array $headers = null,
@@ -252,7 +252,7 @@ class PostmarkClient extends PostmarkClientBase
         $body['Cc'] = $this->stringifyEmailAddress($cc);
         $body['Bcc'] = $this->stringifyEmailAddress($bcc);
         $body['Tag'] = $tag;
-        $body['ReplyTo'] = $replyTo;
+        $body['ReplyTo'] = $this->stringifyEmailAddress($replyTo);
         $body['Headers'] = $this->fixHeaders($headers);
         $body['TrackOpens'] = $trackOpens;
         $body['Attachments'] = $attachments;

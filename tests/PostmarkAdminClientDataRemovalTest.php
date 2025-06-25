@@ -30,6 +30,8 @@ class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $createRequest = $client->createDataRemovalRequest('test@activecampaign.com', 'test2@activecampaign.com', true);
+        // Wait for replication to complete
+        sleep(10);
         $checkRequest = $client->getDataRemoval($createRequest->getID());
 
         $this->assertNotEmpty($checkRequest->getID());
