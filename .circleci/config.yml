@@ -18,6 +18,11 @@ workflows:
           version: "8.3"
           requires:
             - php82
+      - unit-tests:
+          name: php84
+          version: "8.4"
+          requires:
+            - php83
 
 jobs:
   unit-tests:

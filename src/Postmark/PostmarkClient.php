@@ -1339,7 +1339,7 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function getWebhookConfigurations(string $messageStream = null): WebhookConfigurationListingResponse
+    public function getWebhookConfigurations(?string $messageStream = null): WebhookConfigurationListingResponse
     {
         $query = [];
         $query['MessageStream'] = $messageStream;
@@ -1424,7 +1424,7 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function createSuppressions(array $suppressionChanges = [], string $messageStream = null): PostmarkSuppressionResultList
+    public function createSuppressions(array $suppressionChanges = [], ?string $messageStream = null): PostmarkSuppressionResultList
     {
         $body = [];
         $body['Suppressions'] = $suppressionChanges;
@@ -1522,7 +1522,7 @@ class PostmarkClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function editMessageStream(string $id, string $name = null, ?string $description = null): PostmarkMessageStream
+    public function editMessageStream(string $id, ?string $name = null, ?string $description = null): PostmarkMessageStream
     {
         $body = [];
         $body['Name'] = $name;
