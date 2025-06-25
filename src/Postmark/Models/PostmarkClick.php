@@ -11,6 +11,7 @@ class PostmarkClick
     public string $Platform;
     public ?PostmarkAgentInfo $Client;
     public ?PostmarkAgentInfo $OS;
+    public string $ReceivedAt;
 
     public function __construct(array $values)
     {
@@ -21,6 +22,7 @@ class PostmarkClick
         $this->Platform = !empty($values['Platform']) ? $values['Platform'] : '';
         !empty($values['Client']) ? $this->setClient($values['Client']) : $this->setClient(null);
         !empty($values['OS']) ? $this->setOS($values['OS']) : $this->setOS(null);
+        $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
     }
 
     /**
@@ -148,6 +150,24 @@ class PostmarkClick
             $OS = new PostmarkAgentInfo((array) $OS);
         }
         $this->OS = $OS;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getReceivedAt(): string
+    {
+        return $this->ReceivedAt;
+    }
+
+    /**
+     * @param mixed|string $ReceivedAt
+     */
+    public function setReceivedAt(string $ReceivedAt): PostmarkClick
+    {
+        $this->ReceivedAt = $ReceivedAt;
 
         return $this;
     }

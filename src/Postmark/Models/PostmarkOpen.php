@@ -10,6 +10,7 @@ class PostmarkOpen
     public ?PostmarkGeographyInfo $Geo;
     public string $Platform;
     public int $ReadSeconds;
+    public string $ReceivedAt;
     public ?PostmarkAgentInfo $Client;
     public ?PostmarkAgentInfo $OS;
 
@@ -21,6 +22,7 @@ class PostmarkOpen
         !empty($values['Geo']) ? $this->setGeo($values['Geo']) : $this->setGeo(null);
         $this->Platform = !empty($values['Platform']) ? $values['Platform'] : '';
         $this->ReadSeconds = !empty($values['ReadSeconds']) ? $values['ReadSeconds'] : 0;
+        $this->ReceivedAt = !empty($values['ReceivedAt']) ? $values['ReceivedAt'] : '';
         !empty($values['Client']) ? $this->setClient($values['Client']) : $this->setClient(null);
         !empty($values['OS']) ? $this->setOS($values['OS']) : $this->setOS(null);
     }
@@ -96,6 +98,18 @@ class PostmarkOpen
     public function setReadSeconds(int $ReadSeconds): PostmarkOpen
     {
         $this->ReadSeconds = $ReadSeconds;
+
+        return $this;
+    }
+
+    public function getReceivedAt(): string
+    {
+        return $this->ReceivedAt;
+    }
+
+    public function setReceivedAt(string $ReceivedAt): PostmarkOpen
+    {
+        $this->ReceivedAt = $ReceivedAt;
 
         return $this;
     }
