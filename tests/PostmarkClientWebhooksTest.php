@@ -35,23 +35,16 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $configurations = $this->client->getWebhookConfigurations();
         foreach ($configurations->getWebhooks() as $webhook) {
             if (preg_match('/test-php-url/', $webhook->Url)) {
-                $this->client->deleteWebhook($webhook->ID);
+                $this->client->deleteWebhookConfiguration($webhook->ID);
             }
         }
 
         // Create a fresh webhook for tests
-        $webhook = $this->client->createWebhook([
-            'Url' => 'http://example.com/test-php-url-' . uniqid(),
-            'MessageStream' => 'outbound',
-            'HttpAuth' => [
-                'Username' => 'testuser',
-                'Password' => 'testpass'
-            ],
-            'HttpHeaders' => [
-                ['Name' => 'X-Test', 'Value' => 'test']
-            ]
-        ]);
-        $this->webhookId = $webhook['ID'];
+        $webhook = $this->client->createWebhookConfiguration(
+            'http://example.com/test-php-url-' . uniqid(),
+            'outbound'
+        );
+        $this->webhookId = $webhook->getID();
     }
 
     protected function tearDown(): void
@@ -60,7 +53,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         if ($this->client !== null) {
             foreach ($this->createdWebhookIds as $id) {
                 try {
-                    $this->client->deleteWebhook($id);
+                    $this->client->deleteWebhookConfiguration($id);
                 } catch (\Exception $e) {
                     // Ignore deletion errors during cleanup
                 }
@@ -68,7 +61,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
             
             if ($this->webhookId !== null) {
                 try {
-                    $this->client->deleteWebhook($this->webhookId);
+                    $this->client->deleteWebhookConfiguration($this->webhookId);
                 } catch (\Exception $e) {
                     // Ignore deletion errors during cleanup
                 }
@@ -210,8 +203,9 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     // delete
     public function testClientCanDeleteWebhookConfiguration(): void
     {
-        $result = $this->client->deleteWebhook($this->webhookId);
-        $this->assertTrue($result);
+        $result = $this->client->deleteWebhookConfiguration($this->webhookId);
+        $this->assertInstanceOf(\Postmark\Models\PostmarkResponse::class, $result);
+        $this->assertEquals(0, $result->getErrorCode());
         
         // Mark as cleaned up to avoid double deletion
         $this->webhookId = null;
