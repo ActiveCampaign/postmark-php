@@ -165,7 +165,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @throws PostmarkException
      */
     public function createServer(
-        string $name,
+        ?string $name,
         ?string $color = null,
         ?bool $rawEmailEnabled = null,
         ?bool $smtpApiActivated = null,
