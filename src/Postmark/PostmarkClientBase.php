@@ -100,12 +100,12 @@ abstract class PostmarkClientBase
      * @param string $path   the API path
      * @param array  $body   The content to be used (either as the query, or the json post/put body)
      *
-     * @return object
+     * @return mixed
      *
      * @throws PostmarkException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function processRestRequest($method = null, $path = null, array $body = [])
+    protected function processRestRequest($method = null, $path = null, array $body = []): mixed
     {
         $client = $this->getClient();
 

@@ -16,7 +16,7 @@ class SuppressionChangeRequest implements JsonSerializable
      *
      * @param string $emailAddress address of the recipient whose suppression status should be changed
      */
-    public function __construct($emailAddress = null)
+    public function __construct(?string $emailAddress = null)
     {
         $this->EmailAddress = $emailAddress;
     }

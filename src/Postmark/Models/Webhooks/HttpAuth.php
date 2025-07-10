@@ -18,7 +18,7 @@ class HttpAuth implements JsonSerializable
      * @param string $username username to use
      * @param string $password password to use
      */
-    public function __construct($username = null, $password = null)
+    public function __construct(?string $username = null, ?string $password = null)
     {
         $this->username = $username;
         $this->password = $password;

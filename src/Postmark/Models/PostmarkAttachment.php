@@ -12,7 +12,7 @@ class PostmarkAttachment implements JsonSerializable
     private $data;
     private $contentId;
 
-    private function __construct($base64EncodedData, $attachmentName, $mimeType = 'application/octet-stream', $contentId = null)
+    private function __construct($base64EncodedData, $attachmentName, $mimeType = 'application/octet-stream', ?string $contentId = null)
     {
         $this->name = $attachmentName;
         $this->data = $base64EncodedData;
@@ -20,17 +20,17 @@ class PostmarkAttachment implements JsonSerializable
         $this->contentId = $contentId;
     }
 
-    public static function fromRawData($data, $attachmentName, $mimeType = null, $contentId = null)
+    public static function fromRawData($data, $attachmentName, ?string $mimeType = null, ?string $contentId = null)
     {
         return new PostmarkAttachment(base64_encode($data), $attachmentName, $mimeType, $contentId);
     }
 
-    public static function fromBase64EncodedData($base64EncodedData, $attachmentName, $mimeType = null, $contentId = null)
+    public static function fromBase64EncodedData($base64EncodedData, $attachmentName, ?string $mimeType = null, ?string $contentId = null)
     {
         return new PostmarkAttachment($base64EncodedData, $attachmentName, $mimeType, $contentId);
     }
 
-    public static function fromFile($filePath, $attachmentName, $mimeType = null, $contentId = null)
+    public static function fromFile($filePath, $attachmentName, ?string $mimeType = null, ?string $contentId = null)
     {
         return new PostmarkAttachment(base64_encode(file_get_contents($filePath)), $attachmentName, $mimeType, $contentId);
     }

@@ -27,12 +27,12 @@ class WebhookConfigurationTriggers implements JsonSerializable
      * @param null|WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange optional settings for SubscriptionChange webhooks
      */
     public function __construct(
-        WebhookConfigurationOpenTrigger $open = null,
-        WebhookConfigurationClickTrigger $click = null,
-        WebhookConfigurationDeliveryTrigger $delivery = null,
-        WebhookConfigurationBounceTrigger $bounce = null,
-        WebhookConfigurationSpamComplaintTrigger $spamComplaint = null,
-        WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange = null
+        ?WebhookConfigurationOpenTrigger $open = null,
+        ?WebhookConfigurationClickTrigger $click = null,
+        ?WebhookConfigurationDeliveryTrigger $delivery = null,
+        ?WebhookConfigurationBounceTrigger $bounce = null,
+        ?WebhookConfigurationSpamComplaintTrigger $spamComplaint = null,
+        ?WebhookConfigurationSubscriptionChangeTrigger $subscriptionChange = null
     ) {
         $this->Open = $open;
         $this->Click = $click;

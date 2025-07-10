@@ -179,7 +179,7 @@ class PostmarkMessageBase
     /**
      * @param ?array $Metadata
      */
-    public function setMetadata(array $Metadata = null): PostmarkMessageBase
+    public function setMetadata(?array $Metadata = null): PostmarkMessageBase
     {
         $this->Metadata = $Metadata;
 
