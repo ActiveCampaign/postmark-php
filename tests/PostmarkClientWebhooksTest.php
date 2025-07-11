@@ -31,15 +31,24 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $this->client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        // Clean up any leftover test webhooks
-        $configurations = $this->client->getWebhookConfigurations();
-        foreach ($configurations->getWebhooks() as $webhook) {
-            if (preg_match('/test-php-url/', $webhook->Url)) {
-                $this->client->deleteWebhookConfiguration($webhook->ID);
+        // Clean up any leftover test webhooks from previous test runs
+        try {
+            $configurations = $this->client->getWebhookConfigurations();
+            foreach ($configurations->getWebhooks() as $webhook) {
+                if (preg_match('/test-php-url/', $webhook->Url)) {
+                    try {
+                        $this->client->deleteWebhookConfiguration($webhook->ID);
+                    } catch (\Exception $e) {
+                        // Ignore deletion errors during cleanup
+                    }
+                }
             }
+        } catch (\Exception $e) {
+            // Ignore errors during cleanup
         }
 
-        // Create a fresh webhook for tests
+        // Create a fresh webhook for tests that need a shared webhook
+        // Note: Most tests should create their own webhooks for better isolation
         $webhook = $this->client->createWebhookConfiguration(
             'http://example.com/test-php-url-' . uniqid(),
             'outbound'
@@ -51,22 +60,28 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     {
         // Clean up all created webhooks
         if ($this->client !== null) {
+            // Clean up tracked webhooks
             foreach ($this->createdWebhookIds as $id) {
                 try {
                     $this->client->deleteWebhookConfiguration($id);
                 } catch (\Exception $e) {
-                    // Ignore deletion errors during cleanup
+                    // Ignore deletion errors during cleanup - webhook might already be deleted
                 }
             }
             
+            // Clean up the shared webhook if it still exists
             if ($this->webhookId !== null) {
                 try {
                     $this->client->deleteWebhookConfiguration($this->webhookId);
                 } catch (\Exception $e) {
-                    // Ignore deletion errors during cleanup
+                    // Ignore deletion errors during cleanup - webhook might already be deleted
                 }
             }
         }
+        
+        // Reset state for next test
+        $this->createdWebhookIds = [];
+        $this->webhookId = null;
         
         parent::tearDown();
     }
@@ -74,6 +89,17 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     private function trackWebhookForCleanup(int $webhookId): void
     {
         $this->createdWebhookIds[] = $webhookId;
+    }
+
+    /**
+     * Helper method to create a webhook for testing with automatic cleanup tracking
+     */
+    private function createTestWebhook(?string $urlSuffix = null, string $messageStream = 'outbound'): \Postmark\Models\Webhooks\WebhookConfiguration
+    {
+        $url = 'http://example.com/test-php-url-' . ($urlSuffix ?? uniqid());
+        $webhook = $this->client->createWebhookConfiguration($url, $messageStream);
+        $this->trackWebhookForCleanup($webhook->getID());
+        return $webhook;
     }
 
     // create
@@ -177,10 +203,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     // get
     public function testClientCanGetWebhookConfiguration(): void
     {
-        $url = 'http://www.postmark.com/test-php-url';
-
-        $configuration = $this->client->createWebhookConfiguration($url);
-        $this->trackWebhookForCleanup($configuration->getID());
+        $configuration = $this->createTestWebhook('get-test');
 
         $result = $this->client->getWebhookConfiguration($configuration->getID());
 
@@ -191,23 +214,43 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     // list
     public function testClientCanGetWebhookConfigurations(): void
     {
-        $url = 'http://www.postmark.com/test-php-url';
-        $configuration = $this->client->createWebhookConfiguration($url);
-        $this->trackWebhookForCleanup($configuration->getID());
+        $configuration = $this->createTestWebhook('list-test');
 
         $result = $this->client->getWebhookConfigurations();
 
         $this->assertNotEmpty($result->Webhooks);
+        
+        // Verify our webhook is in the list
+        $found = false;
+        foreach ($result->Webhooks as $webhook) {
+            if ($webhook->ID === $configuration->getID()) {
+                $found = true;
+                break;
+            }
+        }
+        $this->assertTrue($found, 'Created webhook should be found in the list');
     }
 
     // delete
     public function testClientCanDeleteWebhookConfiguration(): void
     {
-        $result = $this->client->deleteWebhookConfiguration($this->webhookId);
+        // Create a dedicated webhook for this test to ensure isolation
+        $url = 'http://example.com/delete-test-php-url-' . uniqid();
+        $webhook = $this->client->createWebhookConfiguration($url, 'outbound');
+        $webhookId = $webhook->getID();
+        
+        // Verify webhook exists before deletion
+        $retrievedWebhook = $this->client->getWebhookConfiguration($webhookId);
+        $this->assertEquals($webhookId, $retrievedWebhook->getID());
+        
+        // Delete the webhook
+        $result = $this->client->deleteWebhookConfiguration($webhookId);
         $this->assertInstanceOf(\Postmark\Models\PostmarkResponse::class, $result);
         $this->assertEquals(0, $result->getErrorCode());
         
-        // Mark as cleaned up to avoid double deletion
-        $this->webhookId = null;
+        // Verify webhook is actually deleted by attempting to retrieve it
+        $this->expectException(\Postmark\Models\PostmarkException::class);
+        $this->expectExceptionMessage('The webhook for the provided \'ID\' was not found.');
+        $this->client->getWebhookConfiguration($webhookId);
     }
 }
