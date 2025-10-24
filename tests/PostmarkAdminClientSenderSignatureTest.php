@@ -99,9 +99,21 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-delete' . date('U'), $i);
+        $timestamp = date('U') . '-' . uniqid();
+        $sender = str_replace('@', '+test-php-delete-' . $timestamp . '@', $i);
 
-        $name = 'test-php-delete-' . date('U');
+        $name = 'test-php-delete-' . $timestamp;
+        
+        // First, try to clean up any existing signature with the same name
+        $sigs = $client->listSenderSignatures()->getSenderSignatures();
+        foreach ($sigs as $existing) {
+            if ($existing->getName() === $name) {
+                $client->deleteSenderSignature($existing->getID());
+                break;
+            }
+        }
+        
+        // Now try to create the signature
         $sig = $client->createSenderSignature($sender, $name);
 
         $client->deleteSenderSignature($sig->getID());
