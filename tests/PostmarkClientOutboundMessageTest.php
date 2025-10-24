@@ -28,9 +28,28 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        $retrievedMessages = $client->getOutboundMessages(1, 50);
+        // Retry logic to wait for messages to be available
+        $retries = 3;
+        $retrievedMessages = null;
+        
+        for ($i = 0; $i < $retries; $i++) {
+            $retrievedMessages = $client->getOutboundMessages(1, 50);
+            $messages = $retrievedMessages->getMessages();
+            
+            if (!empty($messages)) {
+                break;
+            }
+            
+            if ($i < $retries - 1) {
+                sleep(2); // Wait 2 seconds before retry
+            }
+        }
+        
+        $this->assertNotEmpty($retrievedMessages, 'No outbound messages retrieved after retries');
+        $messages = $retrievedMessages->getMessages();
+        $this->assertNotEmpty($messages, 'No outbound messages found in response');
 
-        $baseMessageId = $retrievedMessages->getMessages()[0]->getMessageID();
+        $baseMessageId = $messages[0]->getMessageID();
         $message = $client->getOutboundMessageDetails($baseMessageId);
 
         $this->assertNotEmpty($message);
@@ -41,8 +60,28 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
-        $retrievedMessages = $client->getOutboundMessages(1, 50);
-        $baseMessageId = $retrievedMessages->getMessages()[0]->getMessageID();
+        // Retry logic to wait for messages to be available
+        $retries = 3;
+        $retrievedMessages = null;
+        
+        for ($i = 0; $i < $retries; $i++) {
+            $retrievedMessages = $client->getOutboundMessages(1, 50);
+            $messages = $retrievedMessages->getMessages();
+            
+            if (!empty($messages)) {
+                break;
+            }
+            
+            if ($i < $retries - 1) {
+                sleep(2); // Wait 2 seconds before retry
+            }
+        }
+        
+        $this->assertNotEmpty($retrievedMessages, 'No outbound messages retrieved after retries');
+        $messages = $retrievedMessages->getMessages();
+        $this->assertNotEmpty($messages, 'No outbound messages found in response');
+        
+        $baseMessageId = $messages[0]->getMessageID();
         $message = $client->getOutboundMessageDump($baseMessageId);
 
         $this->assertNotEmpty($message);

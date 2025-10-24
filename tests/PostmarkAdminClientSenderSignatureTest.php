@@ -100,6 +100,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
         $timestamp = date('U') . '-' . uniqid();
+        // Create a unique email by adding a suffix before the @ symbol
         $sender = str_replace('@', '+test-php-delete-' . $timestamp . '@', $i);
 
         $name = 'test-php-delete-' . $timestamp;
