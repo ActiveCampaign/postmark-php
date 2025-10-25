@@ -148,9 +148,15 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 
         $sigs = $client->listSenderSignatures()->getSenderSignatures();
 
+        // Verify the deleted signature is not in the list
+        $deletedSignatureFound = false;
         foreach ($sigs as $key => $value) {
-            $this->assertNotSame($sig->getName(), $value->getName());
+            if ($value->getID() === $sig->getID()) {
+                $deletedSignatureFound = true;
+                break;
+            }
         }
+        $this->assertFalse($deletedSignatureFound, 'Deleted signature should not be found in the list');
     }
 
     public function testClientCanRequestNewVerificationForSignature()
