@@ -5,6 +5,7 @@ namespace Postmark\Tests;
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\PostmarkAdminClient;
+use Exception;
 
 /**
  * @internal
@@ -43,7 +44,14 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
 
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-        $id = $client->listSenderSignatures()->getSenderSignatures()[0]->getID();
+        $signatures = $client->listSenderSignatures()->getSenderSignatures();
+        
+        if (empty($signatures)) {
+            $this->markTestSkipped('No sender signatures available in test account');
+            return;
+        }
+        
+        $id = $signatures[0]->getID();
         $sig = $client->getSenderSignature($id);
 
         $this->assertNotEmpty($sig->getName());
@@ -99,18 +107,63 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-delete' . date('U'), $i);
+        $timestamp = date('U') . '-' . uniqid();
+        // Create a unique email by replacing the [TOKEN] placeholder
+        $sender = str_replace('[TOKEN]', 'test-php-delete-' . $timestamp, $i);
+        
+        // Validate the generated email is valid
+        if (!filter_var($sender, FILTER_VALIDATE_EMAIL)) {
+            $this->fail("Generated email address is invalid: $sender");
+        }
 
-        $name = 'test-php-delete-' . date('U');
+        $name = 'test-php-delete-' . $timestamp;
+        
+        // First, try to clean up any existing signature with the same name
+        $sigs = $client->listSenderSignatures()->getSenderSignatures();
+        foreach ($sigs as $existing) {
+            if ($existing->getName() === $name) {
+                try {
+                    $client->deleteSenderSignature($existing->getID());
+                    // Wait a moment for deletion to process
+                    sleep(2);
+                } catch (Exception $e) {
+                    // Continue if deletion fails
+                    continue;
+                }
+            }
+        }
+        
+        // Also try to clean up any signature with the same email address
+        foreach ($sigs as $existing) {
+            try {
+                // Get the signature details to check the email
+                $sigDetails = $client->getSenderSignature($existing->getID());
+                if ($sigDetails->getEmailAddress() === $sender) {
+                    $client->deleteSenderSignature($existing->getID());
+                    sleep(2);
+                }
+            } catch (Exception $e) {
+                // Continue if we can't check or delete
+                continue;
+            }
+        }
+        
+        // Now try to create the signature
         $sig = $client->createSenderSignature($sender, $name);
 
         $client->deleteSenderSignature($sig->getID());
 
         $sigs = $client->listSenderSignatures()->getSenderSignatures();
 
+        // Verify the deleted signature is not in the list
+        $deletedSignatureFound = false;
         foreach ($sigs as $key => $value) {
-            $this->assertNotSame($sig->getName(), $value->getName());
+            if ($value->getID() === $sig->getID()) {
+                $deletedSignatureFound = true;
+                break;
+            }
         }
+        $this->assertFalse($deletedSignatureFound, 'Deleted signature should not be found in the list');
     }
 
     public function testClientCanRequestNewVerificationForSignature()

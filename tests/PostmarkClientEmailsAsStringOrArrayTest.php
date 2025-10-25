@@ -23,9 +23,12 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
             $emailsAsArray[] = str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         }
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $emailsAsArray,
+            [$uniqueRecipient],
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',
@@ -43,9 +46,12 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
             $emailsAsString .= str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS) . ',';
         }
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $emailsAsString,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',

@@ -19,6 +19,13 @@ use Postmark\Models\PostmarkException;
 abstract class PostmarkClientBase
 {
     /**
+     * SDK_VERSION is the current version of the Postmark PHP SDK.
+     *
+     * @var string
+     */
+    public static $SDK_VERSION = '7.0.0';
+
+    /**
      * BASE_URL is "https://api.postmarkapp.com".
      *
      * You may modify this value to disable SSL support, but it is not recommended.
@@ -112,7 +119,10 @@ abstract class PostmarkClientBase
         $options = [
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'User-Agent' => "Postmark-PHP (PHP Version:{$this->version}, OS:{$this->os})",
+                'User-Agent' => "Postmark-SDK/" . self::$SDK_VERSION . " (PHP/{$this->version})",
+                'X-Client-Type' => 'SDK',
+                'X-Client-Version' => self::$SDK_VERSION,
+                'X-Client-Language' => 'php',
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 $this->authorization_header => $this->authorization_token,

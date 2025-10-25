@@ -19,6 +19,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 {
     public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
@@ -175,9 +176,12 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $this->assertEquals($id, $createdStream->getID());
 
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $emailResult = $client->sendEmailWithTemplate(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             $result->getTemplateId(),
             ['subjectValue' => 'Hello!'],
             false,
@@ -195,7 +199,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         $this->assertEquals(0, $emailResult->getErrorCode());
         $this->assertSame('OK', $emailResult->getMessage());
-        $this->assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getTo());
+        $this->assertSame($uniqueRecipient, $emailResult->getTo());
         $this->assertNotEmpty($emailResult->getSubmittedAt());
         $this->assertNotEmpty($emailResult->getMessageID());
     }
@@ -207,9 +211,12 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b> from Template Model!', 'Hello {{name}} from Template Model!');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $templatedModel = new TemplatedPostmarkMessage();
         $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
-        $templatedModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
+        $templatedModel->setTo($uniqueRecipient);
         $templatedModel->setTemplateId($result->getTemplateId());
         $templatedModel->setTemplateModel(['subjectValue' => 'Hello!']);
         $templatedModel->setHeaders(['X-Test-Header' => 'Header.', 'X-Test-Header-2' => 'Test Header 2']);
@@ -218,7 +225,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         $this->assertEquals(0, $emailResult->getErrorCode());
         $this->assertSame('OK', $emailResult->getMessage());
-        $this->assertSame($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS, $emailResult->getTo());
+        $this->assertSame($uniqueRecipient, $emailResult->getTo());
         $this->assertNotEmpty($emailResult->getSubmittedAt());
         $this->assertNotEmpty($emailResult->getMessageID());
     }

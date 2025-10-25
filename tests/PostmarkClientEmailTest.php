@@ -11,6 +11,7 @@ use Postmark\Models\PostmarkAttachment;
 use Postmark\Models\PostmarkException;
 use Postmark\Models\PostmarkMessage;
 use Postmark\PostmarkClient;
+use Postmark\PostmarkClientBase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -31,9 +32,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.'
@@ -49,10 +53,13 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         // Sending with a valid stream
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email via the default stream.',
@@ -102,9 +109,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $emailModel = new PostmarkMessage();
         $emailModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
-        $emailModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
+        $emailModel->setTo($uniqueRecipient);
         $emailModel->setSubject("Hello from the PHP Postmark Client Tests! ({$currentTime})");
         $emailModel->setHtmlBody('<b>Hi there! sent via a model.</b>');
         $emailModel->setTextBody('This is a text body for a test email sent via a model.');
@@ -130,9 +140,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
             'text/plain'
         );
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',
@@ -162,9 +175,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
             'image/png'
         );
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there! From <img src="cid:hello.png"/></b>',
             'This is a text body for a test email.',
@@ -261,5 +277,56 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
             PostmarkClient::$BASE_URL,
             sprintf('%s://%s', $lastRequestUri->getScheme(), $lastRequestUri->getHost())
         );
+    }
+
+    public function testClientSetsCorrectHeaders()
+    {
+        $successResponse = new Response(
+            200,
+            ['Content-Type' => 'application/json'],
+            json_encode([
+                'To' => 'recipient@example.com',
+                'SubmittedAt' => '2023-01-01T00:00:00Z',
+                'MessageId' => '0a129aee-e1cd-480d-b08d-4f48548ff48d',
+                'ErrorCode' => 0,
+                'Message' => 'OK',
+            ])
+        );
+
+        $guzzleMockHandler = new MockHandler();
+        $guzzleMockHandler->append($successResponse);
+
+        $httpHistoryContainer = [];
+
+        $handlerStack = HandlerStack::create($guzzleMockHandler);
+        $handlerStack->push(Middleware::history($httpHistoryContainer), 'history');
+
+        $guzzleClient = new Client([
+            'handler' => $handlerStack,
+        ]);
+        $postmarkClient = new PostmarkClient('test-token');
+
+        $postmarkClient->setClient($guzzleClient);
+
+        $postmarkClient->sendEmail(
+            'sender@example.com',
+            'recipient@example.com',
+            'Test message',
+            null,
+            'Text body'
+        );
+
+        // @var RequestInterface $lastRequest
+        $lastRequest = $httpHistoryContainer[0]['request'];
+
+        // Verify the new headers are present
+        $this->assertEquals('SDK', $lastRequest->getHeaderLine('X-Client-Type'));
+        $this->assertEquals(PostmarkClientBase::$SDK_VERSION, $lastRequest->getHeaderLine('X-Client-Version'));
+        $this->assertEquals('php', $lastRequest->getHeaderLine('X-Client-Language'));
+        
+        // Verify User-Agent format
+        $userAgent = $lastRequest->getHeaderLine('User-Agent');
+        $this->assertStringStartsWith('Postmark-SDK/', $userAgent);
+        $this->assertStringContainsString('(PHP/', $userAgent);
     }
 }
