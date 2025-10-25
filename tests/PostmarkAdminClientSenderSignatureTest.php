@@ -44,7 +44,14 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
 
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-        $id = $client->listSenderSignatures()->getSenderSignatures()[0]->getID();
+        $signatures = $client->listSenderSignatures()->getSenderSignatures();
+        
+        if (empty($signatures)) {
+            $this->markTestSkipped('No sender signatures available in test account');
+            return;
+        }
+        
+        $id = $signatures[0]->getID();
         $sig = $client->getSenderSignature($id);
 
         $this->assertNotEmpty($sig->getName());

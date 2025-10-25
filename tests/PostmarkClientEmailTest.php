@@ -32,9 +32,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.'
@@ -50,10 +53,13 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         // Sending with a valid stream
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email via the default stream.',
@@ -103,9 +109,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         $currentTime = date('c');
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $emailModel = new PostmarkMessage();
         $emailModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
-        $emailModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
+        $emailModel->setTo($uniqueRecipient);
         $emailModel->setSubject("Hello from the PHP Postmark Client Tests! ({$currentTime})");
         $emailModel->setHtmlBody('<b>Hi there! sent via a model.</b>');
         $emailModel->setTextBody('This is a text body for a test email sent via a model.');
@@ -131,9 +140,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
             'text/plain'
         );
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',
@@ -163,9 +175,12 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
             'image/png'
         );
 
+        // Generate a unique recipient email to avoid suppression issues
+        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
+        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
+            $uniqueRecipient,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there! From <img src="cid:hello.png"/></b>',
             'This is a text body for a test email.',
