@@ -5,6 +5,7 @@ namespace Postmark\Tests;
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\PostmarkAdminClient;
+use Exception;
 
 /**
  * @internal
@@ -100,8 +101,13 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
         $timestamp = date('U') . '-' . uniqid();
-        // Create a unique email by adding a suffix before the @ symbol
-        $sender = str_replace('@', '+test-php-delete-' . $timestamp . '@', $i);
+        // Create a unique email by replacing the [TOKEN] placeholder
+        $sender = str_replace('[TOKEN]', 'test-php-delete-' . $timestamp, $i);
+        
+        // Validate the generated email is valid
+        if (!filter_var($sender, FILTER_VALIDATE_EMAIL)) {
+            $this->fail("Generated email address is invalid: $sender");
+        }
 
         $name = 'test-php-delete-' . $timestamp;
         
@@ -109,8 +115,29 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $sigs = $client->listSenderSignatures()->getSenderSignatures();
         foreach ($sigs as $existing) {
             if ($existing->getName() === $name) {
-                $client->deleteSenderSignature($existing->getID());
-                break;
+                try {
+                    $client->deleteSenderSignature($existing->getID());
+                    // Wait a moment for deletion to process
+                    sleep(2);
+                } catch (Exception $e) {
+                    // Continue if deletion fails
+                    continue;
+                }
+            }
+        }
+        
+        // Also try to clean up any signature with the same email address
+        foreach ($sigs as $existing) {
+            try {
+                // Get the signature details to check the email
+                $sigDetails = $client->getSenderSignature($existing->getID());
+                if ($sigDetails->getEmailAddress() === $sender) {
+                    $client->deleteSenderSignature($existing->getID());
+                    sleep(2);
+                }
+            } catch (Exception $e) {
+                // Continue if we can't check or delete
+                continue;
             }
         }
         
