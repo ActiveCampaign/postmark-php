@@ -155,7 +155,7 @@ class PostmarkClick
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function getReceivedAt(): string
     {
@@ -163,7 +163,7 @@ class PostmarkClick
     }
 
     /**
-     * @param mixed|string $ReceivedAt
+     * @param string $ReceivedAt
      */
     public function setReceivedAt(string $ReceivedAt): PostmarkClick
     {

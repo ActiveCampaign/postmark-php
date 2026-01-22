@@ -9,6 +9,7 @@
     <testsuites>
         <testsuite name="unit">
             <directory>tests/</directory>
+            <exclude>tests/PostmarkClientBaseTest.php</exclude>
         </testsuite>
     </testsuites>
 

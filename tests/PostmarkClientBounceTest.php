@@ -21,32 +21,6 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
     /**
      * @depends testClientCanActivateBounce
      */
-    public function testClientCanGetDeliveryStatistics()
-    {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-        $stats = $client->getDeliveryStatistics();
-
-        $this->assertNotEmpty($stats, 'Stats from getDeliveryStatistics() should never be null or empty.');
-        $this->assertGreaterThan(0, $stats->getInactiveMails(), 'The inactive mail count should be greater than zero.');
-    }
-
-    /**
-     * @depends testClientCanActivateBounce
-     */
-    public function testClientCanGetBounces()
-    {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-
-        $bounces = $client->getBounces(10, 0);
-        $this->assertNotEmpty($bounces);
-    }
-
-    /**
-     * @depends testClientCanActivateBounce
-     */
     public function testClientCanGetBounce()
     {
         $tk = parent::$testKeys;
@@ -85,7 +59,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertNotEmpty($dump);
         $this->assertNotEmpty($dump->getBody());
     }
-
+    
     public function testClientCanActivateBounce()
     {
         $tk = parent::$testKeys;
@@ -147,4 +121,31 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $this->assertNotEmpty($actBounce);
         $this->assertEquals($id, $actBounce->getID());
     }
+
+    /**
+     * @depends testClientCanActivateBounce
+     */
+    public function testClientCanGetDeliveryStatistics()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $stats = $client->getDeliveryStatistics();
+
+        $this->assertNotEmpty($stats, 'Stats from getDeliveryStatistics() should never be null or empty.');
+        $this->assertGreaterThan(0, $stats->getInactiveMails(), 'The inactive mail count should be greater than zero.');
+    }
+
+    /**
+     * @depends testClientCanActivateBounce
+     */
+    public function testClientCanGetBounces()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        $bounces = $client->getBounces(10, 0);
+        $this->assertNotEmpty($bounces);
+    }
+    
 }
