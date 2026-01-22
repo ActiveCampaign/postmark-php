@@ -12,7 +12,7 @@ class PostmarkAttachment implements JsonSerializable
     private $data;
     private $contentId;
 
-    private function __construct($base64EncodedData, $attachmentName, $mimeType = 'application/octet-stream', $contentId = null)
+    private function __construct($base64EncodedData, $attachmentName, $mimeType = 'application/octet-stream', ?string $contentId = null)
     {
         $this->name = $attachmentName;
         $this->data = $base64EncodedData;
