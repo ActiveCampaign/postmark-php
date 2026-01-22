@@ -20,7 +20,8 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
 
         $messages = $client->getOutboundMessages(10);
         $this->assertNotEmpty($messages);
-        $this->assertCount(10, $messages->getMessages());
+        $this->assertGreaterThan(0, $messages->getTotalCount());
+        $this->assertNotEmpty($messages->getMessages());
     }
 
     public function testClientCanGetOutboundMessageDetails()

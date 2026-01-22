@@ -13,6 +13,25 @@ use Postmark\PostmarkAdminClient;
  */
 class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 {
+    private static function buildSenderSignatureEmail(string $prototype, string $prefix): string
+    {
+        $token = $prefix . str_replace('.', '', uniqid('', true));
+
+        if (strpos($prototype, '[TOKEN]') !== false) {
+            return str_replace('[TOKEN]', $token, $prototype);
+        }
+
+        $atPos = strpos($prototype, '@');
+        if ($atPos !== false) {
+            $local = substr($prototype, 0, $atPos);
+            $domain = substr($prototype, $atPos + 1);
+
+            return $local . '+' . $token . '@' . $domain;
+        }
+
+        return $token . '@example.com';
+    }
+
     public static function tearDownAfterClass(): void
     {
         $tk = parent::$testKeys;
@@ -55,7 +74,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-create' . date('U'), $i);
+        $sender = self::buildSenderSignatureEmail($i, 'test-php-create-');
         $name = 'test-php-create-' . date('U');
         $note = 'This is a test note';
 
@@ -75,7 +94,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $name = 'test-php-edit-' . date('U');
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-edit' . date('U'), $i);
+        $sender = self::buildSenderSignatureEmail($i, 'test-php-edit-');
 
         $exploded = explode('@', $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE);
         $returnPath = 'test.' . $exploded[1];
@@ -99,7 +118,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-delete' . date('U'), $i);
+        $sender = self::buildSenderSignatureEmail($i, 'test-php-delete-');
 
         $name = 'test-php-delete-' . date('U');
         $sig = $client->createSenderSignature($sender, $name);
@@ -119,7 +138,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-reverify' . date('U'), $i);
+        $sender = self::buildSenderSignatureEmail($i, 'test-php-reverify-');
 
         $name = 'test-php-reverify-' . date('U');
         $sig = $client->createSenderSignature($sender, $name);
