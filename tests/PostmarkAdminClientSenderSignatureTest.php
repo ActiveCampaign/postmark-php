@@ -13,25 +13,6 @@ use Postmark\PostmarkAdminClient;
  */
 class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
 {
-    private static function buildSenderSignatureEmail(string $prototype, string $prefix): string
-    {
-        $token = $prefix . str_replace('.', '', uniqid('', true));
-
-        if (strpos($prototype, '[TOKEN]') !== false) {
-            return str_replace('[TOKEN]', $token, $prototype);
-        }
-
-        $atPos = strpos($prototype, '@');
-        if ($atPos !== false) {
-            $local = substr($prototype, 0, $atPos);
-            $domain = substr($prototype, $atPos + 1);
-
-            return $local . '+' . $token . '@' . $domain;
-        }
-
-        return $token . '@example.com';
-    }
-
     public static function tearDownAfterClass(): void
     {
         $tk = parent::$testKeys;
