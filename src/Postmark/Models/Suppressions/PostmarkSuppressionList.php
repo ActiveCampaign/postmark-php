@@ -9,7 +9,8 @@ class PostmarkSuppressionList
     public function __construct(array $values)
     {
         $tempSuppressions = [];
-        foreach ($values['Suppressions'] as $sups) {
+        $suppressions = $values['Suppressions'] ?? [];
+        foreach ($suppressions as $sups) {
             $obj = json_decode(json_encode($sups));
             $postmarkSup = new PostmarkSuppression((array) $obj);
 

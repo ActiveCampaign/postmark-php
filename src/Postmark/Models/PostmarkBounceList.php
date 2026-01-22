@@ -11,7 +11,8 @@ class PostmarkBounceList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempBounce = [];
-        foreach ($values['Bounces'] as $bounce) {
+        $bounces = $values['Bounces'] ?? [];
+        foreach ($bounces as $bounce) {
             $obj = json_decode(json_encode($bounce));
             $postmarkBounce = new PostmarkBounce((array) $obj);
 

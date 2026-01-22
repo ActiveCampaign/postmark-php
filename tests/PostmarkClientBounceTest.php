@@ -52,7 +52,14 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $bounces = $client->getBounces(10, 0);
-        $id = $bounces->getBounces()[0]->getID();
+        $bounceList = $bounces->getBounces();
+        
+        if (empty($bounceList)) {
+            $this->markTestSkipped('No bounces available for testing');
+            return;
+        }
+        
+        $id = $bounceList[0]->getID();
         $bounce = $client->getBounce($id);
         $this->assertNotEmpty($bounce);
         $this->assertEquals($id, $bounce->getID());
@@ -66,7 +73,14 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $bounces = $client->getBounces(10, 0);
-        $id = $bounces->Bounces[0]->getID();
+        $bounceList = $bounces->getBounces();
+        
+        if (empty($bounceList)) {
+            $this->markTestSkipped('No bounces available for testing');
+            return;
+        }
+        
+        $id = $bounceList[0]->getID();
         $dump = $client->getBounceDump($id);
         $this->assertNotEmpty($dump);
         $this->assertNotEmpty($dump->getBody());
