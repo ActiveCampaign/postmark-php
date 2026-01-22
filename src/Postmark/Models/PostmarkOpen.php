@@ -63,7 +63,7 @@ class PostmarkOpen
         return $this;
     }
 
-    public function getGeo(): PostmarkGeographyInfo
+    public function getGeo(): ?PostmarkGeographyInfo
     {
         return $this->Geo;
     }
@@ -114,7 +114,7 @@ class PostmarkOpen
         return $this;
     }
 
-    public function getClient(): PostmarkAgentInfo
+    public function getClient(): ?PostmarkAgentInfo
     {
         return $this->Client;
     }
@@ -129,7 +129,7 @@ class PostmarkOpen
         return $this;
     }
 
-    public function getOS(): PostmarkAgentInfo
+    public function getOS(): ?PostmarkAgentInfo
     {
         return $this->OS;
     }

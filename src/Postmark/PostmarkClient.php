@@ -306,7 +306,7 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|bool   $inactive      specifies if the bounce caused Postmark to deactivate this email
      * @param null|string $emailFilter   Filter by email address
      * @param null|string $tag           Filter by tag
-     * @param null|int    $messageID     Filter by MessageID
+     * @param null|string $messageID     Filter by MessageID
      * @param null|string $fromdate      filter for bounces after is date
      * @param null|string $todate        filter for bounces before this date
      * @param null|string $messagestream Filter by Message Stream ID. If null, the default "outbound" transactional stream will be used.
@@ -320,7 +320,7 @@ class PostmarkClient extends PostmarkClientBase
         ?bool $inactive = null,
         ?string $emailFilter = null,
         ?string $tag = null,
-        ?int $messageID = null,
+        ?string $messageID = null,
         ?string $fromdate = null,
         ?string $todate = null,
         ?string $messagestream = null
