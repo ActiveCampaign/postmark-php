@@ -30,9 +30,10 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-send-');
 
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
@@ -48,10 +49,11 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-stream-');
 
         // Sending with a valid stream
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
@@ -72,7 +74,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         // Sending with an invalid stream
         try {
             $response = $client->sendEmail(
-                $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+                $fromAddress,
                 $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
                 "Hello from the PHP Postmark Client Tests! ({$currentTime})",
                 '<b>Hi there!</b>',
@@ -101,9 +103,10 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-model-');
 
         $emailModel = new PostmarkMessage();
-        $emailModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
+        $emailModel->setFrom($fromAddress);
         $emailModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         $emailModel->setSubject("Hello from the PHP Postmark Client Tests! ({$currentTime})");
         $emailModel->setHtmlBody('<b>Hi there! sent via a model.</b>');
@@ -123,6 +126,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-attach-');
 
         $attachment = PostmarkAttachment::fromRawData(
             'attachment content',
@@ -131,7 +135,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         );
 
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
@@ -155,6 +159,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-file-');
 
         $attachment = PostmarkAttachment::fromFile(
             dirname(__FILE__) . '/postmark-logo.png',
@@ -163,7 +168,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         );
 
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there! From <img src="cid:hello.png"/></b>',
@@ -185,6 +190,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
 
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-batch-');
 
         $batch = [];
 
@@ -196,7 +202,7 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         for ($i = 0; $i < 5; ++$i) {
             $payload = [
-                'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+                'From' => $fromAddress,
                 'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
                 'Subject' => "Hello from the PHP Postmark Client Tests! ({$currentTime})",
                 'HtmlBody' => '<b>Hi there! (batch test)</b>',

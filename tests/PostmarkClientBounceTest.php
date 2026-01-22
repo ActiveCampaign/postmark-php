@@ -67,7 +67,7 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
 
         // make sure that this email is not suppressed
         // generate a bounces
-        $fromEmail = $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS;
+        $fromEmail = self::senderAddressForTest($tk, 'test-php-bounce-');
         $toEmail = 'hardbounce@bounce-testing.postmarkapp.com'; // special email to generate bounce
         $subject = 'Hello from Postmark!';
         $htmlBody = '<strong>Hello</strong> dear Postmark user.';

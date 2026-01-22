@@ -158,6 +158,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-template-');
 
         // make sure the message stream exists
         $id = 'php-test';
@@ -176,14 +177,14 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
         $emailResult = $client->sendEmailWithTemplate(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
             $result->getTemplateId(),
             ['subjectValue' => 'Hello!'],
             false,
             'TestTag',
             true,
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             null, // cc
             null, // bcc
             null, // headers
@@ -206,9 +207,10 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b> from Template Model!', 'Hello {{name}} from Template Model!');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-template-model-');
 
         $templatedModel = new TemplatedPostmarkMessage();
-        $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
+        $templatedModel->setFrom($fromAddress);
         $templatedModel->setTo($tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         $templatedModel->setTemplateId($result->getTemplateId());
         $templatedModel->setTemplateModel(['subjectValue' => 'Hello!']);
@@ -231,6 +233,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $result = $client->createTemplate('test-php-template-' . date('c'), 'Subject', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-template-batch-');
 
         $batch = [];
 
@@ -238,7 +241,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         for ($i = 0; $i < 5; ++$i) {
             $payload = [
-                'From' => $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+                'From' => $fromAddress,
                 'To' => $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS,
                 'TemplateID' => $result->getTemplateId(),
                 'TemplateModel' => ['name' => 'Jones-' . $i],

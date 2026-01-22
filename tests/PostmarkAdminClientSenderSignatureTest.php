@@ -143,7 +143,16 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $name = 'test-php-reverify-' . date('U');
         $sig = $client->createSenderSignature($sender, $name);
 
-        $result = $client->resendSenderSignatureConfirmation($sig->getID());
+        try {
+            $result = $client->resendSenderSignatureConfirmation($sig->getID());
+        } catch (\Postmark\Models\PostmarkException $exception) {
+            if (strpos($exception->message, 'already been confirmed') !== false) {
+                $this->markTestSkipped('Sender signature was already confirmed.');
+                return;
+            }
+
+            throw $exception;
+        }
 
         $this->assertEquals(0, $result->getErrorCode());
     }

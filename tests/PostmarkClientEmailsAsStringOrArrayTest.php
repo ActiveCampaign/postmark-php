@@ -18,13 +18,14 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-array-');
         $emailsAsArray = [];
         for ($i = 1; $i <= 50; ++$i) {
             $emailsAsArray[] = str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         }
 
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $emailsAsArray,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
@@ -38,13 +39,14 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $currentTime = date('c');
+        $fromAddress = self::senderAddressForTest($tk, 'test-php-string-');
         $emailsAsString = '';
         for ($i = 1; $i <= 50; ++$i) {
             $emailsAsString .= str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS) . ',';
         }
 
         $response = $client->sendEmail(
-            $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            $fromAddress,
             $emailsAsString,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
