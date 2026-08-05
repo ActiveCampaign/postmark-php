@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v8.0.0 (breaking)
+
+### Removed
+- **Dropped support for PHP 8.1** (EOL 2025-12-31). `composer.json` now requires `~8.2 || ~8.3 || ~8.4 || ~8.5`.
+  Projects on 8.1 will stay on v7.x — Composer will not offer them this release.
+
+### Changed
+- **BREAKING** — `PostmarkAttachment::fromRawData()`, `::fromBase64EncodedData()` and `::fromFile()` now declare
+  `string` for their first two parameters and a `PostmarkAttachment` return type. Callers passing non-string values
+  previously coerced silently and will now raise a `TypeError`.
+- **BREAKING** — `PostmarkOpen::getGeo()` and `::getClient()` now declare nullable return types
+  (`?PostmarkGeographyInfo`, `?PostmarkAgentInfo`), matching what the API can actually return. Code that type-hinted
+  the non-nullable form will need updating.
+
+### Added
+- PHP 8.5 to the supported range and the CI matrix.
+
+### Fixed
+- `PostmarkBounceList` and `PostmarkInboundMessageList` no longer fatal when the API response omits the
+  `Bounces` / `InboundMessages` key.
+
 ## [v7.0.0](https://github.com/ActiveCampaign/postmark-php/tree/v7.0.0)
 
 ### Added

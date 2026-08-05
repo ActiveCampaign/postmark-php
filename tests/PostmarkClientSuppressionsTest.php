@@ -32,7 +32,11 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
                 }
             }
         } catch (PostmarkException $e) {
-            // Ignore errors during cleanup
+            fwrite(STDERR, sprintf(
+                "WARNING: suppression cleanup failed (%s): %s\n",
+                get_class($e),
+                $e->getMessage()
+            ));
         }
     }
 
