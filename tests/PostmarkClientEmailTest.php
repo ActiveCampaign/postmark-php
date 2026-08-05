@@ -321,12 +321,14 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         // Verify the new headers are present
         $this->assertEquals('SDK', $lastRequest->getHeaderLine('X-Client-Type'));
-        $this->assertEquals(PostmarkClientBase::$SDK_VERSION, $lastRequest->getHeaderLine('X-Client-Version'));
+        $this->assertEquals(PostmarkClientBase::sdkVersion(), $lastRequest->getHeaderLine('X-Client-Version'));
+        $this->assertNotEmpty($lastRequest->getHeaderLine('X-Client-Version'));
         $this->assertEquals('php', $lastRequest->getHeaderLine('X-Client-Language'));
-        
+
         // Verify User-Agent format
         $userAgent = $lastRequest->getHeaderLine('User-Agent');
         $this->assertStringStartsWith('Postmark-SDK/', $userAgent);
         $this->assertStringContainsString('(PHP/', $userAgent);
+        $this->assertStringContainsString('OS/', $userAgent);
     }
 }

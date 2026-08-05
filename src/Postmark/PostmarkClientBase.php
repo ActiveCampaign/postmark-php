@@ -8,6 +8,7 @@
 
 namespace Postmark;
 
+use Composer\InstalledVersions;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Postmark\Models\PostmarkException;
@@ -19,11 +20,28 @@ use Postmark\Models\PostmarkException;
 abstract class PostmarkClientBase
 {
     /**
-     * SDK_VERSION is the current version of the Postmark PHP SDK.
+     * Version reported when Composer's runtime metadata is unavailable, such as a
+     * source checkout with no installed package.
      *
      * @var string
      */
-    public static $SDK_VERSION = '7.0.0';
+    public const SDK_VERSION_FALLBACK = '7.0.0';
+
+    /**
+     * The installed version of this SDK, as reported to the API.
+     */
+    public static function sdkVersion(): string
+    {
+        if (class_exists(InstalledVersions::class)) {
+            $version = InstalledVersions::getPrettyVersion('wildbit/postmark-php');
+
+            if (null !== $version) {
+                return $version;
+            }
+        }
+
+        return self::SDK_VERSION_FALLBACK;
+    }
 
     /**
      * BASE_URL is "https://api.postmarkapp.com".
@@ -119,9 +137,9 @@ abstract class PostmarkClientBase
         $options = [
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'User-Agent' => "Postmark-SDK/" . self::$SDK_VERSION . " (PHP/{$this->version})",
+                'User-Agent' => 'Postmark-SDK/' . self::sdkVersion() . " (PHP/{$this->version}; OS/{$this->os})",
                 'X-Client-Type' => 'SDK',
-                'X-Client-Version' => self::$SDK_VERSION,
+                'X-Client-Version' => self::sdkVersion(),
                 'X-Client-Language' => 'php',
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
