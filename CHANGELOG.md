@@ -56,6 +56,27 @@ you were catching the `TypeError` from any of the getters above as a workaround,
 
 ### Added
 - PHP 8.5 to the CI matrix.
+- **Guzzle 8 is now supported** alongside Guzzle 7 (`^7.15.2 || ^8.0.1`), thanks to
+  [@simPod](https://github.com/simPod) (#165). Both majors are exercised in CI rather than
+  assumed compatible. The floors are deliberate: Guzzle 8.0.0 and 7.x below 7.15.2 carry
+  [GHSA-v5mv-p594-2x33](https://github.com/advisories/GHSA-v5mv-p594-2x33) (high, host-check
+  bypass) and [GHSA-f7vp-7xgx-4w4r](https://github.com/advisories/GHSA-f7vp-7xgx-4w4r).
+
+  **Read this if you catch Guzzle exceptions.** Composer resolves the highest satisfying
+  version, so upgrading puts you on Guzzle 8 unless you pin otherwise — this is not opt-in.
+  Guzzle 8 reclassified transport exceptions, and because this SDK sets `http_errors => false`
+  and maps responses to `PostmarkException` itself, the transport family is the *only* Guzzle
+  family that reaches your code. Most notably a plain timeout is no longer a `ConnectException`:
+
+  | cURL condition | Guzzle 7 | Guzzle 8 |
+  | --- | --- | --- |
+  | timeout, connect phase | `ConnectException` | `ConnectTimeoutException` (extends `ConnectException`) |
+  | timeout, no response | `ConnectException` | **`NetworkTimeoutException`** |
+  | timeout, body stalled | `ConnectException` | **`ResponseTimeoutException`** |
+  | send/recv error | `RequestException` | **`NetworkException`** |
+
+  Everything still implements `GuzzleException`, so the SDK's documented contract is unchanged —
+  but `catch (ConnectException $e)` around a send will silently stop matching a timeout.
 
 ### Fixed
 - **`getDeliveryStatistics()` reported `Count = 0` for every bounce category, in every released

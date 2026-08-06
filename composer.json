@@ -9,6 +9,7 @@
   "license": "MIT",
   "description": "The officially supported client for Postmark (https://postmarkapp.com)",
   "require": {
+    "php": "^8.2",
     "guzzlehttp/guzzle": "^7.15.2 || ^8.0.1"
   },
   "require-dev": {

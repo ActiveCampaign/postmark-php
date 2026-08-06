@@ -9,7 +9,14 @@ workflows:
       # gives a fork PR any signal at all. Everything below is an integration suite
       # against the live API and cannot start without the tokens above.
       - static-analysis:
-          name: static
+          name: static-guzzle8
+          guzzle: "^8.0.1"
+      # The constraint allows two Guzzle majors, so both have to be exercised or
+      # the compat claim is just an assertion. Guzzle 8 reclassified transport
+      # exceptions, which is the surface this SDK re-exports.
+      - static-analysis:
+          name: static-guzzle7
+          guzzle: "^7.15.2"
       - unit-tests:
           name: php82
           version: "8.2"
@@ -25,13 +32,21 @@ workflows:
 
 jobs:
   static-analysis:
+    parameters:
+      guzzle:
+        description: "Guzzle constraint to resolve against"
+        type: string
+        default: "^8.0.1"
     docker:
       - image: cimg/php:8.2
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: composer install --no-interaction
+          name: Install dependencies (Guzzle << parameters.guzzle >>)
+          command: |
+            composer require --no-update --no-interaction "guzzlehttp/guzzle:<< parameters.guzzle >>"
+            composer update --no-interaction --with-all-dependencies
+            composer show guzzlehttp/guzzle | grep '^versions'
       - run:
           name: PHPStan
           command: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
