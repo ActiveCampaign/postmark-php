@@ -5,6 +5,7 @@ namespace Postmark\Tests;
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\PostmarkAdminClient;
+use Exception;
 
 /**
  * @internal
@@ -43,7 +44,13 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
 
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
-        $id = $client->listSenderSignatures()->getSenderSignatures()[0]->getID();
+        $signatures = $client->listSenderSignatures()->getSenderSignatures();
+
+        if (empty($signatures)) {
+            $this->markTestSkipped('No sender signatures available in test account');
+        }
+
+        $id = $signatures[0]->getID();
         $sig = $client->getSenderSignature($id);
 
         $this->assertNotEmpty($sig->getName());
@@ -55,7 +62,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-create' . date('U'), $i);
+        $sender = str_ireplace('[TOKEN]', 'test-php-create' . date('U'), $i);
         $name = 'test-php-create-' . date('U');
         $note = 'This is a test note';
 
@@ -75,7 +82,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $name = 'test-php-edit-' . date('U');
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-edit' . date('U'), $i);
+        $sender = str_ireplace('[TOKEN]', 'test-php-edit' . date('U'), $i);
 
         $exploded = explode('@', $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE);
         $returnPath = 'test.' . $exploded[1];
@@ -99,18 +106,33 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-delete' . date('U'), $i);
+        $timestamp = date('U') . '-' . uniqid();
+        // Create a unique email by replacing the [TOKEN] placeholder
+        $sender = str_ireplace('[TOKEN]', 'test-php-delete-' . $timestamp, $i);
 
-        $name = 'test-php-delete-' . date('U');
+        // Validate the generated email is valid
+        if (!filter_var($sender, FILTER_VALIDATE_EMAIL)) {
+            $this->fail("Generated email address is invalid: $sender");
+        }
+
+        $name = 'test-php-delete-' . $timestamp;
+
+        // Now try to create the signature
         $sig = $client->createSenderSignature($sender, $name);
 
         $client->deleteSenderSignature($sig->getID());
 
         $sigs = $client->listSenderSignatures()->getSenderSignatures();
 
+        // Verify the deleted signature is not in the list
+        $deletedSignatureFound = false;
         foreach ($sigs as $key => $value) {
-            $this->assertNotSame($sig->getName(), $value->getName());
+            if ($value->getID() === $sig->getID()) {
+                $deletedSignatureFound = true;
+                break;
+            }
         }
+        $this->assertFalse($deletedSignatureFound, 'Deleted signature should not be found in the list');
     }
 
     public function testClientCanRequestNewVerificationForSignature()
@@ -119,7 +141,7 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
 
         $i = $tk->WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE;
-        $sender = str_replace('[TOKEN]', 'test-php-reverify' . date('U'), $i);
+        $sender = str_ireplace('[TOKEN]', 'test-php-reverify' . date('U'), $i);
 
         $name = 'test-php-reverify-' . date('U');
         $sig = $client->createSenderSignature($sender, $name);

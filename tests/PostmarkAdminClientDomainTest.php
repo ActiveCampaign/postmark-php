@@ -97,9 +97,15 @@ class PostmarkAdminClientDomainTest extends PostmarkClientBaseTest
 
         $domains = $client->listDomains()->getDomains();
 
+        // Verify the deleted domain is not in the list
+        $deletedDomainFound = false;
         foreach ($domains as $key => $value) {
-            $this->assertNotSame($domain->getName(), $value->getName());
+            if ($value->getID() === $domain->getID()) {
+                $deletedDomainFound = true;
+                break;
+            }
         }
+        $this->assertFalse($deletedDomainFound, 'Deleted domain should not be found in the list');
     }
 
     public function testClientCanVerifyDKIM()

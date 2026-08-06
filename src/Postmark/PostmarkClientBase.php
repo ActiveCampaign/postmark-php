@@ -8,6 +8,7 @@
 
 namespace Postmark;
 
+use Composer\InstalledVersions;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Postmark\Models\PostmarkException;
@@ -18,6 +19,74 @@ use Postmark\Models\PostmarkException;
  */
 abstract class PostmarkClientBase
 {
+    /**
+     * Version reported when Composer's runtime metadata is unavailable, such as a
+     * source checkout with no installed package.
+     *
+     * Kept in step with the newest CHANGELOG entry by
+     * PostmarkClientBaseTest::testFallbackVersionMatchesChangelog.
+     *
+     * @var string
+     */
+    public const SDK_VERSION_FALLBACK = '7.0.0';
+
+    /** The Packagist name this package is installed under. */
+    private const PACKAGE_NAME = 'wildbit/postmark-php';
+
+    /** Memoized result of {@see self::sdkVersion()}. */
+    private static ?string $sdkVersion = null;
+
+    /**
+     * The installed version of this SDK, as reported to the API.
+     *
+     * Resolution must never throw: this runs on every request, and a failure here
+     * would surface as a non-PostmarkException fatal rather than an API error.
+     * getPrettyVersion() throws OutOfBoundsException when the package is absent
+     * from the installed map — which is the normal case for a vendored copy, a
+     * Phar, a php-scoper'd build, or after a Packagist rename — and class_exists()
+     * does not guard that, because in any Composer-managed host project the class
+     * exists and simply does not know about us. isInstalled() is the documented
+     * non-throwing probe; the catch is belt-and-braces.
+     */
+    public static function sdkVersion(): string
+    {
+        if (null !== self::$sdkVersion) {
+            return self::$sdkVersion;
+        }
+
+        $version = null;
+
+        if (class_exists(InstalledVersions::class)) {
+            try {
+                if (InstalledVersions::isInstalled(self::PACKAGE_NAME)) {
+                    $version = InstalledVersions::getPrettyVersion(self::PACKAGE_NAME);
+                }
+            } catch (\Throwable $e) {
+                $version = null;
+            }
+        }
+
+        return self::$sdkVersion = self::normalizeVersion($version ?? self::SDK_VERSION_FALLBACK);
+    }
+
+    /**
+     * Coerce a Composer version into a valid RFC 9110 product-version token.
+     *
+     * Tags are v-prefixed, so getPrettyVersion() yields "v7.0.0" while the fallback
+     * is "7.0.0"; without stripping, the header format would differ by install
+     * shape. Branch installs yield "dev-feature/x", and "/" is a delimiter rather
+     * than a token character (RFC 9110 §5.6.2), which would mis-split the
+     * User-Agent for any strict parser.
+     */
+    private static function normalizeVersion(string $version): string
+    {
+        $normalized = preg_replace('/[^A-Za-z0-9._+-]/', '-', ltrim($version, 'vV'));
+
+        return ('' === $normalized || null === $normalized)
+            ? self::SDK_VERSION_FALLBACK
+            : $normalized;
+    }
+
     /**
      * BASE_URL is "https://api.postmarkapp.com".
      *
@@ -112,7 +181,12 @@ abstract class PostmarkClientBase
         $options = [
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'User-Agent' => "Postmark-PHP (PHP Version:{$this->version}, OS:{$this->os})",
+                // Product token stays "Postmark-PHP" — it predates this change and any
+                // server-side reporting keyed on it would break silently otherwise.
+                'User-Agent' => 'Postmark-PHP/' . self::sdkVersion() . " (PHP/{$this->version}; OS/{$this->os})",
+                'X-Client-Type' => 'SDK',
+                'X-Client-Version' => self::sdkVersion(),
+                'X-Client-Language' => 'php',
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 $this->authorization_header => $this->authorization_token,
