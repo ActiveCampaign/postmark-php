@@ -33,8 +33,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $currentTime = date('c');
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
             $uniqueRecipient,
@@ -54,8 +54,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $currentTime = date('c');
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         // Sending with a valid stream
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
@@ -110,8 +110,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         $currentTime = date('c');
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $emailModel = new PostmarkMessage();
         $emailModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
         $emailModel->setTo($uniqueRecipient);
@@ -141,8 +141,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         );
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
             $uniqueRecipient,
@@ -176,8 +176,8 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
         );
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
             $uniqueRecipient,
@@ -321,14 +321,23 @@ class PostmarkClientEmailTest extends PostmarkClientBaseTest
 
         // Verify the new headers are present
         $this->assertEquals('SDK', $lastRequest->getHeaderLine('X-Client-Type'));
-        $this->assertEquals(PostmarkClientBase::sdkVersion(), $lastRequest->getHeaderLine('X-Client-Version'));
-        $this->assertNotEmpty($lastRequest->getHeaderLine('X-Client-Version'));
         $this->assertEquals('php', $lastRequest->getHeaderLine('X-Client-Language'));
 
-        // Verify User-Agent format
+        // Derived from Composer directly rather than from sdkVersion(), so that a
+        // wrong version fails here instead of the assertion agreeing with itself.
+        $expectedVersion = ltrim(
+            \Composer\InstalledVersions::getPrettyVersion('wildbit/postmark-php') ?? '',
+            'vV'
+        );
+        $this->assertNotSame('', $expectedVersion);
+        $this->assertEquals($expectedVersion, $lastRequest->getHeaderLine('X-Client-Version'));
+
+        // Verify User-Agent shape in full: product/version (comment), per RFC 9110.
         $userAgent = $lastRequest->getHeaderLine('User-Agent');
-        $this->assertStringStartsWith('Postmark-SDK/', $userAgent);
-        $this->assertStringContainsString('(PHP/', $userAgent);
-        $this->assertStringContainsString('OS/', $userAgent);
+        $this->assertMatchesRegularExpression(
+            '#^Postmark-PHP/[A-Za-z0-9._+-]+ \(PHP/\S+; OS/\S+\)$#',
+            $userAgent
+        );
+        $this->assertStringContainsString('Postmark-PHP/' . $expectedVersion . ' ', $userAgent);
     }
 }

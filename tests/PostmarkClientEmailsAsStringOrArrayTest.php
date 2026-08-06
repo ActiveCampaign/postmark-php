@@ -18,17 +18,18 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $currentTime = date('c');
+        // The point of this file is many-recipients-as-an-array, so the fixture has to
+        // stay multi-recipient. The uniqid suffix is what avoids suppression collisions
+        // between runs; collapsing to a single address would remove the coverage instead.
+        $run = uniqid();
         $emailsAsArray = [];
         for ($i = 1; $i <= 50; ++$i) {
-            $emailsAsArray[] = str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
+            $emailsAsArray[] = str_replace('@', '+' . $run . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         }
 
-        // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            [$uniqueRecipient],
+            $emailsAsArray,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',
@@ -41,17 +42,17 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
         $currentTime = date('c');
-        $emailsAsString = '';
+        // As above: the comma-delimited string is the thing under test, so it stays.
+        $run = uniqid();
+        $emails = [];
         for ($i = 1; $i <= 50; ++$i) {
-            $emailsAsString .= str_replace('@', '+' . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS) . ',';
+            $emails[] = str_replace('@', '+' . $run . $i . '@', $tk->WRITE_TEST_EMAIL_RECIPIENT_ADDRESS);
         }
+        $emailsAsString = implode(',', $emails);
 
-        // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
         $response = $client->sendEmail(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
-            $uniqueRecipient,
+            $emailsAsString,
             "Hello from the PHP Postmark Client Tests! ({$currentTime})",
             '<b>Hi there!</b>',
             'This is a text body for a test email.',

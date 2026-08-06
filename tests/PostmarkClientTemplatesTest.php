@@ -177,8 +177,8 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
 
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b>!', 'Hello {{name}}!');
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $emailResult = $client->sendEmailWithTemplate(
             $tk->WRITE_TEST_SENDER_EMAIL_ADDRESS,
             $uniqueRecipient,
@@ -212,8 +212,8 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         $result = $client->createTemplate('test-php-template-' . date('c'), '{{subject}}', 'Hello <b>{{name}}</b> from Template Model!', 'Hello {{name}} from Template Model!');
 
         // Generate a unique recipient email to avoid suppression issues
-        $uniqueRecipient = 'test-' . uniqid() . '@postmarkapp.com';
-        
+        $uniqueRecipient = 'test-' . uniqid() . '@blackhole.postmarkapp.com';
+
         $templatedModel = new TemplatedPostmarkMessage();
         $templatedModel->setFrom($tk->WRITE_TEST_SENDER_EMAIL_ADDRESS);
         $templatedModel->setTo($uniqueRecipient);
