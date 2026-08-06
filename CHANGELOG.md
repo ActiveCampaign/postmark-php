@@ -45,6 +45,18 @@ you were catching the `TypeError` from any of the getters above as a workaround,
   always permitted; dropping 8.1 is the only real constraint change.
 
 ### Changed
+- **BREAKING** — **transport failures are now `PostmarkTransportException`, not Guzzle exceptions.**
+  `processRestRequest()` previously documented `@throws \GuzzleHttp\Exception\GuzzleException`,
+  making Guzzle's hierarchy part of this SDK's public contract. Because the SDK disables
+  `http_errors` and maps responses itself, the transport family was the *only* Guzzle family that
+  could reach your code — so a Guzzle upgrade silently changed what your `catch` blocks matched.
+  Anything that never reached the API (DNS, connect, TLS, timeout, socket) is now
+  `Postmark\Models\PostmarkTransportException`, which extends `PostmarkException`, so existing
+  `catch (PostmarkException $e)` blocks keep working. The original is preserved on `getPrevious()`.
+
+  Replace `catch (\GuzzleHttp\Exception\ConnectException $e)` with
+  `catch (\Postmark\Models\PostmarkTransportException $e)` and use `$e->isTimeout()` /
+  `$e->isConnectionFailure()` — the SDK normalises across Guzzle majors so you don't have to.
 - **BREAKING** — `PostmarkAttachment::fromRawData()`, `::fromBase64EncodedData()` and `::fromFile()`
   now declare `string` for their first two parameters and a `PostmarkAttachment` return type.
   Passing `null`, an array, or a non-Stringable object now raises a `TypeError`; previously it

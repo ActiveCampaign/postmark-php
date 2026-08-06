@@ -9,8 +9,10 @@
 namespace Postmark;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Postmark\Models\PostmarkException;
+use Postmark\Models\PostmarkTransportException;
 
 /**
  * This is the core class that interacts with the Postmark API. All clients should
@@ -94,6 +96,55 @@ abstract class PostmarkClientBase
     }
 
     /**
+     * Normalise a Guzzle transport failure to a PostmarkTransportException kind.
+     *
+     * All Guzzle-version knowledge is confined here. The two majors express the
+     * same failures differently:
+     *   - Guzzle 7 raises ConnectException for connect AND timeout, and carries a
+     *     cURL errno on the handler context, which is what separates them.
+     *   - Guzzle 8 re-parents ConnectException under NetworkException, DROPS
+     *     getHandlerContext(), and adds precise subclasses instead
+     *     (ConnectTimeoutException, NetworkTimeoutException, ResponseTimeoutException).
+     * Matching on the short class name keeps this working under both without
+     * referencing classes that only exist in one.
+     */
+    private static function classifyTransportFailure(GuzzleException $e): string
+    {
+        $shortName = substr(strrchr('\\' . get_class($e), '\\') ?: '', 1);
+
+        // Guzzle 8: the class already says which it is.
+        if (in_array($shortName, ['ConnectTimeoutException', 'NetworkTimeoutException', 'ResponseTimeoutException'], true)) {
+            return PostmarkTransportException::KIND_TIMEOUT;
+        }
+
+        // Guzzle 7: disambiguate with the cURL errno when the handler supplied one.
+        if (method_exists($e, 'getHandlerContext')) {
+            $errno = $e->getHandlerContext()['errno'] ?? null;
+
+            if (28 === $errno) {
+                return PostmarkTransportException::KIND_TIMEOUT;
+            }
+
+            // Resolve, connect, TLS, empty reply, send/recv.
+            if (in_array($errno, [5, 6, 7, 35, 52, 55, 56], true)) {
+                return PostmarkTransportException::KIND_CONNECTION;
+            }
+        }
+
+        $message = strtolower($e->getMessage());
+
+        if (str_contains($message, 'timed out') || str_contains($message, 'timeout')) {
+            return PostmarkTransportException::KIND_TIMEOUT;
+        }
+
+        if (in_array($shortName, ['ConnectException', 'NetworkException'], true)) {
+            return PostmarkTransportException::KIND_CONNECTION;
+        }
+
+        return PostmarkTransportException::KIND_UNKNOWN;
+    }
+
+    /**
      * The base request method for all API access.
      *
      * @param string $method The request VERB to use (GET, POST, PUT, DELETE)
@@ -102,8 +153,8 @@ abstract class PostmarkClientBase
      *
      * @return mixed
      *
-     * @throws PostmarkException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws PostmarkException          if the API returns an error response
+     * @throws PostmarkTransportException if the API could not be reached at all
      */
     protected function processRestRequest($method = null, $path = null, array $body = []): mixed
     {
@@ -142,7 +193,20 @@ abstract class PostmarkClientBase
             }
         }
 
-        $response = $client->request($method, self::$BASE_URL . $path, $options);
+        try {
+            $response = $client->request($method, self::$BASE_URL . $path, $options);
+        } catch (GuzzleException $e) {
+            // The HTTP client's exception hierarchy is not part of this SDK's contract.
+            // Guzzle 8 reclassified the transport family — a plain timeout stopped being
+            // a ConnectException — and with HTTP_ERRORS disabled that family is the only
+            // one that can reach a caller, so leaking it made every consumer's catch
+            // block version-dependent.
+            throw new PostmarkTransportException(
+                sprintf('Could not reach the Postmark API: %s', $e->getMessage()),
+                $e,
+                self::classifyTransportFailure($e)
+            );
+        }
 
         switch ($response->getStatusCode()) {
             case 200:
