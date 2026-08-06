@@ -55,11 +55,11 @@ class WebhookConfiguration implements JsonSerializable
 
     public function Build(
         int $ID = 0,
-        string $Url = null,
-        string $MessageStream = null,
+        ?string $Url = null,
+        ?string $MessageStream = null,
         ?HttpAuth $HttpAuth = null,
         array $HttpHeaders = [],
-        WebhookConfigurationTriggers $Triggers = null
+        ?WebhookConfigurationTriggers $Triggers = null
     ) {
         $this->ID = $ID;
         $this->Url = $Url;

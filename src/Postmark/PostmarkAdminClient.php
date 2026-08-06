@@ -54,7 +54,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function listServers(int $count = 100, int $offset = 0, string $name = null): PostmarkServerList
+    public function listServers(int $count = 100, int $offset = 0, ?string $name = null): PostmarkServerList
     {
         $query = [];
         $query['count'] = $count;
@@ -103,21 +103,21 @@ class PostmarkAdminClient extends PostmarkClientBase
      */
     public function editServer(
         int $id,
-        string $name = null,
-        string $color = null,
-        bool $rawEmailEnabled = null,
-        bool $smtpApiActivated = null,
-        string $inboundHookUrl = null,
-        string $bounceHookUrl = null,
-        string $openHookUrl = null,
-        bool $postFirstOpenOnly = null,
-        bool $trackOpens = null,
-        string $inboundDomain = null,
-        int $inboundSpamThreshold = null,
-        string $trackLinks = null,
-        string $clickHookUrl = null,
-        string $deliveryHookUrl = null,
-        string $enableSmtpApiErrorHooks = null
+        ?string $name = null,
+        ?string $color = null,
+        ?bool $rawEmailEnabled = null,
+        ?bool $smtpApiActivated = null,
+        ?string $inboundHookUrl = null,
+        ?string $bounceHookUrl = null,
+        ?string $openHookUrl = null,
+        ?bool $postFirstOpenOnly = null,
+        ?bool $trackOpens = null,
+        ?string $inboundDomain = null,
+        ?int $inboundSpamThreshold = null,
+        ?string $trackLinks = null,
+        ?string $clickHookUrl = null,
+        ?string $deliveryHookUrl = null,
+        ?string $enableSmtpApiErrorHooks = null
     ): PostmarkServer {
         $body = [];
         $body['name'] = $name;
@@ -165,21 +165,21 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @throws PostmarkException
      */
     public function createServer(
-        string $name,
-        string $color = null,
-        bool $rawEmailEnabled = null,
-        bool $smtpApiActivated = null,
-        string $inboundHookUrl = null,
-        string $bounceHookUrl = null,
-        string $openHookUrl = null,
-        bool $postFirstOpenOnly = null,
-        bool $trackOpens = null,
-        string $inboundDomain = null,
-        int $inboundSpamThreshold = null,
-        string $trackLinks = null,
-        string $clickHookUrl = null,
-        string $deliveryHookUrl = null,
-        string $enableSmtpApiErrorHooks = null
+        ?string $name,
+        ?string $color = null,
+        ?bool $rawEmailEnabled = null,
+        ?bool $smtpApiActivated = null,
+        ?string $inboundHookUrl = null,
+        ?string $bounceHookUrl = null,
+        ?string $openHookUrl = null,
+        ?bool $postFirstOpenOnly = null,
+        ?bool $trackOpens = null,
+        ?string $inboundDomain = null,
+        ?int $inboundSpamThreshold = null,
+        ?string $trackLinks = null,
+        ?string $clickHookUrl = null,
+        ?string $deliveryHookUrl = null,
+        ?string $enableSmtpApiErrorHooks = null
     ): PostmarkServer {
         $body = [];
         $body['name'] = $name;
@@ -242,7 +242,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function createSenderSignature(string $fromEmail, string $name, string $replyToEmail = null, string $returnPathDomain = null, string $confirmationPersonalNote = null): PostmarkSenderSignature
+    public function createSenderSignature(string $fromEmail, string $name, ?string $replyToEmail = null, ?string $returnPathDomain = null, ?string $confirmationPersonalNote = null): PostmarkSenderSignature
     {
         $body = [];
         $body['fromEmail'] = $fromEmail;
@@ -264,7 +264,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function editSenderSignature(int $id, string $name = null, string $replyToEmail = null, string $returnPathDomain = null, string $confirmationPersonalNote = null): PostmarkSenderSignature
+    public function editSenderSignature(int $id, ?string $name = null, ?string $replyToEmail = null, ?string $returnPathDomain = null, ?string $confirmationPersonalNote = null): PostmarkSenderSignature
     {
         $body = [];
         $body['name'] = $name;
@@ -337,7 +337,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function createDomain(string $name, string $returnPathDomain = null): PostmarkDomainDetails
+    public function createDomain(string $name, ?string $returnPathDomain = null): PostmarkDomainDetails
     {
         $body = [];
         $body['name'] = $name;
@@ -355,7 +355,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      *
      * @throws PostmarkException
      */
-    public function editDomain(int $id, string $returnPathDomain = null, $CustomTrackingDomain = null): PostmarkDomainDetails
+    public function editDomain(int $id, ?string $returnPathDomain = null, $CustomTrackingDomain = null): PostmarkDomainDetails
     {
         $body = [];
         $body['returnPathDomain'] = $returnPathDomain;
