@@ -36,6 +36,39 @@ you were catching the `TypeError` from any of the getters above as a workaround,
 - CI gained a credential-free `static-analysis` job running PHPStan, which is the only check in
   this repo a fork PR can currently exercise.
 
+## [Unreleased] — v8.0.0 (breaking)
+
+### Removed
+- **Dropped support for PHP 8.1** (EOL 2025-12-31). `composer.json` now requires `^8.2`.
+  Projects on 8.1 stay on v7.x — Composer will not offer them this release.
+  Note the previous `~8.1 || ~8.2 || ~8.3 || ~8.4` already resolved to `>=8.1 <9.0`, so 8.5 was
+  always permitted; dropping 8.1 is the only real constraint change.
+
+### Changed
+- **BREAKING** — `PostmarkAttachment::fromRawData()`, `::fromBase64EncodedData()` and `::fromFile()`
+  now declare `string` for their first two parameters and a `PostmarkAttachment` return type.
+  Passing `null`, an array, or a non-Stringable object now raises a `TypeError`; previously it
+  silently produced an empty attachment. `int` and `Stringable` still coerce, except under
+  `declare(strict_types=1)`. **Subclasses overriding these factories must add the
+  `: PostmarkAttachment` return type or PHP will fatal at class-load.**
+- **BREAKING** — `PostmarkAttachment::fromFile()` now throws `RuntimeException` when the file
+  cannot be read, instead of sending an attachment with empty content.
+
+### Added
+- PHP 8.5 to the CI matrix.
+
+### Fixed
+- **`getDeliveryStatistics()` reported `Count = 0` for every bounce category, in every released
+  version.** `PostmarkBounceSummary` read the `FirstOpen` key instead of `Count` — a copy-paste
+  from `PostmarkOpen`. Any dashboard calibrated against the broken zero will start seeing real
+  numbers.
+- `PostmarkBounce` assigned its constructor fallbacks to the wrong properties (`Type` got `0`,
+  `TypeCode` got `''`), throwing `TypeError` on a response missing either field.
+- List models no longer emit `Undefined array key` / `foreach() argument must be of type
+  array|object` warnings when the API response omits the collection key. These were fatal under
+  application error handlers that promote warnings to exceptions (Laravel, Symfony).
+
+
 ## [v7.0.0](https://github.com/ActiveCampaign/postmark-php/tree/v7.0.0)
 
 ### Added

@@ -30,7 +30,14 @@ class PostmarkClientInboundMessageTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $retrievedMessages = $client->getInboundMessages(10);
-        $baseMessageId = $retrievedMessages->getInboundMessages()[0]->getMessageID();
+        $inboundMessages = $retrievedMessages->getInboundMessages();
+        
+        if (empty($inboundMessages)) {
+            $this->markTestSkipped('No inbound messages available for testing');
+            return;
+        }
+        
+        $baseMessageId = $inboundMessages[0]->getMessageID();
         $message = $client->getInboundMessageDetails($baseMessageId);
 
         $this->assertNotEmpty($message);

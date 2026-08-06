@@ -11,13 +11,8 @@ workflows:
       - static-analysis:
           name: static
       - unit-tests:
-          name: php81
-          version: "8.1"
-      - unit-tests:
           name: php82
           version: "8.2"
-          requires:
-            - php81
       - unit-tests:
           name: php83
           version: "8.3"
@@ -28,6 +23,11 @@ workflows:
           version: "8.4"
           requires:
             - php83
+      - unit-tests:
+          name: php85
+          version: "8.5"
+          requires:
+            - php84
 
 jobs:
   static-analysis:

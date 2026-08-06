@@ -29,8 +29,14 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $retrievedMessages = $client->getOutboundMessages(1, 50);
+        $messages = $retrievedMessages->getMessages();
+        
+        if (empty($messages)) {
+            $this->markTestSkipped('No outbound messages available for testing');
+            return;
+        }
 
-        $baseMessageId = $retrievedMessages->getMessages()[0]->getMessageID();
+        $baseMessageId = $messages[0]->getMessageID();
         $message = $client->getOutboundMessageDetails($baseMessageId);
 
         $this->assertNotEmpty($message);
@@ -42,7 +48,14 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $retrievedMessages = $client->getOutboundMessages(1, 50);
-        $baseMessageId = $retrievedMessages->getMessages()[0]->getMessageID();
+        $messages = $retrievedMessages->getMessages();
+        
+        if (empty($messages)) {
+            $this->markTestSkipped('No outbound messages available for testing');
+            return;
+        }
+        
+        $baseMessageId = $messages[0]->getMessageID();
         $message = $client->getOutboundMessageDump($baseMessageId);
 
         $this->assertNotEmpty($message);
