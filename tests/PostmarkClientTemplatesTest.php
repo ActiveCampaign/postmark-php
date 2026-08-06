@@ -46,6 +46,11 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     }
 
     // create
+    protected function setUp(): void
+    {
+        $this->requireConfirmedSenderSignature();
+    }
+
     public function testClientCanCreateTemplate()
     {
         $tk = parent::$testKeys;

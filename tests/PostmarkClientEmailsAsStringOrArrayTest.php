@@ -13,6 +13,11 @@ require_once __DIR__ . '/PostmarkClientBaseTest.php';
  */
 class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
 {
+    protected function setUp(): void
+    {
+        $this->requireConfirmedSenderSignature();
+    }
+
     public function testCanSendArray(): void
     {
         $tk = parent::$testKeys;

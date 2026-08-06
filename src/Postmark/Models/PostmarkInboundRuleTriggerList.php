@@ -11,7 +11,7 @@ class PostmarkInboundRuleTriggerList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempRules = [];
-        foreach ($values['InboundRules'] as $rule) {
+        foreach ($values['InboundRules'] ?? [] as $rule) {
             $obj = json_decode(json_encode($rule));
             $postmarkServer = new PostmarkInboundRuleTrigger((array) $obj);
 

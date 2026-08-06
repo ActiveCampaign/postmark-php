@@ -21,6 +21,11 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
     /**
      * @depends testClientCanActivateBounce
      */
+    protected function setUp(): void
+    {
+        $this->requireConfirmedSenderSignature();
+    }
+
     public function testClientCanGetBounce()
     {
         $tk = parent::$testKeys;
@@ -30,7 +35,6 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         
         if (empty($bounceList)) {
             $this->markTestSkipped('No bounces available for testing');
-            return;
         }
         
         $id = $bounceList[0]->getID();
@@ -51,7 +55,6 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         
         if (empty($bounceList)) {
             $this->markTestSkipped('No bounces available for testing');
-            return;
         }
         
         $id = $bounceList[0]->getID();

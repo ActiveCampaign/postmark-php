@@ -16,23 +16,17 @@ workflows:
       - unit-tests:
           name: php83
           version: "8.3"
-          requires:
-            - php82
       - unit-tests:
           name: php84
           version: "8.4"
-          requires:
-            - php83
       - unit-tests:
           name: php85
           version: "8.5"
-          requires:
-            - php84
 
 jobs:
   static-analysis:
     docker:
-      - image: cimg/php:8.1
+      - image: cimg/php:8.2
     steps:
       - checkout
       - run:

@@ -30,9 +30,21 @@ class PostmarkAttachment implements JsonSerializable
         return new PostmarkAttachment($base64EncodedData, $attachmentName, $mimeType, $contentId);
     }
 
+    /**
+     * @throws \RuntimeException if the file cannot be read
+     */
     public static function fromFile(string $filePath, string $attachmentName, ?string $mimeType = null, ?string $contentId = null): PostmarkAttachment
     {
-        return new PostmarkAttachment(base64_encode(file_get_contents($filePath)), $attachmentName, $mimeType, $contentId);
+        // file_get_contents() returns false on failure and base64_encode(false) is "",
+        // so an unreadable path previously produced a silently empty attachment that
+        // still went out with the message.
+        $contents = @file_get_contents($filePath);
+
+        if (false === $contents) {
+            throw new \RuntimeException(sprintf('Unable to read attachment file "%s".', $filePath));
+        }
+
+        return new PostmarkAttachment(base64_encode($contents), $attachmentName, $mimeType, $contentId);
     }
 
     #[ReturnTypeWillChange]

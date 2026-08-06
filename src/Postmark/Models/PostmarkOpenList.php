@@ -11,7 +11,7 @@ class PostmarkOpenList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempOpens = [];
-        foreach ($values['Opens'] as $open) {
+        foreach ($values['Opens'] ?? [] as $open) {
             $obj = json_decode(json_encode($open));
             $postmarkOpen = new PostmarkOpen((array) $obj);
 
