@@ -11,10 +11,15 @@
  * @see https://activecampaign.atlassian.net/wiki/spaces/DEV/pages/24051783/ActiveCampaign+PHP+Coding+Style+Standards
  * @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/master/doc/ruleSets/index.rst
  */
-$finder = PhpCsFixer\Finder::create()->in(__DIR__);
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
+    ->exclude(['vendor']);
 $config = new PhpCsFixer\Config();
 
-return $config->setRules([
+// setFinder() was missing, so `php-cs-fixer fix` with no path argument aborted with
+// "You must call one of in() or append() methods before iterating over a Finder" —
+// the fixer has never actually been runnable in this repo.
+return $config->setFinder($finder)->setRules([
     '@PhpCsFixer' => true,
     '@PHP82Migration' => true,
     'concat_space' => ['spacing' => 'one'], // This is required by [PER coding style rule 6.2 binary operators](https://www.php-fig.org/per/coding-style/#62-binary-operators)
