@@ -18,6 +18,38 @@ abstract class PostmarkClientBaseTest extends \PHPUnit\Framework\TestCase
         self::$testKeys = new TestingKeys();
         PostmarkClientBase::$BASE_URL = self::$testKeys->BASE_URL ?: 'https://api.postmarkapp.com';
         date_default_timezone_set('UTC');
+
+        // Also here, not just in setUp: a few subclasses build a client in their own
+        // setUpBeforeClass, which runs before any setUp, so a skip there is the only thing that can
+        // stop the constructor throwing.
+        if (!self::$testKeys->hasAnyCredentials()) {
+            self::markTestSkipped(
+                'Integration test: needs Postmark API credentials. Set the tokens from '
+                . 'testing_keys.json.example as environment variables, or create testing_keys.json.'
+            );
+        }
+    }
+
+    /**
+     * Skip, do not error, when the environment has no credentials.
+     *
+     * Every subclass builds a PostmarkClient from a token. With no tokens configured those
+     * constructors throw "Argument #1 ($serverToken) must be of type string, null given", which
+     * PHPUnit reports as 79 ERRORS -- indistinguishable, in CI, from 79 real regressions. That is
+     * what made this pipeline unreadable: the suite has been red since the credentials went away,
+     * so a genuine break had nowhere to show up. A skip states what is actually true -- the code
+     * was not exercised because this environment cannot exercise it.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!self::$testKeys->hasAnyCredentials()) {
+            $this->markTestSkipped(
+                'Integration test: needs Postmark API credentials. Set the tokens from '
+                . 'testing_keys.json.example as environment variables, or create testing_keys.json.'
+            );
+        }
     }
 
     /**

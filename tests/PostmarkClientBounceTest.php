@@ -15,6 +15,11 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
 {
     public static function setUpBeforeClass(): void
     {
+        // Chain first: the parent populates self::$testKeys and skips the class when no
+        // credentials are configured. Without this, $testKeys is whatever an earlier test class
+        // happened to leave in the shared static -- or null, and the client constructor throws.
+        parent::setUpBeforeClass();
+
         PostmarkClientSuppressionsTest::tearDownAfterClass();
     }
 

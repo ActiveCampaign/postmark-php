@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
+<phpunit
         colors="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true">
+        processIsolation="false"
+        stopOnFailure="false"
+        cacheDirectory=".phpunit.cache"
+        displayDetailsOnSkippedTests="true">
+    <!-- Two real suites. The single suite that used to be here was named "unit" but included all of
+         tests/, which is ~95% integration tests against the live API — so "unit" reported nothing of
+         the sort, and a credential outage looked identical to a mass regression. -->
     <testsuites>
         <testsuite name="unit">
+            <!-- Credential-free: constructs models from the array shapes the API returns. Safe on a
+                 fork PR, and the only suite whose red means "the code is broken". -->
+            <file>tests/NullableGetterRegressionTest.php</file>
+        </testsuite>
+        <testsuite name="integration">
+            <!-- Hits the live Postmark API. Skips itself with a message when no tokens are configured
+                 (PostmarkClientBaseTest), so this is green-with-skips rather than red in an
+                 environment that cannot run it. -->
             <directory>tests/</directory>
             <exclude>tests/PostmarkClientBaseTest.php</exclude>
+            <exclude>tests/TestingKeys.php</exclude>
+            <exclude>tests/NullableGetterRegressionTest.php</exclude>
         </testsuite>
     </testsuites>
 

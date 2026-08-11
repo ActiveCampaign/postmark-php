@@ -5,9 +5,13 @@ version: 2.1
 workflows:
   php-tests:
     jobs:
-      # The only job that needs no Postmark credentials, so it is the only one that
-      # gives a fork PR any signal at all. Everything below is an integration suite
-      # against the live API and cannot start without the tokens above.
+      # Static analysis needs no Postmark credentials, so it gives a fork PR real signal.
+      # The unit-tests jobs below now run the CREDENTIAL-FREE suite on each supported PHP
+      # version, so a red one means the code is broken on that version -- which is the whole
+      # point. The live-API suite runs separately (integration-tests) and skips itself with a
+      # message when no tokens are configured, rather than erroring 79 times and making a
+      # credential outage look identical to a mass regression. That is what kept this pipeline
+      # red from 2025-10 onward with no code change behind it.
       - static-analysis:
           name: static-guzzle8
           guzzle: "^8.0.1"
@@ -29,8 +33,25 @@ workflows:
       - unit-tests:
           name: php85
           version: "8.5"
+      - integration-tests:
+          name: integration
 
 jobs:
+  # Live-API suite. Green-with-skips where no tokens are configured, a real gate where they are.
+  # Deliberately NOT chained to the unit jobs: chaining php82->83->84->85 is what hid three
+  # versions' results behind one failure.
+  integration-tests:
+    docker:
+      - image: cimg/php:8.2
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: composer install --no-interaction
+      - run:
+          name: Run integration tests (skips without credentials)
+          command: composer test:integration
+
   static-analysis:
     parameters:
       guzzle:
@@ -80,5 +101,6 @@ jobs:
             sudo composer self-update
             sudo composer install --no-interaction
       - run:
-          name: Run tests
+          # Credential-free suite: real per-version signal that can actually be green.
+          name: Run unit tests
           command: composer test

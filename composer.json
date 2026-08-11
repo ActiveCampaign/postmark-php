@@ -29,7 +29,9 @@
     ]
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit --testsuite unit",
+    "test:integration": "phpunit --testsuite integration",
+    "test:all": "phpunit"
   },
   "config": {
     "allow-plugins": {

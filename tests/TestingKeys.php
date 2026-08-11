@@ -46,4 +46,28 @@ class TestingKeys
 
         $this->BASE_URL = getenv('BASE_URL') ?: ($test_keys['BASE_URL'] ?? null);
     }
+
+    /**
+     * Whether any Postmark credential is configured at all.
+     *
+     * BASE_URL is excluded deliberately: it has a default and is present even with no tokens, so
+     * counting it would report "configured" for an environment that cannot call the API.
+     */
+    public function hasAnyCredentials(): bool
+    {
+        foreach ([
+            $this->READ_INBOUND_TEST_SERVER_TOKEN,
+            $this->READ_SELENIUM_OPEN_TRACKING_TOKEN,
+            $this->READ_SELENIUM_TEST_SERVER_TOKEN,
+            $this->READ_LINK_TRACKING_TEST_SERVER_TOKEN,
+            $this->WRITE_ACCOUNT_TOKEN,
+            $this->WRITE_TEST_SERVER_TOKEN,
+        ] as $token) {
+            if (!empty($token)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
