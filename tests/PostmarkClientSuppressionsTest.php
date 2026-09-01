@@ -15,17 +15,48 @@ use Postmark\PostmarkClient;
  */
 class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp passes when ANY ONE of six tokens is set, so a
+        // partially-configured environment reaches the client constructor and fatals with
+        // "Argument #1 ($serverToken) must be of type string, null given". Guard the token this
+        // class actually uses so it skips with a name instead.
+        $this->requireKeys('WRITE_TEST_SERVER_TOKEN');
+    }
+
     public static function tearDownAfterClass(): void
     {
         $tk = parent::$testKeys;
+
+        // Static, so no instance setUp() guard can protect this — and PostmarkClientBounceTest calls it
+        // from its own setUpBeforeClass(), which means an environment holding SOME credentials but not
+        // WRITE_TEST_SERVER_TOKEN fatals here with "Argument #1 ($serverToken) must be of type string,
+        // null given" before a single test runs. Cleanup that cannot run is a no-op, not a failure.
+        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+            return;
+        }
+
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         // remove all suppressions on the default stream
-        $sups = $client->getSuppressions();
-        foreach ($sups->getSuppressions() as $sup) {
-            $suppressionChanges = [new SuppressionChangeRequest($sup->getEmailAddress())];
-            $messageStream = 'outbound';
-            $client->deleteSuppressions($suppressionChanges, $messageStream);
+        try {
+            $sups = $client->getSuppressions();
+            $suppressions = $sups->getSuppressions();
+            if (!empty($suppressions)) {
+                foreach ($suppressions as $sup) {
+                    $suppressionChanges = [new SuppressionChangeRequest($sup->getEmailAddress())];
+                    $messageStream = 'outbound';
+                    $client->deleteSuppressions($suppressionChanges, $messageStream);
+                }
+            }
+        } catch (PostmarkException $e) {
+            fwrite(STDERR, sprintf(
+                "WARNING: suppression cleanup failed (%s): %s\n",
+                get_class($e),
+                $e->getMessage()
+            ));
         }
     }
 

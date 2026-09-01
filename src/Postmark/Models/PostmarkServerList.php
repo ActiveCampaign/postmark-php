@@ -11,7 +11,7 @@ class PostmarkServerList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempServers = [];
-        foreach ($values['Servers'] as $server) {
+        foreach ($values['Servers'] ?? [] as $server) {
             $obj = json_decode(json_encode($server));
             $postmarkServer = new PostmarkServer((array) $obj);
 

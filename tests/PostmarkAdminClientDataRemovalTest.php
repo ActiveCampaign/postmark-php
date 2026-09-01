@@ -13,6 +13,17 @@ use Postmark\PostmarkAdminClient;
  */
 class PostmarkAdminClientDataRemovalTest extends PostmarkClientBaseTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp passes when ANY ONE of six tokens is set, so a
+        // partially-configured environment reaches the client constructor and fatals with
+        // "Argument #1 ($serverToken) must be of type string, null given". Guard the token this
+        // class actually uses so it skips with a name instead.
+        $this->requireKeys('WRITE_ACCOUNT_TOKEN');
+    }
+
     public function testClientCanCreateRequest()
     {
         $tk = parent::$testKeys;

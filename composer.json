@@ -9,8 +9,8 @@
   "license": "MIT",
   "description": "The officially supported client for Postmark (https://postmarkapp.com)",
   "require": {
-    "php": "~8.1 || ~8.2|| ~8.3 || ~8.4",
-    "guzzlehttp/guzzle": "^7.8"
+    "php": "^8.2",
+    "guzzlehttp/guzzle": "^7.15.2 || ^8.0.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
@@ -29,7 +29,9 @@
     ]
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit --testsuite unit",
+    "test:integration": "phpunit --testsuite integration",
+    "test:all": "phpunit"
   },
   "config": {
     "allow-plugins": {

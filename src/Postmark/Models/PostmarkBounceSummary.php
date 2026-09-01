@@ -12,7 +12,7 @@ class PostmarkBounceSummary
     {
         $this->Type = !empty($values['Type']) ? $values['Type'] : '';
         $this->Name = !empty($values['Name']) ? $values['Name'] : '';
-        $this->Count = !empty($values['FirstOpen']) ? $values['FirstOpen'] : 0;
+        $this->Count = !empty($values['Count']) ? $values['Count'] : 0;
     }
 
     public function getType(): string

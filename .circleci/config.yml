@@ -5,39 +5,82 @@ version: 2.1
 workflows:
   php-tests:
     jobs:
-      # The only job that needs no Postmark credentials, so it is the only one that
-      # gives a fork PR any signal at all. Everything below is an integration suite
-      # against the live API and cannot start without the tokens above.
+      # Static analysis needs no Postmark credentials, so it gives a fork PR real signal.
+      # The unit-tests jobs below now run the CREDENTIAL-FREE suite on each supported PHP
+      # version, so a red one means the code is broken on that version -- which is the whole
+      # point. The live-API suite runs separately (integration-tests) and skips itself with a
+      # message when no tokens are configured, rather than erroring 79 times and making a
+      # credential outage look identical to a mass regression. That is what kept this pipeline
+      # red from 2025-10 onward with no code change behind it.
       - static-analysis:
-          name: static
-      - unit-tests:
-          name: php81
-          version: "8.1"
+          name: static-guzzle8
+          guzzle: "^8.0.1"
+      # The constraint allows two Guzzle majors, so both have to be exercised or
+      # the compat claim is just an assertion. Guzzle 8 reclassified transport
+      # exceptions, which is the surface this SDK re-exports.
+      - static-analysis:
+          name: static-guzzle7
+          guzzle: "^7.15.2"
       - unit-tests:
           name: php82
           version: "8.2"
-          requires:
-            - php81
       - unit-tests:
           name: php83
           version: "8.3"
-          requires:
-            - php82
       - unit-tests:
           name: php84
           version: "8.4"
-          requires:
-            - php83
+      - unit-tests:
+          name: php85
+          version: "8.5"
+      - integration-tests:
+          name: integration
 
 jobs:
-  static-analysis:
+  # Live-API suite. Green-with-skips where no tokens are configured, a real gate where they are.
+  # Deliberately NOT chained to the unit jobs: chaining php82->83->84->85 is what hid three
+  # versions' results behind one failure.
+  integration-tests:
     docker:
-      - image: cimg/php:8.1
+      - image: cimg/php:8.2
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: composer install --no-interaction
+      # Fork PRs legitimately have no credentials — CircleCI withholds project env vars from them by
+      # design — so skipping is correct there and the job must stay green. On the TRUNK build a missing
+      # token is a configuration fault, and a job that exits 0 having run nothing is the same
+      # silent-green failure this PR exists to remove: php81 sat red for ten months precisely because
+      # nobody could tell "no credentials" from "79 regressions".
+      - run:
+          name: Require credentials on trunk (fork PRs skip by design)
+          command: |
+            if [ -z "${CIRCLE_PR_NUMBER:-}" ] && [ -z "${WRITE_ACCOUNT_TOKEN:-}" ]; then
+              echo "WRITE_ACCOUNT_TOKEN is unset on a trunk build — the integration suite would skip"
+              echo "every test and report success. Failing instead."
+              exit 1
+            fi
+      - run:
+          name: Run integration tests (skips without credentials)
+          command: composer test:integration
+
+  static-analysis:
+    parameters:
+      guzzle:
+        description: "Guzzle constraint to resolve against"
+        type: string
+        default: "^8.0.1"
+    docker:
+      - image: cimg/php:8.2
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies (Guzzle << parameters.guzzle >>)
+          command: |
+            composer require --no-update --no-interaction "guzzlehttp/guzzle:<< parameters.guzzle >>"
+            composer update --no-interaction --with-all-dependencies
+            composer show guzzlehttp/guzzle | grep '^versions'
       - run:
           name: PHPStan
           command: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
@@ -71,5 +114,6 @@ jobs:
             sudo composer self-update
             sudo composer install --no-interaction
       - run:
-          name: Run tests
+          # Credential-free suite: real per-version signal that can actually be green.
+          name: Run unit tests
           command: composer test

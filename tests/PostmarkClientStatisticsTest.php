@@ -13,6 +13,12 @@ use Postmark\PostmarkClient;
  */
 class PostmarkClientStatisticsTest extends PostmarkClientBaseTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->requireKeys('READ_SELENIUM_OPEN_TRACKING_TOKEN');
+    }
+
     public function testClientCanGetMessageOpens()
     {
         $tk = parent::$testKeys;
@@ -28,6 +34,13 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest
         $client = new PostmarkClient($tk->READ_SELENIUM_OPEN_TRACKING_TOKEN, $tk->TEST_TIMEOUT);
 
         $stats = $client->getOpenStatistics();
+
+        if ([] === $stats->getOpens()) {
+            $this->markTestSkipped(
+                'The open-tracking test server has no recorded opens, so there is no message to '
+                . 'query. Missing fixture data on the shared test account, not an SDK fault.'
+            );
+        }
 
         $messageId = $stats->getOpens()[0]->getMessageID();
         $result = $client->getOpenStatisticsForMessage($messageId);

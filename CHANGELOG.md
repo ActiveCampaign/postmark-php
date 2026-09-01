@@ -36,6 +36,80 @@ you were catching the `TypeError` from any of the getters above as a workaround,
 - CI gained a credential-free `static-analysis` job running PHPStan, which is the only check in
   this repo a fork PR can currently exercise.
 
+## [Unreleased] — v8.0.0 (breaking)
+
+### Upgrading from v7 — read this first
+
+Three things change behaviour without you changing a line of code. Everything else in this release is
+either a declared signature break (see **Changed**) or a straight bug fix.
+
+| What | You will notice |
+|---|---|
+| `getDeliveryStatistics()` bounce counts | Every bounce category reported `Count = 0` in every released v7. It now reports real numbers. **Any alert or dashboard calibrated against that zero will start firing.** |
+| Guzzle 8 transport exceptions | `catch (ConnectException $e)` around a send stops matching a plain timeout. Nothing errors — the catch just stops running. Catch `GuzzleException`, or add the new types. |
+| `PostmarkAttachment::fromFile()` | Previously sent an attachment with empty content when the file could not be read; now throws `RuntimeException`. A latent path bug becomes a hard failure on upgrade. |
+
+The Guzzle floor also rises, which can block `composer update` — see **Changed**.
+
+### Removed
+- **Dropped support for PHP 8.1** (EOL 2025-12-31). `composer.json` now requires `^8.2`.
+  Projects on 8.1 stay on v7.x — Composer will not offer them this release.
+  Note the previous `~8.1 || ~8.2 || ~8.3 || ~8.4` already resolved to `>=8.1 <9.0`, so 8.5 was
+  always permitted; dropping 8.1 is the only real constraint change.
+
+### Changed
+- **BREAKING** — `PostmarkAttachment::fromRawData()`, `::fromBase64EncodedData()` and `::fromFile()`
+  now declare `string` for their first two parameters and a `PostmarkAttachment` return type.
+  Passing `null`, an array, or a non-Stringable object now raises a `TypeError`; previously it
+  silently produced an empty attachment. `int` and `Stringable` still coerce, except under
+  `declare(strict_types=1)`. **Subclasses overriding these factories must add the
+  `: PostmarkAttachment` return type or PHP will fatal at class-load.**
+- **BREAKING** — `PostmarkAttachment::fromFile()` now throws `RuntimeException` when the file
+  cannot be read, instead of sending an attachment with empty content.
+- **BREAKING (behaviour, not signature) — Guzzle 8 reclassified transport exceptions, so
+  `catch (ConnectException $e)` around a send will silently stop matching a timeout.** This is the
+  largest blast radius in v8.0.0 and the reason it is filed here rather than under Added: nothing in
+  your code changes, and a swallowed timeout is worse than a fatal because nothing tells you.
+
+  Composer resolves the highest satisfying version, so upgrading puts you on Guzzle 8 unless you pin
+  otherwise — this is not opt-in. Because this SDK sets `http_errors => false` and maps responses to
+  `PostmarkException` itself, the transport family is the *only* Guzzle family that reaches your code:
+
+  | cURL condition | Guzzle 7 | Guzzle 8 |
+  | --- | --- | --- |
+  | timeout, connect phase | `ConnectException` | `ConnectTimeoutException` (extends `ConnectException`) |
+  | timeout, no response | `ConnectException` | **`NetworkTimeoutException`** |
+  | timeout, body stalled | `ConnectException` | **`ResponseTimeoutException`** |
+  | send/recv error | `RequestException` | **`NetworkException`** |
+
+  Everything still implements `GuzzleException`, so the SDK's documented contract is unchanged.
+  If you catch the transport family, catch `GuzzleException` or add the new types.
+- **The Guzzle floor rises from `^7.8` to `^7.15.2 || ^8.0.1`.** This can block `composer update` for
+  a consumer whose other dependencies pin an older Guzzle 7.x. The floors are deliberate: Guzzle
+  8.0.0 and 7.x below 7.15.2 carry
+  [GHSA-v5mv-p594-2x33](https://github.com/advisories/GHSA-v5mv-p594-2x33) (high, host-check bypass)
+  and [GHSA-f7vp-7xgx-4w4r](https://github.com/advisories/GHSA-f7vp-7xgx-4w4r).
+
+### Added
+- PHP 8.5 to the CI matrix.
+- **Guzzle 8 support** alongside Guzzle 7, thanks to [@simPod](https://github.com/simPod) (#165).
+  Both majors are exercised in CI rather than assumed compatible — see the exception
+  reclassification under **Changed**, which is the part that can break your code.
+### Fixed
+- **`getDeliveryStatistics()` reported `Count = 0` for every bounce category, in every released
+  version.** `PostmarkBounceSummary` read the `FirstOpen` key instead of `Count` — a copy-paste
+  from `PostmarkOpen`. Any dashboard calibrated against the broken zero will start seeing real
+  numbers.
+- `PostmarkBounce` assigned its constructor fallbacks to the wrong properties (`Type` got `0`,
+  `TypeCode` got `''`). Only `TypeCode` threw `TypeError`. **`Type` silently coerced `0` to the
+  string `"0"`** — no `src/` file declares `strict_types`, so a bounce with no `Type` in the response
+  reported a type of `"0"` rather than failing. Silent corruption on a deliverability field, not a
+  crash, which is the stronger reason to take this release.
+- List models no longer emit `Undefined array key` / `foreach() argument must be of type
+  array|object` warnings when the API response omits the collection key. These were fatal under
+  application error handlers that promote warnings to exceptions (Laravel, Symfony).
+
+
 ## [v7.0.0](https://github.com/ActiveCampaign/postmark-php/tree/v7.0.0)
 
 ### Added
