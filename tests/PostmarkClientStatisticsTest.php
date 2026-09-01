@@ -15,6 +15,7 @@ class PostmarkClientStatisticsTest extends PostmarkClientBaseTest
 {
     protected function setUp(): void
     {
+        parent::setUp();
         $this->requireKeys('READ_SELENIUM_OPEN_TRACKING_TOKEN');
     }
 

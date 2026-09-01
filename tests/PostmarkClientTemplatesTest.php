@@ -25,6 +25,15 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         parent::setUpBeforeClass();
 
         $tk = parent::$testKeys;
+
+        // Static hook, so no instance setUp() guard reaches it: an environment holding SOME credentials
+        // but not WRITE_TEST_SERVER_TOKEN fatals here before a test runs. Cleanup that cannot run is a
+        // no-op, not a failure. Deliberately NOT applied inside test methods — an early return there
+        // would report a pass with zero assertions, which is the silent-green failure this PR removes.
+        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+            return;
+        }
+
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $templates = $client->listTemplates();
@@ -39,6 +48,15 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     public static function tearDownAfterClass(): void
     {
         $tk = parent::$testKeys;
+
+        // Static hook, so no instance setUp() guard reaches it: an environment holding SOME credentials
+        // but not WRITE_TEST_SERVER_TOKEN fatals here before a test runs. Cleanup that cannot run is a
+        // no-op, not a failure. Deliberately NOT applied inside test methods — an early return there
+        // would report a pass with zero assertions, which is the silent-green failure this PR removes.
+        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+            return;
+        }
+
         $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
 
         $templates = $client->listTemplates();
@@ -53,6 +71,14 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
     // create
     protected function setUp(): void
     {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp is true when ANY ONE of six tokens is set, so a
+        // partially-configured environment passes it. Guard the token this class actually constructs
+        // clients with, or the skip never fires and PostmarkClient's constructor throws
+        // "Argument #1 ($serverToken) must be of type string, null given" — the exact fatal this
+        // release exists to remove.
+        $this->requireKeys('WRITE_TEST_SERVER_TOKEN');
         $this->requireConfirmedSenderSignature();
     }
 

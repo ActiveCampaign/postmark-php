@@ -15,6 +15,14 @@ class PostmarkClientEmailsAsStringOrArrayTest extends PostmarkClientBaseTest
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp is true when ANY ONE of six tokens is set, so a
+        // partially-configured environment passes it. Guard the token this class actually constructs
+        // clients with, or the skip never fires and PostmarkClient's constructor throws
+        // "Argument #1 ($serverToken) must be of type string, null given" — the exact fatal this
+        // release exists to remove.
+        $this->requireKeys('WRITE_TEST_SERVER_TOKEN');
         $this->requireConfirmedSenderSignature();
     }
 

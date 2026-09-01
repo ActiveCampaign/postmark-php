@@ -27,6 +27,11 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
 
     protected function setUp(): void
     {
+        // hasAnyCredentials() in the base setUp passes when ANY ONE of six tokens is set, so a
+        // partially-configured environment reaches the client constructor and fatals with
+        // "Argument #1 ($serverToken) must be of type string, null given". Guard the token this
+        // class actually uses so it skips with a name instead.
+        $this->requireKeys('WRITE_TEST_SERVER_TOKEN');
         parent::setUp();
         $tk = parent::$testKeys;
         $this->client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
@@ -40,7 +45,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
                         $this->client->deleteWebhookConfiguration($webhook->ID);
                     } catch (\Exception $e) {
                         // Ignore deletion errors during cleanup
-                    }
+    }
                 }
             }
         } catch (\Exception $e) {

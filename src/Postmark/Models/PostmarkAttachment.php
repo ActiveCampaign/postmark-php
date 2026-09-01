@@ -38,10 +38,21 @@ class PostmarkAttachment implements JsonSerializable
         // file_get_contents() returns false on failure and base64_encode(false) is "",
         // so an unreadable path previously produced a silently empty attachment that
         // still went out with the message.
+        //
+        // The @ is kept so a consumer's error handler does not turn a warning into an exception before
+        // the RuntimeException below can be thrown — but the suppressed reason is recovered and
+        // included, because "missing" / "permission denied" / "failed stream wrapper" are a one-minute
+        // fix and a support ticket respectively.
         $contents = @file_get_contents($filePath);
 
         if (false === $contents) {
-            throw new \RuntimeException(sprintf('Unable to read attachment file "%s".', $filePath));
+            $reason = error_get_last()['message'] ?? null;
+
+            throw new \RuntimeException(sprintf(
+                'Unable to read attachment file "%s".%s',
+                $filePath,
+                null === $reason ? '' : ' ' . $reason
+            ));
         }
 
         return new PostmarkAttachment(base64_encode($contents), $attachmentName, $mimeType, $contentId);

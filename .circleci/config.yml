@@ -48,6 +48,19 @@ jobs:
       - run:
           name: Install dependencies
           command: composer install --no-interaction
+      # Fork PRs legitimately have no credentials — CircleCI withholds project env vars from them by
+      # design — so skipping is correct there and the job must stay green. On the TRUNK build a missing
+      # token is a configuration fault, and a job that exits 0 having run nothing is the same
+      # silent-green failure this PR exists to remove: php81 sat red for ten months precisely because
+      # nobody could tell "no credentials" from "79 regressions".
+      - run:
+          name: Require credentials on trunk (fork PRs skip by design)
+          command: |
+            if [ -z "${CIRCLE_PR_NUMBER:-}" ] && [ -z "${WRITE_ACCOUNT_TOKEN:-}" ]; then
+              echo "WRITE_ACCOUNT_TOKEN is unset on a trunk build — the integration suite would skip"
+              echo "every test and report success. Failing instead."
+              exit 1
+            fi
       - run:
           name: Run integration tests (skips without credentials)
           command: composer test:integration
