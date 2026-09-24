@@ -95,6 +95,12 @@ The Guzzle floor also rises, which can block `composer update` — see **Changed
 - **Guzzle 8 support** alongside Guzzle 7, thanks to [@simPod](https://github.com/simPod) (#165).
   Both majors are exercised in CI rather than assumed compatible — see the exception
   reclassification under **Changed**, which is the part that can break your code.
+- **`createWebhookConfiguration()` and `editWebhookConfiguration()` take an optional trailing
+  `?bool $verify`.** The webhooks API now tests the endpoint on create and edit and rejects the
+  request with error 1364 if it does not respond. Pass `verify: false` to save the webhook
+  unverified instead (sent as `?verify=false`); it receives no events until it is verified. On an
+  edit this takes a live webhook out of service. Leaving it out sends nothing, so the API default
+  (verify) applies — existing calls behave exactly as before.
 ### Fixed
 - **`getDeliveryStatistics()` reported `Count = 0` for every bounce category, in every released
   version.** `PostmarkBounceSummary` read the `FirstOpen` key instead of `Count` — a copy-paste

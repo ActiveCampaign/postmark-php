@@ -56,7 +56,8 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         // Note: Most tests should create their own webhooks for better isolation
         $webhook = $this->client->createWebhookConfiguration(
             'http://example.com/test-php-url-' . uniqid(),
-            'outbound'
+            'outbound',
+            verify: false
         );
         $this->webhookId = $webhook->getID();
     }
@@ -102,7 +103,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     private function createTestWebhook(?string $urlSuffix = null, string $messageStream = 'outbound'): \Postmark\Models\Webhooks\WebhookConfiguration
     {
         $url = 'http://example.com/test-php-url-' . ($urlSuffix ?? uniqid());
-        $webhook = $this->client->createWebhookConfiguration($url, $messageStream);
+        $webhook = $this->client->createWebhookConfiguration($url, $messageStream, verify: false);
         $this->trackWebhookForCleanup($webhook->getID());
         return $webhook;
     }
@@ -124,7 +125,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $url = 'http://www.postmark.com/test-php-url';
         $messageStream = 'outbound';
 
-        $result = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
+        $result = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers, verify: false);
         $this->trackWebhookForCleanup($result->getID());
 
         $this->assertNotEmpty($result->getID());
@@ -157,10 +158,10 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $url = 'http://www.postmark.com/test-php-url';
         $messageStream = 'outbound';
 
-        $configuration = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
+        $configuration = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers, verify: false);
         $this->trackWebhookForCleanup($configuration->getID());
 
-        $result = $this->client->editWebhookConfiguration($configuration->getID(), $url);
+        $result = $this->client->editWebhookConfiguration($configuration->getID(), $url, verify: false);
 
         $this->assertEquals($configuration->getID(), $result->getID());
         $this->assertEquals($configuration->getUrl(), $result->getUrl());
@@ -184,7 +185,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $url = 'http://www.postmark.com/test-php-url';
         $messageStream = 'outbound';
 
-        $configuration = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers);
+        $configuration = $this->client->createWebhookConfiguration($url, $messageStream, $httpAuth, $headers, $triggers, verify: false);
         $this->trackWebhookForCleanup($configuration->getID());
 
         $newUrl = 'http://www.postmark.com/new-test-php-url';
@@ -194,7 +195,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
         $newOpenTrigger = new WebhookConfigurationOpenTrigger(false, false);
         $newTriggers = new WebhookConfigurationTriggers($newOpenTrigger);
 
-        $result = $this->client->editWebhookConfiguration($configuration->getID(), $newUrl, $newHttpAuth, $newHeaders, $newTriggers);
+        $result = $this->client->editWebhookConfiguration($configuration->getID(), $newUrl, $newHttpAuth, $newHeaders, $newTriggers, verify: false);
 
         $this->assertEquals($newUrl, $result->getUrl());
         $this->assertEquals($newHttpAuth->getUsername(), $result->HttpAuth->getUsername());
@@ -241,7 +242,7 @@ class PostmarkClientWebhooksTest extends PostmarkClientBaseTest
     {
         // Create a dedicated webhook for this test to ensure isolation
         $url = 'http://example.com/delete-test-php-url-' . uniqid();
-        $webhook = $this->client->createWebhookConfiguration($url, 'outbound');
+        $webhook = $this->client->createWebhookConfiguration($url, 'outbound', verify: false);
         $webhookId = $webhook->getID();
         
         // Verify webhook exists before deletion
