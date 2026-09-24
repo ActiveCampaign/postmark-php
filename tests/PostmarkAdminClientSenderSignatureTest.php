@@ -131,6 +131,16 @@ class PostmarkAdminClientSenderSignatureTest extends PostmarkClientBaseTest
         $name = 'test-php-reverify-' . date('U');
         $sig = $client->createSenderSignature($sender, $name);
 
+        if (true === $sig->getConfirmed()) {
+            $client->deleteSenderSignature($sig->getID());
+            $this->markTestSkipped(sprintf(
+                '%s was confirmed on creation because its domain is already verified on the test account, so '
+                . 'there is no confirmation to resend. Point WRITE_TEST_SENDER_SIGNATURE_PROTOTYPE at an '
+                . 'unverified domain to exercise this.',
+                $sender
+            ));
+        }
+
         $result = $client->resendSenderSignatureConfirmation($sig->getID());
 
         $this->assertEquals(0, $result->getErrorCode());

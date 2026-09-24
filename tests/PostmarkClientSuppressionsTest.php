@@ -34,7 +34,7 @@ class PostmarkClientSuppressionsTest extends PostmarkClientBaseTest
         // from its own setUpBeforeClass(), which means an environment holding SOME credentials but not
         // WRITE_TEST_SERVER_TOKEN fatals here with "Argument #1 ($serverToken) must be of type string,
         // null given" before a single test runs. Cleanup that cannot run is a no-op, not a failure.
-        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+        if (!$tk instanceof TestingKeys || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
             return;
         }
 

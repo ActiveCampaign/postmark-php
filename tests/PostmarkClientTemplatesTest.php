@@ -30,7 +30,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         // but not WRITE_TEST_SERVER_TOKEN fatals here before a test runs. Cleanup that cannot run is a
         // no-op, not a failure. Deliberately NOT applied inside test methods — an early return there
         // would report a pass with zero assertions, which is the silent-green failure this PR removes.
-        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+        if (!$tk instanceof TestingKeys || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
             return;
         }
 
@@ -53,7 +53,7 @@ class PostmarkClientTemplatesTest extends PostmarkClientBaseTest
         // but not WRITE_TEST_SERVER_TOKEN fatals here before a test runs. Cleanup that cannot run is a
         // no-op, not a failure. Deliberately NOT applied inside test methods — an early return there
         // would report a pass with zero assertions, which is the silent-green failure this PR removes.
-        if (null === $tk || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
+        if (!$tk instanceof TestingKeys || empty($tk->WRITE_TEST_SERVER_TOKEN)) {
             return;
         }
 

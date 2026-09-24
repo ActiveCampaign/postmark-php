@@ -56,11 +56,18 @@ jobs:
       - run:
           name: Require credentials on trunk (fork PRs skip by design)
           command: |
-            if [ -z "${CIRCLE_PR_NUMBER:-}" ] && [ -z "${WRITE_ACCOUNT_TOKEN:-}" ]; then
-              echo "WRITE_ACCOUNT_TOKEN is unset on a trunk build — the integration suite would skip"
-              echo "every test and report success. Failing instead."
-              exit 1
-            fi
+            [ -n "${CIRCLE_PR_NUMBER:-}" ] && exit 0
+            # Every variable a test class passes to requireKeys(); one missing silently skips that class.
+            missing=0
+            for v in WRITE_ACCOUNT_TOKEN WRITE_TEST_SERVER_TOKEN WRITE_TEST_SENDER_EMAIL_ADDRESS \
+                     READ_SELENIUM_TEST_SERVER_TOKEN READ_SELENIUM_OPEN_TRACKING_TOKEN \
+                     READ_LINK_TRACKING_TEST_SERVER_TOKEN; do
+              if [ -z "$(printenv "$v")" ]; then
+                echo "$v is unset on a trunk build — the classes that need it would skip and report success."
+                missing=1
+              fi
+            done
+            exit $missing
       - run:
           name: Run integration tests (skips without credentials)
           command: composer test:integration
