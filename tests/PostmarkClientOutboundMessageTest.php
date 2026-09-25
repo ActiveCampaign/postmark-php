@@ -13,6 +13,9 @@ use Postmark\PostmarkClient;
  */
 class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
 {
+    /** @var null|array{id: string, tag: string} one seeded message, shared by the class */
+    private static ?array $seed = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -24,56 +27,45 @@ class PostmarkClientOutboundMessageTest extends PostmarkClientBaseTest
         $this->requireKeys('READ_SELENIUM_TEST_SERVER_TOKEN');
     }
 
-    public function testClientCanSearchOutboundMessages()
+    /** @return array{0: PostmarkClient, 1: array{id: string, tag: string}} */
+    private function clientWithSeed(): array
     {
         $tk = parent::$testKeys;
         $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        self::$seed ??= $this->seedOutboundMessage($client, 'outbound');
 
-        $messages = $client->getOutboundMessages(10);
-        $this->assertNotEmpty($messages);
-        if (0 === count($messages->getMessages())) {
-            $this->markTestSkipped(
-                'The test server has no outbound messages, so this asserts nothing. '
-                . 'This is missing fixture data on the shared test account, not an SDK fault.'
-            );
-        }
+        return [$client, self::$seed];
+    }
 
-        $this->assertCount(10, $messages->getMessages());
+    public function testClientCanSearchOutboundMessages()
+    {
+        [$client, $seed] = $this->clientWithSeed();
+
+        $filtered = $client->getOutboundMessages(10, 0, tag: $seed['tag'])->getMessages();
+        $this->assertCount(1, $filtered);
+        $this->assertSame($seed['id'], $filtered[0]->getMessageID());
+
+        $page = $client->getOutboundMessages(10)->getMessages();
+        $this->assertNotEmpty($page);
+        $this->assertLessThanOrEqual(10, count($page));
     }
 
     public function testClientCanGetOutboundMessageDetails()
     {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        [$client, $seed] = $this->clientWithSeed();
 
-        $retrievedMessages = $client->getOutboundMessages(1, 50);
-        $messages = $retrievedMessages->getMessages();
-        
-        if (empty($messages)) {
-            $this->markTestSkipped('No outbound messages available for testing');
-        }
+        $message = $client->getOutboundMessageDetails($seed['id']);
 
-        $baseMessageId = $messages[0]->getMessageID();
-        $message = $client->getOutboundMessageDetails($baseMessageId);
-
-        $this->assertNotEmpty($message);
+        $this->assertSame($seed['id'], $message->getMessageID());
+        $this->assertStringContainsString('Seeded by the postmark-php integration suite.', $message->getTextBody());
     }
 
     public function testClientCanGetOutboundMessageDump()
     {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        [$client, $seed] = $this->clientWithSeed();
 
-        $retrievedMessages = $client->getOutboundMessages(1, 50);
-        $messages = $retrievedMessages->getMessages();
-        
-        if (empty($messages)) {
-            $this->markTestSkipped('No outbound messages available for testing');
-        }
-        
-        $baseMessageId = $messages[0]->getMessageID();
-        $message = $client->getOutboundMessageDump($baseMessageId);
+        $dump = $client->getOutboundMessageDump($seed['id']);
 
-        $this->assertNotEmpty($message);
+        $this->assertStringContainsString($seed['tag'], $dump->getBody());
     }
 }

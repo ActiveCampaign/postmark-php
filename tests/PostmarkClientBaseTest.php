@@ -102,6 +102,44 @@ abstract class PostmarkClientBaseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Send one message through $client and wait until the API can find it by tag.
+     *
+     * The read tests used to assert against whatever the shared test server happened to hold.
+     * Postmark keeps message history for about 45 days, so once CI stopped sending, every one of
+     * them skipped for want of data. Seeding their own message makes them independent of what else
+     * ran recently. The black-hole recipient accepts the message without delivering it.
+     *
+     * @return array{id: string, tag: string}
+     */
+    protected function seedOutboundMessage(\Postmark\PostmarkClient $client, string $label): array
+    {
+        $this->requireConfirmedSenderSignature();
+
+        $tag = 'php-sdk-seed-' . $label . '-' . uniqid();
+        $sent = $client->sendEmail(
+            self::$testKeys->WRITE_TEST_SENDER_EMAIL_ADDRESS,
+            'test@blackhole.postmarkapp.com',
+            'php-sdk seed ' . $tag,
+            null,
+            'Seeded by the postmark-php integration suite.',
+            $tag
+        );
+
+        // Searchable in ~12s in practice; the margin is for a busy shared account.
+        $deadline = time() + 60;
+
+        do {
+            if ([] !== $client->getOutboundMessages(1, 0, tag: $tag)->getMessages()) {
+                return ['id' => $sent->getMessageID(), 'tag' => $tag];
+            }
+
+            sleep(2);
+        } while (time() < $deadline);
+
+        $this->fail(sprintf('Seeded message %s (tag %s) was not searchable within 60s.', $sent->getMessageID(), $tag));
+    }
+
+    /**
      * Skip when WRITE_TEST_SENDER_EMAIL_ADDRESS is not a confirmed Sender Signature.
      *
      * Every send in the suite uses it as the From address, so when the test account
