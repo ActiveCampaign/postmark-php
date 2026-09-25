@@ -11,7 +11,7 @@ class PostmarkTemplateList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempTemplates = [];
-        foreach ($values['Templates'] as $template) {
+        foreach ($values['Templates'] ?? [] as $template) {
             $obj = json_decode(json_encode($template));
             $postmarkTemplate = new PostmarkTemplate((array) $obj);
 

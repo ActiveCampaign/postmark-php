@@ -11,7 +11,8 @@ class PostmarkOutboundMessageList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempMessages = [];
-        foreach ($values['Messages'] as $message) {
+        $messages = $values['Messages'] ?? [];
+        foreach ($messages as $message) {
             $obj = json_decode(json_encode($message));
             $postmarkMessage = new PostmarkOutboundMessage((array) $obj);
 

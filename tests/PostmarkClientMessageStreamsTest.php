@@ -5,6 +5,7 @@ namespace Postmark\Tests;
 require_once __DIR__ . '/PostmarkClientBaseTest.php';
 
 use Postmark\PostmarkAdminClient;
+use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 
 /**
@@ -14,6 +15,17 @@ use Postmark\PostmarkClient;
  */
 class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp passes when ANY ONE of six tokens is set, so a
+        // partially-configured environment reaches the client constructor and fatals with
+        // "Argument #1 ($serverToken) must be of type string, null given". Guard the token this
+        // class actually uses so it skips with a name instead.
+        $this->requireKeys('WRITE_ACCOUNT_TOKEN');
+    }
+
     public static function tearDownAfterClass(): void
     {
         $tk = parent::$testKeys;
@@ -29,6 +41,85 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest
     }
 
     // create message stream
+
+    private const ARCHIVE_FIXTURE = 'php-sdk-ci-archive';
+
+    /**
+     * A client for the shared test server and its long-lived archive fixture, unarchived and ready.
+     *
+     * Postmark refuses to archive a stream younger than 48 hours, or one that sent mail today or
+     * yesterday — account-management's anti-abuse guardrail, reported only as error 1241 "Stream is
+     * unable to be archived at this time". A stream the test just created can therefore never be
+     * archived. This one lives on the shared test server, never sends, and is archived and
+     * unarchived in place. If it has gone missing it is recreated and the tests skip until it is old
+     * enough — once, not on every run.
+     */
+    private function archiveFixtureClient(): PostmarkClient
+    {
+        $this->requireKeys('WRITE_TEST_SERVER_TOKEN');
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->WRITE_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+
+        try {
+            $stream = $client->getMessageStream(self::ARCHIVE_FIXTURE);
+        } catch (PostmarkException $e) {
+            if (404 !== $e->getHttpStatusCode()) {
+                throw $e;
+            }
+
+            $stream = $client->createMessageStream(
+                self::ARCHIVE_FIXTURE,
+                'Broadcasts',
+                'PHP SDK CI archive fixture - do not delete',
+                'Archived and unarchived in place by the postmark-php integration suite. Must never send.'
+            );
+        }
+
+        if (null !== $stream->getArchivedAt()) {
+            // A run that died between archive and unarchive leaves it archived; start from clean.
+            $client->unarchiveMessageStream(self::ARCHIVE_FIXTURE);
+        }
+
+        $archivableAt = (new \DateTimeImmutable($stream->getCreatedAt()))->modify('+48 hours');
+
+        if ($archivableAt > new \DateTimeImmutable()) {
+            $this->markTestSkipped(sprintf(
+                'Archive fixture %s is younger than 48 hours; Postmark refuses to archive it until %s.',
+                self::ARCHIVE_FIXTURE,
+                $archivableAt->format(DATE_ATOM)
+            ));
+        }
+
+        return $client;
+    }
+
+    private function archiveFixture(PostmarkClient $client): \Postmark\Models\MessageStream\PostmarkMessageStreamArchivalConfirmation
+    {
+        try {
+            return $client->archiveMessageStream(self::ARCHIVE_FIXTURE);
+        } catch (PostmarkException $e) {
+            if (false === stripos($e->getMessage(), 'unable to be archived')) {
+                throw $e;
+            }
+
+            $this->fail(
+                'Postmark refused to archive ' . self::ARCHIVE_FIXTURE . ', which is over 48 hours old. '
+                . 'The remaining guardrails are a send from this stream today or yesterday, or a '
+                . 'suspended stream — both mean the fixture was misused, not an SDK fault. API said: '
+                . $e->getMessage()
+            );
+        }
+    }
+
+    /** @return string[] */
+    private static function streamIds(PostmarkClient $client, string $includeArchived): array
+    {
+        return array_map(
+            static fn ($s) => $s->getID(),
+            $client->listMessageStreams('Broadcasts', $includeArchived)->getMessageStreams()
+        );
+    }
+
     public function testClientCanCreateMessageStream()
     {
         $tk = parent::$testKeys;
@@ -118,55 +209,44 @@ class PostmarkClientMessageStreamsTest extends PostmarkClientBaseTest
     // list archived message streams
     public function testClientCanListArchivedStreams()
     {
-        $tk = parent::$testKeys;
-        $server = self::getNewServer();
-        $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
+        $client = $this->archiveFixtureClient();
 
-        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
+        try {
+            $this->archiveFixture($client);
 
-        // 2 broadcast streams, including the default one
-        $this->assertEquals(2, $client->listMessageStreams('Broadcasts')->getTotalCount());
-
-        $client->archiveMessageStream($newStream->getID());
-
-        // Filtering out archived streams by default
-        $this->assertEquals(1, $client->listMessageStreams('Broadcasts')->getTotalCount());
-
-        // Allowing archived streams in the result
-        $this->assertEquals(2, $client->listMessageStreams('Broadcasts', 'true')->getTotalCount());
+            $this->assertNotContains(self::ARCHIVE_FIXTURE, self::streamIds($client, 'false'), 'archived streams are filtered out by default');
+            $this->assertContains(self::ARCHIVE_FIXTURE, self::streamIds($client, 'true'));
+        } finally {
+            $client->unarchiveMessageStream(self::ARCHIVE_FIXTURE);
+        }
     }
 
     // archive message streams
     public function testClientCanArchiveStreams()
     {
-        $tk = parent::$testKeys;
-        $server = self::getNewServer();
-        $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
+        $client = $this->archiveFixtureClient();
 
-        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
-        $archivedStream = $client->archiveMessageStream($newStream->getID());
+        try {
+            $archived = $this->archiveFixture($client);
 
-        $this->assertEquals($newStream->getID(), $archivedStream->getID());
-        $this->assertEquals($newStream->getServerId(), $archivedStream->getServerId());
-        $this->assertNotNull($archivedStream->getExpectedPurgeDate());
-
-        $fetchedStream = $client->getMessageStream($archivedStream->getID());
-        $this->assertNotNull($fetchedStream->getArchivedAt());
+            $this->assertEquals(self::ARCHIVE_FIXTURE, $archived->getID());
+            $this->assertNotEmpty($archived->getExpectedPurgeDate());
+            $this->assertNotNull($client->getMessageStream(self::ARCHIVE_FIXTURE)->getArchivedAt());
+        } finally {
+            $client->unarchiveMessageStream(self::ARCHIVE_FIXTURE);
+        }
     }
 
     // unarchive message streams
     public function testClientCanUnarchiveStreams()
     {
-        $tk = parent::$testKeys;
-        $server = self::getNewServer();
-        $client = new PostmarkClient($server->ApiTokens[0], $tk->TEST_TIMEOUT);
+        $client = $this->archiveFixtureClient();
+        $this->archiveFixture($client);
 
-        $newStream = $client->createMessageStream('test-stream', 'Broadcasts', 'Test Stream Name');
-        $client->archiveMessageStream($newStream->getID());
+        $unarchived = $client->unarchiveMessageStream(self::ARCHIVE_FIXTURE);
 
-        $unarchivedStream = $client->unArchiveMessageStream($newStream->getID());
-
-        $this->assertNull($unarchivedStream->getArchivedAt());
+        $this->assertNull($unarchived->getArchivedAt());
+        $this->assertNull($client->getMessageStream(self::ARCHIVE_FIXTURE)->getArchivedAt());
     }
 
     private static function getNewServer()

@@ -11,7 +11,7 @@ class PostmarkDeliveryStats
     {
         $this->InactiveMails = !empty($values['InactiveMails']) ? $values['InactiveMails'] : 0;
         $tempBounces = [];
-        foreach ($values['Bounces'] as $bounce) {
+        foreach ($values['Bounces'] ?? [] as $bounce) {
             $obj = json_decode(json_encode($bounce));
             $postmarkBounce = new PostmarkBounceSummary((array) $obj);
 

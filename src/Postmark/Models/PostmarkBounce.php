@@ -28,8 +28,8 @@ class PostmarkBounce
     {
         $this->RecordType = !empty($values['RecordType']) ? $values['RecordType'] : '';
         $this->ID = !empty($values['ID']) ? $values['ID'] : 0;
-        $this->Type = !empty($values['Type']) ? $values['Type'] : 0;
-        $this->TypeCode = !empty($values['TypeCode']) ? $values['TypeCode'] : '';
+        $this->Type = !empty($values['Type']) ? $values['Type'] : '';
+        $this->TypeCode = !empty($values['TypeCode']) ? $values['TypeCode'] : 0;
         $this->Name = !empty($values['Name']) ? $values['Name'] : '';
         $this->Tag = !empty($values['Tag']) ? $values['Tag'] : '';
         $this->MessageID = !empty($values['MessageID']) ? $values['MessageID'] : '';

@@ -11,7 +11,7 @@ class PostmarkMessageStreamList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempMessageStreams = [];
-        foreach ($values['MessageStreams'] as $open) {
+        foreach ($values['MessageStreams'] ?? [] as $open) {
             $obj = json_decode(json_encode($open));
             $postmarkMessageStreams = new PostmarkMessageStream((array) $obj);
 

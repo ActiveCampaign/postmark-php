@@ -11,7 +11,7 @@ class PostmarkSenderSignatureList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempSigs = [];
-        foreach ($values['SenderSignatures'] as $open) {
+        foreach ($values['SenderSignatures'] ?? [] as $open) {
             $obj = json_decode(json_encode($open));
             $postmarkSenderSig = new PostmarkSenderSignature((array) $obj);
 

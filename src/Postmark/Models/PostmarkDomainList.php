@@ -11,7 +11,7 @@ class PostmarkDomainList
     {
         $this->TotalCount = !empty($values['TotalCount']) ? $values['TotalCount'] : 0;
         $tempDomains = [];
-        foreach ($values['Domains'] as $domain) {
+        foreach ($values['Domains'] ?? [] as $domain) {
             $obj = json_decode(json_encode($domain));
             $postmarkDomain = new PostmarkDomain((array) $obj);
 

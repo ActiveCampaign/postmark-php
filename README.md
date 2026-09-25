@@ -6,7 +6,7 @@ With Postmark, you can send and _receive_ emails effortlessly.
 
 ## Requirements
 
-- PHP 8.1, 8.2, 8.3, or 8.4
+- PHP 8.2, 8.3, 8.4, or 8.5
 - Guzzle HTTP client
 
 ## Getting Started

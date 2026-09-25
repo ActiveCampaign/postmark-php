@@ -15,9 +15,69 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
 {
     public static function setUpBeforeClass(): void
     {
+        // Chain first: the parent populates self::$testKeys and skips the class when no
+        // credentials are configured. Without this, $testKeys is whatever an earlier test class
+        // happened to leave in the shared static -- or null, and the client constructor throws.
+        parent::setUpBeforeClass();
+
         PostmarkClientSuppressionsTest::tearDownAfterClass();
     }
 
+    /**
+     * @depends testClientCanActivateBounce
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // hasAnyCredentials() in the base setUp is true when ANY ONE of six tokens is set, so a
+        // partially-configured environment passes it. Guard the token this class actually constructs
+        // clients with, or the skip never fires and PostmarkClient's constructor throws
+        // "Argument #1 ($serverToken) must be of type string, null given" — the exact fatal this
+        // release exists to remove.
+        // This class builds clients from BOTH tokens: the read path in testClientCanGetBounce /
+        // testClientCanGetBounceDump, the write path in the activate tests.
+        $this->requireKeys('READ_SELENIUM_TEST_SERVER_TOKEN', 'WRITE_TEST_SERVER_TOKEN');
+        $this->requireConfirmedSenderSignature();
+    }
+
+    public function testClientCanGetBounce()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $bounces = $client->getBounces(10, 0);
+        $bounceList = $bounces->getBounces();
+        
+        if (empty($bounceList)) {
+            $this->markTestSkipped('No bounces available for testing');
+        }
+        
+        $id = $bounceList[0]->getID();
+        $bounce = $client->getBounce($id);
+        $this->assertNotEmpty($bounce);
+        $this->assertEquals($id, $bounce->getID());
+    }
+
+    /**
+     * @depends testClientCanActivateBounce
+     */
+    public function testClientCanGetBounceDump()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
+        $bounces = $client->getBounces(10, 0);
+        $bounceList = $bounces->getBounces();
+        
+        if (empty($bounceList)) {
+            $this->markTestSkipped('No bounces available for testing');
+        }
+        
+        $id = $bounceList[0]->getID();
+        $dump = $client->getBounceDump($id);
+        $this->assertNotEmpty($dump);
+        $this->assertNotEmpty($dump->getBody());
+    }
+    
     public function testClientCanActivateBounce()
     {
         $tk = parent::$testKeys;
@@ -105,32 +165,5 @@ class PostmarkClientBounceTest extends PostmarkClientBaseTest
         $bounces = $client->getBounces(10, 0);
         $this->assertNotEmpty($bounces);
     }
-
-    /**
-     * @depends testClientCanActivateBounce
-     */
-    public function testClientCanGetBounce()
-    {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-        $bounces = $client->getBounces(10, 0);
-        $id = $bounces->getBounces()[0]->getID();
-        $bounce = $client->getBounce($id);
-        $this->assertNotEmpty($bounce);
-        $this->assertEquals($id, $bounce->getID());
-    }
-
-    /**
-     * @depends testClientCanActivateBounce
-     */
-    public function testClientCanGetBounceDump()
-    {
-        $tk = parent::$testKeys;
-        $client = new PostmarkClient($tk->READ_SELENIUM_TEST_SERVER_TOKEN, $tk->TEST_TIMEOUT);
-        $bounces = $client->getBounces(10, 0);
-        $id = $bounces->Bounces[0]->getID();
-        $dump = $client->getBounceDump($id);
-        $this->assertNotEmpty($dump);
-        $this->assertNotEmpty($dump->getBody());
-    }
+    
 }

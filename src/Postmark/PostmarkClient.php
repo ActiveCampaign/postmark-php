@@ -1367,6 +1367,10 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|object $httpAuth      optional Basic HTTP Authentication
      * @param null|array  $httpHeaders   optional list of custom HTTP headers
      * @param null|object $triggers      optional triggers for this webhook configuration
+     * @param null|bool   $verify        Pass false to save the webhook unverified without testing the endpoint
+     *                                   (sent as ?verify=false); it receives no events until verified. When null
+     *                                   the API default applies, which verifies and fails with error 1364 if the
+     *                                   endpoint does not respond.
      *
      * @throws PostmarkException
      */
@@ -1375,7 +1379,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $messageStream = null,
         ?object $httpAuth = null,
         ?array $httpHeaders = null,
-        ?object $triggers = null
+        ?object $triggers = null,
+        ?bool $verify = null
     ): WebhookConfiguration {
         $body = [];
         $body['Url'] = $url;
@@ -1384,7 +1389,7 @@ class PostmarkClient extends PostmarkClientBase
         $body['HttpHeaders'] = $this->fixHeaders($httpHeaders);
         $body['Triggers'] = $triggers;
 
-        return new WebhookConfiguration((array) $this->processRestRequest('POST', '/webhooks', $body));
+        return new WebhookConfiguration((array) $this->processRestRequest('POST', '/webhooks' . $this->verifyQuery($verify), $body));
     }
 
     /**
@@ -1396,6 +1401,9 @@ class PostmarkClient extends PostmarkClientBase
      * @param null|object $httpAuth    optional Basic HTTP Authentication
      * @param null|array  $httpHeaders optional list of custom HTTP headers
      * @param null|object $triggers    optional triggers for this webhook configuration
+     * @param null|bool   $verify      Pass false to save without testing the endpoint (sent as ?verify=false).
+     *                                 This leaves the webhook unverified, so a live webhook stops receiving
+     *                                 events until verified again. When null the API default applies.
      *
      * @throws PostmarkException
      */
@@ -1404,7 +1412,8 @@ class PostmarkClient extends PostmarkClientBase
         ?string $url = null,
         ?object $httpAuth = null,
         ?array $httpHeaders = null,
-        ?object $triggers = null
+        ?object $triggers = null,
+        ?bool $verify = null
     ): WebhookConfiguration {
         $body = [];
         $body['Url'] = $url;
@@ -1412,7 +1421,7 @@ class PostmarkClient extends PostmarkClientBase
         $body['HttpHeaders'] = $this->fixHeaders($httpHeaders);
         $body['Triggers'] = $triggers;
 
-        return new WebhookConfiguration((array) $this->processRestRequest('PUT', "/webhooks/{$id}", $body));
+        return new WebhookConfiguration((array) $this->processRestRequest('PUT', "/webhooks/{$id}" . $this->verifyQuery($verify), $body));
     }
 
     /**
@@ -1603,6 +1612,14 @@ class PostmarkClient extends PostmarkClientBase
         }
 
         return $emailAddress;
+    }
+
+    /**
+     * The webhooks API reads verify from the query string only; a Verify key in the JSON body is ignored.
+     */
+    private function verifyQuery(?bool $verify): string
+    {
+        return null === $verify ? '' : '?verify=' . ($verify ? 'true' : 'false');
     }
 
     /**
