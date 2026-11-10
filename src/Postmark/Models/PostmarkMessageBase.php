@@ -171,7 +171,7 @@ class PostmarkMessageBase
         return $this;
     }
 
-    public function getMetadata(): array
+    public function getMetadata(): ?array
     {
         return $this->Metadata;
     }
@@ -186,7 +186,7 @@ class PostmarkMessageBase
         return $this;
     }
 
-    public function getMessageStream(): string
+    public function getMessageStream(): ?string
     {
         return $this->MessageStream;
     }

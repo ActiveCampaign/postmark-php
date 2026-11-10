@@ -116,7 +116,7 @@ class WebhookConfiguration implements JsonSerializable
         return $this;
     }
 
-    public function getHttpAuth(): HttpAuth
+    public function getHttpAuth(): ?HttpAuth
     {
         return $this->HttpAuth;
     }

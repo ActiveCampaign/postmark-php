@@ -5,6 +5,11 @@ version: 2.1
 workflows:
   php-tests:
     jobs:
+      # The only job that needs no Postmark credentials, so it is the only one that
+      # gives a fork PR any signal at all. Everything below is an integration suite
+      # against the live API and cannot start without the tokens above.
+      - static-analysis:
+          name: static
       - unit-tests:
           name: php81
           version: "8.1"
@@ -25,6 +30,26 @@ workflows:
             - php83
 
 jobs:
+  static-analysis:
+    docker:
+      - image: cimg/php:8.1
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: composer install --no-interaction
+      - run:
+          name: PHPStan
+          command: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+      # php-cs-fixer is deliberately NOT a gate yet: its config was missing
+      # setFinder(), so the fixer has never run here and 8 files are already
+      # non-conforming on main. A check that ships red just teaches people to
+      # ignore it. Run it for visibility, promote it to a gate after a
+      # formatting pass.
+      - run:
+          name: php-cs-fixer (advisory)
+          command: vendor/bin/php-cs-fixer fix --dry-run --diff || true
+
   unit-tests:
     parameters:
       version:
