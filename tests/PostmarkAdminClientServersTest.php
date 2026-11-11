@@ -60,6 +60,16 @@ class PostmarkAdminClientServersTest extends PostmarkClientBaseTest
         $this->assertNotEmpty($server);
     }
 
+    public function testClientCanCreateSandboxServer()
+    {
+        $tk = parent::$testKeys;
+        $client = new PostmarkAdminClient($tk->WRITE_ACCOUNT_TOKEN, $tk->TEST_TIMEOUT);
+
+        $server = $client->createServer('test-php-sandbox-' . date('c'), deliveryType: 'Sandbox');
+
+        $this->assertSame('Sandbox', $server->getDeliveryType());
+    }
+
     public function testClientCanEditServer()
     {
         $tk = parent::$testKeys;

@@ -161,6 +161,7 @@ class PostmarkAdminClient extends PostmarkClientBase
      * @param null|string $clickHookUrl            URL to POST to everytime an click event occurs
      * @param null|string $deliveryHookUrl         URL to POST to everytime an click event occurs
      * @param null|string $enableSmtpApiErrorHooks specifies whether or not SMTP API Errors will be included with bounce webhooks
+     * @param null|string $deliveryType            'Live' or 'Sandbox' (defaults to 'Live'), cannot be changed later
      *
      * @throws PostmarkException
      */
@@ -179,7 +180,8 @@ class PostmarkAdminClient extends PostmarkClientBase
         ?string $trackLinks = null,
         ?string $clickHookUrl = null,
         ?string $deliveryHookUrl = null,
-        ?string $enableSmtpApiErrorHooks = null
+        ?string $enableSmtpApiErrorHooks = null,
+        ?string $deliveryType = null
     ): PostmarkServer {
         $body = [];
         $body['name'] = $name;
@@ -197,6 +199,7 @@ class PostmarkAdminClient extends PostmarkClientBase
         $body['ClickHookUrl'] = $clickHookUrl;
         $body['DeliveryHookUrl'] = $deliveryHookUrl;
         $body['EnableSmtpApiErrorHooks'] = $enableSmtpApiErrorHooks;
+        $body['DeliveryType'] = $deliveryType;
 
         return new PostmarkServer((array) $this->processRestRequest('POST', '/servers/', $body));
     }
